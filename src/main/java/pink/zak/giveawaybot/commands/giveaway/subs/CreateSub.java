@@ -1,0 +1,68 @@
+package pink.zak.giveawaybot.commands.giveaway.subs;
+
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import pink.zak.giveawaybot.GiveawayBot;
+import pink.zak.giveawaybot.controller.GiveawayController;
+import pink.zak.giveawaybot.service.command.command.SubCommand;
+import pink.zak.giveawaybot.service.time.Time;
+
+public class CreateSub extends SubCommand {
+    private final GiveawayController giveawayController;
+
+    public CreateSub(GiveawayBot bot) {
+        super(bot, false, true);
+        this.giveawayController = bot.getGiveawayController();
+
+        this.addFlat("create");
+        this.addArgument(String.class);
+        this.addArgument(String.class);
+        this.addArgument(TextChannel.class);
+        this.addArgument(Integer.class);
+        this.addArgument(String.class);
+    }
+
+    @Override
+    public void onExecute(Member sender, MessageReceivedEvent event, String[] args) {
+        String presetName = this.parseArgument(args, event.getGuild(), 1);
+        long lengthMillis = Time.parse(this.parseArgument(args, event.getGuild(), 2));
+        TextChannel responseChannel = event.getTextChannel();
+        TextChannel giveawayChannel = this.parseArgument(args, event.getGuild(), 3);
+        int winnerAmount = this.parseArgument(args, event.getGuild(), 4);
+        String giveawayItem = String.join(" ", this.getEnd(args));
+        if (this.performChecks(lengthMillis, giveawayChannel, giveawayItem, responseChannel)) {
+            return;
+        }
+        switch (this.giveawayController.createGiveaway(lengthMillis, winnerAmount, giveawayChannel, presetName, giveawayItem).getRight()) {
+            case GIVEAWAY_LIMIT_FAILURE:
+                event.getChannel().sendMessage(":x: Your guild has reached the maximum number of 10 giveaways. Gimme all ur money for more or delete some by deleting their message.").queue();
+                break;
+            case WINNER_LIMIT_FAILURE:
+                event.getChannel().sendMessage(":x: You can only have a maximum of 5 winners per giveaway. Gimme all ur money if u want more.").queue();
+                break;
+            case NO_PRESET:
+                event.getChannel().sendMessage(":x: Could not find the specified preset. Use `>preset list` to list them all.").queue();
+                break;
+            case GENERIC_FAILURE:
+            case RATE_LIMIT_FAILURE:
+                event.getChannel().sendMessage(":x: An error occurred. Try again in a minute when the bot is less busy.").queue();
+        }
+    }
+
+    private boolean performChecks(long length, TextChannel giveawayChannel, String giveawayItem, TextChannel responseChannel) {
+        /*if (length < 60000) {
+            responseChannel.sendMessage("Giveaways must be at least 1 minute long.").queue();
+            return true;
+        }*/
+        if (giveawayChannel == null) {
+            responseChannel.sendMessage("Could not find the specified channel.").queue();
+            return true;
+        }
+        if (giveawayItem.isEmpty() || giveawayItem.equals(" ")) {
+            responseChannel.sendMessage("Issue parsing giveaway reward.").queue();
+            return true;
+        }
+        return false;
+    }
+}
