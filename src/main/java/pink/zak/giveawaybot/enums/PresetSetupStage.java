@@ -9,7 +9,7 @@ public enum PresetSetupStage {
     SETTING_SETTING(PresetSetupStage.FINISHED, "Enter any other settings from this list that you would like you set a value for: ", Setting::match),
     SETTING_SETTING_VALUE(null, null, null),
     SETTING_MAX_ENTRIES(PresetSetupStage.SETTING_SETTING, "How many times can each member enter?", input -> Setting.MAX_ENTRIES),
-    SETTING_REACT_TO_ENTER(PresetSetupStage.SETTING_MAX_ENTRIES, "Should users have to react to the giveaway message to enter?", input ->Setting.REACT_TO_ENTER),
+    SETTING_REACT_TO_ENTER(PresetSetupStage.SETTING_MAX_ENTRIES, "Should users have to react to the giveaway message to enter?", input ->Setting.ENABLE_REACT_TO_ENTER),
     SETTING_NAME(PresetSetupStage.SETTING_REACT_TO_ENTER, "What should the preset be called?", input -> null);
 
     private final PresetSetupStage next;

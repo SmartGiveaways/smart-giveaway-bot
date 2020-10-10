@@ -46,9 +46,7 @@ public class ServerStorage extends Storage<Server> {
 
     @Override
     public Server create(String id) {
-        Server server = new Server(this.bot, Long.parseLong(id));
-        System.out.println("Creating server. " + server);
-        return server;
+        return new Server(this.bot, Long.parseLong(id));
     }
 
     private Map<String, EnumMap<Setting, String>> serializePresets(Map<String, Preset> unserialized) {

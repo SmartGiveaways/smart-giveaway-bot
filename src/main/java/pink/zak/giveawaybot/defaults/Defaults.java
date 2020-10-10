@@ -12,8 +12,13 @@ public class Defaults {
 
     private void setupDefaultPreset() {
         this.defaultPreset = new Preset("default");
-        this.defaultPreset.setSetting(Setting.REACT_TO_ENTER, true);
+        this.defaultPreset.setSetting(Setting.ENABLE_REACT_TO_ENTER, true);
+        this.defaultPreset.setSetting(Setting.ENABLE_MESSAGE_ENTRIES, true);
+        this.defaultPreset.setSetting(Setting.ENTRIES_PER_MESSAGE, 1);
+        this.defaultPreset.setSetting(Setting.ENABLE_INVITE_ENTRIES, true);
+        this.defaultPreset.setSetting(Setting.ENTRIES_PER_INVITE, 250);
         this.defaultPreset.setSetting(Setting.MAX_ENTRIES, 1000);
+        this.defaultPreset.setSetting(Setting.PING_WINNERS, true);
     }
 
     public Preset getDefaultPreset() {

@@ -3,7 +3,6 @@ package pink.zak.giveawaybot;
 import com.google.common.collect.Sets;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.requests.GatewayIntent;
-import net.dv8tion.jda.internal.utils.JDALogger;
 import org.slf4j.Logger;
 import pink.zak.giveawaybot.cache.GiveawayCache;
 import pink.zak.giveawaybot.cache.ServerCache;
@@ -12,13 +11,15 @@ import pink.zak.giveawaybot.commands.preset.PresetCommand;
 import pink.zak.giveawaybot.controller.GiveawayController;
 import pink.zak.giveawaybot.controller.UserController;
 import pink.zak.giveawaybot.defaults.Defaults;
+import pink.zak.giveawaybot.entries.pipeline.EntryPipeline;
 import pink.zak.giveawaybot.listener.ReactionAddListener;
 import pink.zak.giveawaybot.service.bot.JdaBot;
-import pink.zak.giveawaybot.service.storage.settings.StorageSettings;
 import pink.zak.giveawaybot.storage.GiveawayStorage;
 import pink.zak.giveawaybot.storage.ServerStorage;
+import pink.zak.giveawaybot.storage.redis.RedisManager;
 import pink.zak.giveawaybot.threads.ThreadFunction;
 import pink.zak.giveawaybot.threads.ThreadManager;
+import redis.clients.jedis.Jedis;
 
 import java.nio.file.Path;
 import java.util.Set;
@@ -29,16 +30,17 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class GiveawayBot extends JdaBot {
-    private static final Logger logger = JDALogger.getLog(GiveawayBot.class);
     private Consumer<Throwable> deleteFailureThrowable;
     private final Defaults defaults = new Defaults();
     private ThreadManager threadManager;
+    private RedisManager redisManager;
     private GiveawayStorage giveawayStorage;
     private GiveawayCache giveawayCache;
     private ServerStorage serverStorage;
     private ServerCache serverCache;
     private UserController userController;
     private GiveawayController giveawayController;
+    private EntryPipeline entryPipeline;
 
     public GiveawayBot() {
         super(basePath -> basePath.resolve("data"));
@@ -55,12 +57,14 @@ public class GiveawayBot extends JdaBot {
         this.initialize(this, this.getConfigStore().commons().get("token"), ">", this.getGatewayIntents());
         this.threadManager = new ThreadManager();
 
+        this.redisManager = new RedisManager(this);
         this.giveawayStorage = new GiveawayStorage(this);
         this.giveawayCache = new GiveawayCache(this);
         this.serverStorage = new ServerStorage(this);
         this.serverCache = new ServerCache(this);
         this.userController = new UserController(this);
         this.giveawayController = new GiveawayController(this);
+        this.entryPipeline = new EntryPipeline(this);
 
         this.giveawayController.loadAllGiveaways();
 
@@ -82,6 +86,7 @@ public class GiveawayBot extends JdaBot {
         this.serverCache.shutdown();
         this.giveawayStorage.closeBack();
         this.serverStorage.closeBack();
+        this.redisManager.shutdown();
         this.threadManager.shutdownPools();
         logger.info("Completing shut down sequence.");
     }
@@ -103,10 +108,6 @@ public class GiveawayBot extends JdaBot {
                 ex.printStackTrace();
             }
         };
-    }
-
-    public StorageSettings getGiveawayStorageSettings() {
-        return this.storageSettings;
     }
 
     public Defaults getDefaults() {
@@ -137,8 +138,12 @@ public class GiveawayBot extends JdaBot {
         return this.threadManager;
     }
 
-    private Set<GatewayIntent> getGatewayIntents() {
-        return Sets.newHashSet(GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_EMOJIS);
+    public RedisManager getRedisManager() {
+        return this.redisManager;
+    }
+
+    public Jedis getJedis() {
+        return this.redisManager.getConnection();
     }
 
     public GiveawayStorage getGiveawayStorage() {
@@ -163,5 +168,13 @@ public class GiveawayBot extends JdaBot {
 
     public GiveawayController getGiveawayController() {
         return this.giveawayController;
+    }
+
+    public EntryPipeline getEntryPipeline() {
+        return this.entryPipeline;
+    }
+
+    private Set<GatewayIntent> getGatewayIntents() {
+        return Sets.newHashSet(GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_EMOJIS);
     }
 }

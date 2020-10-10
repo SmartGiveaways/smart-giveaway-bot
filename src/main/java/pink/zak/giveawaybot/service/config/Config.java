@@ -5,6 +5,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.timvisee.yamlwrapper.ConfigurationSection;
 import com.timvisee.yamlwrapper.YamlConfiguration;
+import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.service.bot.SimpleBot;
 
 import java.io.File;
@@ -115,8 +116,8 @@ public class Config {
     private void createIfAbsent(String file) {
         if (!this.file.exists()) {
             this.bot.getBasePath().toFile().mkdirs();
-            System.out.println("The file '".concat(file).concat("' did not exist. You must make it"));
-            System.out.println("Target path to file: ".concat(this.file.getAbsolutePath()));
+            GiveawayBot.getLogger().error("The file '".concat(file).concat("' did not exist. You must make it"));
+            GiveawayBot.getLogger().info("Target path to file: ".concat(this.file.getAbsolutePath()));
         }
     }
 }

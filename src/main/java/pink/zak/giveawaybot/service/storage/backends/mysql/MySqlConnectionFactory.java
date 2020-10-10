@@ -4,6 +4,7 @@ package pink.zak.giveawaybot.service.storage.backends.mysql;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import lombok.SneakyThrows;
+import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.service.storage.settings.StorageSettings;
 
 import java.sql.Connection;
@@ -22,10 +23,10 @@ public class MySqlConnectionFactory {
         try {
             this.dataSource = new HikariDataSource(this.configure(this.config));
         } catch (Exception ex) {
-            System.out.println("Could not setup mysql, please check your credentials.");
+            GiveawayBot.getLogger().error("Could not setup mysql, please check your credentials.", ex);
         }
         if (this.getConnection() != null) {
-            System.out.println("Connected to MySQL on ".concat(storageSettings.getHost()));
+            GiveawayBot.getLogger().info("Connected to MySQL on ".concat(storageSettings.getHost()));
         }
     }
 

@@ -1,6 +1,7 @@
 package pink.zak.giveawaybot.service.bot;
 
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.service.command.CommandBase;
@@ -12,10 +13,13 @@ import pink.zak.simplediscord.registry.Registry;
 
 import java.nio.file.Path;
 import java.util.Set;
+import java.util.function.UnaryOperator;
 
 public interface SimpleBot {
 
     void unload();
+
+    void initialize(GiveawayBot bot, String token, String prefix, Set<GatewayIntent> intents, UnaryOperator<JDABuilder> jdaOperator);
 
     void initialize(GiveawayBot bot, String token, String prefix, Set<GatewayIntent> intents);
 

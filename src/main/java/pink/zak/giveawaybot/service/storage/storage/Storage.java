@@ -69,7 +69,6 @@ public abstract class Storage<T> {
     }
 
     public void delete(String id) {
-        System.out.println("DELETE IN STORAGE");
         this.backend.delete(id);
     }
 

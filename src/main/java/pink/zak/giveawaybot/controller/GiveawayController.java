@@ -31,6 +31,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class GiveawayController {
     private final ThreadManager threadManager;
@@ -70,7 +71,7 @@ public class GiveawayController {
                         .setColor(Color.MAGENTA)
                         .setFooter("Ends in " + Time.format(length) + " with " + winnerAmount + " winner" + (winnerAmount > 1 ? "s" : ""))
                         .build()).complete(true);
-                if (preset.hasSetting(Setting.REACT_TO_ENTER) && (boolean) preset.getSetting(Setting.REACT_TO_ENTER)) {
+                if (preset.hasSetting(Setting.ENABLE_REACT_TO_ENTER) && (boolean) preset.getSetting(Setting.ENABLE_REACT_TO_ENTER)) {
                     message.addReaction("\uD83C\uDF89").queue();
                 }
                 Giveaway giveaway = new Giveaway(message.getIdLong(), giveawayChannel.getIdLong(), giveawayChannel.getGuild().getIdLong(), endTime, winnerAmount, presetName, giveawayItem);
@@ -90,7 +91,7 @@ public class GiveawayController {
         this.giveawayCache.invalidate(giveaway.uuid(), false);
         this.serverCache.get(giveaway.serverId()).thenAccept(server -> {
             server.getActiveGiveaways().remove(giveaway.messageId());
-            System.out.println("Removing giveaway from server " + giveaway.messageId() + "  :  " + giveaway.uuid());
+            GiveawayBot.getLogger().info("Removing giveaway from server " + giveaway.messageId() + "  :  " + giveaway.uuid());
             UserCache userCache = server.getUserCache();
             for (long enteredId : giveaway.enteredUsers()) {
                 userCache.get(enteredId).thenAccept(user -> {
@@ -106,7 +107,6 @@ public class GiveawayController {
         this.bot.runAsync(ThreadFunction.STORAGE, () -> {
             for (Giveaway giveaway : this.giveawayStorage.loadAll()) {
                 if (!giveaway.isActive()) {
-                    System.out.println("Giveaway not active.");
                     this.endGiveaway(giveaway);
                     continue;
                 }
@@ -135,12 +135,12 @@ public class GiveawayController {
                 for (long enteredUserId : giveaway.enteredUsers()) {
                     User user = server.getUserCache().getSync(enteredUserId);
                     if (user != null) {
-                        Map<EntryType, Integer> entries = user.entries().get(giveaway.uuid());
+                        Map<EntryType, AtomicInteger> entries = user.entries().get(giveaway.uuid());
                         if (entries != null) {
                             BigInteger totalUserEntries = BigInteger.ZERO;
-                            for (int entryTypeAmount : entries.values()) {
-                                totalEntries = totalEntries.add(BigInteger.valueOf(entryTypeAmount));
-                                totalUserEntries = totalUserEntries.add(BigInteger.valueOf(entryTypeAmount));
+                            for (AtomicInteger entryTypeAmount : entries.values()) {
+                                totalEntries = totalEntries.add(BigInteger.valueOf(entryTypeAmount.get()));
+                                totalUserEntries = totalUserEntries.add(BigInteger.valueOf(entryTypeAmount.get()));
                             }
                             userEntriesMap.put(user.id(), totalUserEntries);
                         }
@@ -157,16 +157,21 @@ public class GiveawayController {
                     return;
                 }
                 Set<Long> winners = this.generateWinners(giveaway, totalEntries, userEntriesMap);
-                System.out.println("Generated winners " + winners);
-                StringBuilder descriptionBuilder = new StringBuilder(winners.size() > 1 ? "**Winners:**\n" : "**Winner:**\n");
+                GiveawayBot.getLogger().info("Giveaway " + giveaway.uuid() + " generated winners " + winners);
+                StringBuilder descriptionBuilder = new StringBuilder();
                 for (long winnerId : winners) {
                     descriptionBuilder.append("<@").append(winnerId).append(">\n");
                 }
                 giveawayMessage.editMessage(new EmbedBuilder()
                         .setColor(Color.GREEN)
                         .setTitle("Giveaway: " + giveaway.giveawayItem())
-                        .setDescription(descriptionBuilder.toString())
+                        .setDescription((winners.size() > 1 ? "**Winners:**\n" : "**Winner:**\n") + descriptionBuilder.toString())
                         .setFooter("Ended with " + winners.size() + " winners and " + totalEntries.toString() + " entries.").build()).queue();
+                // Handle the pinging of winners
+                Preset preset = giveaway.presetName().equals("default") ? this.defaultPreset : server.getPreset(giveaway.presetName());
+                if (!preset.hasSetting(Setting.PING_WINNERS) || (boolean) preset.getSetting(Setting.PING_WINNERS)) {
+                    giveawayMessage.getTextChannel().sendMessage(descriptionBuilder.toString()).queue(message -> message.delete().queue());
+                }
             }).exceptionally(ex -> {
                 ex.printStackTrace();
                 return null;
@@ -180,15 +185,21 @@ public class GiveawayController {
         if (userEntries.size() <= giveaway.winnerAmount()) {
             return userEntries.keySet();
         }
+        BigInteger currentTotalEntries = totalEntries;
         for (int i = 1; i <= giveaway.winnerAmount(); i++) {
-            BigInteger decreasingRandom = totalEntries.divide(NumberUtils.getRandomBigInteger(totalEntries));
+            BigInteger decreasingRandom = currentTotalEntries.divide(NumberUtils.getRandomBigInteger(currentTotalEntries));
             for (Map.Entry<Long, BigInteger> entry : userEntries.entrySet()) {
                 decreasingRandom = decreasingRandom.subtract(entry.getValue());
                 if (decreasingRandom.compareTo(BigInteger.ONE) < 0) {
                     winners.add(entry.getKey());
+                    if (i + 1 <= giveaway.winnerAmount()) { // Prevent duplicates if it will be looped again
+                        userEntries.remove(entry.getKey());
+                        currentTotalEntries = currentTotalEntries.subtract(entry.getValue());
+                    }
                     break;
                 }
             }
+
         }
         return winners;
     }
@@ -201,7 +212,6 @@ public class GiveawayController {
                 }
                 Message message = this.getGiveawayMessage(giveaway);
                 if (message == null) {
-                    System.out.println("Message was null for a giveaway so removed it.");
                     this.deleteGiveaway(giveaway);
                     return;
                 }
@@ -216,7 +226,7 @@ public class GiveawayController {
 
     private void startGiveawayTimer(Giveaway giveaway) {
         this.threadManager.getUpdaterExecutor().schedule(() -> {
-            System.out.println("Giveaway expired.");
+            GiveawayBot.getLogger().info("Giveaway" +  giveaway.uuid() + " expired.");
             this.endGiveaway(giveaway);
         }, giveaway.getTimeToExpiry(), TimeUnit.MILLISECONDS);
     }
@@ -225,12 +235,10 @@ public class GiveawayController {
     private Message getGiveawayMessage(Giveaway giveaway) {
         Guild guild = this.bot.getJda().getGuildById(giveaway.serverId());
         if (guild == null) {
-            System.out.println("GUILD WAS NULL");
             return null;
         }
         TextChannel channel = guild.getTextChannelById(giveaway.channelId());
         if (channel == null) {
-            System.out.println("CHANNEL WAS NULL");
             return null;
         }
         Message cachedMessage = channel.getHistory().getMessageById(giveaway.messageId());

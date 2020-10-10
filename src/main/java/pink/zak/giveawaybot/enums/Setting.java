@@ -9,8 +9,13 @@ import java.util.function.Predicate;
 
 public enum Setting {
 
-    REACT_TO_ENTER("React to message to enter", "", null, Boolean::parseBoolean, StringUtils::isBoolean, o -> true, "react-to-enter"),
-    MAX_ENTRIES("Maximum entries per user", "Your max entries per person must be below 10000", 10000, Integer::parseInt, StringUtils::isNumerical, o -> ((Integer) o) <= 10000, "max-entries");
+    ENABLE_REACT_TO_ENTER("React to message to enter", "", null, Boolean::parseBoolean, StringUtils::isBoolean, o -> true, "react-to-enter"),
+    ENABLE_MESSAGE_ENTRIES("Send messages to gain entries", "", null, Boolean::parseBoolean, StringUtils::isBoolean, o -> true, "enable-message-entries", "use-message-entries"),
+    ENTRIES_PER_MESSAGE("Entries per sent message", "The max entries per message is 3", 3, Integer::parseInt, StringUtils::isNumerical, o -> ((Integer) o) <= 3, "entries-per-message", "message-entries"),
+    ENABLE_INVITE_ENTRIES("Invite users to gain entries", "", null, Boolean::parseBoolean, StringUtils::isBoolean, o -> true, "enable-invite-entries", "use-invite-entries"),
+    ENTRIES_PER_INVITE("Entries per invited user", "The max entries per invite is 100", 500, Integer::parseInt, StringUtils::isNumerical, o -> ((Integer) o) <= 500, "entries-per-invite", "invite-entries"),
+    MAX_ENTRIES("Maximum entries per user", "Your max entries per person must be below 10000", 10000, Integer::parseInt, StringUtils::isNumerical, o -> ((Integer) o) <= 10000, "max-entries"),
+    PING_WINNERS("Whether winners will be ghost pinged", "", null, Boolean::parseBoolean, StringUtils::isBoolean, o -> true, "ping-winners", "ping-giveaway-winners");
 
     private final String description;
     private final String limitMessage;

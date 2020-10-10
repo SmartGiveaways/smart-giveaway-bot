@@ -30,16 +30,6 @@ public class GiveawayCommand extends SimpleCommand {
 
     @Override
     public void onExecute(Member sender, MessageReceivedEvent event, String[] args) {
-        /*Map<Integer, AtomicInteger> amount = Maps.newHashMap();
-        for (int i = 1; i < 100; i++) {
-            BigInteger random = NumberUtils.getRandomBigInteger(new BigInteger("4"));
-            if (amount.containsKey(random.intValue())) {
-                amount.get(random.intValue()).getAndIncrement();
-            } else {
-                amount.put(random.intValue(), new AtomicInteger(1));
-            }
-        }
-        System.out.println(amount);*/
         this.serverCache.get(event.getGuild().getIdLong()).thenAccept(server -> {
             EmbedBuilder embedBuilder = new EmbedBuilder()
                     .setTitle("Smart Giveaways Help")
@@ -47,10 +37,11 @@ public class GiveawayCommand extends SimpleCommand {
                     .addField("General Commands", ">entries", false);
             if (sender.hasPermission(Permission.ADMINISTRATOR) || server.canMemberManage(sender)) {
                 embedBuilder.addField( "Admin Commands",
-                        ">giveaway create <preset> <length> <#channel> <no. winners> <item given away>\n" +
-                                ">preset create <name>\n" +
-                                ">preset settings <preset>\n" +
-                                ">preset set <preset> <setting> <value>", false);
+                        """
+                                >giveaway create <preset> <length> <#channel> <no. winners> <topic>
+                                >preset create <name> - Creates a new preset for giveaways
+                                >preset settings <preset> - Shows the set values for a preset
+                                >preset set <preset> <setting> <value> - Sets a value for a preset""", false);
             }
             event.getChannel().sendMessage(embedBuilder.build()).queue(embed -> {
                 embed.delete().queueAfter(60, TimeUnit.SECONDS, null, this.bot.getDeleteFailureThrowable(), this.threadManager.getUpdaterExecutor());

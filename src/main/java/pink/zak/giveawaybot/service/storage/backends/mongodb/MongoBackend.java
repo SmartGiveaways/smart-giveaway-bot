@@ -62,7 +62,6 @@ public class MongoBackend implements Backend {
             this.update(searcher, document);
             return;
         }
-        System.out.println("Adding new document");
         this.collection.insertOne(document);
     }
 

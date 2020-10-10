@@ -14,6 +14,7 @@ import java.util.EnumMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class UserStorage extends Storage<User> {
     private final long serverId;
@@ -37,8 +38,7 @@ public class UserStorage extends Storage<User> {
     public Deserializer<User> deserializer() {
         return (json, gson) -> {
             long id = json.get("userId").getAsLong();
-            ConcurrentHashMap<UUID, EnumMap<EntryType, Integer>> entries = gson.fromJson(json.get("entries").getAsString(), new TypeToken<ConcurrentHashMap<UUID, EnumMap<EntryType, Integer>>>() {
-            }.getType());
+            ConcurrentHashMap<UUID, EnumMap<EntryType, AtomicInteger>> entries = gson.fromJson(json.get("entries").getAsString(), new TypeToken<ConcurrentHashMap<UUID, EnumMap<EntryType, AtomicInteger>>>(){}.getType());
             return new User(id, this.serverId, entries);
         };
     }

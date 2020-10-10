@@ -4,6 +4,8 @@ import lombok.SneakyThrows;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.internal.utils.JDALogger;
+import org.slf4j.Logger;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.service.command.CommandBase;
 import pink.zak.giveawaybot.service.command.command.SimpleCommand;
@@ -20,6 +22,7 @@ import java.util.Set;
 import java.util.function.UnaryOperator;
 
 public abstract class JdaBot implements SimpleBot {
+    public static final Logger logger = JDALogger.getLog(GiveawayBot.class);
     protected final StorageSettings storageSettings;
     private final BackendFactory backendFactory;
     private final ConfigStore configStore;
@@ -33,7 +36,7 @@ public abstract class JdaBot implements SimpleBot {
         this.storageSettings = new StorageSettings();
         this.backendFactory = new BackendFactory(this);
         this.configStore = new ConfigStore(this);
-        System.out.println("Base path set to: ".concat(this.getClass().getProtectionDomain().getCodeSource().getLocation().toURI().toString()));
+        logger.info("Base path set to: ".concat(this.getClass().getProtectionDomain().getCodeSource().getLocation().toURI().toString()));
         this.basePath = subBasePath.apply(new File(this.getClass().getProtectionDomain().getCodeSource().getLocation().toURI()).getParentFile().toPath().toAbsolutePath());
     }
 
@@ -42,7 +45,7 @@ public abstract class JdaBot implements SimpleBot {
 
     @SneakyThrows
     @Override
-    public void initialize(GiveawayBot bot, String token, String prefix, Set<GatewayIntent> intents) {
+    public void initialize(GiveawayBot bot, String token, String prefix, Set<GatewayIntent> intents, UnaryOperator<JDABuilder> jdaOperator) {
         this.commandBase = new CommandBase(bot);
         this.prefix = prefix;
         try {
@@ -50,13 +53,18 @@ public abstract class JdaBot implements SimpleBot {
             if (!intents.isEmpty()) {
                 builder.enableIntents(intents);
             }
+            jdaOperator.apply(builder);
             this.jda = builder.build().awaitReady();
             this.registerListeners(this.commandBase);
         } catch (LoginException e) {
-            System.out.println("Unable to log into Discord, the following error occurred:");
-            e.printStackTrace();
+            logger.error("Unable to log into Discord, the following error occurred:", e);
         }
         new Thread(new ConsoleListener(this)).start();
+    }
+
+    @Override
+    public void initialize(GiveawayBot bot, String token, String prefix, Set<GatewayIntent> intents) {
+        this.initialize(bot, token, prefix, intents, jdaBuilder -> jdaBuilder);
     }
 
     @Override

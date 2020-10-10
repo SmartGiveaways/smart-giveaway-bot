@@ -1,3 +1,8 @@
 # The resource system doesn't gen the file, so you can copy this.
 
 token: 'Your token will be safe in this value'
+
+redis-host: 127.24.114.43
+redis-port: 6379
+use-redis-ssl: true
+redis-password: "some-pass"

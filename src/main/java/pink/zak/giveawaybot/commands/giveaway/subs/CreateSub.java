@@ -51,10 +51,10 @@ public class CreateSub extends SubCommand {
     }
 
     private boolean performChecks(long length, TextChannel giveawayChannel, String giveawayItem, TextChannel responseChannel) {
-        /*if (length < 60000) {
-            responseChannel.sendMessage("Giveaways must be at least 1 minute long.").queue();
+        if (length < 30000) {
+            responseChannel.sendMessage("Giveaways must be at least 30 seconds long.").queue();
             return true;
-        }*/
+        }
         if (giveawayChannel == null) {
             responseChannel.sendMessage("Could not find the specified channel.").queue();
             return true;
