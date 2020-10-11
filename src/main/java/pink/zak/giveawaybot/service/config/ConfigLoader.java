@@ -1,8 +1,5 @@
 package pink.zak.giveawaybot.service.config;
 
-
-import pink.zak.simplediscord.config.Config;
-
 import java.util.List;
 import java.util.function.Consumer;
 

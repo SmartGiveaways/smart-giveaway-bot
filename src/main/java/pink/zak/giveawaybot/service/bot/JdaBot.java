@@ -11,9 +11,9 @@ import pink.zak.giveawaybot.service.command.CommandBase;
 import pink.zak.giveawaybot.service.command.command.SimpleCommand;
 import pink.zak.giveawaybot.service.config.ConfigStore;
 import pink.zak.giveawaybot.service.console.ConsoleListener;
+import pink.zak.giveawaybot.service.registry.Registry;
 import pink.zak.giveawaybot.service.storage.BackendFactory;
 import pink.zak.giveawaybot.service.storage.settings.StorageSettings;
-import pink.zak.simplediscord.registry.Registry;
 
 import javax.security.auth.login.LoginException;
 import java.io.File;
