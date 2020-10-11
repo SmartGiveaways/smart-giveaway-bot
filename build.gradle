@@ -26,7 +26,12 @@ repositories {
 }
 
 dependencies {
-    implementation 'pink.zak:simple-discord:1.0.6.3'
+    implementation 'com.google.guava:guava:29.0-jre'
+    implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'com.zaxxer:HikariCP:3.4.5'
+    implementation 'org.apache.commons:commons-lang3:3.0'
+    implementation 'net.dv8tion:JDA:4.2.0_204'
+    implementation 'com.timvisee:yamlwrapper:1.1.1'
     implementation 'org.mongodb:mongo-java-driver:3.12.7'
     implementation 'redis.clients:jedis:3.3.0'
     implementation 'com.google.code.gson:gson:2.8.6'
