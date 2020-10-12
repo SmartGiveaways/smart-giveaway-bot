@@ -7,8 +7,8 @@ import java.util.function.UnaryOperator;
 
 public abstract class CompactCommand extends SimpleCommand {
 
-    public CompactCommand(GiveawayBot bot, String command, boolean allowBots) {
-        super(bot, allowBots, command);
+    public CompactCommand(GiveawayBot bot, String command, boolean requiresManager) {
+        super(bot, requiresManager, command);
     }
 
     public CompactCommand(GiveawayBot bot, String command) {

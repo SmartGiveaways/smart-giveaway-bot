@@ -9,6 +9,7 @@ import pink.zak.giveawaybot.service.storage.settings.StorageType;
 import pink.zak.giveawaybot.service.storage.storage.Storage;
 import pink.zak.giveawaybot.service.storage.storage.serialization.Deserializer;
 import pink.zak.giveawaybot.service.storage.storage.serialization.Serializer;
+import pink.zak.giveawaybot.service.types.MapCreator;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -22,6 +23,9 @@ public class UserStorage extends Storage<User> {
     public UserStorage(GiveawayBot bot, long serverId) {
         super(bot, factory -> factory.create(StorageType.MONGODB, "users"));
         this.serverId = serverId;
+
+        this.gsonBuilder.registerTypeAdapter(new TypeToken<EnumMap<EntryType, AtomicInteger>>(){}.getType(), new MapCreator<>(EntryType.class));
+        this.saveChanges();
     }
 
     @Override

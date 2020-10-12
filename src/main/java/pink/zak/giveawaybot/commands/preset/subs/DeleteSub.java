@@ -9,6 +9,7 @@ import pink.zak.giveawaybot.cache.ServerCache;
 import pink.zak.giveawaybot.models.Server;
 import pink.zak.giveawaybot.service.command.command.SubCommand;
 
+import java.util.List;
 import java.util.UUID;
 
 public class DeleteSub extends SubCommand {
@@ -25,7 +26,7 @@ public class DeleteSub extends SubCommand {
     }
 
     @Override
-    public void onExecute(Member sender, MessageReceivedEvent event, String[] args) {
+    public void onExecute(Member sender, MessageReceivedEvent event, List<String> args) {
         this.serverCache.get(event.getGuild().getIdLong()).thenAccept(server -> {
             String presetName = this.parseArgument(args, event.getGuild(), 1);
             if (!server.getPresets().containsKey(presetName)) {

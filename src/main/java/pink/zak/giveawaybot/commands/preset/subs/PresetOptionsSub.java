@@ -7,24 +7,27 @@ import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.cache.ServerCache;
 import pink.zak.giveawaybot.enums.Setting;
 import pink.zak.giveawaybot.models.Preset;
+import pink.zak.giveawaybot.service.colour.Palette;
 import pink.zak.giveawaybot.service.command.command.SubCommand;
 
-import java.awt.*;
+import java.util.List;
 import java.util.Map;
 
 public class PresetOptionsSub extends SubCommand {
     private final ServerCache serverCache;
+    private final Palette palette;
 
     public PresetOptionsSub(GiveawayBot bot) {
         super(bot);
         this.serverCache = bot.getServerCache();
+        this.palette = bot.getDefaults().getPalette();
 
         this.addFlatWithAliases("settings", "setting", "options", "option");
         this.addArgument(String.class);
     }
 
     @Override
-    public void onExecute(Member sender, MessageReceivedEvent event, String[] args) {
+    public void onExecute(Member sender, MessageReceivedEvent event, List<String> args) {
         this.serverCache.get(event.getGuild().getIdLong()).thenAccept(server -> {
             String presetName = this.parseArgument(args, event.getGuild(), 1);
             Preset preset = server.getPreset(presetName);
@@ -44,7 +47,7 @@ public class PresetOptionsSub extends SubCommand {
                         .append("\n");
             }
             event.getChannel().sendMessage(new EmbedBuilder()
-                    .setColor(Color.PINK)
+                    .setColor(this.palette.primary())
                     .setDescription(builder.toString())
                     .setTitle("Settings for the " + preset.name() + " preset:")
                     .build()).queue();

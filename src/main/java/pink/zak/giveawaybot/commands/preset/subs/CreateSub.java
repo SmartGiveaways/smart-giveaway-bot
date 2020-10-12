@@ -7,6 +7,8 @@ import pink.zak.giveawaybot.cache.ServerCache;
 import pink.zak.giveawaybot.models.Preset;
 import pink.zak.giveawaybot.service.command.command.SubCommand;
 
+import java.util.List;
+
 public class CreateSub extends SubCommand {
     private final ServerCache serverCache;
 
@@ -19,11 +21,19 @@ public class CreateSub extends SubCommand {
     }
 
     @Override
-    public void onExecute(Member sender, MessageReceivedEvent event, String[] args) {
+    public void onExecute(Member sender, MessageReceivedEvent event, List<String> args) {
         String name = this.parseArgument(args, event.getGuild(), 1);
         this.serverCache.get(event.getGuild().getIdLong()).thenAccept(server -> {
             if (server.getPreset(name) != null) {
                 event.getChannel().sendMessage("There is already a preset called " + name + " for this server.").queue();
+                return;
+            }
+            if (name.length() > 20) {
+                event.getChannel().sendMessage("Preset names must be shorter than 20 characters.").queue();
+                return;
+            }
+            if (name.length() < 4) {
+                event.getChannel().sendMessage("Preset names must be longer than 3 characters.").queue();
                 return;
             }
             event.getChannel().sendMessage("Created your preset. Use `>preset settings` to see available settings.").queue();

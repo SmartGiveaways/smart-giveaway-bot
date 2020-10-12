@@ -11,8 +11,8 @@ public abstract class SimpleCommand extends Command {
     private Set<String> aliases = Sets.newHashSet();
     private Set<SubCommand> subCommands = Sets.newLinkedHashSet();
 
-    public SimpleCommand(GiveawayBot bot, boolean allowBots, String command) {
-        super(bot, allowBots);
+    public SimpleCommand(GiveawayBot bot, boolean requiresManager, String command) {
+        super(bot, requiresManager);
         this.command = command;
     }
 

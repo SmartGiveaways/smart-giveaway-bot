@@ -6,22 +6,25 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.enums.Setting;
+import pink.zak.giveawaybot.service.colour.Palette;
 import pink.zak.giveawaybot.service.command.command.SubCommand;
 
-import java.awt.*;
+import java.util.List;
 
 public class OptionsSub extends SubCommand {
+    private final Palette palette;
     private final MessageEmbed optionsList;
 
     public OptionsSub(GiveawayBot bot) {
         super(bot);
+        this.palette = bot.getDefaults().getPalette();
         this.optionsList = this.setupOptionsList();
 
         this.addFlatWithAliases("options", "settings");
     }
 
     @Override
-    public void onExecute(Member sender, MessageReceivedEvent event, String[] args) {
+    public void onExecute(Member sender, MessageReceivedEvent event, List<String> args) {
         event.getChannel().sendMessage(this.optionsList).queue();
     }
 
@@ -34,7 +37,7 @@ public class OptionsSub extends SubCommand {
                     .append("\n");
         }
         return new EmbedBuilder()
-                .setColor(Color.PINK)
+                .setColor(this.palette.primary())
                 .setTitle("Available Options")
                 .setDescription(builder.toString())
                 .build();

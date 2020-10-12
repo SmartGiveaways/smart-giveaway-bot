@@ -8,6 +8,8 @@ import pink.zak.giveawaybot.enums.Setting;
 import pink.zak.giveawaybot.models.Preset;
 import pink.zak.giveawaybot.service.command.command.SubCommand;
 
+import java.util.List;
+
 public class SetOptionSub extends SubCommand {
     private final ServerCache serverCache;
 
@@ -22,7 +24,7 @@ public class SetOptionSub extends SubCommand {
     }
 
     @Override
-    public void onExecute(Member sender, MessageReceivedEvent event, String[] args) {
+    public void onExecute(Member sender, MessageReceivedEvent event, List<String> args) {
         this.serverCache.get(event.getGuild().getIdLong()).thenAccept(server -> {
             String presetName = this.parseArgument(args, event.getGuild(), 1);
             if (presetName.equalsIgnoreCase("default")) {
@@ -41,7 +43,7 @@ public class SetOptionSub extends SubCommand {
                 return;
             }
             String inputValue = this.parseArgument(args, event.getGuild(), 3);
-            if (!setting.checkFormat(inputValue)) {
+            if (!setting.checkInput(inputValue)) {
                 event.getChannel().sendMessage(":x: Incorrect input for setting ".concat(settingName)).queue();
                 return;
             }

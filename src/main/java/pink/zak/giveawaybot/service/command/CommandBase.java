@@ -1,12 +1,15 @@
 package pink.zak.giveawaybot.service.command;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.hooks.SubscribeEvent;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.cache.ServerCache;
@@ -15,9 +18,11 @@ import pink.zak.giveawaybot.service.cache.Cache;
 import pink.zak.giveawaybot.service.cache.CacheBuilder;
 import pink.zak.giveawaybot.service.command.argument.ArgumentHandler;
 import pink.zak.giveawaybot.service.command.argument.ArgumentType;
+import pink.zak.giveawaybot.service.command.command.Command;
 import pink.zak.giveawaybot.service.command.command.SimpleCommand;
 import pink.zak.giveawaybot.service.command.command.SubCommand;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -47,21 +52,24 @@ public class CommandBase extends ListenerAdapter {
     @Override
     @SubscribeEvent
     public void onMessageReceived(MessageReceivedEvent event) {
+        if (event.getAuthor().isBot()) {
+            return;
+        }
         String rawMessage = event.getMessage().getContentRaw();
         String prefix = this.bot.getPrefix();
         if (!rawMessage.startsWith(prefix)) {
             return;
         }
-        String commandName = rawMessage.substring(1).split(" ")[0];
         Member sender = event.getMember();
         if (sender == null) {
             return;
         }
+        String commandName = rawMessage.substring(1).split(" ")[0];
         for (SimpleCommand simpleCommand : this.commands) {
             if (!simpleCommand.getCommand().equalsIgnoreCase(commandName) && !simpleCommand.getAliases().contains(commandName)) {
                 continue;
             }
-            if (sender.getUser().isBot() && !simpleCommand.allowsBots()) {
+            if (!this.hasAccess(simpleCommand, event.getMessage(), sender)) {
                 return;
             }
             Member member = event.getMember();
@@ -69,42 +77,56 @@ public class CommandBase extends ListenerAdapter {
                 return;
             }
             if (!rawMessage.contains(" ")) {
-                if (this.cooldown(event.getTextChannel(), sender)) {
+                if (this.isOnCooldown(event.getTextChannel(), event.getMessage(), sender)) {
                     return;
                 }
-                simpleCommand.middleMan(sender, event, new String[]{});
+                this.commandCooldowns.set(member.getIdLong(), System.currentTimeMillis());
+                simpleCommand.middleMan(sender, event, Lists.newArrayList());
                 return;
             }
             String message = rawMessage.split(prefix.concat(commandName).concat(" "))[1];
-            String[] args = message.split(" ");
+            List<String> args = Lists.newArrayList(message.split(" "));
+            args.removeIf(String::isEmpty);
 
             SubCommand subResult = null;
             for (SubCommand subCommand : simpleCommand.getSubCommands()) {
-                if ((args.length > subCommand.getArgumentsSize() && subCommand.isEndless()) || (subCommand.getArgumentsSize() == args.length && subCommand.isMatch(args))) {
+                if ((args.size() > subCommand.getArgumentsSize() && subCommand.isEndless()) || (subCommand.getArgumentsSize() == args.size() && subCommand.isMatch(args))) {
                     subResult = subCommand;
                     break;
                 }
             }
+            if (this.isOnCooldown(event.getTextChannel(), event.getMessage(), sender)) {
+                return;
+            }
+            this.commandCooldowns.set(member.getIdLong(), System.currentTimeMillis());
             if (subResult == null) {
-                if (this.cooldown(event.getTextChannel(), sender)) {
-                    return;
-                }
                 simpleCommand.middleMan(sender, event, args);
                 return;
             }
-            if (!subResult.allowsBots() && sender.getUser().isBot()) {
-                return;
-            }
-            if (this.cooldown(event.getTextChannel(), sender)) {
-                return;
-            }
+            if (this.hasAccess(subResult, event.getMessage(), sender))
             subResult.middleMan(sender, event, args);
         }
     }
 
-    private boolean cooldown(TextChannel channel, Member member) {
-        if (this.commandCooldowns.contains(member.getIdLong()) && this.commandCooldowns.getSync(member.getIdLong()) < 3000) {
-            channel.sendMessage("<@ " + member.getIdLong() + "> You must wait 3 seconds inbetween commands.").queue();
+    private boolean hasAccess(Command simpleCommand, Message message, Member member) {
+        if (simpleCommand.requiresManager()) {
+            if (!this.serverCache.get(member.getGuild().getIdLong()).join().canMemberManage(member)) {
+                message.getTextChannel().sendMessage(":x: No permission").queue(botReply -> {
+                    message.delete().queueAfter(10, TimeUnit.SECONDS, null, this.bot.getDeleteFailureThrowable(), this.bot.getThreadManager().getUpdaterExecutor());
+                    botReply.delete().queueAfter(10, TimeUnit.SECONDS, null, this.bot.getDeleteFailureThrowable(), this.bot.getThreadManager().getUpdaterExecutor());
+                });
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean isOnCooldown(TextChannel channel, Message message, Member member) {
+        if (this.commandCooldowns.contains(member.getIdLong()) && System.currentTimeMillis() - this.commandCooldowns.getSync(member.getIdLong()) < 3000) {
+            channel.sendMessage("<@" + member.getIdLong() + "> You must wait 3 seconds inbetween commands.").queue(botReply -> {
+                message.delete().queueAfter(10, TimeUnit.SECONDS, null, this.bot.getDeleteFailureThrowable(), this.bot.getThreadManager().getUpdaterExecutor());
+                botReply.delete().queueAfter(10, TimeUnit.SECONDS, null, this.bot.getDeleteFailureThrowable(), this.bot.getThreadManager().getUpdaterExecutor());
+            });
             return true;
         }
         return false;
@@ -141,6 +163,6 @@ public class CommandBase extends ListenerAdapter {
                 .registerArgumentType(Integer.class, (string, guild) -> NumberUtils.toInt(string, -1))
                 .registerArgumentType(Long.class, (string, guild) -> NumberUtils.toLong(string, -1))
                 .registerArgumentType(Double.class, (string, guild) -> NumberUtils.toDouble(string, -1))
-                .registerArgumentType(Boolean.class, (string, guild) -> string.equalsIgnoreCase("true") || (string.equalsIgnoreCase("false") ? false : null));
+                .registerArgumentType(Boolean.class, (string, guild) -> BooleanUtils.toBoolean(string));
     }
 }

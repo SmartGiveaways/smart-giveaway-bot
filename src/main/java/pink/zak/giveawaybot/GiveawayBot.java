@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 import org.slf4j.Logger;
 import pink.zak.giveawaybot.cache.GiveawayCache;
 import pink.zak.giveawaybot.cache.ServerCache;
+import pink.zak.giveawaybot.commands.entries.EntriesCommand;
 import pink.zak.giveawaybot.commands.giveaway.GiveawayCommand;
 import pink.zak.giveawaybot.commands.preset.PresetCommand;
 import pink.zak.giveawaybot.controller.GiveawayController;
@@ -54,21 +55,23 @@ public class GiveawayBot extends JdaBot {
         this.configRelations();
         this.setupThrowable();
         this.setupStorage();
-        this.initialize(this, this.getConfigStore().commons().get("token"), ">", this.getGatewayIntents());
-        this.threadManager = new ThreadManager();
 
+        this.threadManager = new ThreadManager();
         this.redisManager = new RedisManager(this);
         this.giveawayStorage = new GiveawayStorage(this);
         this.giveawayCache = new GiveawayCache(this);
         this.serverStorage = new ServerStorage(this);
         this.serverCache = new ServerCache(this);
         this.userController = new UserController(this);
-        this.giveawayController = new GiveawayController(this);
+
+        this.initialize(this, this.getConfigStore().commons().get("token"), ">", this.getGatewayIntents()); // This should basically be called as late as physically possible
+
+        this.giveawayController = new GiveawayController(this); // Makes use of JDA, retrieving messages
+
         this.entryPipeline = new EntryPipeline(this);
 
-        this.giveawayController.loadAllGiveaways();
-
         this.registerCommands(
+                new EntriesCommand(this),
                 new GiveawayCommand(this),
                 new PresetCommand(this)
         );

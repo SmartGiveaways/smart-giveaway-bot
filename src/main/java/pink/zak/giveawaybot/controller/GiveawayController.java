@@ -19,13 +19,13 @@ import pink.zak.giveawaybot.enums.Setting;
 import pink.zak.giveawaybot.models.Giveaway;
 import pink.zak.giveawaybot.models.Preset;
 import pink.zak.giveawaybot.models.User;
+import pink.zak.giveawaybot.service.colour.Palette;
 import pink.zak.giveawaybot.service.time.Time;
 import pink.zak.giveawaybot.service.types.NumberUtils;
 import pink.zak.giveawaybot.storage.GiveawayStorage;
 import pink.zak.giveawaybot.threads.ThreadFunction;
 import pink.zak.giveawaybot.threads.ThreadManager;
 
-import java.awt.*;
 import java.math.BigInteger;
 import java.util.Map;
 import java.util.Set;
@@ -39,6 +39,7 @@ public class GiveawayController {
     private final GiveawayStorage giveawayStorage;
     private final ServerCache serverCache;
     private final Preset defaultPreset;
+    private final Palette palette;
     private final GiveawayBot bot;
 
     public GiveawayController(GiveawayBot bot) {
@@ -47,7 +48,9 @@ public class GiveawayController {
         this.giveawayStorage = bot.getGiveawayStorage();
         this.serverCache = bot.getServerCache();
         this.defaultPreset = bot.getDefaults().getDefaultPreset();
+        this.palette = bot.getDefaults().getPalette();
         this.bot = bot;
+        this.loadAllGiveaways();
         this.startGiveawayUpdater();
     }
 
@@ -55,10 +58,10 @@ public class GiveawayController {
         long serverId = giveawayChannel.getGuild().getIdLong();
         long endTime = System.currentTimeMillis() + length;
         return this.serverCache.get(serverId).thenApply(server -> {
-            if (server.getActiveGiveaways().size() >= 10) {
+            if (server.getActiveGiveaways().size() >= 50) {
                 return ImmutablePair.of((Giveaway) null, ReturnCode.GIVEAWAY_LIMIT_FAILURE);
             }
-            if (winnerAmount > 5) {
+            if (winnerAmount > 5 || winnerAmount < 1) {
                 return ImmutablePair.of((Giveaway) null, ReturnCode.WINNER_LIMIT_FAILURE);
             }
             Preset preset = presetName.equalsIgnoreCase("default") ? this.defaultPreset : server.getPreset(presetName);
@@ -68,7 +71,7 @@ public class GiveawayController {
             try {
                 Message message = giveawayChannel.sendMessage(new EmbedBuilder()
                         .setTitle("Giveaway: ".concat(giveawayItem))
-                        .setColor(Color.MAGENTA)
+                        .setColor(this.palette.primary())
                         .setFooter("Ends in " + Time.format(length) + " with " + winnerAmount + " winner" + (winnerAmount > 1 ? "s" : ""))
                         .build()).complete(true);
                 if (preset.hasSetting(Setting.ENABLE_REACT_TO_ENTER) && (boolean) preset.getSetting(Setting.ENABLE_REACT_TO_ENTER)) {
@@ -84,7 +87,6 @@ public class GiveawayController {
                 return ImmutablePair.of((Giveaway) null, ReturnCode.RATE_LIMIT_FAILURE);
             }
         }).join();
-
     }
 
     public void deleteGiveaway(Giveaway giveaway) {
@@ -150,7 +152,7 @@ public class GiveawayController {
                 server.getActiveGiveaways().remove(giveaway.channelId());
                 if (totalEntries.equals(BigInteger.ZERO)) {
                     giveawayMessage.editMessage(new EmbedBuilder()
-                            .setColor(Color.GREEN)
+                            .setColor(this.palette.success())
                             .setTitle("Giveaway: " + giveaway.giveawayItem())
                             .setDescription("There were not enough entries to determine winners.")
                             .setFooter("Ended with no winners.").build()).queue();
@@ -163,7 +165,7 @@ public class GiveawayController {
                     descriptionBuilder.append("<@").append(winnerId).append(">\n");
                 }
                 giveawayMessage.editMessage(new EmbedBuilder()
-                        .setColor(Color.GREEN)
+                        .setColor(this.palette.success())
                         .setTitle("Giveaway: " + giveaway.giveawayItem())
                         .setDescription((winners.size() > 1 ? "**Winners:**\n" : "**Winner:**\n") + descriptionBuilder.toString())
                         .setFooter("Ended with " + winners.size() + " winners and " + totalEntries.toString() + " entries.").build()).queue();
@@ -217,7 +219,7 @@ public class GiveawayController {
                 }
                 message.editMessage(new EmbedBuilder()
                         .setTitle("Giveaway: ".concat(giveaway.giveawayItem()))
-                        .setColor(Color.MAGENTA)
+                        .setColor(this.palette.primary())
                         .setFooter("Ends in " + Time.format(giveaway.getTimeToExpiry()) + " with " + giveaway.winnerAmount() + " winner" + (giveaway.winnerAmount() > 1 ? "s" : ""))
                         .build()).queue();
             }

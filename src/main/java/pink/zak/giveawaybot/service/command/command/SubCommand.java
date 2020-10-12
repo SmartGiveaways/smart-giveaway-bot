@@ -16,13 +16,13 @@ public abstract class SubCommand extends Command {
     private final boolean endless;
     private List<Argument<?>> arguments = Lists.newArrayList();
 
-    public SubCommand(GiveawayBot bot, boolean allowBots, boolean endless) {
-        super(bot, allowBots);
+    public SubCommand(GiveawayBot bot, boolean requiresManager, boolean endless) {
+        super(bot, requiresManager);
         this.endless = endless;
     }
 
-    public SubCommand(GiveawayBot bot, boolean allowBots) {
-        this(bot, allowBots, false);
+    public SubCommand(GiveawayBot bot, boolean requiresManager) {
+        this(bot, requiresManager, false);
     }
 
     public SubCommand(GiveawayBot bot) {
@@ -70,12 +70,12 @@ public abstract class SubCommand extends Command {
     }
 
     @SuppressWarnings("unchecked")
-    public <U> U parseArgument(String[] args, Guild guild, int index) {
-        return ((Argument<U>) this.arguments.get(index)).getType().parse(args[index], guild);
+    public <U> U parseArgument(List<String> args, Guild guild, int index) {
+        return ((Argument<U>) this.arguments.get(index)).getType().parse(args.get(index), guild);
     }
 
-    public boolean isMatch(String[] arguments) {
-        for (int i = 0; i < arguments.length; i++) {
+    public boolean isMatch(List<String> arguments) {
+        for (int i = 0; i < arguments.size(); i++) {
             if (!this.isArgumentValid(arguments, i)) {
                 return false;
             }
@@ -83,34 +83,34 @@ public abstract class SubCommand extends Command {
         return true;
     }
 
-    public String[] getEnd(String[] arguments) {
+    public String[] getEnd(List<String> arguments) {
         Set<String> newSet = Sets.newLinkedHashSet();
-        for (int i = 0; i < arguments.length; i++) {
+        for (int i = 0; i < arguments.size(); i++) {
             if (i < this.arguments.size() - 1) {
                 continue;
             }
-            newSet.add(arguments[i]);
+            newSet.add(arguments.get(i));
         }
         return newSet.toArray(new String[]{});
     }
 
-    private boolean isArgumentValid(String[] arguments, int index) {
+    private boolean isArgumentValid(List<String> arguments, int index) {
         if (this.arguments.size() < index && this.endless) {
             return true;
         }
         Argument<?> argument = this.arguments.get(index);
         if (argument.getType() == null) {
-            String matchTo = arguments[index];
+            String matchTo = arguments.get(index);
             for (String alias : argument.getAliases()) {
                 if (matchTo.equalsIgnoreCase(alias)) {
                     return true;
                 }
             }
-            return argument.getArgument() != null && arguments[index].equalsIgnoreCase(argument.getArgument());
+            return argument.getArgument() != null && arguments.get(index).equalsIgnoreCase(argument.getArgument());
         }
         return true;
     }
 
     @Override
-    public abstract void onExecute(Member sender, MessageReceivedEvent event, String[] args);
+    public abstract void onExecute(Member sender, MessageReceivedEvent event, List<String> args);
 }

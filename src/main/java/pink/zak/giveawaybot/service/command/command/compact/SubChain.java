@@ -18,12 +18,12 @@ public class SubChain {
         return this.subCommands;
     }
 
-    public SubChain newSub(GiveawayBot bot, boolean allowBots, UnaryOperator<ArgumentBuilder> builder, Executor executor) {
+    public SubChain newSub(GiveawayBot bot, boolean requiresManager, UnaryOperator<ArgumentBuilder> builder, Executor executor) {
         List<Argument<?>> arguments = builder.apply(new ArgumentBuilder()).getArguments();
-        SubCommand subCommand = new SubCommand(bot, allowBots) {
+        SubCommand subCommand = new SubCommand(bot, requiresManager) {
 
             @Override
-            public void onExecute(Member sender, MessageReceivedEvent event, String[] args) {
+            public void onExecute(Member sender, MessageReceivedEvent event, List<String> args) {
                 executor.execute(sender, args, null);
             }
         };

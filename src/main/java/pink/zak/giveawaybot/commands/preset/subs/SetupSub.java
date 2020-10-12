@@ -15,6 +15,7 @@ import pink.zak.giveawaybot.service.cache.options.CacheExpiryListener;
 import pink.zak.giveawaybot.service.command.command.SubCommand;
 import pink.zak.giveawaybot.service.tuple.MutablePair;
 
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -32,7 +33,7 @@ public class SetupSub extends SubCommand implements CacheExpiryListener<Long, Mu
     }
 
     @Override
-    public void onExecute(Member sender, MessageReceivedEvent event, String[] args) {
+    public void onExecute(Member sender, MessageReceivedEvent event, List<String> args) {
         long guildId = event.getGuild().getIdLong();
         long senderId = sender.getIdLong();
         if (!this.serverUsersInSetup.contains(guildId)) {

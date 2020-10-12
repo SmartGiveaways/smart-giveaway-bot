@@ -5,16 +5,19 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.commands.preset.subs.*;
+import pink.zak.giveawaybot.service.colour.Palette;
 import pink.zak.giveawaybot.service.command.command.SimpleCommand;
 
-import java.awt.*;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class PresetCommand extends SimpleCommand {
+    private final Palette palette;
 
     public PresetCommand(GiveawayBot bot) {
         super(bot, "preset");
         SetupSub setupSub = new SetupSub(bot);
+        this.palette = bot.getDefaults().getPalette();
 
         this.setAliases("presets");
         this.setSubCommands(
@@ -30,10 +33,10 @@ public class PresetCommand extends SimpleCommand {
     }
 
     @Override
-    public void onExecute(Member sender, MessageReceivedEvent event, String[] args) {
+    public void onExecute(Member sender, MessageReceivedEvent event, List<String> args) {
         event.getChannel().sendMessage(new EmbedBuilder()
                 .setTitle("Preset Help")
-                .setColor(Color.PINK)
+                .setColor(this.palette.primary())
                 .addField("Commands",
                         ">preset create <name>\n" +
                                 ">preset settings <preset>\n" +

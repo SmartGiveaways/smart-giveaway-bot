@@ -4,22 +4,24 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import pink.zak.giveawaybot.GiveawayBot;
 
+import java.util.List;
+
 public abstract class Command {
     protected final GiveawayBot bot;
-    private final boolean allowsBots;
+    private final boolean requiresManager;
 
-    public Command(GiveawayBot bot, boolean allowBots) {
+    public Command(GiveawayBot bot, boolean requiresManager) {
         this.bot = bot;
-        this.allowsBots = allowBots;
+        this.requiresManager = requiresManager;
     }
 
-    public abstract void onExecute(Member sender, MessageReceivedEvent event, String[] args);
+    public abstract void onExecute(Member sender, MessageReceivedEvent event, List<String> args);
 
-    public void middleMan(Member sender, MessageReceivedEvent event, String[] args) {
+    public void middleMan(Member sender, MessageReceivedEvent event, List<String> args) {
         this.onExecute(sender, event, args);
     }
 
-    public boolean allowsBots() {
-        return this.allowsBots;
+    public boolean requiresManager() {
+        return this.requiresManager;
     }
 }
