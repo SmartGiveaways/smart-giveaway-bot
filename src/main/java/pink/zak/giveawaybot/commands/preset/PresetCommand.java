@@ -16,7 +16,7 @@ public class PresetCommand extends SimpleCommand {
 
     public PresetCommand(GiveawayBot bot) {
         super(bot, "preset");
-        SetupSub setupSub = new SetupSub(bot);
+        // SetupSub setupSub = new SetupSub(bot);
         this.palette = bot.getDefaults().getPalette();
 
         this.setAliases("presets");
@@ -26,10 +26,10 @@ public class PresetCommand extends SimpleCommand {
                 new ListSub(bot),
                 new OptionsSub(bot),
                 new PresetOptionsSub(bot),
-                new SetOptionSub(bot),
-                setupSub
+                new SetOptionSub(bot)/*,
+                setupSub*/
         );
-        bot.registerListeners(setupSub);
+        // bot.registerListeners(setupSub);
     }
 
     @Override

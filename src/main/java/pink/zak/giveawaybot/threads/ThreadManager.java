@@ -29,7 +29,7 @@ public class ThreadManager {
     private void initiatePools() {
         this.threadPools.put(ThreadFunction.STORAGE, Executors.newFixedThreadPool(3, this.getThreadFactory("storage")));
         this.threadPools.put(ThreadFunction.COMMANDS, Executors.newFixedThreadPool(3, this.getThreadFactory("commands")));
-        this.threadPools.put(ThreadFunction.LIVE_UPDATING, Executors.newScheduledThreadPool(5, this.getThreadFactory("live-updating")));
+        this.threadPools.put(ThreadFunction.UPDATING, Executors.newScheduledThreadPool(5, this.getThreadFactory("updating")));
     }
 
     public void shutdownPools() {
@@ -43,7 +43,7 @@ public class ThreadManager {
     }
 
     public ScheduledExecutorService getUpdaterExecutor() {
-        return (ScheduledExecutorService) this.threadPools.get(ThreadFunction.LIVE_UPDATING);
+        return (ScheduledExecutorService) this.threadPools.get(ThreadFunction.UPDATING);
     }
 
     private ThreadFactory getThreadFactory(String name) {

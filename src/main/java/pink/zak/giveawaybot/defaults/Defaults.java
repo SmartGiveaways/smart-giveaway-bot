@@ -8,7 +8,7 @@ import pink.zak.giveawaybot.service.colour.PaletteBuilder;
 import java.awt.*;
 
 public class Defaults {
-    private Preset defaultPreset;
+    public static Preset defaultPreset;
     private Palette palette;
 
     public Defaults() {
@@ -17,14 +17,14 @@ public class Defaults {
     }
 
     private void setupDefaultPreset() {
-        this.defaultPreset = new Preset("default");
-        this.defaultPreset.setSetting(Setting.ENABLE_REACT_TO_ENTER, true);
-        this.defaultPreset.setSetting(Setting.ENABLE_MESSAGE_ENTRIES, true);
-        this.defaultPreset.setSetting(Setting.ENTRIES_PER_MESSAGE, 1);
-        this.defaultPreset.setSetting(Setting.ENABLE_INVITE_ENTRIES, true);
-        this.defaultPreset.setSetting(Setting.ENTRIES_PER_INVITE, 250);
-        this.defaultPreset.setSetting(Setting.MAX_ENTRIES, 1000);
-        this.defaultPreset.setSetting(Setting.PING_WINNERS, true);
+        defaultPreset = new Preset("default");
+        defaultPreset.setSetting(Setting.ENABLE_REACT_TO_ENTER, true);
+        defaultPreset.setSetting(Setting.ENABLE_MESSAGE_ENTRIES, true);
+        defaultPreset.setSetting(Setting.ENTRIES_PER_MESSAGE, 1);
+        defaultPreset.setSetting(Setting.ENABLE_INVITE_ENTRIES, true);
+        defaultPreset.setSetting(Setting.ENTRIES_PER_INVITE, 250);
+        defaultPreset.setSetting(Setting.MAX_ENTRIES, 1000);
+        defaultPreset.setSetting(Setting.PING_WINNERS, true);
     }
 
     private void setupPalette() {
@@ -37,7 +37,7 @@ public class Defaults {
     }
 
     public Preset getDefaultPreset() {
-        return this.defaultPreset;
+        return defaultPreset;
     }
 
     public Palette getPalette() {

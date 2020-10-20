@@ -1,9 +1,13 @@
 package pink.zak.giveawaybot;
 
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.LoggerContext;
 import com.google.common.collect.Sets;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pink.zak.giveawaybot.cache.GiveawayCache;
 import pink.zak.giveawaybot.cache.ServerCache;
 import pink.zak.giveawaybot.commands.entries.EntriesCommand;
@@ -13,13 +17,18 @@ import pink.zak.giveawaybot.controller.GiveawayController;
 import pink.zak.giveawaybot.controller.UserController;
 import pink.zak.giveawaybot.defaults.Defaults;
 import pink.zak.giveawaybot.entries.pipeline.EntryPipeline;
+import pink.zak.giveawaybot.listener.MessageSendListener;
 import pink.zak.giveawaybot.listener.ReactionAddListener;
+import pink.zak.giveawaybot.metrics.GiveawayQuery;
 import pink.zak.giveawaybot.service.bot.JdaBot;
 import pink.zak.giveawaybot.storage.GiveawayStorage;
 import pink.zak.giveawaybot.storage.ServerStorage;
 import pink.zak.giveawaybot.storage.redis.RedisManager;
 import pink.zak.giveawaybot.threads.ThreadFunction;
 import pink.zak.giveawaybot.threads.ThreadManager;
+import pink.zak.metrics.Metrics;
+import pink.zak.metrics.queries.stock.SystemQuery;
+import pink.zak.metrics.queries.stock.backends.ProcessStats;
 import redis.clients.jedis.Jedis;
 
 import java.nio.file.Path;
@@ -27,10 +36,12 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class GiveawayBot extends JdaBot {
+public class GiveawayBot extends JdaBot { // BTW yes I know there's a token here RN. Can't be bothered to put it into the config file and it's only accessible on my PC locally :evil_laugh:
+    private final Metrics metricsLogger = new Metrics(new Metrics.Config("http://172.18.113.45:8086", "u-TyDkZFEVd25zKeFoAGC6PhcFaU1fR3pnGzZBdg7cIKODmWFBH_DIR7o8GSdmVqbg7tdoAw_20ozg__wBy7yA==".toCharArray(), "SmartGiveaways", "bot", 5));
     private Consumer<Throwable> deleteFailureThrowable;
     private final Defaults defaults = new Defaults();
     private ThreadManager threadManager;
@@ -52,6 +63,7 @@ public class GiveawayBot extends JdaBot {
     }
 
     public void load() {
+        ((LoggerContext) LoggerFactory.getILoggerFactory()).getLogger("org.mongodb.driver").setLevel(Level.ERROR);
         this.configRelations();
         this.setupThrowable();
         this.setupStorage();
@@ -64,12 +76,17 @@ public class GiveawayBot extends JdaBot {
         this.serverCache = new ServerCache(this);
         this.userController = new UserController(this);
 
-        this.initialize(this, this.getConfigStore().commons().get("token"), ">", this.getGatewayIntents()); // This should basically be called as late as physically possible
-
-        this.giveawayController = new GiveawayController(this); // Makes use of JDA, retrieving messages
+        this.initialize(this, this.getConfigStore().commons().get("token"), ">", this.getGatewayIntents(), shard -> shard
+                .disableCache(CacheFlag.VOICE_STATE)); // This should basically be called as late as physically possible
 
         this.entryPipeline = new EntryPipeline(this);
 
+        Runtime.getRuntime().addShutdownHook(new ShutdownHook(this));
+    }
+
+    @Override
+    public void onConnect() {
+        this.giveawayController = new GiveawayController(this); // Makes use of JDA, retrieving messages
         this.registerCommands(
                 new EntriesCommand(this),
                 new GiveawayCommand(this),
@@ -77,9 +94,19 @@ public class GiveawayBot extends JdaBot {
         );
 
         this.registerListeners(
-                new ReactionAddListener(this)
+                new ReactionAddListener(this),
+                new MessageSendListener(this)
         );
-        Runtime.getRuntime().addShutdownHook(new ShutdownHook(this));
+
+        this.threadManager.getUpdaterExecutor().scheduleAtFixedRate(() -> {
+            this.metricsLogger.<ProcessStats>log(query -> query
+                    .primary(new ProcessStats())
+                    .push(SystemQuery.ALL));
+            this.metricsLogger.<GiveawayCache>log(query -> query
+                    .primary(this.giveawayCache)
+                    .push(GiveawayQuery.ALL)
+            );
+        }, 1, 1, TimeUnit.SECONDS);
     }
 
     @Override
@@ -108,7 +135,7 @@ public class GiveawayBot extends JdaBot {
     private void setupThrowable() {
         this.deleteFailureThrowable = ex -> {
             if (!(ex instanceof ErrorResponseException)) {
-                ex.printStackTrace();
+                GiveawayBot.getLogger().error("", ex);
             }
         };
     }
@@ -178,6 +205,6 @@ public class GiveawayBot extends JdaBot {
     }
 
     private Set<GatewayIntent> getGatewayIntents() {
-        return Sets.newHashSet(GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_EMOJIS);
+        return Sets.newHashSet(GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_EMOJIS, GatewayIntent.GUILD_MESSAGE_REACTIONS);
     }
 }

@@ -27,7 +27,7 @@ public class SetupSub extends SubCommand implements CacheExpiryListener<Long, Mu
         super(bot);
         this.serverUsersInSetup = new CacheBuilder<Long, MutablePair<Long, PresetSetupStage>>()
                 .setControlling(bot)
-                .expireAfterAccess(1, TimeUnit.MINUTES).build();;
+                .expireAfterAccess(1, TimeUnit.MINUTES).build();
 
         this.addFlat("setup");
     }
@@ -43,7 +43,7 @@ public class SetupSub extends SubCommand implements CacheExpiryListener<Long, Mu
             return;
         }
         this.serverUsersInSetup.get(guildId).whenComplete((longPresetSetupStageMutablePair, throwable) -> {
-            if (!(longPresetSetupStageMutablePair.getKey() == senderId)) {
+            if (longPresetSetupStageMutablePair.getKey() != senderId) {
                 event.getChannel().sendMessage(":x: Only one person in a discord can use the setup command at once. You can always do it individually.").queue();
             } else {
                 event.getChannel().sendMessage(":white_check_mark: Clearing your setup and starting over.").queue();

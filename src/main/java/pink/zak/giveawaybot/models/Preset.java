@@ -1,6 +1,7 @@
 package pink.zak.giveawaybot.models;
 
 import com.google.common.collect.Maps;
+import pink.zak.giveawaybot.defaults.Defaults;
 import pink.zak.giveawaybot.enums.Setting;
 
 import java.util.EnumMap;
@@ -13,7 +14,7 @@ public record Preset(String name, EnumMap<Setting, Object> settings) {
     }
 
     public Object getSetting(Setting setting) {
-        return this.settings.get(setting);
+        return this.hasSetting(setting) ? this.settings.get(setting) : Defaults.defaultPreset.getSetting(setting);
     }
 
     public boolean hasSetting(Setting setting) {

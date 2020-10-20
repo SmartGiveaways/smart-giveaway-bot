@@ -16,7 +16,7 @@ public class EntryPipeline {
     private final Preset defaultPreset;
 
     public EntryPipeline(GiveawayBot bot) {
-        this.checkStep = new EligibilityCheckStep(bot);
+        this.checkStep = new EligibilityCheckStep();
         this.serverCache = bot.getServerCache();
         this.giveawayCache = bot.getGiveawayCache();
         this.defaultPreset = bot.getDefaults().getDefaultPreset();
@@ -30,9 +30,12 @@ public class EntryPipeline {
             server.getUserCache().get(userId).thenAccept(user -> {
                 for (UUID giveawayId : server.getActiveGiveaways().values()) {
                     this.giveawayCache.get(giveawayId).thenAccept(giveaway -> {
+                        if (giveaway == null) {
+                            return;
+                        }
                         this.checkStep.process(entryType, user, giveaway, giveaway.presetName().equals("default") ? this.defaultPreset : server.getPreset(giveaway.presetName()));
                     }).exceptionally(ex -> {
-                        ex.printStackTrace();
+                        GiveawayBot.getLogger().error("Server " + guildId + " user " + userId + " giveaway id " + giveawayId , ex);
                         return null;
                     });
                 }

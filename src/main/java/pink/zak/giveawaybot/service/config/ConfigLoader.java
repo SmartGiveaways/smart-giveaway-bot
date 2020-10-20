@@ -5,6 +5,10 @@ import java.util.function.Consumer;
 
 public class ConfigLoader {
 
+    private ConfigLoader() {
+        throw new IllegalStateException("Not Instantiable");
+    }
+
     public static Reader reader(Config config) {
         return new Reader(config);
     }

@@ -16,17 +16,21 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 public class EntriesCommand extends SimpleCommand {
     private final ServerCache serverCache;
     private final GiveawayCache giveawayCache;
     private final Palette palette;
+    private final Consumer<Throwable> deleteFailureThrowable;
 
     public EntriesCommand(GiveawayBot bot) {
         super(bot, false, "entries");
         this.serverCache = bot.getServerCache();
         this.giveawayCache = bot.getGiveawayCache();
         this.palette = bot.getDefaults().getPalette();
+        this.deleteFailureThrowable = bot.getDeleteFailureThrowable();
     }
 
     @Override
@@ -45,14 +49,18 @@ public class EntriesCommand extends SimpleCommand {
                     }
                 }
                 if (presentGiveaways.isEmpty()) {
-                    channel.sendMessage(":x: You are not entered into any giveaways.").queue();
+                    channel.sendMessage(":x: You are not entered into any giveaways.").queue(message -> {
+                        message.delete().queueAfter(10, TimeUnit.SECONDS, null, this.deleteFailureThrowable);
+                    });
                     return;
                 }
                 StringBuilder descriptionBuilder = new StringBuilder();
                 for (UUID giveawayId : presentGiveaways) {
                     BigInteger entries = user.getEntries(giveawayId);
                     Giveaway giveaway = this.giveawayCache.getSync(giveawayId);
-                    descriptionBuilder.append("**" + giveaway.giveawayItem() + "** -> " + entries + " entr" + (entries.compareTo(BigInteger.ONE) < 1 ? "y" : "ies") + "\n");
+                    if (giveaway != null) {
+                        descriptionBuilder.append("**" + giveaway.giveawayItem() + "** -> " + entries + " entr" + (entries.compareTo(BigInteger.ONE) < 1 ? "y" : "ies") + "\n");
+                    }
                 }
                 channel.sendMessage(new EmbedBuilder()
                         .setTitle("Giveaway Entries for " + sender.getEffectiveName() + "#" + sender.getUser().getDiscriminator())
@@ -60,11 +68,11 @@ public class EntriesCommand extends SimpleCommand {
                         .setDescription(descriptionBuilder.toString())
                         .build()).queue();
             }).exceptionally(ex -> {
-                ex.printStackTrace();
+                GiveawayBot.getLogger().error("", ex);
                 return null;
             });
         }).exceptionally(ex -> {
-            ex.printStackTrace();
+            GiveawayBot.getLogger().error("", ex);
             return null;
         });
     }

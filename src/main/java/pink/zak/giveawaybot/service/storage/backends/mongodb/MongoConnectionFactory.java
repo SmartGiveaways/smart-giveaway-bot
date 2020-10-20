@@ -29,13 +29,12 @@ public class MongoConnectionFactory {
     }
 
     public MongoCollection<Document> getCollection(String collectionName) {
-        for (String loopedCollection : this.mongoDatabase.listCollectionNames()) {
-            if (loopedCollection.equals(collectionName)) {
-                return this.mongoDatabase.getCollection(collectionName);
-            }
+        try {
+            return this.mongoDatabase.getCollection(collectionName);
+        } catch (IllegalArgumentException ex) {
+            this.mongoDatabase.createCollection(collectionName);
+            return this.mongoDatabase.getCollection(collectionName);
         }
-        this.mongoDatabase.createCollection(collectionName);
-        return this.mongoDatabase.getCollection(collectionName);
     }
 
     public void close() {

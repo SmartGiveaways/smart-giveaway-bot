@@ -2,7 +2,6 @@ package pink.zak.giveawaybot.listener;
 
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.hooks.SubscribeEvent;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.entries.pipeline.EntryPipeline;
 import pink.zak.giveawaybot.enums.EntryType;
@@ -14,7 +13,6 @@ public class ReactionAddListener extends ListenerAdapter {
         this.entryPipeline = bot.getEntryPipeline();
     }
 
-    @SubscribeEvent
     public void onGuildMessageReactionAdd(GuildMessageReactionAddEvent event) {
         if (event.getUser().isBot() || event.getReactionEmote().isEmote() || !event.getReactionEmote().getAsCodepoints().equals("U+1f389")) { // U+1f389 is the unicode for the expected reaction
             return;

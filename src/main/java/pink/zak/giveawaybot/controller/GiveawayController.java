@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.exceptions.RateLimitedException;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import pink.zak.giveawaybot.GiveawayBot;
@@ -74,7 +75,7 @@ public class GiveawayController {
                         .setColor(this.palette.primary())
                         .setFooter("Ends in " + Time.format(length) + " with " + winnerAmount + " winner" + (winnerAmount > 1 ? "s" : ""))
                         .build()).complete(true);
-                if (preset.hasSetting(Setting.ENABLE_REACT_TO_ENTER) && (boolean) preset.getSetting(Setting.ENABLE_REACT_TO_ENTER)) {
+                if ((boolean) preset.getSetting(Setting.ENABLE_REACT_TO_ENTER)) {
                     message.addReaction("\uD83C\uDF89").queue();
                 }
                 Giveaway giveaway = new Giveaway(message.getIdLong(), giveawayChannel.getIdLong(), giveawayChannel.getGuild().getIdLong(), endTime, winnerAmount, presetName, giveawayItem);
@@ -83,7 +84,7 @@ public class GiveawayController {
                 this.startGiveawayTimer(giveaway);
                 return ImmutablePair.of(giveaway, ReturnCode.SUCCESS);
             } catch (RateLimitedException ex) {
-                ex.printStackTrace();
+                GiveawayBot.getLogger().error("", ex);
                 return ImmutablePair.of((Giveaway) null, ReturnCode.RATE_LIMIT_FAILURE);
             }
         }).join();
@@ -93,12 +94,10 @@ public class GiveawayController {
         this.giveawayCache.invalidate(giveaway.uuid(), false);
         this.serverCache.get(giveaway.serverId()).thenAccept(server -> {
             server.getActiveGiveaways().remove(giveaway.messageId());
-            GiveawayBot.getLogger().info("Removing giveaway from server " + giveaway.messageId() + "  :  " + giveaway.uuid());
+            GiveawayBot.getLogger().info("Removing giveaway from server {}  :  {}", giveaway.serverId(), giveaway.uuid());
             UserCache userCache = server.getUserCache();
             for (long enteredId : giveaway.enteredUsers()) {
-                userCache.get(enteredId).thenAccept(user -> {
-                    user.entries().remove(giveaway.uuid());
-                });
+                userCache.get(enteredId).thenAccept(user -> user.entries().remove(giveaway.uuid()));
             }
         });
         this.giveawayStorage.delete(giveaway.uuid().toString());
@@ -122,7 +121,7 @@ public class GiveawayController {
             return null;
         }).whenComplete((o, ex) -> {
             if (ex != null) {
-                ex.printStackTrace();
+                GiveawayBot.getLogger().error("", ex);
             }
             GiveawayBot.getLogger().info("Loaded {} giveaways in {} milliseconds", this.giveawayCache.size(), System.currentTimeMillis() - loadStartTime);
         });
@@ -159,7 +158,7 @@ public class GiveawayController {
                     return;
                 }
                 Set<Long> winners = this.generateWinners(giveaway, totalEntries, userEntriesMap);
-                GiveawayBot.getLogger().info("Giveaway " + giveaway.uuid() + " generated winners " + winners);
+                GiveawayBot.getLogger().info("Giveaway {} generated winners {}", giveaway.uuid(), winners);
                 StringBuilder descriptionBuilder = new StringBuilder();
                 for (long winnerId : winners) {
                     descriptionBuilder.append("<@").append(winnerId).append(">\n");
@@ -171,11 +170,11 @@ public class GiveawayController {
                         .setFooter("Ended with " + winners.size() + " winners and " + totalEntries.toString() + " entries.").build()).queue();
                 // Handle the pinging of winners
                 Preset preset = giveaway.presetName().equals("default") ? this.defaultPreset : server.getPreset(giveaway.presetName());
-                if (!preset.hasSetting(Setting.PING_WINNERS) || (boolean) preset.getSetting(Setting.PING_WINNERS)) {
+                if ((boolean) preset.getSetting(Setting.PING_WINNERS)) {
                     giveawayMessage.getTextChannel().sendMessage(descriptionBuilder.toString()).queue(message -> message.delete().queue());
                 }
             }).exceptionally(ex -> {
-                ex.printStackTrace();
+                GiveawayBot.getLogger().error("", ex);
                 return null;
             });
         }
@@ -228,14 +227,14 @@ public class GiveawayController {
 
     private void startGiveawayTimer(Giveaway giveaway) {
         this.threadManager.getUpdaterExecutor().schedule(() -> {
-            GiveawayBot.getLogger().info("Giveaway" +  giveaway.uuid() + " expired.");
+            GiveawayBot.getLogger().info("Giveaway {} expired", giveaway.uuid());
             this.endGiveaway(giveaway);
         }, giveaway.getTimeToExpiry(), TimeUnit.MILLISECONDS);
     }
 
     @SneakyThrows
     private Message getGiveawayMessage(Giveaway giveaway) {
-        Guild guild = this.bot.getJda().getGuildById(giveaway.serverId());
+        Guild guild = this.bot.getShardManager().getGuildById(giveaway.serverId());
         if (guild == null) {
             return null;
         }
@@ -249,7 +248,7 @@ public class GiveawayController {
         }
         try {
             return channel.retrieveMessageById(giveaway.messageId()).complete(true);
-        } catch (CompletionException ignored) {
+        } catch (CompletionException | ErrorResponseException ignored) {
             return null;
         }
     }

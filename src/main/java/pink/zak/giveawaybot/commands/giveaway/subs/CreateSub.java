@@ -33,7 +33,7 @@ public class CreateSub extends SubCommand {
         TextChannel giveawayChannel = this.parseArgument(args, event.getGuild(), 3);
         int winnerAmount = this.parseArgument(args, event.getGuild(), 4);
         String giveawayItem = String.join(" ", this.getEnd(args));
-        if (this.performChecks(lengthMillis, giveawayChannel, giveawayItem, winnerAmount, responseChannel)) {
+        if (this.performChecks(lengthMillis, giveawayChannel, giveawayItem, responseChannel)) {
             return;
         }
         switch (this.giveawayController.createGiveaway(lengthMillis, winnerAmount, giveawayChannel, presetName, giveawayItem).getRight()) {
@@ -55,7 +55,7 @@ public class CreateSub extends SubCommand {
         }
     }
 
-    private boolean performChecks(long length, TextChannel giveawayChannel, String giveawayItem, int winnerAmount, TextChannel responseChannel) {
+    private boolean performChecks(long length, TextChannel giveawayChannel, String giveawayItem, TextChannel responseChannel) {
         if (length < 30000) {
             responseChannel.sendMessage("Giveaways must be at least 30 seconds long.").queue();
             return true;

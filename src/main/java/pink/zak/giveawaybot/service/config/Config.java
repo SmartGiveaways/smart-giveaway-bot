@@ -55,9 +55,9 @@ public class Config {
         return (String) this.get(key);
     }
 
-    public Boolean bool(String key) {
+    public boolean bool(String key) {
         Object object = this.get(key);
-        return (object instanceof Boolean) ? (Boolean) object : false;
+        return object instanceof Boolean && (boolean) object;
     }
 
     public int integer(String key) {
@@ -85,7 +85,7 @@ public class Config {
     public Set<String> keys(String key) {
         ConfigurationSection configurationSection = this.configuration.getConfigurationSection(key);
         if (configurationSection == null) {
-            return null;
+            return Sets.newHashSet();
         }
         return Sets.newHashSet(configurationSection.getKeys(key));
     }

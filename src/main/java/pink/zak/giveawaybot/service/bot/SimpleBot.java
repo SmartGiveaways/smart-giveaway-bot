@@ -1,8 +1,8 @@
 package pink.zak.giveawaybot.service.bot;
 
-import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
+import net.dv8tion.jda.api.sharding.ShardManager;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.service.command.CommandBase;
 import pink.zak.giveawaybot.service.command.command.SimpleCommand;
@@ -19,7 +19,9 @@ public interface SimpleBot {
 
     void unload();
 
-    void initialize(GiveawayBot bot, String token, String prefix, Set<GatewayIntent> intents, UnaryOperator<JDABuilder> jdaOperator);
+    void onConnect();
+
+    void initialize(GiveawayBot bot, String token, String prefix, Set<GatewayIntent> intents, UnaryOperator<DefaultShardManagerBuilder> jdaOperator);
 
     void initialize(GiveawayBot bot, String token, String prefix, Set<GatewayIntent> intents);
 
@@ -43,5 +45,5 @@ public interface SimpleBot {
 
     ConfigStore getConfigStore();
 
-    JDA getJda();
+    ShardManager getShardManager();
 }

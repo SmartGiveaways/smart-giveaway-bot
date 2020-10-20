@@ -28,7 +28,7 @@ public class ServerStorage extends Storage<Server> {
             json.addProperty("_id", String.valueOf(server.getId()));
             json.addProperty("presets", gson.toJson(this.serializePresets(server.getPresets())));
             json.addProperty("activeGiveaways", gson.toJson(server.getActiveGiveaways()));
-            json.addProperty("managerRole", server.getManagerRoleId());
+            json.addProperty("managerRoles", gson.toJson(server.getManagerRoles()));
             return json;
         };
     }
@@ -37,10 +37,10 @@ public class ServerStorage extends Storage<Server> {
     public Deserializer<Server> deserializer() {
         return (json, gson) -> {
             long id = json.get("_id").getAsLong();
-            Map<String, Preset> presets = this.deserializePresets(gson.fromJson(json.get("presets").getAsString(), new TypeToken<HashMap<String, HashMap<Setting, String>>>(){}.getType()));
+            Map<String, Preset> presets = this.deserializePresets(gson.fromJson(json.get("presets").getAsString(), new TypeToken<ConcurrentHashMap<String, HashMap<Setting, String>>>(){}.getType()));
             Map<Long, UUID> activeGiveaways = gson.fromJson(json.get("activeGiveaways").getAsString(), new TypeToken<ConcurrentHashMap<Long, UUID>>(){}.getType());
-            long roleId = json.get("managerRole") == null ? 0 : json.get("managerRole").getAsLong();
-            return new Server(this.bot, id, activeGiveaways, presets, roleId);
+            Set<Long> roleIds = gson.fromJson(json.get("managerRoles").getAsString(), new TypeToken<HashSet<Long>>(){}.getType());
+            return new Server(this.bot, id, activeGiveaways, presets, roleIds);
         };
     }
 

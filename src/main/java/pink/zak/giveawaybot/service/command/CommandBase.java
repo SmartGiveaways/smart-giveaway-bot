@@ -26,17 +26,20 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 public class CommandBase extends ListenerAdapter {
     private final GiveawayBot bot;
     private final ServerCache serverCache;
     private final Set<SimpleCommand> commands = Sets.newHashSet();
     private final Cache<Long, Long> commandCooldowns;
+    private final Consumer<Throwable> deleteFailureThrowable;
 
     public CommandBase(GiveawayBot bot) {
         this.bot = bot;
         this.serverCache = bot.getServerCache();
         this.commandCooldowns = new CacheBuilder<Long, Long>().expireAfterAccess(3, TimeUnit.SECONDS).setControlling(bot).build();
+        this.deleteFailureThrowable = bot.getDeleteFailureThrowable();
         this.registerArgumentTypes();
     }
 
@@ -104,31 +107,30 @@ public class CommandBase extends ListenerAdapter {
                 return;
             }
             if (this.hasAccess(subResult, event.getMessage(), sender))
-            subResult.middleMan(sender, event, args);
+                subResult.middleMan(sender, event, args);
         }
     }
 
     private boolean hasAccess(Command simpleCommand, Message message, Member member) {
-        if (simpleCommand.requiresManager()) {
-            if (!this.serverCache.get(member.getGuild().getIdLong()).join().canMemberManage(member)) {
-                message.getTextChannel().sendMessage(":x: No permission").queue(botReply -> {
-                    message.delete().queueAfter(10, TimeUnit.SECONDS, null, this.bot.getDeleteFailureThrowable(), this.bot.getThreadManager().getUpdaterExecutor());
-                    botReply.delete().queueAfter(10, TimeUnit.SECONDS, null, this.bot.getDeleteFailureThrowable(), this.bot.getThreadManager().getUpdaterExecutor());
-                });
-                return false;
-            }
+        if (simpleCommand.requiresManager() && !this.serverCache.get(member.getGuild().getIdLong()).join().canMemberManage(member)) {
+            message.getTextChannel().sendMessage(":x: No permission").queue(botReply -> {
+                message.delete().queueAfter(10, TimeUnit.SECONDS, null, this.deleteFailureThrowable, this.bot.getThreadManager().getUpdaterExecutor());
+                botReply.delete().queueAfter(10, TimeUnit.SECONDS, null, this.deleteFailureThrowable, this.bot.getThreadManager().getUpdaterExecutor());
+            });
+            return false;
         }
         return true;
     }
 
     private boolean isOnCooldown(TextChannel channel, Message message, Member member) {
-        if (this.commandCooldowns.contains(member.getIdLong()) && System.currentTimeMillis() - this.commandCooldowns.getSync(member.getIdLong()) < 3000) {
+        /*if (member.getIdLong() != 240721111174610945L && this.commandCooldowns.contains(member.getIdLong()) && System.currentTimeMillis() - this.commandCooldowns.getSync(member.getIdLong()) < 3000) {
             channel.sendMessage("<@" + member.getIdLong() + "> You must wait 3 seconds inbetween commands.").queue(botReply -> {
-                message.delete().queueAfter(10, TimeUnit.SECONDS, null, this.bot.getDeleteFailureThrowable(), this.bot.getThreadManager().getUpdaterExecutor());
-                botReply.delete().queueAfter(10, TimeUnit.SECONDS, null, this.bot.getDeleteFailureThrowable(), this.bot.getThreadManager().getUpdaterExecutor());
+                message.delete().queueAfter(10, TimeUnit.SECONDS, null, this.deleteFailureThrowable, this.bot.getThreadManager().getUpdaterExecutor());
+                botReply.delete().queueAfter(10, TimeUnit.SECONDS, null, this.deleteFailureThrowable, this.bot.getThreadManager().getUpdaterExecutor());
             });
             return true;
         }
+        return false;*/
         return false;
     }
 
@@ -150,7 +152,7 @@ public class CommandBase extends ListenerAdapter {
                     if (id == null) {
                         return Optional.empty();
                     }
-                    return Optional.of(this.bot.getJda().retrieveUserById(id).complete());
+                    return Optional.of(this.bot.getShardManager().retrieveUserById(id).complete());
                 })
                 .registerArgumentType(TextChannel.class, (string, guild) -> {
                     String id = string.length() == 21 ? string.substring(2, 20) : string.length() == 22 ? string.substring(3, 21) : null;

@@ -1,4 +1,4 @@
-package pink.zak.giveawaybot.service.console;
+package pink.zak.giveawaybot.service.listener;
 
 import pink.zak.giveawaybot.service.bot.SimpleBot;
 

@@ -37,8 +37,10 @@ public class UserCache extends AccessExpiringCache<Long, User> {
 
     public User getUserSync(long userId) {
         User retrieved = super.cacheMap.get(userId);
+        super.hits.incrementAndGet();
         if (retrieved == null) {
             User loaded = this.storage.load(this.getUserValues(userId));
+            super.loads.incrementAndGet();
             if (loaded != null) {
                 return this.setSync(userId, loaded);
             }

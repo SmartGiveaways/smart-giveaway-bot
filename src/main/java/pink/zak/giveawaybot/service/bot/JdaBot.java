@@ -1,16 +1,18 @@
 package pink.zak.giveawaybot.service.bot;
 
+import com.google.common.collect.Sets;
 import lombok.SneakyThrows;
-import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
+import net.dv8tion.jda.api.sharding.ShardManager;
 import net.dv8tion.jda.internal.utils.JDALogger;
 import org.slf4j.Logger;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.service.command.CommandBase;
 import pink.zak.giveawaybot.service.command.command.SimpleCommand;
 import pink.zak.giveawaybot.service.config.ConfigStore;
-import pink.zak.giveawaybot.service.console.ConsoleListener;
+import pink.zak.giveawaybot.service.listener.ConsoleListener;
+import pink.zak.giveawaybot.service.listener.ReadyListener;
 import pink.zak.giveawaybot.service.registry.Registry;
 import pink.zak.giveawaybot.service.storage.BackendFactory;
 import pink.zak.giveawaybot.service.storage.settings.StorageSettings;
@@ -29,7 +31,7 @@ public abstract class JdaBot implements SimpleBot {
     private final Path basePath;
     private CommandBase commandBase;
     private String prefix;
-    private JDA jda;
+    private ShardManager shardManager;
 
     @SneakyThrows
     public JdaBot(UnaryOperator<Path> subBasePath) {
@@ -45,17 +47,14 @@ public abstract class JdaBot implements SimpleBot {
 
     @SneakyThrows
     @Override
-    public void initialize(GiveawayBot bot, String token, String prefix, Set<GatewayIntent> intents, UnaryOperator<JDABuilder> jdaOperator) {
+    public void initialize(GiveawayBot bot, String token, String prefix, Set<GatewayIntent> intents, UnaryOperator<DefaultShardManagerBuilder> jdaOperator) {
         this.commandBase = new CommandBase(bot);
         this.prefix = prefix;
         try {
-            JDABuilder builder = JDABuilder.createDefault(token);
-            if (!intents.isEmpty()) {
-                builder.enableIntents(intents);
-            }
+            DefaultShardManagerBuilder builder = DefaultShardManagerBuilder.createDefault(token, intents == null ? Sets.newHashSet() : intents)
+                    .addEventListeners(this.commandBase, new ReadyListener(this));
             jdaOperator.apply(builder);
-            this.jda = builder.build().awaitReady();
-            this.registerListeners(this.commandBase);
+            this.shardManager = builder.build();
         } catch (LoginException e) {
             logger.error("Unable to log into Discord, the following error occurred:", e);
         }
@@ -75,7 +74,7 @@ public abstract class JdaBot implements SimpleBot {
     }
 
     @Override
-    public void registerCommands(pink.zak.giveawaybot.service.command.command.SimpleCommand... commands) {
+    public void registerCommands(SimpleCommand... commands) {
         for (SimpleCommand command : commands) {
             this.commandBase.registerCommand(command);
         }
@@ -83,13 +82,13 @@ public abstract class JdaBot implements SimpleBot {
 
     @Override
     public void registerListeners(Object... listeners) {
-        this.jda.addEventListener(listeners);
+        this.shardManager.addEventListener(listeners);
     }
 
 
     @Override
     public boolean isInitialized() {
-        return this.jda != null;
+        return this.shardManager != null;
     }
 
     @Override
@@ -123,7 +122,7 @@ public abstract class JdaBot implements SimpleBot {
     }
 
     @Override
-    public JDA getJda() {
-        return this.jda;
+    public ShardManager getShardManager() {
+        return this.shardManager;
     }
 }

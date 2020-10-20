@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 public class Cache<K, V> {
@@ -16,6 +17,8 @@ public class Cache<K, V> {
     protected final ExecutorService executor;
     protected final Consumer<V> removalAction;
     protected final Storage<V> storage;
+    protected final AtomicInteger hits = new AtomicInteger();
+    protected final AtomicInteger loads = new AtomicInteger();
 
     public Cache(GiveawayBot bot) {
         this(bot, null, null);
@@ -29,11 +32,13 @@ public class Cache<K, V> {
 
     public V getSync(K key) {
         V retrieved = this.cacheMap.get(key);
+        this.hits.incrementAndGet();
         if (retrieved == null) {
             if (this.storage == null) {
                 return null;
             }
             V loaded = this.storage.load(key.toString());
+            this.loads.incrementAndGet();
             if (loaded != null) {
                 return this.setSync(key, loaded);
             }
@@ -111,5 +116,21 @@ public class Cache<K, V> {
 
     public Cache<K, V> getCache() {
         return this;
+    }
+
+    public AtomicInteger getHits() {
+        return this.hits;
+    }
+
+    public void resetHits() {
+        this.hits.set(0);
+    }
+
+    public AtomicInteger getLoads() {
+        return this.loads;
+    }
+
+    public void resetLoads() {
+        this.loads.set(0);
     }
 }

@@ -17,7 +17,7 @@ public class UserController {
         return this.serverCache.get(serverId).thenApply(server -> {
             return server.getUserCache().getSync(userId);
         }).exceptionally(ex -> {
-            ex.printStackTrace();
+            GiveawayBot.getLogger().error("", ex);
             return null;
         });
     }
