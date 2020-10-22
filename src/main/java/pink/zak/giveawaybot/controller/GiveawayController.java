@@ -6,6 +6,7 @@ import lombok.SneakyThrows;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageReaction;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.exceptions.RateLimitedException;
@@ -23,6 +24,7 @@ import pink.zak.giveawaybot.models.User;
 import pink.zak.giveawaybot.service.colour.Palette;
 import pink.zak.giveawaybot.service.time.Time;
 import pink.zak.giveawaybot.service.types.NumberUtils;
+import pink.zak.giveawaybot.service.types.ReactionContainer;
 import pink.zak.giveawaybot.storage.GiveawayStorage;
 import pink.zak.giveawaybot.threads.ThreadFunction;
 import pink.zak.giveawaybot.threads.ThreadManager;
@@ -76,7 +78,12 @@ public class GiveawayController {
                         .setFooter("Ends in " + Time.format(length) + " with " + winnerAmount + " winner" + (winnerAmount > 1 ? "s" : ""))
                         .build()).complete(true);
                 if ((boolean) preset.getSetting(Setting.ENABLE_REACT_TO_ENTER)) {
-                    message.addReaction("\uD83C\uDF89").queue();
+                    MessageReaction.ReactionEmote reaction = ((ReactionContainer) preset.getSetting(Setting.REACT_TO_ENTER_EMOJI)).getReactionEmote();
+                    if (reaction.isEmoji()) {
+                        message.addReaction(reaction.getEmoji()).queue();
+                    } else {
+                        message.addReaction(reaction.getEmote()).queue();
+                    }
                 }
                 Giveaway giveaway = new Giveaway(message.getIdLong(), giveawayChannel.getIdLong(), giveawayChannel.getGuild().getIdLong(), endTime, winnerAmount, presetName, giveawayItem);
                 this.giveawayCache.addGiveaway(giveaway);

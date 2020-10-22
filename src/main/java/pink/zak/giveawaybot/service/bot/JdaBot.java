@@ -2,6 +2,7 @@ package pink.zak.giveawaybot.service.bot;
 
 import com.google.common.collect.Sets;
 import lombok.SneakyThrows;
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
@@ -124,5 +125,10 @@ public abstract class JdaBot implements SimpleBot {
     @Override
     public ShardManager getShardManager() {
         return this.shardManager;
+    }
+
+    @Override
+    public JDA getJda() {
+        return this.shardManager.getShards().stream().findAny().get();
     }
 }

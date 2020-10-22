@@ -21,7 +21,7 @@ public class GiveawayCommand extends SimpleCommand {
 
     public GiveawayCommand(GiveawayBot bot) {
         super(bot, false, "giveaway");
-        this.setAliases("help");
+        this.setAliases("g", "help");
         this.setSubCommands(
                 new CreateSub(bot)
         );

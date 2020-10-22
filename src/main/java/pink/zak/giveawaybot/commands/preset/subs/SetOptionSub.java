@@ -43,17 +43,20 @@ public class SetOptionSub extends SubCommand {
                 return;
             }
             String inputValue = this.parseArgument(args, event.getGuild(), 3);
-            if (!setting.checkInput(inputValue)) {
+            if (!setting.checkInputAny(inputValue, event.getGuild())) {
                 event.getChannel().sendMessage(":x: Incorrect input for setting ".concat(settingName)).queue();
                 return;
             }
-            Object parsedValue = setting.parse(inputValue);
+            Object parsedValue = setting.parseAny(inputValue, event.getGuild());
             if (!setting.checkLimit(parsedValue)) {
                 event.getChannel().sendMessage(":x:".concat(setting.getLimitMessage())).queue();
                 return;
             }
-            preset.setSetting(setting, setting.parse(inputValue));
-            event.getChannel().sendMessage("Set the " + setting.getPrimaryConfigName() + " setting to " + inputValue + ".").queue();
+            preset.setSetting(setting, parsedValue);
+            event.getChannel().sendMessage("Set the " + setting.getPrimaryConfigName() + " setting to " + parsedValue + ".").queue();
+        }).exceptionally(ex -> {
+            ex.printStackTrace();
+            return null;
         });
     }
 }

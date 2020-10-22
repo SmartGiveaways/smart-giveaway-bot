@@ -15,11 +15,13 @@ import java.util.Map;
 
 public class PresetOptionsSub extends SubCommand {
     private final ServerCache serverCache;
+    private final Preset defaultPreset;
     private final Palette palette;
 
     public PresetOptionsSub(GiveawayBot bot) {
         super(bot);
         this.serverCache = bot.getServerCache();
+        this.defaultPreset = bot.getDefaults().getDefaultPreset();
         this.palette = bot.getDefaults().getPalette();
 
         this.addFlatWithAliases("settings", "setting", "options", "option");
@@ -30,7 +32,7 @@ public class PresetOptionsSub extends SubCommand {
     public void onExecute(Member sender, MessageReceivedEvent event, List<String> args) {
         this.serverCache.get(event.getGuild().getIdLong()).thenAccept(server -> {
             String presetName = this.parseArgument(args, event.getGuild(), 1);
-            Preset preset = server.getPreset(presetName);
+            Preset preset = presetName.equalsIgnoreCase("default") ? this.defaultPreset : server.getPreset(presetName);
             if (preset == null) {
                 event.getChannel().sendMessage(":x: Could not find a preset called ".concat(presetName)).queue();
                 return;

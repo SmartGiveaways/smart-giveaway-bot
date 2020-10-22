@@ -35,6 +35,7 @@ dependencies {
     implementation 'org.apache.commons:commons-lang3:3.0'
     implementation 'net.dv8tion:JDA:4.2.0_204'
     implementation 'com.timvisee:yamlwrapper:1.1.1'
+    implementation 'com.vdurmont:emoji-java:5.1.1'
     implementation 'org.mongodb:mongo-java-driver:3.12.7'
     implementation 'redis.clients:jedis:3.3.0'
     compileOnly 'org.projectlombok:lombok:1.18.12'

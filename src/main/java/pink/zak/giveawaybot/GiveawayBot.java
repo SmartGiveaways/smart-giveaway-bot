@@ -21,6 +21,7 @@ import pink.zak.giveawaybot.listener.MessageSendListener;
 import pink.zak.giveawaybot.listener.ReactionAddListener;
 import pink.zak.giveawaybot.metrics.GiveawayQuery;
 import pink.zak.giveawaybot.service.bot.JdaBot;
+import pink.zak.giveawaybot.service.config.Config;
 import pink.zak.giveawaybot.storage.GiveawayStorage;
 import pink.zak.giveawaybot.storage.ServerStorage;
 import pink.zak.giveawaybot.storage.redis.RedisManager;
@@ -40,10 +41,10 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class GiveawayBot extends JdaBot { // BTW yes I know there's a token here RN. Can't be bothered to put it into the config file and it's only accessible on my PC locally :evil_laugh:
-    private final Metrics metricsLogger = new Metrics(new Metrics.Config("http://172.18.113.45:8086", "u-TyDkZFEVd25zKeFoAGC6PhcFaU1fR3pnGzZBdg7cIKODmWFBH_DIR7o8GSdmVqbg7tdoAw_20ozg__wBy7yA==".toCharArray(), "SmartGiveaways", "bot", 5));
+public class GiveawayBot extends JdaBot {
+    private Defaults defaults;
+    private Metrics metricsLogger;
     private Consumer<Throwable> deleteFailureThrowable;
-    private final Defaults defaults = new Defaults();
     private ThreadManager threadManager;
     private RedisManager redisManager;
     private GiveawayStorage giveawayStorage;
@@ -67,6 +68,12 @@ public class GiveawayBot extends JdaBot { // BTW yes I know there's a token here
         this.configRelations();
         this.setupThrowable();
         this.setupStorage();
+        Config settings = this.getConfigStore().getConfig("settings");
+
+        this.metricsLogger = new Metrics(new Metrics.Config(settings.string("influx-url"),
+                settings.string("influx-token").toCharArray(),
+                settings.string("influx-org"),
+                settings.string("influx-bucket"), 5));
 
         this.threadManager = new ThreadManager();
         this.redisManager = new RedisManager(this);
@@ -79,6 +86,7 @@ public class GiveawayBot extends JdaBot { // BTW yes I know there's a token here
         this.initialize(this, this.getConfigStore().commons().get("token"), ">", this.getGatewayIntents(), shard -> shard
                 .disableCache(CacheFlag.VOICE_STATE)); // This should basically be called as late as physically possible
 
+        this.defaults = new Defaults(this);
         this.entryPipeline = new EntryPipeline(this);
 
         Runtime.getRuntime().addShutdownHook(new ShutdownHook(this));

@@ -2,6 +2,7 @@ package pink.zak.giveawaybot.storage;
 
 import com.google.common.collect.Maps;
 import com.google.gson.reflect.TypeToken;
+import net.dv8tion.jda.api.entities.Guild;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.enums.Setting;
 import pink.zak.giveawaybot.models.Preset;
@@ -37,7 +38,7 @@ public class ServerStorage extends Storage<Server> {
     public Deserializer<Server> deserializer() {
         return (json, gson) -> {
             long id = json.get("_id").getAsLong();
-            Map<String, Preset> presets = this.deserializePresets(gson.fromJson(json.get("presets").getAsString(), new TypeToken<ConcurrentHashMap<String, HashMap<Setting, String>>>(){}.getType()));
+            Map<String, Preset> presets = this.deserializePresets(id, gson.fromJson(json.get("presets").getAsString(), new TypeToken<ConcurrentHashMap<String, HashMap<Setting, String>>>(){}.getType()));
             Map<Long, UUID> activeGiveaways = gson.fromJson(json.get("activeGiveaways").getAsString(), new TypeToken<ConcurrentHashMap<Long, UUID>>(){}.getType());
             Set<Long> roleIds = gson.fromJson(json.get("managerRoles").getAsString(), new TypeToken<HashSet<Long>>(){}.getType());
             return new Server(this.bot, id, activeGiveaways, presets, roleIds);
@@ -57,12 +58,16 @@ public class ServerStorage extends Storage<Server> {
         return serialized;
     }
 
-    private Map<String, Preset> deserializePresets(Map<String, Map<Setting, String>> serialized) {
+    private Map<String, Preset> deserializePresets(long guildId, Map<String, Map<Setting, String>> serialized) {
+        if (serialized.isEmpty()) {
+            return Maps.newConcurrentMap();
+        }
+        Guild guild = this.bot.getJda().getGuildById(guildId);
         Map<String, Preset> deserialized = Maps.newHashMap();
         for (Map.Entry<String, Map<Setting, String>> entry : serialized.entrySet()) {
             EnumMap<Setting, Object> enumMap = Maps.newEnumMap(Setting.class);
             for (Map.Entry<Setting, String> innerEntry : entry.getValue().entrySet()) {
-                enumMap.put(innerEntry.getKey(), innerEntry.getKey().parse(innerEntry.getValue()));
+                enumMap.put(innerEntry.getKey(), innerEntry.getKey().parseAny(innerEntry.getValue(), guild));
             }
             deserialized.put(entry.getKey(), new Preset(entry.getKey(), enumMap));
         }

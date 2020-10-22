@@ -2,6 +2,11 @@
 
 token: 'Your token will be safe in this value'
 
+influx-url: 'https://your.instance.com'
+influx-token: 'your-token'
+influx-org: SmartGiveaways
+influx-bucket: bot
+
 redis-host: 127.24.114.43
 redis-port: 6379
 use-redis-ssl: true
