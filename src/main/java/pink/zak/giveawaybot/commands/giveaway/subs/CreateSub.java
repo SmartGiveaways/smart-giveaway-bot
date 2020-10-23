@@ -51,7 +51,9 @@ public class CreateSub extends SubCommand {
                 event.getChannel().sendMessage(":x: An error occurred. Try again in a minute when the bot is less busy.").queue();
                 break;
             case SUCCESS:
-                event.getChannel().sendMessage(":white_check_mark: Created your giveaway" + (responseChannel == giveawayChannel ? "." : " in " + giveawayChannel.getAsMention() + ".")).queue();
+                if (responseChannel != giveawayChannel) {
+                    event.getChannel().sendMessage(":white_check_mark: Created your giveaway in " + giveawayChannel.getAsMention() + ".").queue();
+                }
         }
     }
 

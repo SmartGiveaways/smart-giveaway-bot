@@ -18,11 +18,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class ReactionAddListener extends ListenerAdapter {
     private final ServerCache serverCache;
     private final GiveawayCache giveawayCache;
+    private final Preset defaultPreset;
     private final EnumMap<EntryType, AtomicInteger> baseMap;
 
     public ReactionAddListener(GiveawayBot bot) {
         this.serverCache = bot.getServerCache();
         this.giveawayCache = bot.getGiveawayCache();
+        this.defaultPreset = bot.getDefaults().getDefaultPreset();
 
         this.baseMap = Maps.newEnumMap(EntryType.class);
         this.baseMap.put(EntryType.REACTION, new AtomicInteger(1));
@@ -42,7 +44,7 @@ public class ReactionAddListener extends ListenerAdapter {
                 if (giveaway.enteredUsers().contains(userId)) {
                     return;
                 }
-                Preset preset = server.getPreset(giveaway.presetName());
+                Preset preset = giveaway.presetName().equals("default") ? this.defaultPreset : server.getPreset(giveaway.presetName());
                 MessageReaction.ReactionEmote messageReaction = event.getReactionEmote();
                 MessageReaction.ReactionEmote setReaction = ((ReactionContainer) preset.getSetting(Setting.REACT_TO_ENTER_EMOJI)).getReactionEmote();
                 if (messageReaction.isEmoji() != setReaction.isEmoji()

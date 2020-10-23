@@ -58,7 +58,12 @@ public class GiveawayCommand extends SimpleCommand {
                         >preset list - Lists all your presets
                         >preset create <name> - Creates a new preset for giveaways
                         >preset settings <preset> - Shows the set values for a preset
-                        >preset set <preset> <setting> <value> - Sets a value for a preset""", false);
+                        >preset set <preset> <setting> <value> - Sets a value for a preset
+                                                
+                        >ban <user> - Visibly bans a user from giveaways.
+                        >sban <user> - Shadow bans a user from giveaways. Almost impossible to tell.
+                        >unban <user> - Removes a user's ban or shadow ban.
+                        """, false);
         this.fullMessageEmbed = embedBuilder.build();
     }
 }
