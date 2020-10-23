@@ -28,6 +28,9 @@ public class EntryPipeline {
                 return;
             }
             server.getUserCache().get(userId).thenAccept(user -> {
+                if (user.isBanned()) {
+                    return;
+                }
                 for (UUID giveawayId : server.getActiveGiveaways().values()) {
                     this.giveawayCache.get(giveawayId).thenAccept(giveaway -> {
                         if (giveaway == null) {

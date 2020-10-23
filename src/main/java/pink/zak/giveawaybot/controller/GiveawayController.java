@@ -142,16 +142,17 @@ public class GiveawayController {
                 Map<Long, BigInteger> userEntriesMap = Maps.newHashMap();
                 for (long enteredUserId : giveaway.enteredUsers()) {
                     User user = server.getUserCache().getSync(enteredUserId);
-                    if (user != null) {
-                        Map<EntryType, AtomicInteger> entries = user.entries().get(giveaway.uuid());
-                        if (entries != null) {
-                            BigInteger totalUserEntries = BigInteger.ZERO;
-                            for (AtomicInteger entryTypeAmount : entries.values()) {
-                                totalEntries = totalEntries.add(BigInteger.valueOf(entryTypeAmount.get()));
-                                totalUserEntries = totalUserEntries.add(BigInteger.valueOf(entryTypeAmount.get()));
-                            }
-                            userEntriesMap.put(user.id(), totalUserEntries);
+                    if (user == null || user.isBanned() || user.isShadowBanned()) {
+                        continue;
+                    }
+                    Map<EntryType, AtomicInteger> entries = user.entries().get(giveaway.uuid());
+                    if (entries != null) {
+                        BigInteger totalUserEntries = BigInteger.ZERO;
+                        for (AtomicInteger entryTypeAmount : entries.values()) {
+                            totalEntries = totalEntries.add(BigInteger.valueOf(entryTypeAmount.get()));
+                            totalUserEntries = totalUserEntries.add(BigInteger.valueOf(entryTypeAmount.get()));
                         }
+                        userEntriesMap.put(user.id(), totalUserEntries);
                     }
                 }
                 GiveawayBot.getLogger().info(userEntriesMap.toString());

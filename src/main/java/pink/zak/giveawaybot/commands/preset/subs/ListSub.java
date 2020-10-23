@@ -33,7 +33,7 @@ public class ListSub extends SubCommand {
             }
             event.getChannel().sendMessage(new EmbedBuilder()
                     .setColor(this.palette.primary())
-                    .setTitle("Current Presets (**" + server.getPresets().size() + "**)")
+                    .setTitle("Current Presets (**" + (server.getPresets().size() + 1) + "**)")
                     .setDescription(listBuilder.toString())
                     .build()).queue();
         });

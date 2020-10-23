@@ -143,16 +143,16 @@ public class CommandBase extends ListenerAdapter {
                 .registerArgumentType(Member.class, (string, guild) -> {
                     String id = string.length() == 21 ? string.substring(2, 20) : string.length() == 22 ? string.substring(3, 21) : null;
                     if (id == null) {
-                        return Optional.empty();
+                        return null;
                     }
-                    return Optional.of(guild.retrieveMemberById(id).complete());
+                    return guild.retrieveMemberById(id).complete();
                 })
                 .registerArgumentType(User.class, (string, guild) -> {
                     String id = string.length() == 21 ? string.substring(2, 20) : string.length() == 22 ? string.substring(3, 21) : null;
                     if (id == null) {
-                        return Optional.empty();
+                        return null;
                     }
-                    return Optional.of(this.bot.getShardManager().retrieveUserById(id).complete());
+                    return this.bot.getShardManager().retrieveUserById(id).complete();
                 })
                 .registerArgumentType(TextChannel.class, (string, guild) -> {
                     String id = string.length() == 21 ? string.substring(2, 20) : string.length() == 22 ? string.substring(3, 21) : null;

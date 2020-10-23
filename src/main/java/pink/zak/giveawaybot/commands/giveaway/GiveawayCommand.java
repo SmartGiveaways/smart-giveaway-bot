@@ -1,8 +1,8 @@
 package pink.zak.giveawaybot.commands.giveaway;
 
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.cache.ServerCache;
@@ -18,6 +18,8 @@ public class GiveawayCommand extends SimpleCommand {
     private final ServerCache serverCache;
     private final ThreadManager threadManager;
     private final Palette palette;
+    private MessageEmbed limitedMessageEmbed;
+    private MessageEmbed fullMessageEmbed;
 
     public GiveawayCommand(GiveawayBot bot) {
         super(bot, false, "giveaway");
@@ -29,27 +31,34 @@ public class GiveawayCommand extends SimpleCommand {
         this.palette = bot.getDefaults().getPalette();
         this.serverCache = bot.getServerCache();
         this.threadManager = bot.getThreadManager();
+        this.buildMessages();
     }
 
     @Override
     public void onExecute(Member sender, MessageReceivedEvent event, List<String> args) {
         this.serverCache.get(event.getGuild().getIdLong()).thenAccept(server -> {
-            EmbedBuilder embedBuilder = new EmbedBuilder()
-                    .setTitle("Smart Giveaways Help")
-                    .setColor(this.palette.primary())
-                    .addField("General Commands", ">entries", false);
-            if (sender.hasPermission(Permission.ADMINISTRATOR) || server.canMemberManage(sender)) {
-                embedBuilder.addField( "Admin Commands",
-                        """
-                                >giveaway create <preset> <length> <#channel> <no. winners> <topic>
-                                >preset create <name> - Creates a new preset for giveaways
-                                >preset settings <preset> - Shows the set values for a preset
-                                >preset set <preset> <setting> <value> - Sets a value for a preset""", false);
-            }
-            event.getChannel().sendMessage(embedBuilder.build()).queue(embed -> {
+            event.getChannel().sendMessage(server.canMemberManage(sender) ? this.fullMessageEmbed : this.limitedMessageEmbed).queue(embed -> {
                 embed.delete().queueAfter(60, TimeUnit.SECONDS, null, this.bot.getDeleteFailureThrowable(), this.threadManager.getUpdaterExecutor());
                 event.getMessage().delete().queueAfter(60, TimeUnit.SECONDS, null, this.bot.getDeleteFailureThrowable(), this.threadManager.getUpdaterExecutor());
             });
         });
+    }
+
+    private void buildMessages() {
+        EmbedBuilder embedBuilder = new EmbedBuilder()
+                .setTitle("Smart Giveaways Help")
+                .setColor(this.palette.primary())
+                .addField("General Commands", ">entries", false);
+        this.limitedMessageEmbed = embedBuilder.build();
+
+        embedBuilder.addField("Admin Commands",
+                """
+                        >giveaway create <preset> <length> <#channel> <no. winners> <topic>
+                                                
+                        >preset list - Lists all your presets
+                        >preset create <name> - Creates a new preset for giveaways
+                        >preset settings <preset> - Shows the set values for a preset
+                        >preset set <preset> <setting> <value> - Sets a value for a preset""", false);
+        this.fullMessageEmbed = embedBuilder.build();
     }
 }

@@ -30,7 +30,7 @@ public class EligibilityCheckStep {
             user.entries().put(giveaway.uuid(), Maps.newEnumMap(EntryType.class));
             giveaway.enteredUsers().add(user.id());
         }
-        if (user.hasEntries(giveaway.uuid()) && user.getEntries(giveaway.uuid()).compareTo(new BigInteger(String.valueOf(preset.getSetting(Setting.MAX_ENTRIES)))) > -1) {
+        if (user.hasEntries(giveaway.uuid()) && user.entries(giveaway.uuid()).compareTo(new BigInteger(String.valueOf(preset.getSetting(Setting.MAX_ENTRIES)))) > -1) {
             System.out.println("Over max entries");
             return;
         }

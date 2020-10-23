@@ -10,6 +10,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pink.zak.giveawaybot.cache.GiveawayCache;
 import pink.zak.giveawaybot.cache.ServerCache;
+import pink.zak.giveawaybot.commands.ban.BanCommand;
+import pink.zak.giveawaybot.commands.ban.ShadowBanCommand;
+import pink.zak.giveawaybot.commands.ban.UnbanCommand;
 import pink.zak.giveawaybot.commands.entries.EntriesCommand;
 import pink.zak.giveawaybot.commands.giveaway.GiveawayCommand;
 import pink.zak.giveawaybot.commands.preset.PresetCommand;
@@ -96,6 +99,9 @@ public class GiveawayBot extends JdaBot {
     public void onConnect() {
         this.giveawayController = new GiveawayController(this); // Makes use of JDA, retrieving messages
         this.registerCommands(
+                new BanCommand(this),
+                new ShadowBanCommand(this),
+                new UnbanCommand(this),
                 new EntriesCommand(this),
                 new GiveawayCommand(this),
                 new PresetCommand(this)

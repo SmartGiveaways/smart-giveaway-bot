@@ -2,6 +2,7 @@ package pink.zak.giveawaybot.commands.preset;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.commands.preset.subs.*;
@@ -13,6 +14,7 @@ import java.util.concurrent.TimeUnit;
 
 public class PresetCommand extends SimpleCommand {
     private final Palette palette;
+    private MessageEmbed messageEmbed;
 
     public PresetCommand(GiveawayBot bot) {
         super(bot, "preset");
@@ -30,20 +32,28 @@ public class PresetCommand extends SimpleCommand {
                 setupSub*/
         );
         // bot.registerListeners(setupSub);
+        this.buildMessage();
     }
 
     @Override
     public void onExecute(Member sender, MessageReceivedEvent event, List<String> args) {
-        event.getChannel().sendMessage(new EmbedBuilder()
-                .setTitle("Preset Help")
-                .setColor(this.palette.primary())
-                .addField("Commands",
-                        ">preset create <name>\n" +
-                                ">preset settings <preset>\n" +
-                                ">preset set <preset> <settings> <value>", false)
-                .build()).queue(message -> {
+        event.getChannel().sendMessage(this.messageEmbed).queue(message -> {
             message.delete().queueAfter(60, TimeUnit.SECONDS, unused -> {
             }, this.bot.getDeleteFailureThrowable());
         });
+    }
+
+    private void buildMessage() {
+        this.messageEmbed = new EmbedBuilder()
+                .setTitle("Preset Help")
+                .setColor(this.palette.primary())
+                .addField("Commands",
+                        """
+                                >preset list
+                                >preset create <name>
+                                >preset settings <preset>
+                                >preset set <preset> <settings> <value>
+                                """, false)
+                .build();
     }
 }

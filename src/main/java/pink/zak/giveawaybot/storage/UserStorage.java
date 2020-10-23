@@ -33,6 +33,8 @@ public class UserStorage extends Storage<User> {
         return (user, json, gson) -> {
             json.addProperty("userId", String.valueOf(user.id()));
             json.addProperty("serverId", String.valueOf(this.serverId));
+            json.addProperty("banned", String.valueOf(user.isBanned()));
+            json.addProperty("shadowBanned", String.valueOf(user.isShadowBanned()));
             json.addProperty("entries", gson.toJson(user.entries()));
             return json;
         };
@@ -42,8 +44,10 @@ public class UserStorage extends Storage<User> {
     public Deserializer<User> deserializer() {
         return (json, gson) -> {
             long id = json.get("userId").getAsLong();
+            boolean banned = json.get("banned").getAsBoolean();
+            boolean shadowBanned = json.get("shadowBanned").getAsBoolean();
             ConcurrentHashMap<UUID, EnumMap<EntryType, AtomicInteger>> entries = gson.fromJson(json.get("entries").getAsString(), new TypeToken<ConcurrentHashMap<UUID, EnumMap<EntryType, AtomicInteger>>>(){}.getType());
-            return new User(id, this.serverId, entries);
+            return new User(id, this.serverId, banned, shadowBanned, entries);
         };
     }
 

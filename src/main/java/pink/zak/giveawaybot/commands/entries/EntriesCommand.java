@@ -41,8 +41,14 @@ public class EntriesCommand extends SimpleCommand {
                 channel.sendMessage(":x: There are no active giveaways in this server.").queue();
                 return;
             }
-            Set<UUID> presentGiveaways = Sets.newHashSet();
             server.getUserCache().get(event.getAuthor().getIdLong()).thenAccept(user -> {
+                if (user.isBanned()) {
+                    event.getChannel().sendMessage(":x: You are banned from giveaways.").queue(message -> {
+                        message.delete().queueAfter(10, TimeUnit.SECONDS, null, this.deleteFailureThrowable);
+                    });
+                    return;
+                }
+                Set<UUID> presentGiveaways = Sets.newHashSet();
                 for (UUID giveawayId : server.getActiveGiveaways().values()) {
                     if (user.entries().containsKey(giveawayId) && user.hasEntries(giveawayId)) {
                         presentGiveaways.add(giveawayId);
@@ -56,7 +62,7 @@ public class EntriesCommand extends SimpleCommand {
                 }
                 StringBuilder descriptionBuilder = new StringBuilder();
                 for (UUID giveawayId : presentGiveaways) {
-                    BigInteger entries = user.getEntries(giveawayId);
+                    BigInteger entries = user.entries(giveawayId);
                     Giveaway giveaway = this.giveawayCache.getSync(giveawayId);
                     if (giveaway != null) {
                         descriptionBuilder.append("**" + giveaway.giveawayItem() + "** -> " + entries + " entr" + (entries.compareTo(BigInteger.ONE) < 1 ? "y" : "ies") + "\n");
