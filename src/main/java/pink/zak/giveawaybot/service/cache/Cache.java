@@ -5,9 +5,7 @@ import pink.zak.giveawaybot.service.storage.storage.Storage;
 import pink.zak.giveawaybot.threads.ThreadFunction;
 
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
@@ -24,10 +22,17 @@ public class Cache<K, V> {
         this(bot, null, null);
     }
 
-    public Cache(GiveawayBot bot, Storage<V> storage, Consumer<V> removalAction) {
+    public Cache(GiveawayBot bot, Consumer<V> removalAction, Storage<V> storage) {
+        this(bot, removalAction, storage, null, 0);
+    }
+
+    public Cache(GiveawayBot bot, Consumer<V> removalAction, Storage<V> storage, TimeUnit autoSaveTimeUnit, int autoSaveInterval) {
         this.executor = bot.getAsyncExecutor(ThreadFunction.STORAGE);
         this.removalAction = removalAction;
         this.storage = storage;
+        if (autoSaveTimeUnit != null && autoSaveInterval > 0) {
+            this.startAutoSave(bot.getThreadManager().getUpdaterExecutor(), autoSaveTimeUnit, autoSaveInterval);
+        }
     }
 
     public V getSync(K key) {
@@ -64,9 +69,13 @@ public class Cache<K, V> {
         return this.cacheMap.containsKey(key);
     }
 
+    public void save(K key) {
+        this.storage.save(key.toString(), this.getSync(key));
+    }
+
     public void invalidate(K key) {
         if (this.storage != null) {
-            this.storage.save(key.toString(), this.cacheMap.get(key));
+            this.save(key);
         }
         if (this.removalAction != null) {
             this.removalAction.accept(this.cacheMap.get(key));
@@ -132,5 +141,15 @@ public class Cache<K, V> {
 
     public void resetLoads() {
         this.loads.set(0);
+    }
+
+    private void startAutoSave(ScheduledExecutorService scheduledExecutor, TimeUnit timeUnit, int interval) {
+        scheduledExecutor.scheduleAtFixedRate(() -> {
+            this.executor.submit(() -> {
+                for (K key : this.cacheMap.keySet()) {
+                    this.save(key);
+                }
+            });
+        }, interval, interval, timeUnit);
     }
 }

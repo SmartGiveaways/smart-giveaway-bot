@@ -98,7 +98,7 @@ public class GiveawayController {
     }
 
     public void deleteGiveaway(Giveaway giveaway) {
-        this.giveawayCache.invalidate(giveaway.uuid(), false);
+        this.giveawayCache.invalidateAsync(giveaway.uuid(), false);
         this.serverCache.get(giveaway.serverId()).thenAccept(server -> {
             server.getActiveGiveaways().remove(giveaway.messageId());
             GiveawayBot.getLogger().info("Removing giveaway from server {}  :  {}", giveaway.serverId(), giveaway.uuid());

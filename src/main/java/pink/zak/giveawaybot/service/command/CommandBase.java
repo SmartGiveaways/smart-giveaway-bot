@@ -7,8 +7,10 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.hooks.SubscribeEvent;
+import net.dv8tion.jda.api.requests.ErrorResponse;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import pink.zak.giveawaybot.GiveawayBot;
@@ -145,14 +147,28 @@ public class CommandBase extends ListenerAdapter {
                     if (id == null) {
                         return null;
                     }
-                    return guild.retrieveMemberById(id).complete();
+                    try {
+                        return guild.retrieveMemberById(id).complete();
+                    } catch (ErrorResponseException ex) {
+                        if (!(ex.getErrorResponse() == ErrorResponse.UNKNOWN_USER)) {
+                            ex.printStackTrace();
+                        }
+                        return null;
+                    }
                 })
                 .registerArgumentType(User.class, (string, guild) -> {
                     String id = string.length() == 21 ? string.substring(2, 20) : string.length() == 22 ? string.substring(3, 21) : null;
                     if (id == null) {
                         return null;
                     }
-                    return this.bot.getShardManager().retrieveUserById(id).complete();
+                    try {
+                        return this.bot.getShardManager().retrieveUserById(id).complete();
+                    } catch (ErrorResponseException ex) {
+                        if (!(ex.getErrorResponse() == ErrorResponse.UNKNOWN_USER)) {
+                            ex.printStackTrace();
+                        }
+                        return null;
+                    }
                 })
                 .registerArgumentType(TextChannel.class, (string, guild) -> {
                     String id = string.length() == 21 ? string.substring(2, 20) : string.length() == 22 ? string.substring(3, 21) : null;

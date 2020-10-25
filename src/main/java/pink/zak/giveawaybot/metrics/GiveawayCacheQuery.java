@@ -6,7 +6,7 @@ import pink.zak.metrics.queries.QueryInterface;
 
 import java.util.function.BiFunction;
 
-public enum GiveawayQuery implements QueryInterface<GiveawayCache> {
+public enum GiveawayCacheQuery implements QueryInterface<GiveawayCache> {
 
     GIVEAWAYS((cache, point) -> {
         //GiveawayBot.getLogger().info("Adding cache siz " + cache.size());
@@ -24,10 +24,10 @@ public enum GiveawayQuery implements QueryInterface<GiveawayCache> {
         cache.resetLoads();
         return point;
     }),
-    ALL((profile, point) -> {
-        for (GiveawayQuery query : values()) {
+    ALL((cache, point) -> {
+        for (GiveawayCacheQuery query : values()) {
             if (!query.toString().equals("ALL")) {
-                query.get().apply(profile, point);
+                query.get().apply(cache, point);
             }
         }
         //System.out.println(" ");
@@ -36,7 +36,7 @@ public enum GiveawayQuery implements QueryInterface<GiveawayCache> {
 
     private final BiFunction<GiveawayCache, Point, Point> computation;
 
-    GiveawayQuery(BiFunction<GiveawayCache, Point, Point> computation) {
+    GiveawayCacheQuery(BiFunction<GiveawayCache, Point, Point> computation) {
         this.computation = computation;
     }
 
@@ -53,6 +53,6 @@ public enum GiveawayQuery implements QueryInterface<GiveawayCache> {
 
     @Override
     public String measurement() {
-        return "giveaway-metrics";
+        return "giveaway-cache-metrics";
     }
 }

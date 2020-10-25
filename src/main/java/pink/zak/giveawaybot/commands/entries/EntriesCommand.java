@@ -11,6 +11,8 @@ import pink.zak.giveawaybot.cache.ServerCache;
 import pink.zak.giveawaybot.models.Giveaway;
 import pink.zak.giveawaybot.service.colour.Palette;
 import pink.zak.giveawaybot.service.command.command.SimpleCommand;
+import pink.zak.giveawaybot.service.command.command.SubCommand;
+import pink.zak.giveawaybot.service.types.UserUtils;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -31,19 +33,46 @@ public class EntriesCommand extends SimpleCommand {
         this.giveawayCache = bot.getGiveawayCache();
         this.palette = bot.getDefaults().getPalette();
         this.deleteFailureThrowable = bot.getDeleteFailureThrowable();
+
+        this.setSubCommands(
+                new UserEntriesSub(bot)
+        );
     }
 
     @Override
     public void onExecute(Member sender, MessageReceivedEvent event, List<String> args) {
-        TextChannel channel = event.getTextChannel();
-        this.serverCache.get(event.getGuild().getIdLong()).thenAccept(server -> {
+        this.runLogic(sender, event.getTextChannel(), true);
+    }
+
+    private class UserEntriesSub extends SubCommand {
+
+        public UserEntriesSub(GiveawayBot bot) {
+            super(bot, true);
+
+            this.addArgument(Member.class); // target
+        }
+
+        @Override
+        public void onExecute(Member sender, MessageReceivedEvent event, List<String> args) {
+            Member target = this.parseArgument(args, event.getGuild(), 0);
+            if (target == null) {
+                event.getChannel().sendMessage(":x: Couldn't find that member :worried:").queue();
+                return;
+            }
+            runLogic(target, event.getTextChannel(), false);
+        }
+    }
+
+    private void runLogic(Member target, TextChannel channel, boolean self) {
+        String targetDisplay = self ? "You are " : UserUtils.getNameDiscrim(target) + " is ";
+        this.serverCache.get(channel.getGuild().getIdLong()).thenAccept(server -> {
             if (server.getActiveGiveaways().isEmpty()) {
                 channel.sendMessage(":x: There are no active giveaways in this server.").queue();
                 return;
             }
-            server.getUserCache().get(event.getAuthor().getIdLong()).thenAccept(user -> {
+            server.getUserCache().get(target.getIdLong()).thenAccept(user -> {
                 if (user.isBanned()) {
-                    event.getChannel().sendMessage(":x: You are banned from giveaways.").queue(message -> {
+                    channel.sendMessage(":x: " + targetDisplay + " banned from giveaways.").queue(message -> {
                         message.delete().queueAfter(10, TimeUnit.SECONDS, null, this.deleteFailureThrowable);
                     });
                     return;
@@ -55,7 +84,7 @@ public class EntriesCommand extends SimpleCommand {
                     }
                 }
                 if (presentGiveaways.isEmpty()) {
-                    channel.sendMessage(":x: You are not entered into any giveaways.").queue(message -> {
+                    channel.sendMessage(":x: " + targetDisplay + "not entered into any giveaways.").queue(message -> {
                         message.delete().queueAfter(10, TimeUnit.SECONDS, null, this.deleteFailureThrowable);
                     });
                     return;
@@ -69,7 +98,7 @@ public class EntriesCommand extends SimpleCommand {
                     }
                 }
                 channel.sendMessage(new EmbedBuilder()
-                        .setTitle("Giveaway Entries for " + sender.getEffectiveName() + "#" + sender.getUser().getDiscriminator())
+                        .setTitle("Giveaway Entries for " + UserUtils.getNameDiscrim(target))
                         .setColor(this.palette.primary())
                         .setDescription(descriptionBuilder.toString())
                         .build()).queue();

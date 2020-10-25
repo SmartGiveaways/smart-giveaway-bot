@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 public class GiveawayCache extends AccessExpiringCache<UUID, Giveaway> {
 
     public GiveawayCache(GiveawayBot bot) {
-        super(bot, bot.getGiveawayStorage(), TimeUnit.MINUTES, 10);
+        super(bot, bot.getGiveawayStorage(), TimeUnit.MINUTES, 10, TimeUnit.MINUTES, 2);
     }
 
     public void addGiveaway(Giveaway giveaway) {

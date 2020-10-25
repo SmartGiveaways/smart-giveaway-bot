@@ -12,14 +12,16 @@ public class CacheBuilder<K, V> {
     private CacheExpiryListener<K, V> expiryListener;
     private Consumer<V> removalAction;
     private Storage<V> storage;
-    private TimeUnit timeUnit;
-    private int delay;
+    private TimeUnit autoSaveTimeUnit;
+    private int autoSaveInterval;
+    private TimeUnit expiryTimeUnit;
+    private int expiryDelay;
 
     public Cache<K, V> build() {
-        if (this.timeUnit != null && this.delay > 0) {
-            return new AccessExpiringCache<>(this.bot, this.storage, this.expiryListener, this.removalAction, this.timeUnit, this.delay);
+        if (this.expiryTimeUnit != null && this.expiryDelay > 0) {
+            return new AccessExpiringCache<>(this.bot, this.storage, this.expiryListener, this.removalAction, this.expiryTimeUnit, this.expiryDelay, this.autoSaveTimeUnit, this.autoSaveInterval);
         }
-        return new Cache<>(this.bot, this.storage, this.removalAction);
+        return new Cache<>(this.bot, this.removalAction, this.storage, this.autoSaveTimeUnit, this.autoSaveInterval);
     }
 
     public CacheBuilder<K, V> setControlling(GiveawayBot bot) {
@@ -38,8 +40,14 @@ public class CacheBuilder<K, V> {
     }
 
     public CacheBuilder<K, V> expireAfterAccess(int delay, TimeUnit timeUnit) {
-        this.timeUnit = timeUnit;
-        this.delay = delay;
+        this.expiryTimeUnit = timeUnit;
+        this.expiryDelay = delay;
+        return this;
+    }
+
+    public CacheBuilder<K, V> autoSave(int delay, TimeUnit timeUnit) {
+        this.autoSaveTimeUnit = timeUnit;
+        this.autoSaveInterval = delay;
         return this;
     }
 

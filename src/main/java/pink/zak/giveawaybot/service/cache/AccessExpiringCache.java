@@ -18,14 +18,22 @@ public class AccessExpiringCache<K, V> extends Cache<K, V> {
     private final TimeUnit timeUnit;
     private final int delay;
 
-    public AccessExpiringCache(GiveawayBot bot, Storage<V> storage, CacheExpiryListener<K, V> expiryListener, Consumer<V> removalAction, TimeUnit timeUnit, int delay) {
-        super(bot, storage, removalAction);
+    public AccessExpiringCache(GiveawayBot bot, Storage<V> storage, CacheExpiryListener<K, V> expiryListener, Consumer<V> removalAction, TimeUnit timeUnit, int delay, TimeUnit autoSaveUnit, int autoSaveInterval) {
+        super(bot, removalAction, storage, autoSaveUnit, autoSaveInterval);
         this.scheduledExecutor = bot.getThreadManager().getUpdaterExecutor();
         this.expiryListener = expiryListener;
         this.timeUnit = timeUnit;
         this.delay = delay;
 
         this.startScheduledCleanup();
+    }
+
+    public AccessExpiringCache(GiveawayBot bot, Storage<V> storage, CacheExpiryListener<K, V> expiryListener, Consumer<V> removalAction, TimeUnit timeUnit, int delay) {
+        this(bot, storage, expiryListener, removalAction, timeUnit, delay, null, 0);
+    }
+
+    public AccessExpiringCache(GiveawayBot bot, Storage<V> storage, TimeUnit timeUnit, int delay, TimeUnit autoSaveUnit, int autoSaveInterval) {
+        this(bot, storage, null, null, timeUnit, delay, autoSaveUnit, autoSaveInterval);
     }
 
     public AccessExpiringCache(GiveawayBot bot, Storage<V> storage, TimeUnit timeUnit, int delay) {

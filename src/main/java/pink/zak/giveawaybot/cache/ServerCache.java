@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 public class ServerCache extends AccessExpiringCache<Long, Server> {
 
     public ServerCache(GiveawayBot bot) {
-        super(bot, bot.getServerStorage(), null, server -> server.getUserCache().invalidateAll(), TimeUnit.MINUTES,  10);
+        super(bot, bot.getServerStorage(), null, server -> server.getUserCache().invalidateAll(), TimeUnit.MINUTES,  10, TimeUnit.MINUTES, 5);
     }
 
     public void shutdown() {

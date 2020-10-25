@@ -26,7 +26,7 @@ public class Server {
         this.id = id;
         this.presets = presets;
         this.userStorage = new UserStorage(bot, this.getId());
-        this.userCache = new UserCache(bot, this.userStorage, TimeUnit.MINUTES, 10, this.id);
+        this.userCache = new UserCache(bot, this.userStorage, this.id);
         this.activeGiveaways = activeGiveaways;
         this.managerRoles = managerRoles;
     }

@@ -22,7 +22,7 @@ import pink.zak.giveawaybot.defaults.Defaults;
 import pink.zak.giveawaybot.entries.pipeline.EntryPipeline;
 import pink.zak.giveawaybot.listener.MessageSendListener;
 import pink.zak.giveawaybot.listener.ReactionAddListener;
-import pink.zak.giveawaybot.metrics.GiveawayQuery;
+import pink.zak.giveawaybot.metrics.MetricsStarter;
 import pink.zak.giveawaybot.service.bot.JdaBot;
 import pink.zak.giveawaybot.service.config.Config;
 import pink.zak.giveawaybot.storage.GiveawayStorage;
@@ -31,8 +31,6 @@ import pink.zak.giveawaybot.storage.redis.RedisManager;
 import pink.zak.giveawaybot.threads.ThreadFunction;
 import pink.zak.giveawaybot.threads.ThreadManager;
 import pink.zak.metrics.Metrics;
-import pink.zak.metrics.queries.stock.SystemQuery;
-import pink.zak.metrics.queries.stock.backends.ProcessStats;
 import redis.clients.jedis.Jedis;
 
 import java.nio.file.Path;
@@ -40,7 +38,6 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -111,16 +108,7 @@ public class GiveawayBot extends JdaBot {
                 new ReactionAddListener(this),
                 new MessageSendListener(this)
         );
-
-        this.threadManager.getUpdaterExecutor().scheduleAtFixedRate(() -> {
-            this.metricsLogger.<ProcessStats>log(query -> query
-                    .primary(new ProcessStats())
-                    .push(SystemQuery.ALL));
-            this.metricsLogger.<GiveawayCache>log(query -> query
-                    .primary(this.giveawayCache)
-                    .push(GiveawayQuery.ALL)
-            );
-        }, 1, 1, TimeUnit.SECONDS);
+        new MetricsStarter().start(this);
     }
 
     @Override
@@ -156,6 +144,10 @@ public class GiveawayBot extends JdaBot {
 
     public Defaults getDefaults() {
         return this.defaults;
+    }
+
+    public Metrics getMetrics() {
+        return this.metricsLogger;
     }
 
     public Consumer<Throwable> getDeleteFailureThrowable() {

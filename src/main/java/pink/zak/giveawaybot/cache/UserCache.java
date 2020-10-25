@@ -13,8 +13,8 @@ import java.util.concurrent.TimeUnit;
 public class UserCache extends AccessExpiringCache<Long, User> {
     private final Map<String, String> baseValueMap = Maps.newHashMap();
 
-    public UserCache(GiveawayBot bot, Storage<User> storage, TimeUnit timeUnit, int delay, long serverId) {
-        super(bot, storage, timeUnit, delay);
+    public UserCache(GiveawayBot bot, Storage<User> storage, long serverId) {
+        super(bot, storage, TimeUnit.MINUTES, 10, TimeUnit.MINUTES, 5);
 
         this.baseValueMap.put("serverId", String.valueOf(serverId));
     }
@@ -50,13 +50,8 @@ public class UserCache extends AccessExpiringCache<Long, User> {
     }
 
     @Override
-    public void invalidate(Long key) {
+    public void save(Long key) {
         this.storage.save(this.getUserValues(key), this.cacheMap.get(key));
-        this.cacheMap.remove(key);
-        this.accessTimes.remove(key);
-        if (this.removalAction != null) {
-            this.removalAction.accept(this.cacheMap.get(key));
-        }
     }
 
     @Override
