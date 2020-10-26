@@ -12,15 +12,17 @@ import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.exceptions.RateLimitedException;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import pink.zak.giveawaybot.GiveawayBot;
+import pink.zak.giveawaybot.cache.FinishedGiveawayCache;
 import pink.zak.giveawaybot.cache.GiveawayCache;
 import pink.zak.giveawaybot.cache.ServerCache;
 import pink.zak.giveawaybot.cache.UserCache;
 import pink.zak.giveawaybot.enums.EntryType;
 import pink.zak.giveawaybot.enums.ReturnCode;
 import pink.zak.giveawaybot.enums.Setting;
-import pink.zak.giveawaybot.models.Giveaway;
-import pink.zak.giveawaybot.models.Preset;
-import pink.zak.giveawaybot.models.User;
+import pink.zak.giveawaybot.models.*;
+import pink.zak.giveawaybot.models.giveaway.FinishedGiveaway;
+import pink.zak.giveawaybot.models.giveaway.CurrentGiveaway;
+import pink.zak.giveawaybot.models.giveaway.Giveaway;
 import pink.zak.giveawaybot.service.colour.Palette;
 import pink.zak.giveawaybot.service.time.Time;
 import pink.zak.giveawaybot.service.types.NumberUtils;
@@ -40,6 +42,7 @@ public class GiveawayController {
     private final ThreadManager threadManager;
     private final GiveawayCache giveawayCache;
     private final GiveawayStorage giveawayStorage;
+    private final FinishedGiveawayCache finishedGiveawayCache;
     private final ServerCache serverCache;
     private final Preset defaultPreset;
     private final Palette palette;
@@ -49,6 +52,7 @@ public class GiveawayController {
         this.threadManager = bot.getThreadManager();
         this.giveawayCache = bot.getGiveawayCache();
         this.giveawayStorage = bot.getGiveawayStorage();
+        this.finishedGiveawayCache = bot.getFinishedGiveawayCache();
         this.serverCache = bot.getServerCache();
         this.defaultPreset = bot.getDefaults().getDefaultPreset();
         this.palette = bot.getDefaults().getPalette();
@@ -57,19 +61,19 @@ public class GiveawayController {
         this.startGiveawayUpdater();
     }
 
-    public ImmutablePair<Giveaway, ReturnCode> createGiveaway(long length, int winnerAmount, TextChannel giveawayChannel, String presetName, String giveawayItem) {
+    public ImmutablePair<CurrentGiveaway, ReturnCode> createGiveaway(long length, int winnerAmount, TextChannel giveawayChannel, String presetName, String giveawayItem) {
         long serverId = giveawayChannel.getGuild().getIdLong();
         long endTime = System.currentTimeMillis() + length;
         return this.serverCache.get(serverId).thenApply(server -> {
             if (server.getActiveGiveaways().size() >= 50) {
-                return ImmutablePair.of((Giveaway) null, ReturnCode.GIVEAWAY_LIMIT_FAILURE);
+                return ImmutablePair.of((CurrentGiveaway) null, ReturnCode.GIVEAWAY_LIMIT_FAILURE);
             }
             if (winnerAmount > 5 || winnerAmount < 1) {
-                return ImmutablePair.of((Giveaway) null, ReturnCode.WINNER_LIMIT_FAILURE);
+                return ImmutablePair.of((CurrentGiveaway) null, ReturnCode.WINNER_LIMIT_FAILURE);
             }
             Preset preset = presetName.equalsIgnoreCase("default") ? this.defaultPreset : server.getPreset(presetName);
             if (preset == null) {
-                return ImmutablePair.of((Giveaway) null, ReturnCode.NO_PRESET);
+                return ImmutablePair.of((CurrentGiveaway) null, ReturnCode.NO_PRESET);
             }
             try {
                 Message message = giveawayChannel.sendMessage(new EmbedBuilder()
@@ -85,35 +89,22 @@ public class GiveawayController {
                         message.addReaction(reaction.getEmote()).queue();
                     }
                 }
-                Giveaway giveaway = new Giveaway(message.getIdLong(), giveawayChannel.getIdLong(), giveawayChannel.getGuild().getIdLong(), endTime, winnerAmount, presetName, giveawayItem);
+                CurrentGiveaway giveaway = new CurrentGiveaway(message.getIdLong(), giveawayChannel.getIdLong(), giveawayChannel.getGuild().getIdLong(), endTime, winnerAmount, presetName, giveawayItem);
                 this.giveawayCache.addGiveaway(giveaway);
                 server.addActiveGiveaway(giveaway);
                 this.startGiveawayTimer(giveaway);
                 return ImmutablePair.of(giveaway, ReturnCode.SUCCESS);
             } catch (RateLimitedException ex) {
                 GiveawayBot.getLogger().error("", ex);
-                return ImmutablePair.of((Giveaway) null, ReturnCode.RATE_LIMIT_FAILURE);
+                return ImmutablePair.of((CurrentGiveaway) null, ReturnCode.RATE_LIMIT_FAILURE);
             }
         }).join();
-    }
-
-    public void deleteGiveaway(Giveaway giveaway) {
-        this.giveawayCache.invalidateAsync(giveaway.messageId(), false);
-        this.serverCache.get(giveaway.serverId()).thenAccept(server -> {
-            server.getActiveGiveaways().remove(giveaway.messageId());
-            GiveawayBot.getLogger().info("Removing giveaway from server {}  :  {}", giveaway.serverId(), giveaway.messageId());
-            UserCache userCache = server.getUserCache();
-            for (long enteredId : giveaway.enteredUsers()) {
-                userCache.get(enteredId).thenAccept(user -> user.entries().remove(giveaway.messageId()));
-            }
-        });
-        this.giveawayStorage.delete(String.valueOf(giveaway.messageId()));
     }
 
     public void loadAllGiveaways() {
         long loadStartTime = System.currentTimeMillis();
         this.bot.runAsync(ThreadFunction.STORAGE, () -> {
-            for (Giveaway giveaway : this.giveawayStorage.loadAll()) {
+            for (CurrentGiveaway giveaway : this.giveawayStorage.loadAll()) {
                 if (!giveaway.isActive()) {
                     this.endGiveaway(giveaway);
                     continue;
@@ -134,7 +125,7 @@ public class GiveawayController {
         });
     }
 
-    private void endGiveaway(Giveaway giveaway) {
+    private void endGiveaway(CurrentGiveaway giveaway) {
         Message giveawayMessage = this.getGiveawayMessage(giveaway);
         if (giveawayMessage != null) {
             this.serverCache.get(giveaway.serverId()).thenAccept(server -> {
@@ -167,20 +158,9 @@ public class GiveawayController {
                 }
                 Set<Long> winners = this.generateWinners(giveaway, totalEntries, userEntriesMap);
                 GiveawayBot.getLogger().info("Giveaway {} generated winners {}", giveaway.messageId(), winners);
-                StringBuilder descriptionBuilder = new StringBuilder();
-                for (long winnerId : winners) {
-                    descriptionBuilder.append("<@").append(winnerId).append(">\n");
-                }
-                giveawayMessage.editMessage(new EmbedBuilder()
-                        .setColor(this.palette.success())
-                        .setTitle("Giveaway: " + giveaway.giveawayItem())
-                        .setDescription((winners.size() > 1 ? "**Winners:**\n" : "**Winner:**\n") + descriptionBuilder.toString())
-                        .setFooter("Ended with " + winners.size() + " winners and " + totalEntries.toString() + " entries.").build()).queue();
-                // Handle the pinging of winners
-                Preset preset = giveaway.presetName().equals("default") ? this.defaultPreset : server.getPreset(giveaway.presetName());
-                if ((boolean) preset.getSetting(Setting.PING_WINNERS)) {
-                    giveawayMessage.getTextChannel().sendMessage(descriptionBuilder.toString()).queue(message -> message.delete().queue());
-                }
+                this.handleGiveawayEndMessages(giveaway, winners, totalEntries, giveawayMessage, server);
+                // Convert to a FinishedGiveaway
+                this.finishedGiveawayCache.set(giveaway.messageId(), new FinishedGiveaway(giveaway, totalEntries, userEntriesMap, winners));
             }).exceptionally(ex -> {
                 GiveawayBot.getLogger().error("", ex);
                 return null;
@@ -189,19 +169,40 @@ public class GiveawayController {
         this.deleteGiveaway(giveaway);
     }
 
-    private Set<Long> generateWinners(Giveaway giveaway, BigInteger totalEntries, Map<Long, BigInteger> userEntries) {
+    public void handleGiveawayEndMessages(Giveaway giveaway, Set<Long> winners, BigInteger totalEntries, Message giveawayMessage, Server server) {
+        StringBuilder descriptionBuilder = new StringBuilder();
+        for (long winnerId : winners) {
+            descriptionBuilder.append("<@").append(winnerId).append(">\n");
+        }
+        giveawayMessage.editMessage(new EmbedBuilder()
+                .setColor(this.palette.success())
+                .setTitle("Giveaway: " + giveaway.giveawayItem())
+                .setDescription((winners.size() > 1 ? "**Winners:**\n" : "**Winner:**\n") + descriptionBuilder.toString())
+                .setFooter("Ended with " + winners.size() + (winners.size() > 1 ? " winners" : " winner") + " and " + totalEntries.toString() + " entries.").build()).queue();
+        // Handle the pinging of winners
+        Preset preset = giveaway.presetName().equals("default") ? this.defaultPreset : server.getPreset(giveaway.presetName());
+        if ((boolean) preset.getSetting(Setting.PING_WINNERS)) {
+            giveawayMessage.getTextChannel().sendMessage(descriptionBuilder.toString()).queue(message -> message.delete().queue());
+        }
+    }
+
+    public Set<Long> generateWinners(CurrentGiveaway giveaway, BigInteger totalEntries, Map<Long, BigInteger> userEntries) {
+        return this.generateWinners(giveaway.winnerAmount(), totalEntries, userEntries);
+    }
+
+    public Set<Long> generateWinners(int winnerAmount, BigInteger totalEntries, Map<Long, BigInteger> userEntries) {
         Set<Long> winners = Sets.newHashSet();
-        if (userEntries.size() <= giveaway.winnerAmount()) {
+        if (userEntries.size() <= winnerAmount) {
             return userEntries.keySet();
         }
         BigInteger currentTotalEntries = totalEntries;
-        for (int i = 1; i <= giveaway.winnerAmount(); i++) {
+        for (int i = 1; i <= winnerAmount; i++) {
             BigInteger decreasingRandom = currentTotalEntries.divide(NumberUtils.getRandomBigInteger(currentTotalEntries));
             for (Map.Entry<Long, BigInteger> entry : userEntries.entrySet()) {
                 decreasingRandom = decreasingRandom.subtract(entry.getValue());
                 if (decreasingRandom.compareTo(BigInteger.ONE) < 0) {
                     winners.add(entry.getKey());
-                    if (i + 1 <= giveaway.winnerAmount()) { // Prevent duplicates if it will be looped again
+                    if (i + 1 <= winnerAmount) { // Prevent duplicates if it will be looped again
                         userEntries.remove(entry.getKey());
                         currentTotalEntries = currentTotalEntries.subtract(entry.getValue());
                     }
@@ -213,9 +214,22 @@ public class GiveawayController {
         return winners;
     }
 
+    public void deleteGiveaway(CurrentGiveaway giveaway) {
+        this.giveawayCache.invalidateAsync(giveaway.messageId(), false);
+        this.serverCache.get(giveaway.serverId()).thenAccept(server -> {
+            server.getActiveGiveaways().remove(giveaway.messageId());
+            GiveawayBot.getLogger().info("Removing giveaway from server {}  :  {}", giveaway.serverId(), giveaway.messageId());
+            UserCache userCache = server.getUserCache();
+            for (long enteredId : giveaway.enteredUsers()) {
+                userCache.get(enteredId).thenAccept(user -> user.entries().remove(giveaway.messageId()));
+            }
+        });
+        this.giveawayStorage.delete(String.valueOf(giveaway.messageId()));
+    }
+
     private void startGiveawayUpdater() {
         this.threadManager.getUpdaterExecutor().scheduleAtFixedRate(() -> {
-            for (Giveaway giveaway : this.giveawayCache.getMap().values()) {
+            for (CurrentGiveaway giveaway : this.giveawayCache.getMap().values()) {
                 if (!giveaway.isActive()) {
                     return;
                 }
@@ -227,21 +241,21 @@ public class GiveawayController {
                 message.editMessage(new EmbedBuilder()
                         .setTitle("Giveaway: ".concat(giveaway.giveawayItem()))
                         .setColor(this.palette.primary())
-                        .setFooter("Ends in " + Time.format(giveaway.getTimeToExpiry()) + " with " + giveaway.winnerAmount() + " winner" + (giveaway.winnerAmount() > 1 ? "s" : ""))
+                        .setFooter("Ends in " + Time.format(giveaway.timeToExpiry()) + " with " + giveaway.winnerAmount() + " winner" + (giveaway.winnerAmount() > 1 ? "s" : ""))
                         .build()).queue();
             }
         }, 30, 30, TimeUnit.SECONDS);
     }
 
-    private void startGiveawayTimer(Giveaway giveaway) {
+    private void startGiveawayTimer(CurrentGiveaway giveaway) {
         this.threadManager.getUpdaterExecutor().schedule(() -> {
             GiveawayBot.getLogger().info("Giveaway {} expired", giveaway.messageId());
             this.endGiveaway(giveaway);
-        }, giveaway.getTimeToExpiry(), TimeUnit.MILLISECONDS);
+        }, giveaway.timeToExpiry(), TimeUnit.MILLISECONDS);
     }
 
     @SneakyThrows
-    private Message getGiveawayMessage(Giveaway giveaway) {
+    public Message getGiveawayMessage(Giveaway giveaway) {
         Guild guild = this.bot.getShardManager().getGuildById(giveaway.serverId());
         if (guild == null) {
             return null;

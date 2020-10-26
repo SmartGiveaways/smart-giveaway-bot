@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pink.zak.giveawaybot.cache.FinishedGiveawayCache;
 import pink.zak.giveawaybot.cache.GiveawayCache;
 import pink.zak.giveawaybot.cache.ServerCache;
 import pink.zak.giveawaybot.commands.ban.BanCommand;
@@ -49,6 +50,7 @@ public class GiveawayBot extends JdaBot {
     private ThreadManager threadManager;
     private RedisManager redisManager;
     private FinishedGiveawayStorage finishedGiveawayStorage;
+    private FinishedGiveawayCache finishedGiveawayCache;
     private GiveawayStorage giveawayStorage;
     private GiveawayCache giveawayCache;
     private ServerStorage serverStorage;
@@ -58,7 +60,7 @@ public class GiveawayBot extends JdaBot {
     private EntryPipeline entryPipeline;
 
     public GiveawayBot() {
-        super(basePath -> basePath.resolve("data"));
+        super(basePath -> basePath);
     }
 
     public static Logger getLogger() {
@@ -66,7 +68,7 @@ public class GiveawayBot extends JdaBot {
     }
 
     public void load() {
-        ((LoggerContext) LoggerFactory.getILoggerFactory()).getLogger("org.mongodb.driver").setLevel(Level.ERROR);
+        ((LoggerContext) LoggerFactory.getILoggerFactory()).getLogger("org.mongodb.driver").setLevel(Level.WARN);
         this.configRelations();
         this.setupThrowable();
         this.setupStorage();
@@ -80,6 +82,7 @@ public class GiveawayBot extends JdaBot {
         this.threadManager = new ThreadManager();
         this.redisManager = new RedisManager(this);
         this.finishedGiveawayStorage = new FinishedGiveawayStorage(this);
+        this.finishedGiveawayCache = new FinishedGiveawayCache(this);
         this.giveawayStorage = new GiveawayStorage(this);
         this.giveawayCache = new GiveawayCache(this);
         this.serverStorage = new ServerStorage(this);
@@ -118,8 +121,10 @@ public class GiveawayBot extends JdaBot {
     public void unload() {
         logger.info("Shutting down....");
         this.giveawayCache.shutdown();
+        this.finishedGiveawayCache.shutdown();
         this.serverCache.shutdown();
         this.giveawayStorage.closeBack();
+        this.finishedGiveawayStorage.closeBack();
         this.serverStorage.closeBack();
         this.redisManager.shutdown();
         this.threadManager.shutdownPools();
@@ -185,6 +190,14 @@ public class GiveawayBot extends JdaBot {
 
     public RedisManager getRedisManager() {
         return this.redisManager;
+    }
+
+    public FinishedGiveawayStorage getFinishedGiveawayStorage() {
+        return this.finishedGiveawayStorage;
+    }
+
+    public FinishedGiveawayCache getFinishedGiveawayCache() {
+        return this.finishedGiveawayCache;
     }
 
     public Jedis getJedis() {

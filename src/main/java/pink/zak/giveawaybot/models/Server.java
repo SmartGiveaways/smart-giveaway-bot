@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.cache.UserCache;
+import pink.zak.giveawaybot.models.giveaway.CurrentGiveaway;
 import pink.zak.giveawaybot.storage.UserStorage;
 
 import java.util.Map;
@@ -53,7 +54,7 @@ public class Server {
         return this.activeGiveaways;
     }
 
-    public void addActiveGiveaway(Giveaway giveaway) {
+    public void addActiveGiveaway(CurrentGiveaway giveaway) {
         this.activeGiveaways.add(giveaway.messageId());
     }
 

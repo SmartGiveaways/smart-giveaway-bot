@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.cache.ServerCache;
 import pink.zak.giveawaybot.commands.giveaway.subs.CreateSub;
+import pink.zak.giveawaybot.commands.giveaway.subs.RerollSub;
 import pink.zak.giveawaybot.service.colour.Palette;
 import pink.zak.giveawaybot.service.command.command.SimpleCommand;
 import pink.zak.giveawaybot.threads.ThreadManager;
@@ -25,7 +26,8 @@ public class GiveawayCommand extends SimpleCommand {
         super(bot, false, "giveaway");
         this.setAliases("g", "help");
         this.setSubCommands(
-                new CreateSub(bot)
+                new CreateSub(bot),
+                new RerollSub(bot)
         );
 
         this.palette = bot.getDefaults().getPalette();

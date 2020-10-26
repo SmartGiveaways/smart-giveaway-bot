@@ -8,7 +8,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.cache.GiveawayCache;
 import pink.zak.giveawaybot.cache.ServerCache;
-import pink.zak.giveawaybot.models.Giveaway;
+import pink.zak.giveawaybot.models.giveaway.CurrentGiveaway;
 import pink.zak.giveawaybot.service.colour.Palette;
 import pink.zak.giveawaybot.service.command.command.SimpleCommand;
 import pink.zak.giveawaybot.service.command.command.SubCommand;
@@ -91,7 +91,7 @@ public class EntriesCommand extends SimpleCommand {
                 StringBuilder descriptionBuilder = new StringBuilder();
                 for (long giveawayId : presentGiveaways) {
                     BigInteger entries = user.entries(giveawayId);
-                    Giveaway giveaway = this.giveawayCache.getSync(giveawayId);
+                    CurrentGiveaway giveaway = this.giveawayCache.getSync(giveawayId);
                     if (giveaway != null) {
                         descriptionBuilder.append("**" + giveaway.giveawayItem() + "** -> " + entries + " entr" + (entries.compareTo(BigInteger.ONE) < 1 ? "y" : "ies") + "\n");
                     }

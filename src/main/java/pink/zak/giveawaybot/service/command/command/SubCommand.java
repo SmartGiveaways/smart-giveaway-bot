@@ -1,7 +1,6 @@
 package pink.zak.giveawaybot.service.command.command;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -10,7 +9,6 @@ import pink.zak.giveawaybot.service.command.argument.Argument;
 import pink.zak.giveawaybot.service.command.argument.ArgumentHandler;
 
 import java.util.List;
-import java.util.Set;
 
 public abstract class SubCommand extends Command {
     private final boolean endless;
@@ -84,14 +82,14 @@ public abstract class SubCommand extends Command {
     }
 
     public String[] getEnd(List<String> arguments) {
-        Set<String> newSet = Sets.newLinkedHashSet();
+        List<String> newList = Lists.newArrayList();
         for (int i = 0; i < arguments.size(); i++) {
             if (i < this.arguments.size() - 1) {
                 continue;
             }
-            newSet.add(arguments.get(i));
+            newList.add(arguments.get(i));
         }
-        return newSet.toArray(new String[]{});
+        return newList.toArray(new String[]{});
     }
 
     private boolean isArgumentValid(List<String> arguments, int index) {
