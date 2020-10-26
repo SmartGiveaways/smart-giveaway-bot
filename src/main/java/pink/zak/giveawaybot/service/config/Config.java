@@ -94,6 +94,10 @@ public class Config {
         return this.valueMap.getOrDefault(key, null);
     }
 
+    public boolean has(String key) {
+        return this.valueMap.containsKey(key);
+    }
+
     public synchronized void load() {
         boolean isReload = true;
         if (this.valueMap == null) {

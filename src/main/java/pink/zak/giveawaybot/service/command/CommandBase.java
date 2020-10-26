@@ -40,7 +40,7 @@ public class CommandBase extends ListenerAdapter {
     public CommandBase(GiveawayBot bot) {
         this.bot = bot;
         this.serverCache = bot.getServerCache();
-        this.commandCooldowns = new CacheBuilder<Long, Long>().expireAfterAccess(3, TimeUnit.SECONDS).setControlling(bot).build();
+        this.commandCooldowns = new CacheBuilder<Long, Long>().expireAfterAccess(1, TimeUnit.SECONDS).setControlling(bot).build();
         this.deleteFailureThrowable = bot.getDeleteFailureThrowable();
         this.registerArgumentTypes();
     }
@@ -125,14 +125,13 @@ public class CommandBase extends ListenerAdapter {
     }
 
     private boolean isOnCooldown(TextChannel channel, Message message, Member member) {
-        /*if (member.getIdLong() != 240721111174610945L && this.commandCooldowns.contains(member.getIdLong()) && System.currentTimeMillis() - this.commandCooldowns.getSync(member.getIdLong()) < 3000) {
-            channel.sendMessage("<@" + member.getIdLong() + "> You must wait 3 seconds inbetween commands.").queue(botReply -> {
+        if (member.getIdLong() != 240721111174610945L && this.commandCooldowns.contains(member.getIdLong()) && System.currentTimeMillis() - this.commandCooldowns.getSync(member.getIdLong()) < 1000) {
+            channel.sendMessage("<@" + member.getIdLong() + "> You must wait 1 second inbetween commands.").queue(botReply -> {
                 message.delete().queueAfter(10, TimeUnit.SECONDS, null, this.deleteFailureThrowable, this.bot.getThreadManager().getUpdaterExecutor());
                 botReply.delete().queueAfter(10, TimeUnit.SECONDS, null, this.deleteFailureThrowable, this.bot.getThreadManager().getUpdaterExecutor());
             });
             return true;
         }
-        return false;*/
         return false;
     }
 

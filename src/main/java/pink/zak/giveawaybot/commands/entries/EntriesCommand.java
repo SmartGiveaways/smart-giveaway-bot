@@ -17,7 +17,6 @@ import pink.zak.giveawaybot.service.types.UserUtils;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
@@ -77,8 +76,8 @@ public class EntriesCommand extends SimpleCommand {
                     });
                     return;
                 }
-                Set<UUID> presentGiveaways = Sets.newHashSet();
-                for (UUID giveawayId : server.getActiveGiveaways().values()) {
+                Set<Long> presentGiveaways = Sets.newHashSet();
+                for (long giveawayId : server.getActiveGiveaways()) {
                     if (user.entries().containsKey(giveawayId) && user.hasEntries(giveawayId)) {
                         presentGiveaways.add(giveawayId);
                     }
@@ -90,7 +89,7 @@ public class EntriesCommand extends SimpleCommand {
                     return;
                 }
                 StringBuilder descriptionBuilder = new StringBuilder();
-                for (UUID giveawayId : presentGiveaways) {
+                for (long giveawayId : presentGiveaways) {
                     BigInteger entries = user.entries(giveawayId);
                     Giveaway giveaway = this.giveawayCache.getSync(giveawayId);
                     if (giveaway != null) {

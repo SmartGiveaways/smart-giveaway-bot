@@ -37,10 +37,10 @@ public class ReactionAddListener extends ListenerAdapter {
         long messageId = event.getMessageIdLong();
         long userId = event.getUserIdLong();
         this.serverCache.get(event.getGuild().getIdLong()).thenAccept(server -> {
-            if (!server.getActiveGiveaways().containsKey(messageId)) {
+            if (!server.getActiveGiveaways().contains(messageId)) {
                 return;
             }
-            this.giveawayCache.get(server.getActiveGiveaways().get(messageId)).thenAccept(giveaway -> {
+            this.giveawayCache.get(messageId).thenAccept(giveaway -> {
                 if (giveaway.enteredUsers().contains(userId)) {
                     return;
                 }
@@ -54,7 +54,7 @@ public class ReactionAddListener extends ListenerAdapter {
                 }
                 server.getUserCache().get(userId).thenAccept(user -> {
                     giveaway.enteredUsers().add(userId);
-                    user.entries().put(giveaway.uuid(), this.baseMap.clone());
+                    user.entries().put(giveaway.messageId(), this.baseMap.clone());
                 });
             }).exceptionally(ex -> {
                 ex.printStackTrace();

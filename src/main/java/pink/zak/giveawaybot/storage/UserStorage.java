@@ -46,7 +46,7 @@ public class UserStorage extends Storage<User> {
             long id = json.get("userId").getAsLong();
             boolean banned = json.get("banned").getAsBoolean();
             boolean shadowBanned = json.get("shadowBanned").getAsBoolean();
-            ConcurrentHashMap<UUID, EnumMap<EntryType, AtomicInteger>> entries = gson.fromJson(json.get("entries").getAsString(), new TypeToken<ConcurrentHashMap<UUID, EnumMap<EntryType, AtomicInteger>>>(){}.getType());
+            ConcurrentHashMap<Long, EnumMap<EntryType, AtomicInteger>> entries = gson.fromJson(json.get("entries").getAsString(), new TypeToken<ConcurrentHashMap<Long, EnumMap<EntryType, AtomicInteger>>>(){}.getType());
             return new User(id, this.serverId, banned, shadowBanned, entries);
         };
     }

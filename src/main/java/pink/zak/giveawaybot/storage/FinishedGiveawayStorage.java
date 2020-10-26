@@ -3,68 +3,63 @@ package pink.zak.giveawaybot.storage;
 import com.google.common.collect.Sets;
 import com.google.gson.reflect.TypeToken;
 import pink.zak.giveawaybot.GiveawayBot;
-import pink.zak.giveawaybot.models.Giveaway;
+import pink.zak.giveawaybot.models.FinishedGiveaway;
 import pink.zak.giveawaybot.service.cache.options.CacheLoader;
-import pink.zak.giveawaybot.service.cache.options.CacheSaver;
 import pink.zak.giveawaybot.service.storage.settings.StorageType;
 import pink.zak.giveawaybot.service.storage.storage.Storage;
 import pink.zak.giveawaybot.service.storage.storage.serialization.Deserializer;
 import pink.zak.giveawaybot.service.storage.storage.serialization.Serializer;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.math.BigInteger;
+import java.util.*;
 
-public class GiveawayStorage extends Storage<Giveaway> implements CacheLoader<UUID, Giveaway>, CacheSaver<UUID, Giveaway> {
+public class FinishedGiveawayStorage extends Storage<FinishedGiveaway> implements CacheLoader<UUID, FinishedGiveaway> {
 
-    public GiveawayStorage(GiveawayBot bot) {
-        super(bot, factory -> factory.create(StorageType.MONGODB, "giveaways"));
+    public FinishedGiveawayStorage(GiveawayBot bot) {
+        super(bot, factory -> factory.create(StorageType.MONGODB, "finished-giveaways"));
     }
 
     @Override
-    public Serializer<Giveaway> serializer() {
+    public Serializer<FinishedGiveaway> serializer() {
         return (giveaway, json, gson) -> {
             json.addProperty("_id", String.valueOf(giveaway.messageId()));
-            json.addProperty("channelId", String.valueOf(giveaway.channelId()));
             json.addProperty("serverId", String.valueOf(giveaway.serverId()));
             json.addProperty("startTime", String.valueOf(giveaway.startTime()));
             json.addProperty("endTime", String.valueOf(giveaway.endTime()));
             json.addProperty("winnerAmount", String.valueOf(giveaway.winnerAmount()));
             json.addProperty("presetName", giveaway.presetName());
             json.addProperty("giveawayItem", giveaway.giveawayItem());
-            json.addProperty("enteredUsers", gson.toJson(giveaway.enteredUsers()));
+            json.addProperty("totalEntries", giveaway.totalEntries().toString());
+            json.addProperty("userEntries", gson.toJson(giveaway.userEntries()));
+            json.addProperty("winners", gson.toJson(giveaway.winners()));
             return json;
         };
     }
 
     @Override
-    public Deserializer<Giveaway> deserializer() {
+    public Deserializer<FinishedGiveaway> deserializer() {
         return (json, gson) -> {
             long messageId = json.get("_id").getAsLong();
-            long channelId = json.get("channelId").getAsLong();
             long serverId = json.get("serverId").getAsLong();
             long startTime = json.get("startTime").getAsLong();
             long endTime = json.get("endTime").getAsLong();
             int winnerAmount = json.get("winnerAmount").getAsInt();
             String presetName = json.get("presetName").getAsString();
             String giveawayItem = json.get("giveawayItem").getAsString();
-            Set<Long> enteredUsers = Sets.newConcurrentHashSet(gson.fromJson(json.get("enteredUsers").getAsString(), new TypeToken<HashSet<Long>>(){}.getType()));
-            return new Giveaway(messageId, channelId, serverId, startTime, endTime, winnerAmount, presetName, giveawayItem, enteredUsers);
+            BigInteger totalEntries = new BigInteger(json.get("totalEntries").getAsString());
+            Map<Long, BigInteger> userEntries = gson.fromJson(json.get("userEntries"), new TypeToken<HashMap<Long, BigInteger>>(){}.getType());
+            Set<Long> winners = Sets.newConcurrentHashSet(gson.fromJson(json.get("winners").getAsString(), new TypeToken<HashSet<Long>>(){}.getType()));
+            return new FinishedGiveaway(messageId, serverId, startTime, endTime, winnerAmount, presetName, giveawayItem, totalEntries, userEntries, winners);
         };
     }
 
     @Override
-    public Giveaway create(String id) {
-        return null;
+    public FinishedGiveaway create(String id) {
+        throw new UnsupportedOperationException("FinishedGiveaway cannot be created from an ID");
     }
 
     @Override
-    public Giveaway load(UUID key) {
+    public FinishedGiveaway load(UUID key) {
         return super.load(key.toString());
-    }
-
-    @Override
-    public void save(UUID key, Giveaway value) {
-        super.save(key.toString(), value);
     }
 }

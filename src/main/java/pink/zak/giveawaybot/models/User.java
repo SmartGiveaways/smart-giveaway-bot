@@ -5,18 +5,17 @@ import pink.zak.giveawaybot.enums.EntryType;
 import java.math.BigInteger;
 import java.util.EnumMap;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class User {
     private final long id;
     private final long serverId;
-    private final ConcurrentHashMap<UUID, EnumMap<EntryType, AtomicInteger>> entries;
+    private final ConcurrentHashMap<Long, EnumMap<EntryType, AtomicInteger>> entries;
     private boolean banned;
     private boolean shadowBanned;
 
-    public User(long id, long serverId, boolean banned, boolean shadowBanned, ConcurrentHashMap<UUID, EnumMap<EntryType, AtomicInteger>> entries) {
+    public User(long id, long serverId, boolean banned, boolean shadowBanned, ConcurrentHashMap<Long, EnumMap<EntryType, AtomicInteger>> entries) {
         this.id = id;
         this.serverId = serverId;
         this.banned = banned;
@@ -28,19 +27,19 @@ public class User {
         this(id, serverId, false, false, new ConcurrentHashMap<>());
     }
 
-    public BigInteger entries(UUID uuid) {
+    public BigInteger entries(long id) {
         BigInteger total = BigInteger.ZERO;
-        if (!this.entries.containsKey(uuid)) {
+        if (!this.entries.containsKey(id)) {
             return total;
         }
-        for (Map.Entry<EntryType, AtomicInteger> entry : this.entries.get(uuid).entrySet()) { // TODO error here
+        for (Map.Entry<EntryType, AtomicInteger> entry : this.entries.get(id).entrySet()) { // TODO error here
             total = total.add(BigInteger.valueOf(entry.getValue().get()));
         }
         return total;
     }
 
-    public boolean hasEntries(UUID uuid) {
-        return this.entries(uuid).compareTo(BigInteger.ZERO) > 0;
+    public boolean hasEntries(long id) {
+        return this.entries(id).compareTo(BigInteger.ZERO) > 0;
     }
 
     public long id() {
@@ -75,7 +74,7 @@ public class User {
         return this.shadowBanned;
     }
 
-    public ConcurrentHashMap<UUID, EnumMap<EntryType, AtomicInteger>> entries() {
+    public ConcurrentHashMap<Long, EnumMap<EntryType, AtomicInteger>> entries() {
         return this.entries;
     }
 }

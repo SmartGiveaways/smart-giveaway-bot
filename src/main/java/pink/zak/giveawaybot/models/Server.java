@@ -11,18 +11,16 @@ import pink.zak.giveawaybot.storage.UserStorage;
 
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 public class Server {
     private final long id;
     private final UserStorage userStorage;
     private final UserCache userCache;
-    private final Map<Long, UUID> activeGiveaways;
+    private final Set<Long> activeGiveaways;
     private final Map<String, Preset> presets;
     private final Set<Long> managerRoles;
 
-    public Server(GiveawayBot bot, long id, Map<Long, UUID> activeGiveaways, Map<String, Preset> presets, Set<Long> managerRoles) {
+    public Server(GiveawayBot bot, long id, Set<Long> activeGiveaways, Map<String, Preset> presets, Set<Long> managerRoles) {
         this.id = id;
         this.presets = presets;
         this.userStorage = new UserStorage(bot, this.getId());
@@ -32,7 +30,7 @@ public class Server {
     }
 
     public Server(GiveawayBot bot, long id) {
-        this(bot, id, Maps.newConcurrentMap(), Maps.newConcurrentMap(), Sets.newHashSet());
+        this(bot, id, Sets.newConcurrentHashSet(), Maps.newConcurrentMap(), Sets.newHashSet());
     }
 
     public long getId() {
@@ -51,12 +49,12 @@ public class Server {
         return this.userCache;
     }
 
-    public Map<Long, UUID> getActiveGiveaways() {
+    public Set<Long> getActiveGiveaways() {
         return this.activeGiveaways;
     }
 
     public void addActiveGiveaway(Giveaway giveaway) {
-        this.activeGiveaways.put(giveaway.messageId(), giveaway.uuid());
+        this.activeGiveaways.add(giveaway.messageId());
     }
 
     public Preset getPreset(String name) {

@@ -62,7 +62,7 @@ public class CreateSub extends SubCommand {
             responseChannel.sendMessage("Giveaways must be at least 30 seconds long.").queue();
             return true;
         }
-        if (length > 2592000000L) {
+        if (length > 5184000000L) {
             responseChannel.sendMessage("Giveaways must be no longer than 30 days.").queue();
             return true;
         }
@@ -70,7 +70,7 @@ public class CreateSub extends SubCommand {
             responseChannel.sendMessage("Could not find the specified channel.").queue();
             return true;
         }
-        if (giveawayItem.isEmpty() || giveawayItem.equals(" ") || giveawayItem.length() > 50) {
+        if (giveawayItem.isEmpty() || giveawayItem.equals(" ") || giveawayItem.length() > 20) {
             responseChannel.sendMessage("Issue parsing giveaway reward.").queue();
             return true;
         }

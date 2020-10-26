@@ -24,17 +24,17 @@ public class EligibilityCheckStep {
         // TODO I think there's a logic issue here that can cause a giveaway to be overridden.
         if (!giveaway.enteredUsers().contains(user.id())) {
             if (this.isEntryEnabled(EntryType.REACTION, preset)) {
-                System.out.println("No contain D: message id " + giveaway.messageId() + " : " + giveaway.uuid());
+                System.out.println("No contain D: message id " + giveaway.messageId() + " : " + giveaway.messageId());
                 return;
             }
-            user.entries().put(giveaway.uuid(), Maps.newEnumMap(EntryType.class));
+            user.entries().put(giveaway.messageId(), Maps.newEnumMap(EntryType.class));
             giveaway.enteredUsers().add(user.id());
         }
-        if (user.hasEntries(giveaway.uuid()) && user.entries(giveaway.uuid()).compareTo(new BigInteger(String.valueOf(preset.getSetting(Setting.MAX_ENTRIES)))) > -1) {
+        if (user.hasEntries(giveaway.messageId()) && user.entries(giveaway.messageId()).compareTo(new BigInteger(String.valueOf(preset.getSetting(Setting.MAX_ENTRIES)))) > -1) {
             System.out.println("Over max entries");
             return;
         }
-        if (!user.hasEntries(giveaway.uuid())) {
+        if (!user.hasEntries(giveaway.messageId())) {
             System.out.println("Doesnt have entries but invite is guuuud bro");
         }
         this.rewardStep.process(entryType, user, giveaway, preset);

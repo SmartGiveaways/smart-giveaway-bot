@@ -10,7 +10,6 @@ import pink.zak.giveawaybot.models.Server;
 import pink.zak.giveawaybot.service.command.command.SubCommand;
 
 import java.util.List;
-import java.util.UUID;
 
 public class DeleteSub extends SubCommand {
     private final GiveawayCache giveawayCache;
@@ -49,7 +48,7 @@ public class DeleteSub extends SubCommand {
 
     @SneakyThrows
     private boolean canBeDeleted(Server server, String presetName) {
-        for (UUID giveawayUuid : server.getActiveGiveaways().values()) {
+        for (long giveawayUuid : server.getActiveGiveaways()) {
             if (this.giveawayCache.get(giveawayUuid).thenApply(giveaway -> giveaway.presetName().equals(presetName)).get()) {
                 return false;
             }

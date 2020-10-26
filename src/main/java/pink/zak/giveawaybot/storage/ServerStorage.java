@@ -1,6 +1,7 @@
 package pink.zak.giveawaybot.storage;
 
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import com.google.gson.reflect.TypeToken;
 import net.dv8tion.jda.api.entities.Guild;
 import pink.zak.giveawaybot.GiveawayBot;
@@ -39,7 +40,7 @@ public class ServerStorage extends Storage<Server> {
         return (json, gson) -> {
             long id = json.get("_id").getAsLong();
             Map<String, Preset> presets = this.deserializePresets(id, gson.fromJson(json.get("presets").getAsString(), new TypeToken<ConcurrentHashMap<String, HashMap<Setting, String>>>(){}.getType()));
-            Map<Long, UUID> activeGiveaways = gson.fromJson(json.get("activeGiveaways").getAsString(), new TypeToken<ConcurrentHashMap<Long, UUID>>(){}.getType());
+            Set<Long> activeGiveaways = Sets.newConcurrentHashSet(gson.fromJson(json.get("activeGiveaways").getAsString(), new TypeToken<HashSet<Long>>(){}.getType()));
             Set<Long> roleIds = gson.fromJson(json.get("managerRoles").getAsString(), new TypeToken<HashSet<Long>>(){}.getType());
             return new Server(this.bot, id, activeGiveaways, presets, roleIds);
         };

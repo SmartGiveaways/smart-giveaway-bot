@@ -18,7 +18,7 @@ public class MongoConnectionFactory {
         if (storageSettings.getPassword().isEmpty()) {
             this.mongoClient = new MongoClient(address);
         } else {
-            MongoCredential credential = MongoCredential.createCredential(storageSettings.getUsername(), storageSettings.getDatabase(), storageSettings.getPassword().toCharArray());
+            MongoCredential credential = MongoCredential.createCredential(storageSettings.getUsername(), storageSettings.getAuthDatabase(), storageSettings.getPassword().toCharArray());
             this.mongoClient = new MongoClient(address, credential, new MongoClientOptions.Builder().build());
         }
         this.mongoDatabase = this.mongoClient.getDatabase(storageSettings.getDatabase());

@@ -7,8 +7,6 @@ import pink.zak.giveawaybot.entries.pipeline.workers.EligibilityCheckStep;
 import pink.zak.giveawaybot.enums.EntryType;
 import pink.zak.giveawaybot.models.Preset;
 
-import java.util.UUID;
-
 public class EntryPipeline {
     private final EligibilityCheckStep checkStep;
     private final ServerCache serverCache;
@@ -31,7 +29,7 @@ public class EntryPipeline {
                 if (user.isBanned()) {
                     return;
                 }
-                for (UUID giveawayId : server.getActiveGiveaways().values()) {
+                for (long giveawayId : server.getActiveGiveaways()) {
                     this.giveawayCache.get(giveawayId).thenAccept(giveaway -> {
                         if (giveaway == null) {
                             return;

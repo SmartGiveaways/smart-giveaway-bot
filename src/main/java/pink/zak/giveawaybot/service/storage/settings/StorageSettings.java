@@ -8,6 +8,7 @@ public class StorageSettings {
     private String address;
     private String prefix;
     private String database;
+    private String authDatabase;
     private String username;
     private String password;
     private int maximumPoolSize;
@@ -51,6 +52,14 @@ public class StorageSettings {
 
     public void setDatabase(String database) {
         this.database = database;
+    }
+
+    public String getAuthDatabase() {
+        return this.authDatabase;
+    }
+
+    public void setAuthDatabase(String authDatabase) {
+        this.authDatabase = authDatabase;
     }
 
     public String getUsername() {

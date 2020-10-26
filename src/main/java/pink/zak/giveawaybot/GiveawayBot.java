@@ -25,6 +25,7 @@ import pink.zak.giveawaybot.listener.ReactionAddListener;
 import pink.zak.giveawaybot.metrics.MetricsStarter;
 import pink.zak.giveawaybot.service.bot.JdaBot;
 import pink.zak.giveawaybot.service.config.Config;
+import pink.zak.giveawaybot.storage.FinishedGiveawayStorage;
 import pink.zak.giveawaybot.storage.GiveawayStorage;
 import pink.zak.giveawaybot.storage.ServerStorage;
 import pink.zak.giveawaybot.storage.redis.RedisManager;
@@ -47,6 +48,7 @@ public class GiveawayBot extends JdaBot {
     private Consumer<Throwable> deleteFailureThrowable;
     private ThreadManager threadManager;
     private RedisManager redisManager;
+    private FinishedGiveawayStorage finishedGiveawayStorage;
     private GiveawayStorage giveawayStorage;
     private GiveawayCache giveawayCache;
     private ServerStorage serverStorage;
@@ -77,6 +79,7 @@ public class GiveawayBot extends JdaBot {
 
         this.threadManager = new ThreadManager();
         this.redisManager = new RedisManager(this);
+        this.finishedGiveawayStorage = new FinishedGiveawayStorage(this);
         this.giveawayStorage = new GiveawayStorage(this);
         this.giveawayCache = new GiveawayCache(this);
         this.serverStorage = new ServerStorage(this);
@@ -130,8 +133,14 @@ public class GiveawayBot extends JdaBot {
     }
 
     private void setupStorage() {
-        this.storageSettings.setAddress("127.0.0.1:27017");
-        this.storageSettings.setDatabase("giveaway-bot");
+        Config settings = this.getConfigStore().getConfig("settings");
+        this.storageSettings.setAddress(settings.string("mongo-ip") + ":" + settings.string("mongo-port"));
+        this.storageSettings.setDatabase(settings.string("mongo-storage-database"));
+        if (settings.has("mongo-username")) {
+            this.storageSettings.setAuthDatabase(settings.string("mongo-auth-database"));
+            this.storageSettings.setUsername(settings.string("mongo-username"));
+            this.storageSettings.setPassword(settings.string("mongo-password"));
+        }
     }
 
     private void setupThrowable() {

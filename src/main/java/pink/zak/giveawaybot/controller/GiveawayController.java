@@ -98,16 +98,16 @@ public class GiveawayController {
     }
 
     public void deleteGiveaway(Giveaway giveaway) {
-        this.giveawayCache.invalidateAsync(giveaway.uuid(), false);
+        this.giveawayCache.invalidateAsync(giveaway.messageId(), false);
         this.serverCache.get(giveaway.serverId()).thenAccept(server -> {
             server.getActiveGiveaways().remove(giveaway.messageId());
-            GiveawayBot.getLogger().info("Removing giveaway from server {}  :  {}", giveaway.serverId(), giveaway.uuid());
+            GiveawayBot.getLogger().info("Removing giveaway from server {}  :  {}", giveaway.serverId(), giveaway.messageId());
             UserCache userCache = server.getUserCache();
             for (long enteredId : giveaway.enteredUsers()) {
-                userCache.get(enteredId).thenAccept(user -> user.entries().remove(giveaway.uuid()));
+                userCache.get(enteredId).thenAccept(user -> user.entries().remove(giveaway.messageId()));
             }
         });
-        this.giveawayStorage.delete(giveaway.uuid().toString());
+        this.giveawayStorage.delete(String.valueOf(giveaway.messageId()));
     }
 
     public void loadAllGiveaways() {
@@ -145,7 +145,7 @@ public class GiveawayController {
                     if (user == null || user.isBanned() || user.isShadowBanned()) {
                         continue;
                     }
-                    Map<EntryType, AtomicInteger> entries = user.entries().get(giveaway.uuid());
+                    Map<EntryType, AtomicInteger> entries = user.entries().get(giveaway.messageId());
                     if (entries != null) {
                         BigInteger totalUserEntries = BigInteger.ZERO;
                         for (AtomicInteger entryTypeAmount : entries.values()) {
@@ -166,7 +166,7 @@ public class GiveawayController {
                     return;
                 }
                 Set<Long> winners = this.generateWinners(giveaway, totalEntries, userEntriesMap);
-                GiveawayBot.getLogger().info("Giveaway {} generated winners {}", giveaway.uuid(), winners);
+                GiveawayBot.getLogger().info("Giveaway {} generated winners {}", giveaway.messageId(), winners);
                 StringBuilder descriptionBuilder = new StringBuilder();
                 for (long winnerId : winners) {
                     descriptionBuilder.append("<@").append(winnerId).append(">\n");
@@ -235,7 +235,7 @@ public class GiveawayController {
 
     private void startGiveawayTimer(Giveaway giveaway) {
         this.threadManager.getUpdaterExecutor().schedule(() -> {
-            GiveawayBot.getLogger().info("Giveaway {} expired", giveaway.uuid());
+            GiveawayBot.getLogger().info("Giveaway {} expired", giveaway.messageId());
             this.endGiveaway(giveaway);
         }, giveaway.getTimeToExpiry(), TimeUnit.MILLISECONDS);
     }
