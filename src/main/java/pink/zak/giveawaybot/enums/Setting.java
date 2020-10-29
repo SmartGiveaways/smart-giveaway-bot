@@ -7,6 +7,7 @@ import pink.zak.giveawaybot.service.types.StringUtils;
 
 import java.util.Set;
 import java.util.function.BiFunction;
+import java.util.function.BiPredicate;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -14,8 +15,8 @@ public enum Setting {
 
     ENABLE_REACT_TO_ENTER("React to message to enter", Boolean::parseBoolean, StringUtils::isBoolean, "react-to-enter"),
     REACT_TO_ENTER_EMOJI("The emoji to react with", ReactionContainer::fromUnknown, (str, guild) -> {
-        return ReactionContainer.fromUnknown(str, guild).getReactionEmote() != null;
-    }, "reaction-emote", "react-emote", "reaction-emoji", "react-emoji", "react-to-enter-emote"),
+        return ReactionContainer.fromUnknown(str, guild) != null;
+    }, "reaction-emote", "react-emote", "reaction-emoji", "react-emoji", "react-to-enter-emote", "reaction"),
     ENABLE_MESSAGE_ENTRIES("Send messages to gain entries", Boolean::parseBoolean, StringUtils::isBoolean, "enable-message-entries", "use-message-entries"),
     ENTRIES_PER_MESSAGE("Entries per sent message", "The max entries per message is 3", 3, Integer::parseInt, StringUtils::isNumerical, o -> ((Integer) o) <= 3, "entries-per-message", "message-entries"),
     ENABLE_INVITE_ENTRIES("Invite users to gain entries", Boolean::parseBoolean, StringUtils::isBoolean, "enable-invite-entries", "use-invite-entries"),
@@ -27,7 +28,7 @@ public enum Setting {
     private final Set<String> configNames;
     private final String primaryConfigName;
     // Nullable values
-    private BiFunction<String, Guild, Boolean> guildInputChecker;
+    private BiPredicate<String, Guild> guildInputChecker;
     private Function<String, Boolean> inputChecker;
     private Function<String, Object> parser;
     private BiFunction<String, Guild, Object> guildParser;
@@ -36,7 +37,7 @@ public enum Setting {
     private final Object maxValue;
     private final Predicate<Object> limitChecker;
 
-    Setting(String description, String limitMessage, Object maxValue, BiFunction<String, Guild, Object> guildParser, BiFunction<String, Guild, Boolean> guildInputChecker, Predicate<Object> limitChecker, String... configNames) {
+    Setting(String description, String limitMessage, Object maxValue, BiFunction<String, Guild, Object> guildParser, BiPredicate<String, Guild> guildInputChecker, Predicate<Object> limitChecker, String... configNames) {
         this.description = description;
         this.limitMessage = limitMessage;
         this.maxValue = maxValue;
@@ -58,7 +59,7 @@ public enum Setting {
         this.configNames = Sets.newHashSet(configNames);
     }
 
-    Setting(String description, BiFunction<String, Guild, Object> guildParser, BiFunction<String, Guild, Boolean> guildInputChecker, String... configNames) {
+    Setting(String description, BiFunction<String, Guild, Object> guildParser, BiPredicate<String, Guild> guildInputChecker, String... configNames) {
         this(description, null, null, guildParser, guildInputChecker, null, configNames);
     }
 
@@ -91,7 +92,7 @@ public enum Setting {
     }
 
     public boolean checkInput(String input, Guild guild) {
-        return this.guildInputChecker.apply(input, guild);
+        return this.guildInputChecker.test(input, guild);
     }
 
     public boolean checkInput(String input) {

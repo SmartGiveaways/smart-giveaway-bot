@@ -7,6 +7,10 @@ import java.util.Map;
 public class ArgumentHandler {
     private static Map<Class<?>, ArgumentType<?>> argumentTypes = Maps.newHashMap();
 
+    private ArgumentHandler() {
+        throw new IllegalStateException("Registry class cannot be instantiated.");
+    }
+
     public static void register(Class<?> clazz, ArgumentType<?> argumentType) {
         argumentTypes.put(clazz, argumentType);
     }

@@ -6,16 +6,17 @@ import java.math.BigInteger;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class User {
     private final long id;
     private final long serverId;
-    private final ConcurrentHashMap<Long, EnumMap<EntryType, AtomicInteger>> entries;
+    private final ConcurrentMap<Long, EnumMap<EntryType, AtomicInteger>> entries;
     private boolean banned;
     private boolean shadowBanned;
 
-    public User(long id, long serverId, boolean banned, boolean shadowBanned, ConcurrentHashMap<Long, EnumMap<EntryType, AtomicInteger>> entries) {
+    public User(long id, long serverId, boolean banned, boolean shadowBanned, ConcurrentMap<Long, EnumMap<EntryType, AtomicInteger>> entries) {
         this.id = id;
         this.serverId = serverId;
         this.banned = banned;
@@ -32,7 +33,7 @@ public class User {
         if (!this.entries.containsKey(id)) {
             return total;
         }
-        for (Map.Entry<EntryType, AtomicInteger> entry : this.entries.get(id).entrySet()) { // TODO error here
+        for (Map.Entry<EntryType, AtomicInteger> entry : this.entries.get(id).entrySet()) {
             total = total.add(BigInteger.valueOf(entry.getValue().get()));
         }
         return total;
@@ -74,7 +75,7 @@ public class User {
         return this.shadowBanned;
     }
 
-    public ConcurrentHashMap<Long, EnumMap<EntryType, AtomicInteger>> entries() {
+    public ConcurrentMap<Long, EnumMap<EntryType, AtomicInteger>> entries() {
         return this.entries;
     }
 }

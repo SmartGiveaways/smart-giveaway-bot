@@ -17,7 +17,7 @@ import java.util.Set;
 import java.util.function.UnaryOperator;
 
 public class Config {
-    private final SimpleBot bot;
+    private final Path basePath;
     private final File file;
     private final boolean reloadable;
     private YamlConfiguration configuration;
@@ -25,8 +25,8 @@ public class Config {
     private Set<String> enduringKeys;
 
     public Config(SimpleBot bot, UnaryOperator<Path> path, boolean reloadable, String... enduringKeys) {
-        this.bot = bot;
-        this.file = path.apply(this.bot.getBasePath()).toFile();
+        this.basePath = bot.getBasePath();
+        this.file = path.apply(this.basePath).toFile();
         this.reloadable = reloadable;
         this.enduringKeys = Sets.newHashSet(enduringKeys);
         this.createIfAbsent(path.apply(Paths.get("")).toString());
@@ -35,12 +35,19 @@ public class Config {
     }
 
     public Config(SimpleBot bot, File file, boolean reloadable, String... enduringKeys) {
-        this.bot = bot;
+        this.basePath = bot.getBasePath();
         this.file = file;
         this.reloadable = reloadable;
         this.enduringKeys = Sets.newHashSet(enduringKeys);
         this.reload();
-        this.load();
+    }
+
+    public Config(SimpleBot bot, File file, String... enduringKeys) {
+        this.basePath = bot.getBasePath();
+        this.file = file;
+        this.reloadable = false;
+        this.enduringKeys = Sets.newHashSet(enduringKeys);
+        this.reload();
     }
 
     public YamlConfiguration getConfiguration() {
@@ -119,9 +126,9 @@ public class Config {
 
     private void createIfAbsent(String file) {
         if (!this.file.exists()) {
-            this.bot.getBasePath().toFile().mkdirs();
-            GiveawayBot.getLogger().error("The file '".concat(file).concat("' did not exist. You must make it"));
-            GiveawayBot.getLogger().info("Target path to file: ".concat(this.file.getAbsolutePath()));
+            this.basePath.toFile().mkdirs();
+            GiveawayBot.getLogger().error("The file '{}' did not exist. You must make it.", file);
+            GiveawayBot.getLogger().error("Target path to file: {}", this.file.getAbsolutePath());
         }
     }
 }

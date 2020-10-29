@@ -26,7 +26,7 @@ public class MySqlConnectionFactory {
             GiveawayBot.getLogger().error("Could not setup mysql, please check your credentials.", ex);
         }
         if (this.getConnection() != null) {
-            GiveawayBot.getLogger().info("Connected to MySQL on ".concat(storageSettings.getHost()));
+            GiveawayBot.getLogger().info("Connected to MySQL on {}", storageSettings.getHost());
         }
     }
 

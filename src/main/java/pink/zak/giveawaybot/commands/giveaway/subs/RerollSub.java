@@ -6,7 +6,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.cache.FinishedGiveawayCache;
 import pink.zak.giveawaybot.cache.ServerCache;
-import pink.zak.giveawaybot.controller.GiveawayController;
+import pink.zak.giveawaybot.controllers.GiveawayController;
 import pink.zak.giveawaybot.service.command.command.SubCommand;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package pink.zak.giveawaybot.controller;
+package pink.zak.giveawaybot.controllers;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.entities.MessageReaction;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.exceptions.RateLimitedException;
+import net.dv8tion.jda.api.requests.ErrorResponse;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.cache.FinishedGiveawayCache;
@@ -19,9 +20,11 @@ import pink.zak.giveawaybot.cache.UserCache;
 import pink.zak.giveawaybot.enums.EntryType;
 import pink.zak.giveawaybot.enums.ReturnCode;
 import pink.zak.giveawaybot.enums.Setting;
-import pink.zak.giveawaybot.models.*;
-import pink.zak.giveawaybot.models.giveaway.FinishedGiveaway;
+import pink.zak.giveawaybot.models.Preset;
+import pink.zak.giveawaybot.models.Server;
+import pink.zak.giveawaybot.models.User;
 import pink.zak.giveawaybot.models.giveaway.CurrentGiveaway;
+import pink.zak.giveawaybot.models.giveaway.FinishedGiveaway;
 import pink.zak.giveawaybot.models.giveaway.Giveaway;
 import pink.zak.giveawaybot.service.colour.Palette;
 import pink.zak.giveawaybot.service.time.Time;
@@ -68,7 +71,7 @@ public class GiveawayController {
             if (server.getActiveGiveaways().size() >= 50) {
                 return ImmutablePair.of((CurrentGiveaway) null, ReturnCode.GIVEAWAY_LIMIT_FAILURE);
             }
-            if (winnerAmount > 5 || winnerAmount < 1) {
+            if (winnerAmount > 20 || winnerAmount < 1) {
                 return ImmutablePair.of((CurrentGiveaway) null, ReturnCode.WINNER_LIMIT_FAILURE);
             }
             Preset preset = presetName.equalsIgnoreCase("default") ? this.defaultPreset : server.getPreset(presetName);
@@ -81,15 +84,27 @@ public class GiveawayController {
                         .setColor(this.palette.primary())
                         .setFooter("Ends in " + Time.format(length) + " with " + winnerAmount + " winner" + (winnerAmount > 1 ? "s" : ""))
                         .build()).complete(true);
+
+                CurrentGiveaway giveaway = new CurrentGiveaway(message.getIdLong(), giveawayChannel.getIdLong(), giveawayChannel.getGuild().getIdLong(), endTime, winnerAmount, presetName, giveawayItem);
+
+                // Add reaction
                 if ((boolean) preset.getSetting(Setting.ENABLE_REACT_TO_ENTER)) {
                     MessageReaction.ReactionEmote reaction = ((ReactionContainer) preset.getSetting(Setting.REACT_TO_ENTER_EMOJI)).getReactionEmote();
+                    if (reaction == null) {
+                        return ImmutablePair.of(giveaway, ReturnCode.UNKNOWN_EMOJI);
+                    }
                     if (reaction.isEmoji()) {
                         message.addReaction(reaction.getEmoji()).queue();
                     } else {
-                        message.addReaction(reaction.getEmote()).queue();
+                        try {
+                            message.addReaction(reaction.getEmote()).queue();
+                        } catch (ErrorResponseException ex) {
+                            if (ex.getErrorResponse() == ErrorResponse.UNKNOWN_EMOJI) {
+                                return ImmutablePair.of(giveaway, ReturnCode.UNKNOWN_EMOJI);
+                            }
+                        }
                     }
                 }
-                CurrentGiveaway giveaway = new CurrentGiveaway(message.getIdLong(), giveawayChannel.getIdLong(), giveawayChannel.getGuild().getIdLong(), endTime, winnerAmount, presetName, giveawayItem);
                 this.giveawayCache.addGiveaway(giveaway);
                 server.addActiveGiveaway(giveaway);
                 this.startGiveawayTimer(giveaway);
@@ -146,7 +161,6 @@ public class GiveawayController {
                         userEntriesMap.put(user.id(), totalUserEntries);
                     }
                 }
-                GiveawayBot.getLogger().info(userEntriesMap.toString());
                 server.getActiveGiveaways().remove(giveaway.channelId());
                 if (totalEntries.equals(BigInteger.ZERO)) {
                     giveawayMessage.editMessage(new EmbedBuilder()
@@ -202,8 +216,8 @@ public class GiveawayController {
                 decreasingRandom = decreasingRandom.subtract(entry.getValue());
                 if (decreasingRandom.compareTo(BigInteger.ONE) < 0) {
                     winners.add(entry.getKey());
-                    if (i + 1 <= winnerAmount) { // Prevent duplicates if it will be looped again
-                        userEntries.remove(entry.getKey());
+                    if (i + 1 <= winnerAmount) {
+                        userEntries.remove(entry.getKey());// Prevent duplicates if it will be looped again
                         currentTotalEntries = currentTotalEntries.subtract(entry.getValue());
                     }
                     break;

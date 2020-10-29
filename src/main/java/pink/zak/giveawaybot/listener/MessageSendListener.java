@@ -14,6 +14,7 @@ public class MessageSendListener extends ListenerAdapter {
         this.entryPipeline = bot.getEntryPipeline();
     }
 
+    @Override
     public void onGuildMessageReceived(@NotNull GuildMessageReceivedEvent event) {
         if (event.getAuthor().isBot()) {
             return;

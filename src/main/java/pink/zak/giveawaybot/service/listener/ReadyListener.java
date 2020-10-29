@@ -13,6 +13,7 @@ public class ReadyListener extends ListenerAdapter {
         this.bot = bot;
     }
 
+    @Override
     public void onReady(@NotNull ReadyEvent readyEvent) {
         if (!this.triggered) {
             this.triggered = true;

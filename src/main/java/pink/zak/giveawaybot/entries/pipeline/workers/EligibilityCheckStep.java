@@ -3,9 +3,9 @@ package pink.zak.giveawaybot.entries.pipeline.workers;
 import com.google.common.collect.Maps;
 import pink.zak.giveawaybot.enums.EntryType;
 import pink.zak.giveawaybot.enums.Setting;
-import pink.zak.giveawaybot.models.giveaway.CurrentGiveaway;
 import pink.zak.giveawaybot.models.Preset;
 import pink.zak.giveawaybot.models.User;
+import pink.zak.giveawaybot.models.giveaway.CurrentGiveaway;
 
 import java.math.BigInteger;
 

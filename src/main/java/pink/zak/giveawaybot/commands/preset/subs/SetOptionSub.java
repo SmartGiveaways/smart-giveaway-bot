@@ -55,7 +55,7 @@ public class SetOptionSub extends SubCommand {
             preset.setSetting(setting, parsedValue);
             event.getChannel().sendMessage("Set the " + setting.getPrimaryConfigName() + " setting to " + parsedValue + ".").queue();
         }).exceptionally(ex -> {
-            ex.printStackTrace();
+            GiveawayBot.getLogger().error("Error in SetOptionSub", ex);
             return null;
         });
     }

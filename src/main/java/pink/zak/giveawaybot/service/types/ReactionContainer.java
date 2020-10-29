@@ -9,26 +9,29 @@ import net.dv8tion.jda.api.entities.MessageReaction;
 import java.util.List;
 
 public class ReactionContainer {
-    private final MessageReaction.ReactionEmote reactionEmote;
+    private MessageReaction.ReactionEmote reactionEmote;
 
     public static ReactionContainer fromUnknown(String input, Guild guild) {
         if (input.startsWith("<") && input.endsWith(">") && input.contains(":")) {
             String[] split = input.split(":");
             if (split.length != 3 || split[2].length() < 19) {
-                return new ReactionContainer((MessageReaction.ReactionEmote) null);
+                return null;
             }
             String id = split[2].substring(0, split[2].length() - 1);
             try {
-                return new ReactionContainer(guild.getEmoteById(id));
+                ReactionContainer built = new ReactionContainer(guild.getEmoteById(id));
+                if (built.getReactionEmote() == null) {
+                    return null;
+                }
             } catch (NumberFormatException ex) {
-                return new ReactionContainer((MessageReaction.ReactionEmote) null);
+                return null;
             }
         }
         List<String> parsed = EmojiParser.extractEmojis(input);
         if (parsed.size() == 1) {
             return new ReactionContainer(parsed.get(0), guild.getJDA());
         }
-        return new ReactionContainer((MessageReaction.ReactionEmote) null);
+        return null;
     }
 
     public ReactionContainer(String unicode, JDA api) {
@@ -36,7 +39,11 @@ public class ReactionContainer {
     }
 
     public ReactionContainer(Emote emote) {
-        this.reactionEmote = MessageReaction.ReactionEmote.fromCustom(emote);
+        try {
+            this.reactionEmote = MessageReaction.ReactionEmote.fromCustom(emote);
+        } catch (NullPointerException ex) {
+            this.reactionEmote = null;
+        }
     }
 
     public ReactionContainer(MessageReaction.ReactionEmote emote) {

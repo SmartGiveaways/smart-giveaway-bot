@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.cache.UserCache;
+import pink.zak.giveawaybot.lang.enums.Language;
 import pink.zak.giveawaybot.models.giveaway.CurrentGiveaway;
 import pink.zak.giveawaybot.storage.UserStorage;
 
@@ -20,18 +21,20 @@ public class Server {
     private final Set<Long> activeGiveaways;
     private final Map<String, Preset> presets;
     private final Set<Long> managerRoles;
+    private Language language;
 
-    public Server(GiveawayBot bot, long id, Set<Long> activeGiveaways, Map<String, Preset> presets, Set<Long> managerRoles) {
+    public Server(GiveawayBot bot, long id, Set<Long> activeGiveaways, Map<String, Preset> presets, Set<Long> managerRoles, Language language) {
         this.id = id;
         this.presets = presets;
         this.userStorage = new UserStorage(bot, this.getId());
         this.userCache = new UserCache(bot, this.userStorage, this.id);
         this.activeGiveaways = activeGiveaways;
         this.managerRoles = managerRoles;
+        this.language = language;
     }
 
     public Server(GiveawayBot bot, long id) {
-        this(bot, id, Sets.newConcurrentHashSet(), Maps.newConcurrentMap(), Sets.newHashSet());
+        this(bot, id, Sets.newConcurrentHashSet(), Maps.newConcurrentMap(), Sets.newHashSet(), Language.ENGLISH_UK);
     }
 
     public long getId() {
@@ -95,5 +98,13 @@ public class Server {
 
     public void removeManagerRole(long managerRoleId) {
         this.managerRoles.remove(managerRoleId);
+    }
+
+    public void setLanguage(Language language) {
+        this.language = language;
+    }
+
+    public Language getLanguage() {
+        return this.language;
     }
 }

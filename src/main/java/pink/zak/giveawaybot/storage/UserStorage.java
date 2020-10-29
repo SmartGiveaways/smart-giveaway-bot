@@ -13,8 +13,8 @@ import pink.zak.giveawaybot.service.types.MapCreator;
 
 import java.util.EnumMap;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class UserStorage extends Storage<User> {
@@ -46,7 +46,7 @@ public class UserStorage extends Storage<User> {
             long id = json.get("userId").getAsLong();
             boolean banned = json.get("banned").getAsBoolean();
             boolean shadowBanned = json.get("shadowBanned").getAsBoolean();
-            ConcurrentHashMap<Long, EnumMap<EntryType, AtomicInteger>> entries = gson.fromJson(json.get("entries").getAsString(), new TypeToken<ConcurrentHashMap<Long, EnumMap<EntryType, AtomicInteger>>>(){}.getType());
+            ConcurrentMap<Long, EnumMap<EntryType, AtomicInteger>> entries = gson.fromJson(json.get("entries").getAsString(), new TypeToken<ConcurrentHashMap<Long, EnumMap<EntryType, AtomicInteger>>>(){}.getType());
             return new User(id, this.serverId, banned, shadowBanned, entries);
         };
     }

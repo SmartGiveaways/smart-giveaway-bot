@@ -1,4 +1,4 @@
-package pink.zak.giveawaybot.controller;
+package pink.zak.giveawaybot.controllers;
 
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.cache.ServerCache;

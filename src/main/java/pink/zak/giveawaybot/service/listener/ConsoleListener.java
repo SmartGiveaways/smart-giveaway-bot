@@ -16,12 +16,8 @@ public class ConsoleListener implements Runnable {
         Scanner scanner = new Scanner(System.in);
         while (scanner.hasNextLine()) {
             String input = scanner.nextLine();
-            switch (input.toLowerCase()) {
-                case "stop":
-                    if (this.bot.isInitialized()) {
-                        System.exit(0);
-                    }
-                    break;
+            if (input.equalsIgnoreCase("stop") && this.bot.isInitialized()) {
+                System.exit(0);
             }
         }
     }

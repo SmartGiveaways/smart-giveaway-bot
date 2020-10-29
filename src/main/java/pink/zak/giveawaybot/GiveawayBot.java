@@ -1,13 +1,10 @@
 package pink.zak.giveawaybot;
 
-import ch.qos.logback.classic.Level;
-import ch.qos.logback.classic.LoggerContext;
 import com.google.common.collect.Sets;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import pink.zak.giveawaybot.cache.FinishedGiveawayCache;
 import pink.zak.giveawaybot.cache.GiveawayCache;
 import pink.zak.giveawaybot.cache.ServerCache;
@@ -17,8 +14,8 @@ import pink.zak.giveawaybot.commands.ban.UnbanCommand;
 import pink.zak.giveawaybot.commands.entries.EntriesCommand;
 import pink.zak.giveawaybot.commands.giveaway.GiveawayCommand;
 import pink.zak.giveawaybot.commands.preset.PresetCommand;
-import pink.zak.giveawaybot.controller.GiveawayController;
-import pink.zak.giveawaybot.controller.UserController;
+import pink.zak.giveawaybot.controllers.GiveawayController;
+import pink.zak.giveawaybot.controllers.UserController;
 import pink.zak.giveawaybot.defaults.Defaults;
 import pink.zak.giveawaybot.entries.pipeline.EntryPipeline;
 import pink.zak.giveawaybot.listener.MessageSendListener;
@@ -68,7 +65,6 @@ public class GiveawayBot extends JdaBot {
     }
 
     public void load() {
-        ((LoggerContext) LoggerFactory.getILoggerFactory()).getLogger("org.mongodb.driver").setLevel(Level.WARN);
         this.configRelations();
         this.setupThrowable();
         this.setupStorage();

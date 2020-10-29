@@ -30,6 +30,7 @@ public class ReactionAddListener extends ListenerAdapter {
         this.baseMap.put(EntryType.REACTION, new AtomicInteger(1));
     }
 
+    @Override
     public void onGuildMessageReactionAdd(GuildMessageReactionAddEvent event) {
         if (event.getUser().isBot()) {
             return;
@@ -57,11 +58,11 @@ public class ReactionAddListener extends ListenerAdapter {
                     user.entries().put(giveaway.messageId(), this.baseMap.clone());
                 });
             }).exceptionally(ex -> {
-                ex.printStackTrace();
+                GiveawayBot.getLogger().error("messageId:userId:serverId  {}:{}:{}", messageId, userId, server.getId(), ex);
                 return null;
             });
         }).exceptionally(ex -> {
-            ex.printStackTrace();
+            GiveawayBot.getLogger().error("Error in ReactionAddListener point A", ex);
             return null;
         });
     }

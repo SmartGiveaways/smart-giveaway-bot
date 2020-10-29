@@ -12,7 +12,7 @@ import java.awt.*;
 
 public class Defaults {
     private final JDA jda;
-    public static Preset defaultPreset;
+    public static final Preset defaultPreset = new Preset("default");
     private Palette palette;
 
     public Defaults(GiveawayBot bot) {
@@ -22,7 +22,6 @@ public class Defaults {
     }
 
     private void setupDefaultPreset() {
-        defaultPreset = new Preset("default");
         defaultPreset.setSetting(Setting.ENABLE_REACT_TO_ENTER, true);
         defaultPreset.setSetting(Setting.REACT_TO_ENTER_EMOJI, new ReactionContainer("\uD83C\uDF89", this.jda));
         defaultPreset.setSetting(Setting.ENABLE_MESSAGE_ENTRIES, true);

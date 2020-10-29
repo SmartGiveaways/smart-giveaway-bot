@@ -9,6 +9,7 @@ import pink.zak.giveawaybot.service.command.argument.Argument;
 import pink.zak.giveawaybot.service.command.argument.ArgumentHandler;
 
 import java.util.List;
+import java.util.function.Predicate;
 
 public abstract class SubCommand extends Command {
     private final boolean endless;
@@ -50,11 +51,15 @@ public abstract class SubCommand extends Command {
     }
 
     protected <S> void addArgument(Class<S> clazz) {
-        this.arguments.add(new Argument<S>(ArgumentHandler.getArgumentType(clazz)));
+        this.arguments.add(new Argument<>(ArgumentHandler.getArgumentType(clazz)));
+    }
+
+    protected <S> void addArgument(Class<S> clazz, Predicate<String> tester) {
+        this.arguments.add(new Argument<>(ArgumentHandler.getArgumentType(clazz), tester));
     }
 
     protected <S> void addArgument(Class<S> clazz, String argument) {
-        this.arguments.add(new Argument<S>(ArgumentHandler.getArgumentType(clazz), argument));
+        this.arguments.add(new Argument<>(ArgumentHandler.getArgumentType(clazz), argument));
     }
 
     protected <S> void addArguments(Class<S>... clazzes) {
@@ -73,7 +78,15 @@ public abstract class SubCommand extends Command {
     }
 
     public boolean isMatch(List<String> arguments) {
-        for (int i = 0; i < arguments.size(); i++) {
+        return this.isMatch(arguments, arguments.size());
+    }
+
+    public boolean isEndlessMatch(List<String> arguments) {
+        return this.isMatch(arguments, this.arguments.size());
+    }
+
+    public boolean isMatch(List<String> arguments, int endIndex) {
+        for (int i = 0; i < endIndex; i++) {
             if (!this.isArgumentValid(arguments, i)) {
                 return false;
             }
@@ -97,16 +110,15 @@ public abstract class SubCommand extends Command {
             return true;
         }
         Argument<?> argument = this.arguments.get(index);
+        String matchTo = arguments.get(index);
         if (argument.getType() == null) {
-            String matchTo = arguments.get(index);
             for (String alias : argument.getAliases()) {
                 if (matchTo.equalsIgnoreCase(alias)) {
                     return true;
                 }
             }
-            return argument.getArgument() != null && arguments.get(index).equalsIgnoreCase(argument.getArgument());
-        }
-        return true;
+            return argument.getArgumentName() != null && arguments.get(index).equalsIgnoreCase(argument.getArgumentName());
+        } else return argument.getTester() == null || argument.getTester().test(matchTo);
     }
 
     @Override

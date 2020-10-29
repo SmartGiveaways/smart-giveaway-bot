@@ -95,7 +95,7 @@ public class CommandBase extends ListenerAdapter {
 
             SubCommand subResult = null;
             for (SubCommand subCommand : simpleCommand.getSubCommands()) {
-                if ((args.size() > subCommand.getArgumentsSize() && subCommand.isEndless()) || (subCommand.getArgumentsSize() == args.size() && subCommand.isMatch(args))) {
+                if ((args.size() > subCommand.getArgumentsSize() && subCommand.isEndless() && subCommand.isEndlessMatch(args)) || (subCommand.getArgumentsSize() == args.size() && subCommand.isMatch(args))) {
                     subResult = subCommand;
                     break;
                 }
@@ -149,8 +149,8 @@ public class CommandBase extends ListenerAdapter {
                     try {
                         return guild.retrieveMemberById(id).complete();
                     } catch (ErrorResponseException ex) {
-                        if (!(ex.getErrorResponse() == ErrorResponse.UNKNOWN_USER)) {
-                            ex.printStackTrace();
+                        if (ex.getErrorResponse() != ErrorResponse.UNKNOWN_USER && ex.getErrorResponse() != ErrorResponse.UNKNOWN_MEMBER) {
+                            GiveawayBot.getLogger().error("Error parsing MEMBER type from command. Input {}", id, ex);
                         }
                         return null;
                     }
@@ -163,8 +163,8 @@ public class CommandBase extends ListenerAdapter {
                     try {
                         return this.bot.getShardManager().retrieveUserById(id).complete();
                     } catch (ErrorResponseException ex) {
-                        if (!(ex.getErrorResponse() == ErrorResponse.UNKNOWN_USER)) {
-                            ex.printStackTrace();
+                        if (ex.getErrorResponse() != ErrorResponse.UNKNOWN_USER) {
+                            GiveawayBot.getLogger().error("Error parsing MEMBER type from command. Input {}", id, ex);
                         }
                         return null;
                     }

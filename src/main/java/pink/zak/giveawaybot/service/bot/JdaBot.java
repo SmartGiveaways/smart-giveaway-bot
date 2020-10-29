@@ -1,6 +1,5 @@
 package pink.zak.giveawaybot.service.bot;
 
-import com.google.common.collect.Sets;
 import lombok.SneakyThrows;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.requests.GatewayIntent;
@@ -21,6 +20,7 @@ import pink.zak.giveawaybot.service.storage.settings.StorageSettings;
 import javax.security.auth.login.LoginException;
 import java.io.File;
 import java.nio.file.Path;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.UnaryOperator;
 
@@ -39,12 +39,9 @@ public abstract class JdaBot implements SimpleBot {
         this.storageSettings = new StorageSettings();
         this.backendFactory = new BackendFactory(this);
         this.configStore = new ConfigStore(this);
-        logger.info("Base path set to: ".concat(this.getClass().getProtectionDomain().getCodeSource().getLocation().toURI().toString()));
+        logger.info("Base path set to: {}", this.getClass().getProtectionDomain().getCodeSource().getLocation().toURI());
         this.basePath = subBasePath.apply(new File(this.getClass().getProtectionDomain().getCodeSource().getLocation().toURI()).getParentFile().toPath().toAbsolutePath());
     }
-
-    @Override
-    public abstract void unload();
 
     @SneakyThrows
     @Override
@@ -52,7 +49,8 @@ public abstract class JdaBot implements SimpleBot {
         this.commandBase = new CommandBase(bot);
         this.prefix = prefix;
         try {
-            DefaultShardManagerBuilder builder = DefaultShardManagerBuilder.createDefault(token, intents == null ? Sets.newHashSet() : intents)
+            DefaultShardManagerBuilder builder = DefaultShardManagerBuilder.createDefault(token)
+                    .setEnabledIntents(intents)
                     .addEventListeners(this.commandBase, new ReadyListener(this));
             jdaOperator.apply(builder);
             this.shardManager = builder.build();
@@ -129,6 +127,7 @@ public abstract class JdaBot implements SimpleBot {
 
     @Override
     public JDA getJda() {
-        return this.shardManager.getShards().stream().findAny().get();
+        Optional<JDA> optionalJDA = this.shardManager.getShards().stream().findAny();
+        return optionalJDA.orElse(null);
     }
 }
