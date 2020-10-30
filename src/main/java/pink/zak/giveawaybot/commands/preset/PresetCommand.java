@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.commands.preset.subs.*;
+import pink.zak.giveawaybot.models.Server;
 import pink.zak.giveawaybot.service.colour.Palette;
 import pink.zak.giveawaybot.service.command.command.SimpleCommand;
 
@@ -36,7 +37,7 @@ public class PresetCommand extends SimpleCommand {
     }
 
     @Override
-    public void onExecute(Member sender, MessageReceivedEvent event, List<String> args) {
+    public void onExecute(Member sender, Server server, MessageReceivedEvent event, List<String> args) {
         event.getChannel().sendMessage(this.messageEmbed).queue(message -> {
             message.delete().queueAfter(60, TimeUnit.SECONDS, unused -> {
             }, this.bot.getDeleteFailureThrowable());

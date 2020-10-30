@@ -64,56 +64,53 @@ public class GiveawayController {
         this.startGiveawayUpdater();
     }
 
-    public ImmutablePair<CurrentGiveaway, ReturnCode> createGiveaway(long length, int winnerAmount, TextChannel giveawayChannel, String presetName, String giveawayItem) {
-        long serverId = giveawayChannel.getGuild().getIdLong();
+    public ImmutablePair<CurrentGiveaway, ReturnCode> createGiveaway(Server server, long length, int winnerAmount, TextChannel giveawayChannel, String presetName, String giveawayItem) {
         long endTime = System.currentTimeMillis() + length;
-        return this.serverCache.get(serverId).thenApply(server -> {
-            if (server.getActiveGiveaways().size() >= 50) {
-                return ImmutablePair.of((CurrentGiveaway) null, ReturnCode.GIVEAWAY_LIMIT_FAILURE);
-            }
-            if (winnerAmount > 20 || winnerAmount < 1) {
-                return ImmutablePair.of((CurrentGiveaway) null, ReturnCode.WINNER_LIMIT_FAILURE);
-            }
-            Preset preset = presetName.equalsIgnoreCase("default") ? this.defaultPreset : server.getPreset(presetName);
-            if (preset == null) {
-                return ImmutablePair.of((CurrentGiveaway) null, ReturnCode.NO_PRESET);
-            }
-            try {
-                Message message = giveawayChannel.sendMessage(new EmbedBuilder()
-                        .setTitle("Giveaway: ".concat(giveawayItem))
-                        .setColor(this.palette.primary())
-                        .setFooter("Ends in " + Time.format(length) + " with " + winnerAmount + " winner" + (winnerAmount > 1 ? "s" : ""))
-                        .build()).complete(true);
+        if (server.getActiveGiveaways().size() >= 50) {
+            return ImmutablePair.of(null, ReturnCode.GIVEAWAY_LIMIT_FAILURE);
+        }
+        if (winnerAmount > 20 || winnerAmount < 1) {
+            return ImmutablePair.of(null, ReturnCode.WINNER_LIMIT_FAILURE);
+        }
+        Preset preset = presetName.equalsIgnoreCase("default") ? this.defaultPreset : server.getPreset(presetName);
+        if (preset == null) {
+            return ImmutablePair.of(null, ReturnCode.NO_PRESET);
+        }
+        try {
+            Message message = giveawayChannel.sendMessage(new EmbedBuilder()
+                    .setTitle("Giveaway: ".concat(giveawayItem))
+                    .setColor(this.palette.primary())
+                    .setFooter("Ends in " + Time.format(length) + " with " + winnerAmount + " winner" + (winnerAmount > 1 ? "s" : ""))
+                    .build()).complete(true);
 
-                CurrentGiveaway giveaway = new CurrentGiveaway(message.getIdLong(), giveawayChannel.getIdLong(), giveawayChannel.getGuild().getIdLong(), endTime, winnerAmount, presetName, giveawayItem);
+            CurrentGiveaway giveaway = new CurrentGiveaway(message.getIdLong(), giveawayChannel.getIdLong(), giveawayChannel.getGuild().getIdLong(), endTime, winnerAmount, presetName, giveawayItem);
 
-                // Add reaction
-                if ((boolean) preset.getSetting(Setting.ENABLE_REACT_TO_ENTER)) {
-                    MessageReaction.ReactionEmote reaction = ((ReactionContainer) preset.getSetting(Setting.REACT_TO_ENTER_EMOJI)).getReactionEmote();
-                    if (reaction == null) {
-                        return ImmutablePair.of(giveaway, ReturnCode.UNKNOWN_EMOJI);
-                    }
-                    if (reaction.isEmoji()) {
-                        message.addReaction(reaction.getEmoji()).queue();
-                    } else {
-                        try {
-                            message.addReaction(reaction.getEmote()).queue();
-                        } catch (ErrorResponseException ex) {
-                            if (ex.getErrorResponse() == ErrorResponse.UNKNOWN_EMOJI) {
-                                return ImmutablePair.of(giveaway, ReturnCode.UNKNOWN_EMOJI);
-                            }
+            // Add reaction
+            if ((boolean) preset.getSetting(Setting.ENABLE_REACT_TO_ENTER)) {
+                MessageReaction.ReactionEmote reaction = ((ReactionContainer) preset.getSetting(Setting.REACT_TO_ENTER_EMOJI)).getReactionEmote();
+                if (reaction == null) {
+                    return ImmutablePair.of(giveaway, ReturnCode.UNKNOWN_EMOJI);
+                }
+                if (reaction.isEmoji()) {
+                    message.addReaction(reaction.getEmoji()).queue();
+                } else {
+                    try {
+                        message.addReaction(reaction.getEmote()).queue();
+                    } catch (ErrorResponseException ex) {
+                        if (ex.getErrorResponse() == ErrorResponse.UNKNOWN_EMOJI) {
+                            return ImmutablePair.of(giveaway, ReturnCode.UNKNOWN_EMOJI);
                         }
                     }
                 }
-                this.giveawayCache.addGiveaway(giveaway);
-                server.addActiveGiveaway(giveaway);
-                this.startGiveawayTimer(giveaway);
-                return ImmutablePair.of(giveaway, ReturnCode.SUCCESS);
-            } catch (RateLimitedException ex) {
-                GiveawayBot.getLogger().error("", ex);
-                return ImmutablePair.of((CurrentGiveaway) null, ReturnCode.RATE_LIMIT_FAILURE);
             }
-        }).join();
+            this.giveawayCache.addGiveaway(giveaway);
+            server.addActiveGiveaway(giveaway);
+            this.startGiveawayTimer(giveaway);
+            return ImmutablePair.of(giveaway, ReturnCode.SUCCESS);
+        } catch (RateLimitedException ex) {
+            GiveawayBot.getLogger().error("", ex);
+            return ImmutablePair.of((CurrentGiveaway) null, ReturnCode.RATE_LIMIT_FAILURE);
+        }
     }
 
     public void loadAllGiveaways() {

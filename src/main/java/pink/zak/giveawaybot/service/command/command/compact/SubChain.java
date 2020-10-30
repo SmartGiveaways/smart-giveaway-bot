@@ -4,6 +4,7 @@ import com.google.common.collect.Sets;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import pink.zak.giveawaybot.GiveawayBot;
+import pink.zak.giveawaybot.models.Server;
 import pink.zak.giveawaybot.service.command.argument.Argument;
 import pink.zak.giveawaybot.service.command.command.SubCommand;
 
@@ -23,7 +24,7 @@ public class SubChain {
         SubCommand subCommand = new SubCommand(bot, requiresManager) {
 
             @Override
-            public void onExecute(Member sender, MessageReceivedEvent event, List<String> args) {
+            public void onExecute(Member sender, Server server, MessageReceivedEvent event, List<String> args) {
                 executor.execute(sender, args, null);
             }
         };

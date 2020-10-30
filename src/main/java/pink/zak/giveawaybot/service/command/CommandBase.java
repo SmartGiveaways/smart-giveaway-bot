@@ -23,16 +23,19 @@ import pink.zak.giveawaybot.service.command.argument.ArgumentType;
 import pink.zak.giveawaybot.service.command.command.Command;
 import pink.zak.giveawaybot.service.command.command.SimpleCommand;
 import pink.zak.giveawaybot.service.command.command.SubCommand;
+import pink.zak.giveawaybot.threads.ThreadFunction;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 public class CommandBase extends ListenerAdapter {
     private final GiveawayBot bot;
     private final ServerCache serverCache;
+    private final ExecutorService executor;
     private final Set<SimpleCommand> commands = Sets.newHashSet();
     private final Cache<Long, Long> commandCooldowns;
     private final Consumer<Throwable> deleteFailureThrowable;
@@ -40,6 +43,7 @@ public class CommandBase extends ListenerAdapter {
     public CommandBase(GiveawayBot bot) {
         this.bot = bot;
         this.serverCache = bot.getServerCache();
+        this.executor = bot.getThreadManager().getAsyncExecutor(ThreadFunction.COMMANDS);
         this.commandCooldowns = new CacheBuilder<Long, Long>().expireAfterAccess(1, TimeUnit.SECONDS).setControlling(bot).build();
         this.deleteFailureThrowable = bot.getDeleteFailureThrowable();
         this.registerArgumentTypes();
@@ -70,47 +74,58 @@ public class CommandBase extends ListenerAdapter {
             return;
         }
         String commandName = rawMessage.substring(1).split(" ")[0];
-        for (SimpleCommand simpleCommand : this.commands) {
-            if (!simpleCommand.getCommand().equalsIgnoreCase(commandName) && !simpleCommand.getAliases().contains(commandName)) {
-                continue;
-            }
-            if (!this.hasAccess(simpleCommand, event.getMessage(), sender)) {
+        this.serverCache.get(event.getGuild().getIdLong()).thenAccept(server -> {
+            if (server == null) {
+                event.getTextChannel().sendMessage("There was a fatal error loading your server. Please join the support discord and scream at Zak.").queue();
                 return;
             }
-            Member member = event.getMember();
-            if (member == null) {
-                return;
-            }
-            if (!rawMessage.contains(" ")) {
-                if (this.isOnCooldown(event.getTextChannel(), event.getMessage(), sender)) {
-                    return;
-                }
-                this.commandCooldowns.set(member.getIdLong(), System.currentTimeMillis());
-                simpleCommand.middleMan(sender, event, Lists.newArrayList());
-                return;
-            }
-            String message = rawMessage.split(prefix.concat(commandName).concat(" "))[1];
-            List<String> args = Lists.newArrayList(message.split(" "));
-            args.removeIf(String::isEmpty);
+            this.executor.submit(() -> {
+                for (SimpleCommand simpleCommand : this.commands) {
+                    if (!simpleCommand.getCommand().equalsIgnoreCase(commandName) && !simpleCommand.getAliases().contains(commandName)) {
+                        continue;
+                    }
+                    if (!this.hasAccess(simpleCommand, event.getMessage(), sender)) {
+                        return;
+                    }
+                    Member member = event.getMember();
+                    if (member == null) {
+                        return;
+                    }
+                    if (!rawMessage.contains(" ")) {
+                        if (this.isOnCooldown(event.getTextChannel(), event.getMessage(), sender)) {
+                            return;
+                        }
+                        this.commandCooldowns.set(member.getIdLong(), System.currentTimeMillis());
+                        simpleCommand.middleMan(sender, server, event, Lists.newArrayList());
+                        return;
+                    }
+                    String message = rawMessage.split(prefix.concat(commandName).concat(" "))[1];
+                    List<String> args = Lists.newArrayList(message.split(" "));
+                    args.removeIf(String::isEmpty);
 
-            SubCommand subResult = null;
-            for (SubCommand subCommand : simpleCommand.getSubCommands()) {
-                if ((args.size() > subCommand.getArgumentsSize() && subCommand.isEndless() && subCommand.isEndlessMatch(args)) || (subCommand.getArgumentsSize() == args.size() && subCommand.isMatch(args))) {
-                    subResult = subCommand;
-                    break;
+                    SubCommand subResult = null;
+                    for (SubCommand subCommand : simpleCommand.getSubCommands()) {
+                        if ((args.size() > subCommand.getArgumentsSize() && subCommand.isEndless() && subCommand.isEndlessMatch(args)) || (subCommand.getArgumentsSize() == args.size() && subCommand.isMatch(args))) {
+                            subResult = subCommand;
+                            break;
+                        }
+                    }
+                    if (this.isOnCooldown(event.getTextChannel(), event.getMessage(), sender)) {
+                        return;
+                    }
+                    this.commandCooldowns.set(member.getIdLong(), System.currentTimeMillis());
+                    if (subResult == null) {
+                        simpleCommand.middleMan(sender, server, event, args);
+                        return;
+                    }
+                    if (this.hasAccess(subResult, event.getMessage(), sender))
+                        subResult.middleMan(sender, server, event, args);
                 }
-            }
-            if (this.isOnCooldown(event.getTextChannel(), event.getMessage(), sender)) {
-                return;
-            }
-            this.commandCooldowns.set(member.getIdLong(), System.currentTimeMillis());
-            if (subResult == null) {
-                simpleCommand.middleMan(sender, event, args);
-                return;
-            }
-            if (this.hasAccess(subResult, event.getMessage(), sender))
-                subResult.middleMan(sender, event, args);
-        }
+            });
+        }).exceptionally(ex -> {
+            GiveawayBot.getLogger().error("Error stemmed from CommandBase input {}", rawMessage, ex);
+            return null;
+        });
     }
 
     private boolean hasAccess(Command simpleCommand, Message message, Member member) {

@@ -5,6 +5,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import pink.zak.giveawaybot.GiveawayBot;
+import pink.zak.giveawaybot.models.Server;
 import pink.zak.giveawaybot.service.command.argument.Argument;
 import pink.zak.giveawaybot.service.command.argument.ArgumentHandler;
 
@@ -122,5 +123,5 @@ public abstract class SubCommand extends Command {
     }
 
     @Override
-    public abstract void onExecute(Member sender, MessageReceivedEvent event, List<String> args);
+    public abstract void onExecute(Member sender, Server server, MessageReceivedEvent event, List<String> args);
 }

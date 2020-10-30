@@ -1,0 +1,32 @@
+identifier: "english-uk"
+
+values:
+  # General messages
+  cant-find-member: ":x: Couldn't find that member :worried:"
+  no-active-giveaways: ":x: There are no active giveaways in this server"
+  fatal-error-loading-server: ":warning: There was a fatal error loading your server. Please join the support discord and scream at Zak."
+  
+  # General ban command messages
+  cannot-ban-self: ":x: You can't ban yourself dummy."
+  not-enough-permissions-ban: ":x: You're not high enough in the god complex to ban %target%"
+  
+  # >ban command messages
+  ban-help: ">ban <user> - Bans a user from giveaways."
+  target-already-banned: ":x: %target% is already banned."
+  cannot-ban-is-shadow-banned: ":x: %target% is shadow banned. Unban them first if you want to overwrite this."
+  banned-successfully: ":white_check_mark: banned %target%"
+  
+  # >sban command messages
+  shadow-ban-help: ""
+  target-already-shadow-banned: ""
+  cannot-ban-is-banned: ""
+  shadow-banned-successfully: ""
+  
+  # >entries command messages
+  self-banned-from-giveaways: ""
+  target-banned-from-giveaways: ""
+  self-not-entered: ""
+  target-not-entered: ""
+  entries-embed-title: ""
+  entries-embed-giveaway-line: ""
+  entries-embed-giveaway-line-plural: ""

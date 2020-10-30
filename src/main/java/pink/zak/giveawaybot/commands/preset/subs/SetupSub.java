@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.hooks.EventListener;
 import org.jetbrains.annotations.NotNull;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.enums.PresetSetupStage;
+import pink.zak.giveawaybot.models.Server;
 import pink.zak.giveawaybot.service.cache.Cache;
 import pink.zak.giveawaybot.service.cache.CacheBuilder;
 import pink.zak.giveawaybot.service.cache.options.CacheExpiryListener;
@@ -33,7 +34,7 @@ public class SetupSub extends SubCommand implements CacheExpiryListener<Long, Mu
     }
 
     @Override
-    public void onExecute(Member sender, MessageReceivedEvent event, List<String> args) {
+    public void onExecute(Member sender, Server server, MessageReceivedEvent event, List<String> args) {
         long guildId = event.getGuild().getIdLong();
         long senderId = sender.getIdLong();
         if (!this.serverUsersInSetup.contains(guildId)) {
@@ -49,7 +50,7 @@ public class SetupSub extends SubCommand implements CacheExpiryListener<Long, Mu
                 event.getChannel().sendMessage(":white_check_mark: Clearing your setup and starting over.").queue();
                 this.activeGuildChannels.remove(guildId);
                 this.serverUsersInSetup.invalidate(guildId, false);
-                this.onExecute(sender, event, args);
+                this.onExecute(sender, server, event, args);
             }
         });
     }

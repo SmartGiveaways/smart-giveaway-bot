@@ -15,9 +15,9 @@ import pink.zak.giveawaybot.commands.entries.EntriesCommand;
 import pink.zak.giveawaybot.commands.giveaway.GiveawayCommand;
 import pink.zak.giveawaybot.commands.preset.PresetCommand;
 import pink.zak.giveawaybot.controllers.GiveawayController;
-import pink.zak.giveawaybot.controllers.UserController;
 import pink.zak.giveawaybot.defaults.Defaults;
 import pink.zak.giveawaybot.entries.pipeline.EntryPipeline;
+import pink.zak.giveawaybot.lang.LanguageRegistry;
 import pink.zak.giveawaybot.listener.MessageSendListener;
 import pink.zak.giveawaybot.listener.ReactionAddListener;
 import pink.zak.giveawaybot.metrics.MetricsStarter;
@@ -52,7 +52,7 @@ public class GiveawayBot extends JdaBot {
     private GiveawayCache giveawayCache;
     private ServerStorage serverStorage;
     private ServerCache serverCache;
-    private UserController userController;
+    private LanguageRegistry languageRegistry;
     private GiveawayController giveawayController;
     private EntryPipeline entryPipeline;
 
@@ -83,7 +83,9 @@ public class GiveawayBot extends JdaBot {
         this.giveawayCache = new GiveawayCache(this);
         this.serverStorage = new ServerStorage(this);
         this.serverCache = new ServerCache(this);
-        this.userController = new UserController(this);
+        this.languageRegistry = new LanguageRegistry();
+
+        this.languageRegistry.loadLanguages(this);
 
         this.initialize(this, this.getConfigStore().commons().get("token"), ">", this.getGatewayIntents(), shard -> shard
                 .disableCache(CacheFlag.VOICE_STATE)); // This should basically be called as late as physically possible
@@ -216,8 +218,8 @@ public class GiveawayBot extends JdaBot {
         return this.serverCache;
     }
 
-    public UserController getUserController() {
-        return this.userController;
+    public LanguageRegistry getLanguageRegistry() {
+        return this.languageRegistry;
     }
 
     public GiveawayController getGiveawayController() {

@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.enums.Setting;
+import pink.zak.giveawaybot.models.Server;
 import pink.zak.giveawaybot.service.colour.Palette;
 import pink.zak.giveawaybot.service.command.command.SubCommand;
 
@@ -24,7 +25,7 @@ public class OptionsSub extends SubCommand {
     }
 
     @Override
-    public void onExecute(Member sender, MessageReceivedEvent event, List<String> args) {
+    public void onExecute(Member sender, Server server, MessageReceivedEvent event, List<String> args) {
         event.getChannel().sendMessage(this.optionsList).queue();
     }
 

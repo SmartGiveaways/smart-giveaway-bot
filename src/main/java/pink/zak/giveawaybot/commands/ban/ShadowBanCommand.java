@@ -1,9 +1,11 @@
 package pink.zak.giveawaybot.commands.ban;
 
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import pink.zak.giveawaybot.GiveawayBot;
-import pink.zak.giveawaybot.cache.ServerCache;
+import pink.zak.giveawaybot.lang.enums.Text;
+import pink.zak.giveawaybot.models.Server;
 import pink.zak.giveawaybot.service.command.command.SimpleCommand;
 import pink.zak.giveawaybot.service.command.command.SubCommand;
 import pink.zak.giveawaybot.service.types.UserUtils;
@@ -13,56 +15,54 @@ import java.util.List;
 public class ShadowBanCommand extends SimpleCommand {
 
     public ShadowBanCommand(GiveawayBot bot) {
-        super(bot, true, "shadowban");
-        this.setAliases("sban");
+        super(bot, true, "gshadowban");
+        this.setAliases("gsban");
 
         this.setSubCommands(new BanSub(bot));
     }
 
     @Override
-    public void onExecute(Member sender, MessageReceivedEvent event, List<String> args) {
+    public void onExecute(Member sender, Server server, MessageReceivedEvent event, List<String> args) {
         event.getChannel().sendMessage(">sban <user> - Bans a user from giveaways but they have no way of finding out (entries count but they cannot win).").queue();
 
     }
 
     private class BanSub extends SubCommand {
-        private final ServerCache serverCache;
 
         public BanSub(GiveawayBot bot) {
             super(bot, true);
-            this.serverCache = bot.getServerCache();
 
             this.addArgument(Member.class);
         }
 
         @Override
-        public void onExecute(Member sender, MessageReceivedEvent event, List<String> args) {
+        public void onExecute(Member sender, Server server, MessageReceivedEvent event, List<String> args) {
             Member target = this.parseArgument(args, event.getGuild(), 0);
+            TextChannel textChannel = event.getTextChannel();
             if (target == null) {
-                event.getChannel().sendMessage(":x: Couldn't find that member :worried:").queue();
+                this.langFor(server, Text.CANT_FIND_MEMBER).to(textChannel);
                 return;
             }
             if (target.getIdLong() == sender.getIdLong()) {
-                event.getChannel().sendMessage(":x: You can't ban yourself dummy.").queue();
+                this.langFor(server, Text.CANNOT_BAN_SELF).to(textChannel);
                 return;
             }
-            this.serverCache.get(event.getGuild().getIdLong()).thenAccept(server -> {
-                if (server.canMemberManage(target)) {
-                    event.getChannel().sendMessage(":x: You're not high enough in the god complex to ban " + target.getAsMention()).queue();
+            if (server.canMemberManage(target)) {
+                this.langFor(server, Text.NOT_ENOUGH_PERMISSIONS_BAN, replacer -> replacer.set("target", target.getAsMention())).to(textChannel);
+                return;
+            }
+            server.getUserCache().get(target.getIdLong()).thenAccept(user -> {
+                String userPlaceholder = UserUtils.getNameDiscrim(target);
+                if (user.isShadowBanned()) {
+                    this.langFor(server, Text.TARGET_ALREADY_SHADOW_BANNED, replacer -> replacer.set("target", userPlaceholder)).to(textChannel);
                     return;
                 }
-                server.getUserCache().get(target.getIdLong()).thenAccept(user -> {
-                    if (user.isShadowBanned()) {
-                        event.getChannel().sendMessage(":x: " + UserUtils.getNameDiscrim(target) + " is already shadow banned.").queue();
-                        return;
-                    }
-                    if (user.isBanned()) {
-                        event.getChannel().sendMessage(":x: " + UserUtils.getNameDiscrim(target) + " is banned. Unban them first if you want to overwrite this.").queue();
-                        return;
-                    }
-                    user.shadowBan();
-                    event.getChannel().sendMessage(":white_check_mark: shadow banned " + target.getEffectiveName() + "#" + target.getUser().getDiscriminator() + ".").queue();
-                });
+                if (user.isBanned()) {
+                    this.langFor(server, Text.CANNOT_BAN_IS_BANNED, replacer -> replacer.set("target", userPlaceholder)).to(textChannel);
+                    return;
+                }
+                user.shadowBan();
+                this.langFor(server, Text.BANNED_SUCCESSFULLY, replacer -> replacer.set("target", userPlaceholder)).to(textChannel);
             });
         }
     }

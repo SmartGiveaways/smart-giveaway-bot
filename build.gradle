@@ -29,7 +29,7 @@ repositories {
 dependencies {
     implementation 'ch.qos.logback:logback-classic:1.2.3' // Logback
     implementation 'pink.zak:influx-metrics:1.0.0'
-    implementation 'com.influxdb:influxdb-client-java:1.12.0'
+    implementation "com.influxdb:influxdb-client-java:1.13.0-SNAPSHOT"
     implementation 'com.google.guava:guava:29.0-jre'
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'com.zaxxer:HikariCP:3.4.5'

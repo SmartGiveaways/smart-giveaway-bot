@@ -12,18 +12,19 @@ import pink.zak.giveawaybot.service.types.StringUtils;
 
 import java.util.List;
 
-public class CreateSub extends SubCommand {
+public class CreateWithChannelSub extends SubCommand {
     private final GiveawayCmdUtils cmdUtils;
 
-    public CreateSub(GiveawayBot bot, GiveawayCmdUtils cmdUtils) {
+    public CreateWithChannelSub(GiveawayBot bot, GiveawayCmdUtils cmdUtils) {
         super(bot, false, true);
         this.cmdUtils = cmdUtils;
 
         this.addFlat("create");
-        this.addArgument(String.class);
-        this.addArgument(String.class);
-        this.addArgument(Integer.class, StringUtils::isNumerical);
-        this.addArgument(String.class);
+        this.addArgument(String.class); // preset name
+        this.addArgument(String.class); // length
+        this.addArgument(TextChannel.class); // giveaway channel
+        this.addArgument(Integer.class, StringUtils::isNumerical); // winner amount
+        this.addArgument(String.class); // giveaway item placer
     }
 
     @Override
@@ -31,9 +32,10 @@ public class CreateSub extends SubCommand {
         String presetName = this.parseArgument(args, event.getGuild(), 1);
         long lengthMillis = Time.parse(this.parseArgument(args, event.getGuild(), 2));
         TextChannel responseChannel = event.getTextChannel();
-        int winnerAmount = this.parseArgument(args, event.getGuild(), 3);
+        TextChannel giveawayChannel = this.parseArgument(args, event.getGuild(), 3);
+        int winnerAmount = this.parseArgument(args, event.getGuild(), 4);
         String giveawayItem = String.join(" ", this.getEnd(args));
 
-        this.cmdUtils.create(server, lengthMillis, winnerAmount, presetName, giveawayItem, responseChannel, responseChannel);
+        this.cmdUtils.create(server, lengthMillis, winnerAmount, presetName, giveawayItem, giveawayChannel, responseChannel);
     }
 }

@@ -3,6 +3,7 @@ package pink.zak.giveawaybot.commands.giveaway;
 import net.dv8tion.jda.api.entities.TextChannel;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.controllers.GiveawayController;
+import pink.zak.giveawaybot.models.Server;
 
 public class GiveawayCmdUtils {
     private final GiveawayController giveawayController;
@@ -11,11 +12,11 @@ public class GiveawayCmdUtils {
         this.giveawayController = bot.getGiveawayController();
     }
 
-    public void create(long lengthMillis, int winnerAmount, String presetName, String giveawayItem, TextChannel giveawayChannel, TextChannel responseChannel) {
+    public void create(Server server, long lengthMillis, int winnerAmount, String presetName, String giveawayItem, TextChannel giveawayChannel, TextChannel responseChannel) {
         if (this.performChecks(lengthMillis, winnerAmount, giveawayChannel, giveawayItem, responseChannel)) {
             return;
         }
-        switch (this.giveawayController.createGiveaway(lengthMillis, winnerAmount, giveawayChannel, presetName, giveawayItem).getRight()) {
+        switch (this.giveawayController.createGiveaway(server, lengthMillis, winnerAmount, giveawayChannel, presetName, giveawayItem).getRight()) {
             case GIVEAWAY_LIMIT_FAILURE:
                 responseChannel.sendMessage(":x: Your guild has reached the maximum number of 5 giveaways. Gimme all ur money for more or delete some by deleting their message.").queue();
                 break;
