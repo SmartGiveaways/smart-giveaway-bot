@@ -8,6 +8,5 @@ public enum ReturnCode {
     RATE_LIMIT_FAILURE,
     NO_PRESET,
     GIVEAWAY_LIMIT_FAILURE,
-    WINNER_LIMIT_FAILURE,
     UNKNOWN_EMOJI
 }

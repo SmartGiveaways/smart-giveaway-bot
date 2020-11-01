@@ -4,6 +4,7 @@ import com.google.common.collect.Maps;
 import com.timvisee.yamlwrapper.ConfigurationSection;
 import com.timvisee.yamlwrapper.YamlConfiguration;
 import lombok.SneakyThrows;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.lang.enums.Language;
@@ -17,6 +18,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 public class LanguageRegistry {
     private final EnumMap<Language, LanguageContainer> languageMap = Maps.newEnumMap(Language.class);
@@ -101,6 +104,18 @@ public class LanguageRegistry {
 
         public void to(TextChannel channel) {
             channel.sendMessage(this.message).queue();
+        }
+
+        public void to(TextChannel channel, Consumer<Message> messageConsumer) {
+            channel.sendMessage(this.message).queue(messageConsumer);
+        }
+
+        public void to(TextChannel channel, Consumer<Message> messageConsumer, GiveawayBot bot, int deleteAfter) {
+            channel.sendMessage(this.message).queue(messageConsumer.andThen(message -> message.delete().queueAfter(deleteAfter, TimeUnit.SECONDS, u -> {}, bot.getDeleteFailureThrowable())));
+        }
+
+        public void to(TextChannel channel, GiveawayBot bot, int deleteAfter) {
+            channel.sendMessage(this.message).queue(message -> message.delete().queueAfter(deleteAfter, TimeUnit.SECONDS, u -> {}, bot.getDeleteFailureThrowable()));
         }
 
         public String get() {

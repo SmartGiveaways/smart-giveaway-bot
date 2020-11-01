@@ -2,31 +2,56 @@ identifier: "english-uk"
 
 values:
   # General messages
-  cant-find-member: ":x: Couldn't find that member :worried:"
+  couldnt-find-member: ":x: Couldn't find that member :worried:"
   no-active-giveaways: ":x: There are no active giveaways in this server"
   fatal-error-loading-server: ":warning: There was a fatal error loading your server. Please join the support discord and scream at Zak."
-  
+  generic-failure: ":x: Something went wrong. Please try again in a few minutes."
+  couldnt-find-channel: ":x: The specified channel could not be found. Make sure the bot can access it."
+  couldnt-find-giveaway: ":x: Could not find a giveaway with that ID. Make sure the giveaway is finished and you're using the message ID."
+
   # General ban command messages
   cannot-ban-self: ":x: You can't ban yourself dummy."
   not-enough-permissions-ban: ":x: You're not high enough in the god complex to ban %target%"
-  
-  # >ban command messages
-  ban-help: ">ban <user> - Bans a user from giveaways."
+
+  # >gban command messages
+  ban-help: ">gban <user> - Bans a user from giveaways."
   target-already-banned: ":x: %target% is already banned."
   cannot-ban-is-shadow-banned: ":x: %target% is shadow banned. Unban them first if you want to overwrite this."
   banned-successfully: ":white_check_mark: banned %target%"
-  
-  # >sban command messages
-  shadow-ban-help: ""
-  target-already-shadow-banned: ""
-  cannot-ban-is-banned: ""
-  shadow-banned-successfully: ""
-  
+
+  # >gsban command messages
+  shadow-ban-help: ">gsban <user> - Shadow bans a user from giveaways."
+  target-already-shadow-banned: ":x: %target% is already shadow banned."
+  cannot-ban-is-banned: ":x: %target% is banned. Unban them first to overwrite with a shadow ban."
+  shadow-banned-successfully: ":white_check_mark: shadow banned %target%."
+
+  # >gunban command messages
+  unban-help: ""
+  cannot-unban-self: ":x: Oi, get someone else to do it for you."
+  unban-not-banned: ":x: Slight problem... %target% is not banned or shadow banned. You only pardon the guilty."
+  shadow-unbanned: ":white_check_mark: %target% is no longer shadow banned."
+  unbanned: ":white_check_mark: %target% is no longer banned."
+
   # >entries command messages
-  self-banned-from-giveaways: ""
-  target-banned-from-giveaways: ""
-  self-not-entered: ""
-  target-not-entered: ""
-  entries-embed-title: ""
-  entries-embed-giveaway-line: ""
-  entries-embed-giveaway-line-plural: ""
+  self-banned-from-giveaways: ":x: You are banned from giveaways."
+  target-banned-from-giveaways: ":x: %target% is banned from giveaways."
+  self-not-entered: ":x: You are not entered into any giveaways."
+  target-not-entered: ":x: %target% is not entered into any giveaways."
+  entries-embed-title: "Giveaway entries for %target%"
+  entries-embed-giveaway-line: "**%item%** -> %entries% entries"
+  entries-embed-giveaway-line-plural: "**%item%** -> %entries% entry."
+
+  # >giveaway command messages
+
+  # NOT COMPLETE, BASE COMMAND NOT DONE
+  giveaway-limit-failure: ":x: Your guild has reached the maximum number of 5 giveaways."
+  no-preset-found-on-creation: ":x: Could not find the specified preset. Use `>preset list` to list them all."
+  unknown-emoji-on-creation: ":x: Your giveaway was created but the reaction could not be added. Check the preset `%preset-name%` and make sure the reaction is valid. You must manually add it if you change it."
+  giveaway-created: ":white_check_mark: Created your giveaway in %channel%."
+  giveaway-length-too-short: "Giveaways must be at least 30 seconds long."
+  giveaway-length-too-long: "Giveaways must be no longer than 30 days."
+  winner-amount-too-large: "Giveaways must have less than 20 winners."
+  winner-amount-too-small: "Giveaways must have at least 1 winner."
+  parsing-reward-failed: "Issue parsing giveaway reward."
+  # reroll messages
+  reroll-over-24-hours: ":x: You can only reroll a giveaway within 24 hours."

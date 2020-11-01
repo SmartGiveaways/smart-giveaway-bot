@@ -1,11 +1,14 @@
 package pink.zak.giveawaybot.commands.ban;
 
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import pink.zak.giveawaybot.GiveawayBot;
+import pink.zak.giveawaybot.lang.enums.Text;
 import pink.zak.giveawaybot.models.Server;
 import pink.zak.giveawaybot.service.command.command.SimpleCommand;
 import pink.zak.giveawaybot.service.command.command.SubCommand;
+import pink.zak.giveawaybot.service.types.UserUtils;
 
 import java.util.List;
 
@@ -21,7 +24,6 @@ public class UnbanCommand extends SimpleCommand {
     @Override
     public void onExecute(Member sender, Server server, MessageReceivedEvent event, List<String> args) {
         event.getChannel().sendMessage(">unban <user> - Unbans a user if they are banned.").queue();
-
     }
 
     private class UnbanSub extends SubCommand {
@@ -35,26 +37,28 @@ public class UnbanCommand extends SimpleCommand {
         @Override
         public void onExecute(Member sender, Server server, MessageReceivedEvent event, List<String> args) {
             Member target = this.parseArgument(args, event.getGuild(), 0);
+            TextChannel textChannel = event.getTextChannel();
             if (target == null) {
-                event.getChannel().sendMessage(":x: Couldn't find that member :worried:").queue();
+                this.langFor(server, Text.COULDNT_FIND_MEMBER).to(textChannel);
                 return;
             }
             if (target.getIdLong() == sender.getIdLong()) {
-                event.getChannel().sendMessage(":x: Oi, get someone else to do it for you.").queue();
+                this.langFor(server, Text.CANNOT_UNBAN_SELF).to(textChannel);
                 return;
             }
             server.getUserCache().get(target.getIdLong()).thenAccept(user -> {
+                String userPlaceholder = UserUtils.getNameDiscrim(sender);
                 if (user.isShadowBanned()) {
-                    event.getChannel().sendMessage(":white_check_mark: " + target.getAsMention() + " is no longer shadow banned.").queue();
+                    this.langFor(server, Text.SHADOW_UNBANNED, replacer -> replacer.set("target", userPlaceholder)).to(textChannel);
                     user.unShadowBan();
                     return;
                 }
                 if (user.isBanned()) {
-                    event.getChannel().sendMessage(":white_check_mark: " + target.getAsMention() + " is no longer banned.").queue();
+                    this.langFor(server, Text.UNBANNED, replacer -> replacer.set("target", userPlaceholder)).to(textChannel);
                     user.unBan();
                     return;
                 }
-                event.getChannel().sendMessage(":x: Slight problem... they're not banned or shadow banned. You only pardon the guilty.").queue();
+                this.langFor(server, Text.UNBAN_NOT_BANNED, replacer -> replacer.set("target", user)).to(textChannel);
             });
         }
     }

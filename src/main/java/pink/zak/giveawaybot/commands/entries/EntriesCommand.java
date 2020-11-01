@@ -18,7 +18,6 @@ import pink.zak.giveawaybot.service.types.UserUtils;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 public class EntriesCommand extends SimpleCommand {
@@ -54,7 +53,7 @@ public class EntriesCommand extends SimpleCommand {
         public void onExecute(Member sender, Server server, MessageReceivedEvent event, List<String> args) {
             Member target = this.parseArgument(args, event.getGuild(), 0);
             if (target == null) {
-                this.langFor(server, Text.CANT_FIND_MEMBER).to(event.getTextChannel());
+                this.langFor(server, Text.COULDNT_FIND_MEMBER).to(event.getTextChannel());
                 return;
             }
             runLogic(target, server, event.getTextChannel(), false);
@@ -62,16 +61,14 @@ public class EntriesCommand extends SimpleCommand {
     }
 
     private void runLogic(Member target, Server server, TextChannel channel, boolean self) {
-        String targetDisplay = self ? "You are " : UserUtils.getNameDiscrim(target) + " is ";
+        String targetName = UserUtils.getNameDiscrim(target);
         if (server.getActiveGiveaways().isEmpty()) {
-            channel.sendMessage(":x: There are no active giveaways in this server.").queue();
+            this.langFor(server, Text.NO_ACTIVE_GIVEAWAYS).to(channel);
             return;
         }
         server.getUserCache().get(target.getIdLong()).thenAccept(user -> {
             if (user.isBanned()) {
-                channel.sendMessage(":x: " + targetDisplay + " banned from giveaways.").queue(message -> {
-                    message.delete().queueAfter(10, TimeUnit.SECONDS, null, this.deleteFailureThrowable);
-                });
+                this.langFor(server, self ? Text.SELF_BANNED_FROM_GIVEAWAYS : Text.TARGET_BANNED_FROM_GIVEAWAYS, replacer -> replacer.set("target", target)).to(channel, this.bot, 10);
                 return;
             }
             Set<Long> presentGiveaways = Sets.newHashSet();
@@ -81,9 +78,7 @@ public class EntriesCommand extends SimpleCommand {
                 }
             }
             if (presentGiveaways.isEmpty()) {
-                channel.sendMessage(":x: " + targetDisplay + "not entered into any giveaways.").queue(message -> {
-                    message.delete().queueAfter(10, TimeUnit.SECONDS, null, this.deleteFailureThrowable);
-                });
+                this.langFor(server, self ? Text.SELF_NOT_ENTERED : Text.TARGET_NOT_ENTERED, replacer -> replacer.set("target", target)).to(channel, this.bot, 10);
                 return;
             }
             StringBuilder descriptionBuilder = new StringBuilder();
@@ -91,14 +86,17 @@ public class EntriesCommand extends SimpleCommand {
                 BigInteger entries = user.entries(giveawayId);
                 CurrentGiveaway giveaway = this.giveawayCache.getSync(giveawayId);
                 if (giveaway != null) {
-                    descriptionBuilder.append("**" + giveaway.giveawayItem() + "** -> " + entries + " entr" + (entries.compareTo(BigInteger.ONE) < 1 ? "y" : "ies") + "\n");
+                    descriptionBuilder.append(this.langFor(server,
+                            entries.compareTo(BigInteger.ONE) < 1 ? Text.ENTRIES_EMBED_GIVEAWAY_LINE : Text.ENTRIES_EMBED_GIVEAWAY_LINE_PLURAL, replacer -> replacer
+                                    .set("item", giveaway.giveawayItem())
+                                    .set("entries", entries.toString())).get());
                 }
             }
             channel.sendMessage(new EmbedBuilder()
-                    .setTitle("Giveaway Entries for " + UserUtils.getNameDiscrim(target))
-                    .setColor(this.palette.primary())
-                    .setDescription(descriptionBuilder.toString())
-                    .build()).queue();
+                    .setTitle(this.langFor(server, Text.ENTRIES_EMBED_TITLE, replacer -> replacer.set("target", targetName)).get())
+                            .setColor(this.palette.primary())
+                            .setDescription(descriptionBuilder.toString())
+                            .build()).queue();
         }).exceptionally(ex -> {
             GiveawayBot.getLogger().error("", ex);
             return null;

@@ -27,20 +27,23 @@ repositories {
 }
 
 dependencies {
-    implementation 'ch.qos.logback:logback-classic:1.2.3' // Logback
-    implementation 'pink.zak:influx-metrics:1.0.0'
-    implementation "com.influxdb:influxdb-client-java:1.13.0-SNAPSHOT"
+    implementation 'net.dv8tion:JDA:4.2.0_214'
     implementation 'com.google.guava:guava:29.0-jre'
     implementation 'com.google.code.gson:gson:2.8.6'
-    implementation 'com.zaxxer:HikariCP:3.4.5'
     implementation 'org.apache.commons:commons-lang3:3.0'
-    implementation 'net.dv8tion:JDA:4.2.0_204'
     implementation 'com.timvisee:yamlwrapper:1.1.1'
     implementation 'com.vdurmont:emoji-java:5.1.1'
     implementation 'org.mongodb:mongo-java-driver:3.12.7'
-    implementation 'redis.clients:jedis:3.3.0'
+
     compileOnly 'org.projectlombok:lombok:1.18.12'
     annotationProcessor 'org.projectlombok:lombok:1.18.12'
+
+    // Technically non essentials
+    implementation 'ch.qos.logback:logback-classic:1.2.3' // Logback
+    implementation 'pink.zak:influx-metrics:1.0.0'
+    implementation 'com.influxdb:influxdb-client-java:1.13.0-SNAPSHOT'
+    implementation 'com.zaxxer:HikariCP:3.4.5'
+    implementation 'redis.clients:jedis:3.3.0'
 
     testImplementation 'org.junit.jupiter:junit-jupiter:5.4.2'
 }

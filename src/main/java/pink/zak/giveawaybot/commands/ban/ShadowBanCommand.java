@@ -40,7 +40,7 @@ public class ShadowBanCommand extends SimpleCommand {
             Member target = this.parseArgument(args, event.getGuild(), 0);
             TextChannel textChannel = event.getTextChannel();
             if (target == null) {
-                this.langFor(server, Text.CANT_FIND_MEMBER).to(textChannel);
+                this.langFor(server, Text.COULDNT_FIND_MEMBER).to(textChannel);
                 return;
             }
             if (target.getIdLong() == sender.getIdLong()) {

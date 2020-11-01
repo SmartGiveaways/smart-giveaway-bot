@@ -2,25 +2,35 @@ package pink.zak.giveawaybot.lang.enums;
 
 public enum Text {
     // Applies everywhere
-    CANT_FIND_MEMBER,
+    COULDNT_FIND_MEMBER,
     NO_ACTIVE_GIVEAWAYS, // Might be moved to entries
     FATAL_ERROR_LOADING_SERVER,
+    GENERIC_FAILURE,
+    COULDNT_FIND_CHANNEL,
+    COULDNT_FIND_GIVEAWAY,
 
     // Applies to both ban commands
     CANNOT_BAN_SELF,
     NOT_ENOUGH_PERMISSIONS_BAN,
 
-    // Applies to >ban
+    // Applies to >gban
     BAN_HELP,
     TARGET_ALREADY_BANNED,
     CANNOT_BAN_IS_SHADOW_BANNED, // You cannot ban someone normally if they are shadow banned
     BANNED_SUCCESSFULLY,
 
-    // Applies to >sban
+    // Applies to >gsban
     SHADOW_BAN_HELP,
     TARGET_ALREADY_SHADOW_BANNED,
     CANNOT_BAN_IS_BANNED, // You cannot shadow ban someone if they are banned normally.
     SHADOW_BANNED_SUCCESSFULLY,
+
+    // Applies to >gunban
+    UNBAN_HELP,
+    CANNOT_UNBAN_SELF,
+    UNBAN_NOT_BANNED,
+    SHADOW_UNBANNED,
+    UNBANNED,
 
     // Applies to >entries
 
@@ -32,6 +42,19 @@ public enum Text {
     ENTRIES_EMBED_TITLE,
     ENTRIES_EMBED_GIVEAWAY_LINE, // This is what is used for every line. One giveaway per line.
     ENTRIES_EMBED_GIVEAWAY_LINE_PLURAL,
+
+    // Applies to >giveaway commands
+    GIVEAWAY_LIMIT_FAILURE,
+    NO_PRESET_FOUND_ON_CREATION,
+    UNKNOWN_EMOJI_ON_CREATION,
+    GIVEAWAY_CREATED,
+    GIVEAWAY_LENGTH_TOO_SHORT,
+    GIVEAWAY_LENGTH_TOO_LONG,
+    WINNER_AMOUNT_TOO_LARGE,
+    WINNER_AMOUNT_TOO_SMALL,
+    PARSING_REWARD_FAILED,
+    // reroll
+    REROLL_OVER_24_HOURS,
     ;
 
     public static Text match(String identifier) {

@@ -69,9 +69,6 @@ public class GiveawayController {
         if (server.getActiveGiveaways().size() >= 50) {
             return ImmutablePair.of(null, ReturnCode.GIVEAWAY_LIMIT_FAILURE);
         }
-        if (winnerAmount > 20 || winnerAmount < 1) {
-            return ImmutablePair.of(null, ReturnCode.WINNER_LIMIT_FAILURE);
-        }
         Preset preset = presetName.equalsIgnoreCase("default") ? this.defaultPreset : server.getPreset(presetName);
         if (preset == null) {
             return ImmutablePair.of(null, ReturnCode.NO_PRESET);

@@ -2,10 +2,12 @@ package pink.zak.giveawaybot.commands.giveaway.subs;
 
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.cache.FinishedGiveawayCache;
 import pink.zak.giveawaybot.controllers.GiveawayController;
+import pink.zak.giveawaybot.lang.enums.Text;
 import pink.zak.giveawaybot.models.Server;
 import pink.zak.giveawaybot.service.command.command.SubCommand;
 
@@ -28,12 +30,13 @@ public class RerollSub extends SubCommand {
     @Override
     public void onExecute(Member sender, Server server, MessageReceivedEvent event, List<String> args) {
         this.giveawayCache.get(this.parseArgument(args, event.getGuild(), 1)).thenAccept(giveaway -> {
+            TextChannel textChannel = event.getTextChannel();
             if (giveaway == null) {
-                event.getTextChannel().sendMessage(":x: Could not find a giveaway with that ID. Make sure the giveaway is finished and you're using the message ID.").queue();
+                this.langFor(server, Text.COULDNT_FIND_GIVEAWAY).to(textChannel);
                 return;
             }
             if (System.currentTimeMillis() - giveaway.endTime() > 86400000) {
-                event.getTextChannel().sendMessage(":x: You can only reroll a giveaway within 24 hours.").queue();
+                this.langFor(server, Text.REROLL_OVER_24_HOURS).to(textChannel);
                 return;
             }
             Set<Long> newWinners = this.giveawayController.generateWinners(giveaway.winnerAmount(), giveaway.totalEntries(), giveaway.userEntries());
@@ -42,6 +45,7 @@ public class RerollSub extends SubCommand {
                 this.giveawayController.handleGiveawayEndMessages(giveaway, newWinners, giveaway.totalEntries(), message, server);
             }
             Long[] winnersArray = newWinners.toArray(new Long[]{});
+            // TODO more messages
             StringBuilder builder = new StringBuilder(":white_check_mark: Your new winner");
             if (winnersArray.length == 1) {
                 builder.append(" is <@").append(winnersArray[0]).append(">");

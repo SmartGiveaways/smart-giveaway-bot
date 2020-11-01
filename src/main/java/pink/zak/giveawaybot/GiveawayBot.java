@@ -1,6 +1,8 @@
 package pink.zak.giveawaybot;
 
 import com.google.common.collect.Sets;
+import net.dv8tion.jda.api.OnlineStatus;
+import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
@@ -98,6 +100,7 @@ public class GiveawayBot extends JdaBot {
 
     @Override
     public void onConnect() {
+        this.getJda().getPresence().setPresence(OnlineStatus.DO_NOT_DISTURB, Activity.playing("Loading...."));
         this.giveawayController = new GiveawayController(this); // Makes use of JDA, retrieving messages
         this.registerCommands(
                 new BanCommand(this),
@@ -113,6 +116,7 @@ public class GiveawayBot extends JdaBot {
                 new MessageSendListener(this)
         );
         new MetricsStarter().start(this);
+        this.getJda().getPresence().setPresence(OnlineStatus.ONLINE, Activity.playing("smartgiveaways.xyz"));
     }
 
     @Override
