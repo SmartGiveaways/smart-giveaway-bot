@@ -1,6 +1,7 @@
 package pink.zak.giveawaybot.service.types;
 
 import com.vdurmont.emoji.EmojiParser;
+import lombok.SneakyThrows;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Guild;
@@ -11,6 +12,7 @@ import java.util.List;
 public class ReactionContainer {
     private MessageReaction.ReactionEmote reactionEmote;
 
+    @SneakyThrows
     public static ReactionContainer fromUnknown(String input, Guild guild) {
         if (input.startsWith("<") && input.endsWith(">") && input.contains(":")) {
             String[] split = input.split(":");
@@ -19,10 +21,12 @@ public class ReactionContainer {
             }
             String id = split[2].substring(0, split[2].length() - 1);
             try {
-                ReactionContainer built = new ReactionContainer(guild.getEmoteById(id));
-                if (built.getReactionEmote() == null) {
-                    return null;
+                Emote possibleEmote = guild.getEmoteById(id);
+                if (possibleEmote == null) {
+                    possibleEmote = guild.retrieveEmoteById(id).complete(true);
                 }
+                ReactionContainer built = new ReactionContainer(possibleEmote);
+                return built.getReactionEmote() == null ? null : built;
             } catch (NumberFormatException ex) {
                 return null;
             }

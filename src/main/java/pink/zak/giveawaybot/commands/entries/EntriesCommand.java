@@ -18,18 +18,15 @@ import pink.zak.giveawaybot.service.types.UserUtils;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Consumer;
 
 public class EntriesCommand extends SimpleCommand {
     private final GiveawayCache giveawayCache;
     private final Palette palette;
-    private final Consumer<Throwable> deleteFailureThrowable;
 
     public EntriesCommand(GiveawayBot bot) {
         super(bot, false, "entries");
         this.giveawayCache = bot.getGiveawayCache();
         this.palette = bot.getDefaults().getPalette();
-        this.deleteFailureThrowable = bot.getDeleteFailureThrowable();
 
         this.setSubCommands(
                 new UserEntriesSub(bot)

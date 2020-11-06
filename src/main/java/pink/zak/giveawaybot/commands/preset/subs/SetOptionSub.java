@@ -3,7 +3,6 @@ package pink.zak.giveawaybot.commands.preset.subs;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import pink.zak.giveawaybot.GiveawayBot;
-import pink.zak.giveawaybot.cache.ServerCache;
 import pink.zak.giveawaybot.enums.Setting;
 import pink.zak.giveawaybot.models.Preset;
 import pink.zak.giveawaybot.models.Server;
@@ -12,11 +11,9 @@ import pink.zak.giveawaybot.service.command.command.SubCommand;
 import java.util.List;
 
 public class SetOptionSub extends SubCommand {
-    private final ServerCache serverCache;
 
     public SetOptionSub(GiveawayBot bot) {
         super(bot);
-        this.serverCache = bot.getServerCache();
 
         this.addFlat("set");
         this.addArgument(String.class); // preset name

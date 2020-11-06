@@ -74,10 +74,8 @@ public class AccessExpiringCache<K, V> extends Cache<K, V> {
     @Override
     public void invalidate(K key, boolean save) {
         this.accessTimes.remove(key);
-        if (save) {
-            if (this.expiryListener != null) {
-                this.expiryListener.onExpiry(key, this.getSync(key));
-            }
+        if (save && this.expiryListener != null) {
+            this.expiryListener.onExpiry(key, this.getSync(key));
         }
         super.invalidate(key, save);
     }

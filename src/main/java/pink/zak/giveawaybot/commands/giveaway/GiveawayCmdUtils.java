@@ -40,6 +40,8 @@ public class GiveawayCmdUtils {
                 if (responseChannel != giveawayChannel) {
                     this.lang.get(server, Text.GIVEAWAY_CREATED, replacer -> replacer.set("channel", giveawayChannel.getAsMention())).to(responseChannel);
                 }
+                break;
+            default:
         }
     }
 

@@ -12,11 +12,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class RewardStep {
 
     public void process(EntryType entryType, User user, CurrentGiveaway giveaway, Preset preset) {
+
         EnumMap<EntryType, AtomicInteger> entries = user.entries().get(giveaway.messageId());
         switch (entryType) {
             case INVITES -> this.add(entryType, entries, (int) preset.getSetting(Setting.ENTRIES_PER_INVITE));
             case MESSAGES -> this.add(entryType, entries, (int) preset.getSetting(Setting.ENTRIES_PER_MESSAGE));
             case REACTION -> entries.put(entryType, new AtomicInteger(1));
+            default -> {}
         }
     }
 

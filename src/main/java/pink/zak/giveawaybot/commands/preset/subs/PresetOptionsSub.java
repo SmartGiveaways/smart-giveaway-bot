@@ -4,7 +4,6 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import pink.zak.giveawaybot.GiveawayBot;
-import pink.zak.giveawaybot.cache.ServerCache;
 import pink.zak.giveawaybot.enums.Setting;
 import pink.zak.giveawaybot.models.Preset;
 import pink.zak.giveawaybot.models.Server;
@@ -15,13 +14,11 @@ import java.util.List;
 import java.util.Map;
 
 public class PresetOptionsSub extends SubCommand {
-    private final ServerCache serverCache;
     private final Preset defaultPreset;
     private final Palette palette;
 
     public PresetOptionsSub(GiveawayBot bot) {
         super(bot);
-        this.serverCache = bot.getServerCache();
         this.defaultPreset = bot.getDefaults().getDefaultPreset();
         this.palette = bot.getDefaults().getPalette();
 

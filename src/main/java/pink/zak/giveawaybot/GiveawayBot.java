@@ -28,13 +28,13 @@ import pink.zak.giveawaybot.service.config.Config;
 import pink.zak.giveawaybot.storage.FinishedGiveawayStorage;
 import pink.zak.giveawaybot.storage.GiveawayStorage;
 import pink.zak.giveawaybot.storage.ServerStorage;
-import pink.zak.giveawaybot.storage.redis.RedisManager;
 import pink.zak.giveawaybot.threads.ThreadFunction;
 import pink.zak.giveawaybot.threads.ThreadManager;
 import pink.zak.metrics.Metrics;
-import redis.clients.jedis.Jedis;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
@@ -47,7 +47,7 @@ public class GiveawayBot extends JdaBot {
     private Metrics metricsLogger;
     private Consumer<Throwable> deleteFailureThrowable;
     private ThreadManager threadManager;
-    private RedisManager redisManager;
+    //private RedisManager redisManager;
     private FinishedGiveawayStorage finishedGiveawayStorage;
     private FinishedGiveawayCache finishedGiveawayCache;
     private GiveawayStorage giveawayStorage;
@@ -78,7 +78,7 @@ public class GiveawayBot extends JdaBot {
                 settings.string("influx-bucket"), 5));
 
         this.threadManager = new ThreadManager();
-        this.redisManager = new RedisManager(this);
+        //this.redisManager = new RedisManager(this);
         this.finishedGiveawayStorage = new FinishedGiveawayStorage(this);
         this.finishedGiveawayCache = new FinishedGiveawayCache(this);
         this.giveawayStorage = new GiveawayStorage(this);
@@ -89,7 +89,7 @@ public class GiveawayBot extends JdaBot {
 
         this.languageRegistry.loadLanguages(this);
 
-        this.initialize(this, this.getConfigStore().commons().get("token"), ">", this.getGatewayIntents(), shard -> shard
+        this.initialize(this, this.getConfigStore().getConfig("settings").string("token"), ">", this.getGatewayIntents(), shard -> shard
                 .disableCache(CacheFlag.VOICE_STATE)); // This should basically be called as late as physically possible
 
         this.defaults = new Defaults(this);
@@ -100,7 +100,7 @@ public class GiveawayBot extends JdaBot {
 
     @Override
     public void onConnect() {
-        this.getJda().getPresence().setPresence(OnlineStatus.DO_NOT_DISTURB, Activity.playing("Loading...."));
+        this.getJda().getPresence().setPresence(OnlineStatus.IDLE, Activity.playing("Loading...."));
         this.giveawayController = new GiveawayController(this); // Makes use of JDA, retrieving messages
         this.registerCommands(
                 new BanCommand(this),
@@ -122,21 +122,29 @@ public class GiveawayBot extends JdaBot {
     @Override
     public void unload() {
         logger.info("Shutting down....");
+        List<Long> timings = new ArrayList<>();
+        timings.add(System.currentTimeMillis());
         this.giveawayCache.shutdown();
+        timings.add(System.currentTimeMillis());
         this.finishedGiveawayCache.shutdown();
+        timings.add(System.currentTimeMillis());
         this.serverCache.shutdown();
+        timings.add(System.currentTimeMillis());
         this.giveawayStorage.closeBack();
         this.finishedGiveawayStorage.closeBack();
         this.serverStorage.closeBack();
-        this.redisManager.shutdown();
+        //this.redisManager.shutdown();
         this.threadManager.shutdownPools();
+        timings.add(System.currentTimeMillis());
         logger.info("Completing shut down sequence.");
+        logger.info("Timings:");
+        for (int i = 1; i < timings.size(); i++) {
+            logger.info(i + ": " + (timings.get(i) - timings.get(i - 1)));
+        }
     }
 
     public void configRelations() {
         this.getConfigStore().config("settings", Path::resolve, true);
-
-        this.getConfigStore().common("token", "settings", config -> config.string("token"));
     }
 
     private void setupStorage() {
@@ -190,9 +198,9 @@ public class GiveawayBot extends JdaBot {
         return this.threadManager;
     }
 
-    public RedisManager getRedisManager() {
+    /*public RedisManager getRedisManager() {
         return this.redisManager;
-    }
+    }*/
 
     public FinishedGiveawayStorage getFinishedGiveawayStorage() {
         return this.finishedGiveawayStorage;
@@ -202,9 +210,9 @@ public class GiveawayBot extends JdaBot {
         return this.finishedGiveawayCache;
     }
 
-    public Jedis getJedis() {
+    /*public Jedis getJedis() {
         return this.redisManager.getConnection();
-    }
+    }*/
 
     public GiveawayStorage getGiveawayStorage() {
         return this.giveawayStorage;
