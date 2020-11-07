@@ -20,7 +20,6 @@ public class EligibilityCheckStep {
         if (!this.isEntryEnabled(entryType, preset)) { // No point doing any processing if the entry type is not enabled.
             return;
         }
-        // TODO I think there's a logic issue here that can cause a giveaway to be overridden.
         if (!giveaway.enteredUsers().contains(user.id())) {
             if (this.isEntryEnabled(EntryType.REACTION, preset)) {
                 return;
@@ -30,8 +29,6 @@ public class EligibilityCheckStep {
         }
         if (user.hasEntries(giveaway.messageId()) && user.entries(giveaway.messageId()).compareTo(new BigInteger(String.valueOf(preset.getSetting(Setting.MAX_ENTRIES)))) > -1) {
             return;
-        }
-        if (!user.hasEntries(giveaway.messageId())) {
         }
         this.rewardStep.process(entryType, user, giveaway, preset);
     }

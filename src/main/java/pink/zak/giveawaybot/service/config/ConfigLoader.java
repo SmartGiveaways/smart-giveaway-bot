@@ -35,7 +35,7 @@ public class ConfigLoader {
         }
 
         public String string(String path) {
-            return this.config.string(this.currentPath.concat(".").concat(path));
+            return this.config.string(this.currentPath + "." + path);
         }
 
         public String string() {
@@ -43,7 +43,7 @@ public class ConfigLoader {
         }
 
         public int integer(String path) {
-            return this.config.integer(this.currentPath.concat(".").concat(path));
+            return this.config.integer(this.currentPath + "." + path);
         }
 
         public int integer() {
@@ -51,7 +51,7 @@ public class ConfigLoader {
         }
 
         public List<String> list(String path) {
-            return this.config.list(this.currentPath.concat(".").concat(path));
+            return this.config.list(this.currentPath + "." + path);
         }
 
         public List<String> list() {
@@ -65,7 +65,7 @@ public class ConfigLoader {
                 this.currentPath += ".".concat(path);
             }
             for (String key : this.config.keys(path)) {
-                this.currentPath = path.isEmpty() ? key : path.concat(".").concat(key);
+                this.currentPath = path.isEmpty() ? key : path + "." + key;
                 consumer.accept(key);
             }
             return this;

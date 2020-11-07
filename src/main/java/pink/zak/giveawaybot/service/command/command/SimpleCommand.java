@@ -47,4 +47,8 @@ public abstract class SimpleCommand extends Command {
     protected void setSubCommands(SubCommand... subCommands) {
         this.subCommands.addAll(Arrays.asList(subCommands));
     }
+
+    public boolean doesCommandMatch(String command) {
+        return this.command.equalsIgnoreCase(command) || this.aliases.contains(command);
+    }
 }

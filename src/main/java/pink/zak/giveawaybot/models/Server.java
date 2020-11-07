@@ -57,6 +57,16 @@ public class Server {
         return this.activeGiveaways;
     }
 
+    public Set<Long> getActiveGiveaways(User user) {
+        Set<Long> enteredGiveaways = Sets.newHashSet();
+        for (long giveawayId : this.activeGiveaways) {
+            if (user.entries().containsKey(giveawayId) && user.hasEntries(giveawayId)) {
+                enteredGiveaways.add(giveawayId);
+            }
+        }
+        return enteredGiveaways;
+    }
+
     public void addActiveGiveaway(CurrentGiveaway giveaway) {
         this.activeGiveaways.add(giveaway.messageId());
     }

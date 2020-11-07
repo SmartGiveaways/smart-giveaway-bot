@@ -1,3 +1,5 @@
+package pink.zak.test.giveawaybot;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import pink.zak.giveawaybot.service.time.Time;

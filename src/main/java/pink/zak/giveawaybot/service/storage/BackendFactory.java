@@ -25,7 +25,7 @@ public class BackendFactory {
 
     public Backend create(String backendType, UnaryOperator<Path> path, String destination) {
         for (Map.Entry<StorageType, BiFunction<UnaryOperator<Path>, String, Backend>> backendEntry : this.backendMap.entrySet()) {
-            if (backendEntry.getKey().toString().toLowerCase().equals(backendType)) {
+            if (backendEntry.getKey().toString().equalsIgnoreCase(backendType)) {
                 return backendEntry.getValue().apply(path, destination);
             }
         }

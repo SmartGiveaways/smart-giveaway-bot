@@ -37,7 +37,7 @@ public class GiveawayCmdUtils {
                 this.lang.get(server, Text.UNKNOWN_EMOJI_ON_CREATION, replacer -> replacer.set("preset-name", presetName)).to(responseChannel, this.bot, 20);
                 break;
             case SUCCESS:
-                if (responseChannel != giveawayChannel) {
+                if (!responseChannel.equals(giveawayChannel)) {
                     this.lang.get(server, Text.GIVEAWAY_CREATED, replacer -> replacer.set("channel", giveawayChannel.getAsMention())).to(responseChannel);
                 }
                 break;

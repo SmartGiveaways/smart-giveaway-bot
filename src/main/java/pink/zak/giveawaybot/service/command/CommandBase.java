@@ -15,7 +15,10 @@ import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.cache.ServerCache;
+import pink.zak.giveawaybot.lang.LanguageRegistry;
+import pink.zak.giveawaybot.lang.enums.Text;
 import pink.zak.giveawaybot.models.Preset;
+import pink.zak.giveawaybot.models.Server;
 import pink.zak.giveawaybot.service.cache.Cache;
 import pink.zak.giveawaybot.service.cache.CacheBuilder;
 import pink.zak.giveawaybot.service.command.argument.ArgumentHandler;
@@ -39,6 +42,7 @@ public class CommandBase extends ListenerAdapter {
     private final Set<SimpleCommand> commands = Sets.newHashSet();
     private final Cache<Long, Long> commandCooldowns;
     private final Consumer<Throwable> deleteFailureThrowable;
+    private final LanguageRegistry languageRegistry;
 
     public CommandBase(GiveawayBot bot) {
         this.bot = bot;
@@ -46,6 +50,7 @@ public class CommandBase extends ListenerAdapter {
         this.executor = bot.getThreadManager().getAsyncExecutor(ThreadFunction.COMMANDS);
         this.commandCooldowns = new CacheBuilder<Long, Long>().expireAfterAccess(1, TimeUnit.SECONDS).setControlling(bot).build();
         this.deleteFailureThrowable = bot.getDeleteFailureThrowable();
+        this.languageRegistry = bot.getLanguageRegistry();
         this.registerArgumentTypes();
     }
 
@@ -80,11 +85,14 @@ public class CommandBase extends ListenerAdapter {
                 return;
             }
             this.executor.submit(() -> {
+                if (this.isOnCooldown(sender)) {
+                    return;
+                }
                 for (SimpleCommand simpleCommand : this.commands) {
-                    if (!simpleCommand.getCommand().equalsIgnoreCase(commandName) && !simpleCommand.getAliases().contains(commandName)) {
+                    if (!simpleCommand.doesCommandMatch(commandName)) {
                         continue;
                     }
-                    if (!this.hasAccess(simpleCommand, event.getMessage(), sender)) {
+                    if (!this.hasAccess(server, simpleCommand, event.getMessage(), sender)) {
                         return;
                     }
                     Member member = event.getMember();
@@ -92,14 +100,11 @@ public class CommandBase extends ListenerAdapter {
                         return;
                     }
                     if (!rawMessage.contains(" ")) {
-                        if (this.isOnCooldown(event.getTextChannel(), event.getMessage(), sender)) {
-                            return;
-                        }
                         this.commandCooldowns.set(member.getIdLong(), System.currentTimeMillis());
                         simpleCommand.middleMan(sender, server, event, Lists.newArrayList());
                         return;
                     }
-                    String message = rawMessage.split(prefix.concat(commandName).concat(" "))[1];
+                    String message = rawMessage.split(prefix + commandName + " ")[1];
                     List<String> args = Lists.newArrayList(message.split(" "));
                     args.removeIf(String::isEmpty);
 
@@ -110,15 +115,12 @@ public class CommandBase extends ListenerAdapter {
                             break;
                         }
                     }
-                    if (this.isOnCooldown(event.getTextChannel(), event.getMessage(), sender)) {
-                        return;
-                    }
                     this.commandCooldowns.set(member.getIdLong(), System.currentTimeMillis());
                     if (subResult == null) {
                         simpleCommand.middleMan(sender, server, event, args);
                         return;
                     }
-                    if (this.hasAccess(subResult, event.getMessage(), sender))
+                    if (this.hasAccess(server, subResult, event.getMessage(), sender))
                         subResult.middleMan(sender, server, event, args);
                 }
             });
@@ -128,26 +130,24 @@ public class CommandBase extends ListenerAdapter {
         });
     }
 
-    private boolean hasAccess(Command simpleCommand, Message message, Member member) {
+    private boolean hasAccess(Server server, Command simpleCommand, Message message, Member member) {
         if (simpleCommand.requiresManager() && !this.serverCache.get(member.getGuild().getIdLong()).join().canMemberManage(member)) {
-            message.getTextChannel().sendMessage(":x: No permission").queue(botReply -> {
-                message.delete().queueAfter(10, TimeUnit.SECONDS, null, this.deleteFailureThrowable, this.bot.getThreadManager().getUpdaterExecutor());
-                botReply.delete().queueAfter(10, TimeUnit.SECONDS, null, this.deleteFailureThrowable, this.bot.getThreadManager().getUpdaterExecutor());
-            });
+            this.languageRegistry.get(server, Text.NO_PERMISSION).to(message.getTextChannel(), this.bot, 10);
             return false;
         }
         return true;
     }
 
-    private boolean isOnCooldown(TextChannel channel, Message message, Member member) {
-        if (member.getIdLong() != 240721111174610945L && this.commandCooldowns.contains(member.getIdLong()) && System.currentTimeMillis() - this.commandCooldowns.getSync(member.getIdLong()) < 1000) {
-            channel.sendMessage("<@" + member.getIdLong() + "> You must wait 1 second inbetween commands.").queue(botReply -> {
-                message.delete().queueAfter(10, TimeUnit.SECONDS, null, this.deleteFailureThrowable, this.bot.getThreadManager().getUpdaterExecutor());
-                botReply.delete().queueAfter(10, TimeUnit.SECONDS, null, this.deleteFailureThrowable, this.bot.getThreadManager().getUpdaterExecutor());
-            });
-            return true;
-        }
-        return false;
+    /**
+     * Returns whether a user is on command cooldown.
+     * There is not any notification that they are, it's to maybe lessen some API limits.
+     * Sending two messages within a second is... unnecessary at best.
+     *
+     * @param member The member to check the cooldown of.
+     * @return Whether the user is on cooldown.
+     */
+    private boolean isOnCooldown(Member member) {
+        return member.getIdLong() != 240721111174610945L && this.commandCooldowns.contains(member.getIdLong()) && System.currentTimeMillis() - this.commandCooldowns.getSync(member.getIdLong()) < 1000;
     }
 
     public Set<SimpleCommand> getCommands() {

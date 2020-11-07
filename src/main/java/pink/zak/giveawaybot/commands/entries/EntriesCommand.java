@@ -1,6 +1,5 @@
 package pink.zak.giveawaybot.commands.entries;
 
-import com.google.common.collect.Sets;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -68,12 +67,7 @@ public class EntriesCommand extends SimpleCommand {
                 this.langFor(server, self ? Text.SELF_BANNED_FROM_GIVEAWAYS : Text.TARGET_BANNED_FROM_GIVEAWAYS, replacer -> replacer.set("target", target)).to(channel, this.bot, 10);
                 return;
             }
-            Set<Long> presentGiveaways = Sets.newHashSet();
-            for (long giveawayId : server.getActiveGiveaways()) {
-                if (user.entries().containsKey(giveawayId) && user.hasEntries(giveawayId)) {
-                    presentGiveaways.add(giveawayId);
-                }
-            }
+            Set<Long> presentGiveaways = server.getActiveGiveaways(user);
             if (presentGiveaways.isEmpty()) {
                 this.langFor(server, self ? Text.SELF_NOT_ENTERED : Text.TARGET_NOT_ENTERED, replacer -> replacer.set("target", target)).to(channel, this.bot, 10);
                 return;

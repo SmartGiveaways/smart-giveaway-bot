@@ -28,7 +28,7 @@ public class FlatBackend implements Backend {
     @Override
     @SneakyThrows
     public JsonObject load(String id) {
-        Path userPath = this.path.resolve(id + ".json");
+        Path userPath = this.path.resolve(id.concat(".json"));
         if (!Files.exists(userPath)) {
             return null;
         }
@@ -46,7 +46,7 @@ public class FlatBackend implements Backend {
     @SneakyThrows
     public void save(String id, JsonObject json) {
         if (Files.exists(this.path)) {
-            Path userPath = this.path.resolve(id + ".json");
+            Path userPath = this.path.resolve(id.concat(".json"));
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             Writer writer = Files.newBufferedWriter(userPath);
             gson.toJson(json, writer);
@@ -78,7 +78,7 @@ public class FlatBackend implements Backend {
     @SneakyThrows
     @Override
     public void delete(String id) {
-        Path filePath = this.path.resolve(id + ".json");
+        Path filePath = this.path.resolve(id.concat(".json"));
         if (Files.exists(filePath)) {
             Files.delete(filePath);
         }

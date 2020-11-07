@@ -9,59 +9,71 @@ public class Time {
     public static String format(long millis) {
         int seconds = (int) Math.floor((double) millis / 1000);
         if (seconds >= 86400) {
-            int days = getDays(seconds);
-            int remainderSeconds = seconds - days * 86400;
-            int hours = getHours(remainderSeconds);
-            StringBuilder builder = new StringBuilder(days + " day");
-            if (days > 1) {
-                builder.append("s");
-            }
-            if (hours == 0) {
-                return builder.toString();
-            }
-            builder.append(" ").append(hours).append(" hour");
-            if (hours > 1) {
-                builder.append("s");
-            }
-            return builder.toString();
+            return formatDaysHours(seconds);
         }
         if (seconds >= 3600) {
-            int hours = getHours(seconds);
-            int remainderSeconds = seconds - hours * 3600;
-            int minutes = getMinutes(remainderSeconds);
-            StringBuilder builder = new StringBuilder(hours + " hour");
-            if (hours > 1) {
-                builder.append("s");
-            }
-            if (minutes == 0) {
-                return builder.toString();
-            }
-            builder.append(" ").append(minutes).append(" minute");
-            if (minutes > 1) {
-                builder.append("s");
-            }
-            return builder.toString();
+            return formatHoursMinutes(seconds);
         }
         if (seconds >= 60) {
-            int minutes = getMinutes(seconds);
-            int remainderSeconds = seconds - minutes * 60;
-            StringBuilder builder = new StringBuilder(minutes + " minute");
-            if (minutes > 1) {
-                builder.append("s");
-            }
-            if (remainderSeconds == 0) {
-                return builder.toString();
-            }
-            builder.append(" ").append(remainderSeconds).append(" second");
-            if (remainderSeconds > 1) {
-                builder.append("s");
-            }
-            return builder.toString();
+            return formatMinutesSeconds(seconds);
         }
         if (seconds > 1) {
             return seconds + " seconds";
         }
         return seconds + " second";
+    }
+
+    public static String formatDaysHours(int seconds) {
+        int days = getDays(seconds);
+        int remainderSeconds = seconds - days * 86400;
+        int hours = getHours(remainderSeconds);
+        StringBuilder builder = new StringBuilder(days + " day");
+        if (days > 1) {
+            builder.append("s");
+        }
+        if (hours == 0) {
+            return builder.toString();
+        }
+        builder.append(" ").append(hours).append(" hour");
+        if (hours > 1) {
+            builder.append("s");
+        }
+        return builder.toString();
+    }
+
+    public static String formatHoursMinutes(int seconds) {
+        int hours = getHours(seconds);
+        int remainderSeconds = seconds - hours * 3600;
+        int minutes = getMinutes(remainderSeconds);
+        StringBuilder builder = new StringBuilder(hours + " hour");
+        if (hours > 1) {
+            builder.append("s");
+        }
+        if (minutes == 0) {
+            return builder.toString();
+        }
+        builder.append(" ").append(minutes).append(" minute");
+        if (minutes > 1) {
+            builder.append("s");
+        }
+        return builder.toString();
+    }
+
+    public static String formatMinutesSeconds(int seconds) {
+        int minutes = getMinutes(seconds);
+        int remainderSeconds = seconds - minutes * 60;
+        StringBuilder builder = new StringBuilder(minutes + " minute");
+        if (minutes > 1) {
+            builder.append("s");
+        }
+        if (remainderSeconds == 0) {
+            return builder.toString();
+        }
+        builder.append(" ").append(remainderSeconds).append(" second");
+        if (remainderSeconds > 1) {
+            builder.append("s");
+        }
+        return builder.toString();
     }
 
     public static long parse(String input) {

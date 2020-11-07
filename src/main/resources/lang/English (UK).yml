@@ -2,8 +2,9 @@ identifier: "english-uk"
 
 values:
   # General messages
+  no-permission: ":x: No permission."
   couldnt-find-member: ":x: Couldn't find that member :worried:"
-  no-active-giveaways: ":x: There are no active giveaways in this server"
+  no-active-giveaways: ":x: There are no active giveaways in this server."
   fatal-error-loading-server: ":warning: There was a fatal error loading your server. Please join the support discord and scream at Zak."
   generic-failure: ":x: Something went wrong. Please try again in a few minutes."
   couldnt-find-channel: ":x: The specified channel could not be found. Make sure the bot can access it."

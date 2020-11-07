@@ -159,7 +159,7 @@ public class GiveawayController {
                 if (totalEntries.equals(BigInteger.ZERO)) {
                     giveawayMessage.editMessage(new EmbedBuilder()
                             .setColor(this.palette.success())
-                            .setTitle("Giveaway: " + giveaway.giveawayItem())
+                            .setTitle("Giveaway: ".concat(giveaway.giveawayItem()))
                             .setDescription("There were not enough entries to determine winners.")
                             .setFooter("Ended with no winners.").build()).queue();
                     return;
@@ -184,7 +184,7 @@ public class GiveawayController {
         }
         giveawayMessage.editMessage(new EmbedBuilder()
                 .setColor(this.palette.success())
-                .setTitle("Giveaway: " + giveaway.giveawayItem())
+                .setTitle("Giveaway: ".concat(giveaway.giveawayItem()))
                 .setDescription((winners.size() > 1 ? "**Winners:**\n" : "**Winner:**\n") + descriptionBuilder.toString())
                 .setFooter("Ended with " + winners.size() + (winners.size() > 1 ? " winners" : " winner") + " and " + totalEntries.toString() + " entries.").build()).queue();
         // Handle the pinging of winners

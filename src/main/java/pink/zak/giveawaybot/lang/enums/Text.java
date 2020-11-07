@@ -2,6 +2,7 @@ package pink.zak.giveawaybot.lang.enums;
 
 public enum Text {
     // Applies everywhere
+    NO_PERMISSION,
     COULDNT_FIND_MEMBER,
     NO_ACTIVE_GIVEAWAYS, // Might be moved to entries
     FATAL_ERROR_LOADING_SERVER,
