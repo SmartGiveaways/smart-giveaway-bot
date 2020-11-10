@@ -15,18 +15,19 @@ public enum Text {
 
     // Applies to both ban commands
     CANNOT_BAN_SELF,
+    CANNOT_BAN_THE_BOT,
     NOT_ENOUGH_PERMISSIONS_BAN,
 
 
     // Applies to >gban
-    BAN_HELP,
+    BAN_EMBED_TITLE,
+    BAN_EMBED_CONTENT,
     TARGET_ALREADY_BANNED,
     CANNOT_BAN_IS_SHADOW_BANNED, // You cannot ban someone normally if they are shadow banned
     BANNED_SUCCESSFULLY,
 
 
     // Applies to >gsban
-    SHADOW_BAN_HELP,
     TARGET_ALREADY_SHADOW_BANNED,
     CANNOT_BAN_IS_BANNED, // You cannot shadow ban someone if they are banned normally.
     SHADOW_BANNED_SUCCESSFULLY,

@@ -11,14 +11,11 @@ import pink.zak.giveawaybot.service.command.command.SubCommand;
 import java.util.List;
 
 public class CreateSub extends SubCommand {
-    private final GiveawayBot bot;
 
     public CreateSub(GiveawayBot bot) {
         super(bot);
         this.addFlat("create");
         this.addArgument(String.class);
-
-        this.bot = bot;
     }
 
     @Override

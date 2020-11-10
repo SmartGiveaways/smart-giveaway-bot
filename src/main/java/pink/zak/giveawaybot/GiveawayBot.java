@@ -11,7 +11,6 @@ import pink.zak.giveawaybot.cache.FinishedGiveawayCache;
 import pink.zak.giveawaybot.cache.GiveawayCache;
 import pink.zak.giveawaybot.cache.ServerCache;
 import pink.zak.giveawaybot.commands.ban.BanCommand;
-import pink.zak.giveawaybot.commands.ban.ShadowBanCommand;
 import pink.zak.giveawaybot.commands.ban.UnbanCommand;
 import pink.zak.giveawaybot.commands.entries.EntriesCommand;
 import pink.zak.giveawaybot.commands.giveaway.GiveawayCommand;
@@ -111,7 +110,6 @@ public class GiveawayBot extends JdaBot {
         this.giveawayController = new GiveawayController(this); // Makes use of JDA, retrieving messages
         this.registerCommands(
                 new BanCommand(this),
-                new ShadowBanCommand(this),
                 new UnbanCommand(this),
                 new EntriesCommand(this),
                 new GiveawayCommand(this),

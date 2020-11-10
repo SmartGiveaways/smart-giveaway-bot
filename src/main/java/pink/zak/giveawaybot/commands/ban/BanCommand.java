@@ -1,67 +1,51 @@
 package pink.zak.giveawaybot.commands.ban;
 
+import com.google.common.collect.Maps;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import pink.zak.giveawaybot.GiveawayBot;
+import pink.zak.giveawaybot.commands.ban.subs.BanSub;
+import pink.zak.giveawaybot.commands.ban.subs.ShadowBanSub;
+import pink.zak.giveawaybot.lang.LanguageRegistry;
+import pink.zak.giveawaybot.lang.enums.Language;
 import pink.zak.giveawaybot.lang.enums.Text;
 import pink.zak.giveawaybot.models.Server;
+import pink.zak.giveawaybot.service.colour.Palette;
 import pink.zak.giveawaybot.service.command.command.SimpleCommand;
-import pink.zak.giveawaybot.service.command.command.SubCommand;
-import pink.zak.giveawaybot.service.types.UserUtils;
 
 import java.util.List;
+import java.util.Map;
 
 public class BanCommand extends SimpleCommand {
+    private final Map<Language, MessageEmbed> messageEmbeds = Maps.newHashMap();
 
     public BanCommand(GiveawayBot bot) {
         super(bot, true, "gban");
 
-        this.setSubCommands(new BanSub(bot));
+        BanCmdUtils cmdUtils = new BanCmdUtils(bot);
+        this.setSubCommands(
+                new BanSub(bot, cmdUtils),
+                new ShadowBanSub(bot, cmdUtils)
+        );
+
+        this.buildMessages(bot.getLanguageRegistry(), bot.getDefaults().getPalette());
     }
 
     @Override
     public void onExecute(Member sender, Server server, MessageReceivedEvent event, List<String> args) {
-        this.langFor(server, Text.BAN_HELP).to(event.getTextChannel());
+        event.getTextChannel().sendMessage(this.messageEmbeds.get(server.getLanguage())).queue();
     }
 
-    private class BanSub extends SubCommand {
-
-        public BanSub(GiveawayBot bot) {
-            super(bot, true);
-
-            this.addArgument(Member.class);
-        }
-
-        @Override
-        public void onExecute(Member sender, Server server, MessageReceivedEvent event, List<String> args) {
-            Member target = this.parseArgument(args, event.getGuild(), 0);
-            TextChannel textChannel = event.getTextChannel();
-            if (target == null) {
-                this.langFor(server, Text.COULDNT_FIND_MEMBER).to(textChannel);
-                return;
-            }
-            if (target.getIdLong() == sender.getIdLong()) {
-                this.langFor(server, Text.CANNOT_BAN_SELF).to(textChannel);
-                return;
-            }
-            if (server.canMemberManage(target)) {
-                this.langFor(server, Text.NOT_ENOUGH_PERMISSIONS_BAN, replacer -> replacer.set("target", target.getAsMention())).to(textChannel);
-                return;
-            }
-            server.getUserCache().get(target.getIdLong()).thenAccept(user -> {
-                String userPlaceholder = UserUtils.getNameDiscrim(target);
-                if (user.isBanned()) {
-                    this.langFor(server, Text.TARGET_ALREADY_BANNED, replacer -> replacer.set("target", userPlaceholder)).to(textChannel);
-                    return;
-                }
-                if (user.isShadowBanned()) {
-                    this.langFor(server, Text.CANNOT_BAN_IS_SHADOW_BANNED, replacer -> replacer.set("target", userPlaceholder)).to(textChannel);
-                    return;
-                }
-                user.ban();
-                this.langFor(server, Text.BANNED_SUCCESSFULLY, replacer -> replacer.set("target", userPlaceholder)).to(textChannel);
-            });
+    private void buildMessages(LanguageRegistry languageRegistry, Palette palette) {
+        for (Language language : Language.values()) {
+            EmbedBuilder embedBuilder = new EmbedBuilder()
+                    .setTitle(languageRegistry.get(language, Text.BAN_EMBED_TITLE).get())
+                    .setFooter(languageRegistry.get(language, Text.GENERIC_EMBED_FOOTER).get())
+                    .setDescription(languageRegistry.get(language, Text.BAN_EMBED_CONTENT).get())
+                    .setColor(palette.primary());
+            this.messageEmbeds.put(language, embedBuilder.build());
         }
     }
 }

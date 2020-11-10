@@ -14,16 +14,19 @@ values:
 
   # General ban command messages
   cannot-ban-self: ":x: You can't ban yourself dummy."
+  cannot-ban-the-bot: ":cry:"
   not-enough-permissions-ban: ":x: You're not high enough in the god complex to ban %target%"
 
   # >gban command messages
-  ban-help: ">gban <user> - Bans a user from giveaways."
+  ban-embed-title: "Ban Command Help"
+  ban-embed-content: ">gban -s <user> - Silently bans a user\n
+                        >gban <user>\n
+                        >gban list\n"
   target-already-banned: ":x: %target% is already banned."
   cannot-ban-is-shadow-banned: ":x: %target% is shadow banned. Unban them first if you want to overwrite this."
   banned-successfully: ":white_check_mark: banned %target%"
 
-  # >gsban command messages
-  shadow-ban-help: ">gsban <user> - Shadow bans a user from giveaways."
+  # >gban -s command messages
   target-already-shadow-banned: ":x: %target% is already shadow banned."
   cannot-ban-is-banned: ":x: %target% is banned. Unban them first to overwrite with a shadow ban."
   shadow-banned-successfully: ":white_check_mark: shadow banned %target%."

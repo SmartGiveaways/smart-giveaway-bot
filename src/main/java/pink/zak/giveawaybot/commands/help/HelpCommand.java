@@ -12,25 +12,18 @@ import pink.zak.giveawaybot.lang.enums.Text;
 import pink.zak.giveawaybot.models.Server;
 import pink.zak.giveawaybot.service.colour.Palette;
 import pink.zak.giveawaybot.service.command.command.SimpleCommand;
-import pink.zak.giveawaybot.threads.ThreadManager;
 
 import java.util.List;
 import java.util.Map;
 
 public class HelpCommand extends SimpleCommand {
-    private final ThreadManager threadManager;
-    private final Palette palette;
-    private final LanguageRegistry languageRegistry;
     private final Map<Language, MessageEmbed> limitedMessageEmbed = Maps.newHashMap();
     private final Map<Language, MessageEmbed> fullMessageEmbed = Maps.newHashMap();
 
     public HelpCommand(GiveawayBot bot) {
         super(bot, "ghelp");
 
-        this.threadManager = bot.getThreadManager();
-        this.palette = bot.getDefaults().getPalette();
-        this.languageRegistry = bot.getLanguageRegistry();
-        this.buildMessages();
+        this.buildMessages(bot.getLanguageRegistry(), bot.getDefaults().getPalette());
     }
 
     @Override
@@ -38,13 +31,13 @@ public class HelpCommand extends SimpleCommand {
         event.getTextChannel().sendMessage(server.canMemberManage(sender) ? this.fullMessageEmbed.get(server.getLanguage()) : this.limitedMessageEmbed.get(server.getLanguage())).queue();
     }
 
-    private void buildMessages() {
+    private void buildMessages(LanguageRegistry languageRegistry, Palette palette) {
         for (Language language : Language.values()) {
             EmbedBuilder embedBuilder = new EmbedBuilder()
-                    .setTitle(this.languageRegistry.get(language, Text.HELP_EMBED_TITLE).get())
-                    .setFooter(this.languageRegistry.get(language, Text.HELP_EMBED_FOOTER).get())
-                    .setColor(this.palette.primary())
-                    .addField("General Commands", this.languageRegistry.get(language, Text.HELP_LIMITED_SECTION).get(), false);
+                    .setTitle(languageRegistry.get(language, Text.HELP_EMBED_TITLE).get())
+                    .setFooter(languageRegistry.get(language, Text.HELP_EMBED_FOOTER).get())
+                    .setColor(palette.primary())
+                    .addField("General Commands", languageRegistry.get(language, Text.HELP_LIMITED_SECTION).get(), false);
             this.limitedMessageEmbed.put(language, embedBuilder.build());
             embedBuilder.addField("Admin Commands",
                     """

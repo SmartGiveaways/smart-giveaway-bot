@@ -15,7 +15,6 @@ import pink.zak.giveawaybot.service.command.command.SubCommand;
 import java.util.List;
 
 public class ListSub extends SubCommand {
-    private final GiveawayBot bot;
     private final Palette palette;
     private final GiveawayCache giveawayCache;
     private final GiveawayController giveawayController;
@@ -24,7 +23,6 @@ public class ListSub extends SubCommand {
         super(bot, true);
         this.addFlatWithAliases("list", "show");
 
-        this.bot = bot;
         this.palette = bot.getDefaults().getPalette();
         this.giveawayCache = bot.getGiveawayCache();
         this.giveawayController = bot.getGiveawayController();

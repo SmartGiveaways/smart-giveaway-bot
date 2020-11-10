@@ -47,7 +47,7 @@ public class UnbanCommand extends SimpleCommand {
                 return;
             }
             server.getUserCache().get(target.getIdLong()).thenAccept(user -> {
-                String userPlaceholder = UserUtils.getNameDiscrim(sender);
+                String userPlaceholder = UserUtils.getNameDiscrim(target);
                 if (user.isShadowBanned()) {
                     this.langFor(server, Text.SHADOW_UNBANNED, replacer -> replacer.set("target", userPlaceholder)).to(textChannel);
                     user.unShadowBan();
