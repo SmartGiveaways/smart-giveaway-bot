@@ -1,36 +1,37 @@
-# Contribution to Smart Giveaways Bot
+# Contributing to Smart Giveaways Bot
 #### Please read the following before contributing
 - [Issues](#issues)
   - [Bug Report Expectations](#bug-report-expectations)
   - [Suggestion Expectations](#suggestion-expectations)
+    
 - [Pull Requests](#pull-requests)
   - [Code / Pull Request Expectations](#codepr-expectations)
   - [Code Review](#code-review)
   - [Developer's Certificate of Origin 1.1](#developers-certificate-of-origin-11)
 
-# Issues
+## Issues
 
-## Bug Report Expectations
-- You follow the format outlined in the default bug report.
-- You're as descriptive as necessary.
-- You respond, where necessary to comments and provide additional information if needed.
-- You're nice and are just happy to discuss your suggestion :D
+### Bug Report Expectations
+  - You follow the format outlined in the default bug report.
+  - You're as descriptive as necessary.
+  - You respond, where necessary to comments and provide additional information if needed.
+  - You're nice and are just happy to discuss your suggestion :D
 
-## Suggestion Expectations
-- You follow the defined format, although not extremely important here.
-- You fully detail your suggestion.
-- You respond, where necessary to comments and provide additional information if needed.
-- Accept the fact that not all suggestions are added and that the bot is developed for general use, not a specific case.
+### Suggestion Expectations
+  - You follow the defined format, although not extremely important here.
+  - You fully detail your suggestion.
+  - You respond, where necessary to comments and provide additional information if needed.
+  - Accept the fact that not all suggestions are added and that the bot is developed for general use, not a specific case.
 
-# Pull Requests
+## Pull Requests
 
-## Code/PR Expectations
-- Your code is clean and not overly messy.
-- You abide by the formatting, naming and code style of the rest of the project.
-- You accept constructive criticism in code reviews and are willing to make necessary changes.
-- You don't try to be sneaky hiding pieces of code.
-- You fully test your changes before making a pull request.
-- d o n t    m a s s    r e f a c t o r
+### Code/PR Expectations
+  - Your code is clean and not overly messy.
+  - You abide by the formatting, naming and code style of the rest of the project.
+  - You accept constructive criticism in code reviews and are willing to make necessary changes.
+  - You don't try to be sneaky hiding pieces of code.
+  - You fully test your changes before making a pull request.
+  - d o n t    m a s s    r e f a c t o r
   
 ## Code Review
 

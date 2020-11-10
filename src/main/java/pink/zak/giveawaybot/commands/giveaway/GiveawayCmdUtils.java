@@ -10,12 +10,10 @@ import pink.zak.giveawaybot.models.Server;
 public class GiveawayCmdUtils {
     private final GiveawayController giveawayController;
     private final LanguageRegistry lang;
-    private final GiveawayBot bot;
 
     public GiveawayCmdUtils(GiveawayBot bot) {
         this.giveawayController = bot.getGiveawayController();
         this.lang = bot.getLanguageRegistry();
-        this.bot = bot;
     }
 
     public void create(Server server, long lengthMillis, int winnerAmount, String presetName, String giveawayItem, TextChannel giveawayChannel, TextChannel responseChannel) {
