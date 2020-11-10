@@ -1,7 +1,7 @@
 ---
 name: Bug report (not self hosted)
 about: Report something not quite right and help us blast those bugs
-title: "[BUG]"
+title: "[BUG] "
 labels: bug
 assignees: ''
 
@@ -28,7 +28,7 @@ Where applicable, please attach screenshots or videos of the bug.
  - Time of the bug (GMT): 
  - Server ID: 
  - Related User IDs (specify in what way): 
- - Any form of error code if you're given one: N/A
+ - Any form of error code if you're given one: 
 
 
 **Additional context**
