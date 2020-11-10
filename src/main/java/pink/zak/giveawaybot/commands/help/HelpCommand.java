@@ -16,7 +16,6 @@ import pink.zak.giveawaybot.threads.ThreadManager;
 
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 public class HelpCommand extends SimpleCommand {
     private final ThreadManager threadManager;
@@ -36,10 +35,7 @@ public class HelpCommand extends SimpleCommand {
 
     @Override
     public void onExecute(Member sender, Server server, MessageReceivedEvent event, List<String> args) {
-        event.getTextChannel().sendMessage(server.canMemberManage(sender) ? this.fullMessageEmbed.get(server.getLanguage()) : this.limitedMessageEmbed.get(server.getLanguage())).queue(embed -> {
-            embed.delete().queueAfter(60, TimeUnit.SECONDS, null, this.bot.getDeleteFailureThrowable(), this.threadManager.getScheduler());
-            event.getMessage().delete().queueAfter(60, TimeUnit.SECONDS, null, this.bot.getDeleteFailureThrowable(), this.threadManager.getScheduler());
-        });
+        event.getTextChannel().sendMessage(server.canMemberManage(sender) ? this.fullMessageEmbed.get(server.getLanguage()) : this.limitedMessageEmbed.get(server.getLanguage())).queue();
     }
 
     private void buildMessages() {

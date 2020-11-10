@@ -78,7 +78,13 @@ public enum Text {
 
     // Applies to >preset commands
     PRESET_EMBED_TITLE,
-    PRESET_EMBED_CONTENT
+    PRESET_EMBED_CONTENT,
+    // create sub
+    PRESET_CREATE_RESTRICTED_NAME,
+    PRESET_CREATE_ALREADY_CALLED,
+    PRESET_CREATE_NAME_TOO_LONG,
+    PRESET_CREATE_NAME_TOO_SHORT,
+    PRESET_CREATED
     ;
 
     public static Text match(String identifier) {

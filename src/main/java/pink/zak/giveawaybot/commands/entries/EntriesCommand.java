@@ -64,12 +64,12 @@ public class EntriesCommand extends SimpleCommand {
         }
         server.getUserCache().get(target.getIdLong()).thenAccept(user -> {
             if (user.isBanned()) {
-                this.langFor(server, self ? Text.SELF_BANNED_FROM_GIVEAWAYS : Text.TARGET_BANNED_FROM_GIVEAWAYS, replacer -> replacer.set("target", target)).to(channel, this.bot, 10);
+                this.langFor(server, self ? Text.SELF_BANNED_FROM_GIVEAWAYS : Text.TARGET_BANNED_FROM_GIVEAWAYS, replacer -> replacer.set("target", target)).to(channel);
                 return;
             }
             Set<Long> presentGiveaways = server.getActiveGiveaways(user);
             if (presentGiveaways.isEmpty()) {
-                this.langFor(server, self ? Text.SELF_NOT_ENTERED : Text.TARGET_NOT_ENTERED, replacer -> replacer.set("target", target)).to(channel, this.bot, 10);
+                this.langFor(server, self ? Text.SELF_NOT_ENTERED : Text.TARGET_NOT_ENTERED, replacer -> replacer.set("target", target)).to(channel);
                 return;
             }
             StringBuilder descriptionBuilder = new StringBuilder();

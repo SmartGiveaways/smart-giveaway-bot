@@ -123,14 +123,6 @@ public class LanguageRegistry {
             channel.sendMessage(this.message).queue(messageConsumer);
         }
 
-        public void to(TextChannel channel, Consumer<Message> messageConsumer, GiveawayBot bot, int deleteAfter) {
-            channel.sendMessage(this.message).queue(messageConsumer.andThen(message -> message.delete().queueAfter(deleteAfter, TimeUnit.SECONDS, u -> {}, bot.getDeleteFailureThrowable())));
-        }
-
-        public void to(TextChannel channel, GiveawayBot bot, int deleteAfter) {
-            channel.sendMessage(this.message).queue(message -> message.delete().queueAfter(deleteAfter, TimeUnit.SECONDS, u -> {}, bot.getDeleteFailureThrowable()));
-        }
-
         public String get() {
             return this.message;
         }

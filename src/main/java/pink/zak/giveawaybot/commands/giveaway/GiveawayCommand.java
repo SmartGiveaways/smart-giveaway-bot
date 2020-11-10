@@ -20,7 +20,6 @@ import pink.zak.giveawaybot.threads.ThreadManager;
 
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 public class GiveawayCommand extends SimpleCommand {
     private final LanguageRegistry languageRegistry;
@@ -48,10 +47,7 @@ public class GiveawayCommand extends SimpleCommand {
 
     @Override
     public void onExecute(Member sender, Server server, MessageReceivedEvent event, List<String> args) {
-        event.getChannel().sendMessage(this.embedMessages.get(server.getLanguage())).queue(embed -> {
-            embed.delete().queueAfter(60, TimeUnit.SECONDS, null, this.bot.getDeleteFailureThrowable(), this.threadManager.getScheduler());
-            event.getMessage().delete().queueAfter(60, TimeUnit.SECONDS, null, this.bot.getDeleteFailureThrowable(), this.threadManager.getScheduler());
-        });
+        event.getChannel().sendMessage(this.embedMessages.get(server.getLanguage())).queue();
     }
 
     private void buildMessages() {

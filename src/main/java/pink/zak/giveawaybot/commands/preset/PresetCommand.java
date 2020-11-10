@@ -13,15 +13,12 @@ import pink.zak.giveawaybot.lang.enums.Text;
 import pink.zak.giveawaybot.models.Server;
 import pink.zak.giveawaybot.service.colour.Palette;
 import pink.zak.giveawaybot.service.command.command.SimpleCommand;
-import pink.zak.giveawaybot.threads.ThreadManager;
 
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 public class PresetCommand extends SimpleCommand {
     private final LanguageRegistry languageRegistry;
-    private final ThreadManager threadManager;
     private final Palette palette;
     private final Map<Language, MessageEmbed> embedMessages = Maps.newHashMap();
 
@@ -39,17 +36,13 @@ public class PresetCommand extends SimpleCommand {
         );
 
         this.languageRegistry = bot.getLanguageRegistry();
-        this.threadManager = bot.getThreadManager();
         this.palette = bot.getDefaults().getPalette();
         this.buildMessages();
     }
 
     @Override
     public void onExecute(Member sender, Server server, MessageReceivedEvent event, List<String> args) {
-        event.getChannel().sendMessage(this.embedMessages.get(server.getLanguage())).queue(embed -> {
-            embed.delete().queueAfter(60, TimeUnit.SECONDS, null, this.bot.getDeleteFailureThrowable(), this.threadManager.getScheduler());
-            event.getMessage().delete().queueAfter(60, TimeUnit.SECONDS, null, this.bot.getDeleteFailureThrowable(), this.threadManager.getScheduler());
-        });
+        event.getChannel().sendMessage(this.embedMessages.get(server.getLanguage())).queue();
     }
 
     private void buildMessages() {

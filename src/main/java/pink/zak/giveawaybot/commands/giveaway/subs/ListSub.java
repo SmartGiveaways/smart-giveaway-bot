@@ -33,7 +33,7 @@ public class ListSub extends SubCommand {
     @Override
     public void onExecute(Member sender, Server server, MessageReceivedEvent event, List<String> args) {
         if (server.getActiveGiveaways().isEmpty()) {
-            this.langFor(server, Text.NO_ACTIVE_GIVEAWAYS).to(event.getTextChannel(), this.bot, 30);
+            this.langFor(server, Text.NO_ACTIVE_GIVEAWAYS).to(event.getTextChannel());
             return;
         }
         StringBuilder descriptionBuilder = new StringBuilder();

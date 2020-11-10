@@ -28,6 +28,7 @@ import pink.zak.giveawaybot.service.command.argument.ArgumentType;
 import pink.zak.giveawaybot.service.command.command.Command;
 import pink.zak.giveawaybot.service.command.command.SimpleCommand;
 import pink.zak.giveawaybot.service.command.command.SubCommand;
+import pink.zak.giveawaybot.service.types.UserUtils;
 import pink.zak.giveawaybot.threads.ThreadFunction;
 
 import java.util.List;
@@ -158,7 +159,7 @@ public class CommandBase extends ListenerAdapter {
 
     private boolean hasAccess(Server server, Command simpleCommand, Message message, Member member) {
         if (simpleCommand.requiresManager() && !this.serverCache.get(member.getGuild().getIdLong()).join().canMemberManage(member)) {
-            this.languageRegistry.get(server, Text.NO_PERMISSION).to(message.getTextChannel(), this.bot, 10);
+            this.languageRegistry.get(server, Text.NO_PERMISSION).to(message.getTextChannel());
             return false;
         }
         return true;
@@ -187,29 +188,29 @@ public class CommandBase extends ListenerAdapter {
     private void registerArgumentTypes() {
         this.registerArgumentType(String.class, (string, guild) -> string)
                 .registerArgumentType(Member.class, (string, guild) -> {
-                    String id = string.length() == 21 ? string.substring(2, 20) : string.length() == 22 ? string.substring(3, 21) : null;
-                    if (id == null) {
+                    long userId = UserUtils.parseIdInput(string);
+                    if (userId == -1) {
                         return null;
                     }
                     try {
-                        return guild.retrieveMemberById(id).complete();
+                        return guild.retrieveMemberById(userId).complete();
                     } catch (ErrorResponseException ex) {
                         if (ex.getErrorResponse() != ErrorResponse.UNKNOWN_USER && ex.getErrorResponse() != ErrorResponse.UNKNOWN_MEMBER) {
-                            GiveawayBot.getLogger().error("Error parsing MEMBER type from command. Input {}", id, ex);
+                            GiveawayBot.getLogger().error("Error parsing MEMBER type from command. Input {}", userId, ex);
                         }
                         return null;
                     }
                 })
                 .registerArgumentType(User.class, (string, guild) -> {
-                    String id = string.length() == 21 ? string.substring(2, 20) : string.length() == 22 ? string.substring(3, 21) : null;
-                    if (id == null) {
+                    long userId = UserUtils.parseIdInput(string);
+                    if (userId == -1) {
                         return null;
                     }
                     try {
-                        return this.bot.getShardManager().retrieveUserById(id).complete();
+                        return this.bot.getShardManager().retrieveUserById(userId).complete();
                     } catch (ErrorResponseException ex) {
                         if (ex.getErrorResponse() != ErrorResponse.UNKNOWN_USER) {
-                            GiveawayBot.getLogger().error("Error parsing MEMBER type from command. Input {}", id, ex);
+                            GiveawayBot.getLogger().error("Error parsing MEMBER type from command. Input {}", userId, ex);
                         }
                         return null;
                     }

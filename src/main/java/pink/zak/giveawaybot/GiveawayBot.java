@@ -3,7 +3,6 @@ package pink.zak.giveawaybot;
 import com.google.common.collect.Sets;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.awaitility.Awaitility;
@@ -44,13 +43,11 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class GiveawayBot extends JdaBot {
     private Metrics metricsLogger;
     private LatencyMonitor latencyMonitor;
-    private Consumer<Throwable> deleteFailureThrowable;
     private ThreadManager threadManager;
     private FinishedGiveawayStorage finishedGiveawayStorage;
     private FinishedGiveawayCache finishedGiveawayCache;
@@ -87,7 +84,6 @@ public class GiveawayBot extends JdaBot {
         this.latencyMonitor = new LatencyMonitor(this);
         this.closeIfPingUnusable();
 
-        this.setupThrowable();
         this.setupStorage();
 
         this.finishedGiveawayStorage = new FinishedGiveawayStorage(this);
@@ -181,24 +177,12 @@ public class GiveawayBot extends JdaBot {
         }
     }
 
-    private void setupThrowable() {
-        this.deleteFailureThrowable = ex -> {
-            if (!(ex instanceof ErrorResponseException)) {
-                GiveawayBot.getLogger().error("", ex);
-            }
-        };
-    }
-
     public Defaults getDefaults() {
         return this.defaults;
     }
 
     public Metrics getMetrics() {
         return this.metricsLogger;
-    }
-
-    public Consumer<Throwable> getDeleteFailureThrowable() {
-        return this.deleteFailureThrowable;
     }
 
     public void runOnMainThread(Runnable runnable) {
