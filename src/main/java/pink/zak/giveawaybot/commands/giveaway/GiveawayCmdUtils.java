@@ -24,17 +24,19 @@ public class GiveawayCmdUtils {
         }
         switch (this.giveawayController.createGiveaway(server, lengthMillis, winnerAmount, giveawayChannel, presetName, giveawayItem).getRight()) {
             case GIVEAWAY_LIMIT_FAILURE:
-                this.lang.get(server, Text.GIVEAWAY_LIMIT_FAILURE).to(responseChannel, this.bot, 20);
+                this.lang.get(server, Text.GIVEAWAY_LIMIT_FAILURE).to(responseChannel, this.bot, 30);
                 break;
             case NO_PRESET:
-                this.lang.get(server, Text.NO_PRESET_FOUND_ON_CREATION).to(responseChannel, this.bot, 20);
+                this.lang.get(server, Text.NO_PRESET_FOUND_ON_CREATION).to(responseChannel, this.bot, 30);
                 break;
+            case PERMISSIONS_FAILURE:
+                this.lang.get(server, Text.BOT_DOESNT_HAVE_PERMISSIONS).to(responseChannel, this.bot, 30);
             case GENERIC_FAILURE:
             case RATE_LIMIT_FAILURE:
-                this.lang.get(server, Text.GENERIC_FAILURE).to(responseChannel, this.bot, 20);
+                this.lang.get(server, Text.GENERIC_FAILURE).to(responseChannel, this.bot, 30);
                 break;
             case UNKNOWN_EMOJI:
-                this.lang.get(server, Text.UNKNOWN_EMOJI_ON_CREATION, replacer -> replacer.set("preset-name", presetName)).to(responseChannel, this.bot, 20);
+                this.lang.get(server, Text.UNKNOWN_EMOJI_ON_CREATION, replacer -> replacer.set("preset-name", presetName)).to(responseChannel, this.bot, 30);
                 break;
             case SUCCESS:
                 if (!responseChannel.equals(giveawayChannel)) {

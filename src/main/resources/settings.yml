@@ -9,6 +9,7 @@ mongo-storage-database: "giveaway-bot"
 mongo-username: "yourUsername" # If you dont have credentials for ur DB, just remove the actual config parts themselves, so comment the entire username and password section.
 mongo-password: "thisIsSecure"
 
+enable-metrics: false
 influx-url: 'https://your.instance.com'
 influx-token: 'your-token'
 influx-org: SmartGiveaways
@@ -18,3 +19,6 @@ redis-host: 127.24.114.43
 redis-port: 6379
 use-redis-ssl: true
 redis-password: "some-pass"
+
+latency-tester:
+  channel-id: 775406909216784385

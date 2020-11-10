@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
+import org.awaitility.Awaitility;
 import org.slf4j.Logger;
 import pink.zak.giveawaybot.cache.FinishedGiveawayCache;
 import pink.zak.giveawaybot.cache.GiveawayCache;
@@ -15,14 +16,17 @@ import pink.zak.giveawaybot.commands.ban.ShadowBanCommand;
 import pink.zak.giveawaybot.commands.ban.UnbanCommand;
 import pink.zak.giveawaybot.commands.entries.EntriesCommand;
 import pink.zak.giveawaybot.commands.giveaway.GiveawayCommand;
+import pink.zak.giveawaybot.commands.help.HelpCommand;
 import pink.zak.giveawaybot.commands.preset.PresetCommand;
 import pink.zak.giveawaybot.controllers.GiveawayController;
 import pink.zak.giveawaybot.defaults.Defaults;
 import pink.zak.giveawaybot.entries.pipeline.EntryPipeline;
 import pink.zak.giveawaybot.lang.LanguageRegistry;
+import pink.zak.giveawaybot.listener.GiveawayDeletionListener;
 import pink.zak.giveawaybot.listener.MessageSendListener;
 import pink.zak.giveawaybot.listener.ReactionAddListener;
 import pink.zak.giveawaybot.metrics.MetricsStarter;
+import pink.zak.giveawaybot.metrics.helpers.LatencyMonitor;
 import pink.zak.giveawaybot.service.bot.JdaBot;
 import pink.zak.giveawaybot.service.config.Config;
 import pink.zak.giveawaybot.storage.FinishedGiveawayStorage;
@@ -39,15 +43,15 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class GiveawayBot extends JdaBot {
-    private Defaults defaults;
     private Metrics metricsLogger;
+    private LatencyMonitor latencyMonitor;
     private Consumer<Throwable> deleteFailureThrowable;
     private ThreadManager threadManager;
-    //private RedisManager redisManager;
     private FinishedGiveawayStorage finishedGiveawayStorage;
     private FinishedGiveawayCache finishedGiveawayCache;
     private GiveawayStorage giveawayStorage;
@@ -56,6 +60,7 @@ public class GiveawayBot extends JdaBot {
     private ServerCache serverCache;
     private LanguageRegistry languageRegistry;
     private GiveawayController giveawayController;
+    private Defaults defaults;
     private EntryPipeline entryPipeline;
 
     public GiveawayBot() {
@@ -68,17 +73,23 @@ public class GiveawayBot extends JdaBot {
 
     public void load() {
         this.configRelations();
-        this.setupThrowable();
-        this.setupStorage();
-        Config settings = this.getConfigStore().getConfig("settings");
+        this.threadManager = new ThreadManager();
 
+        Config settings = this.getConfigStore().getConfig("settings");
         this.metricsLogger = new Metrics(new Metrics.Config(settings.string("influx-url"),
                 settings.string("influx-token").toCharArray(),
                 settings.string("influx-org"),
                 settings.string("influx-bucket"), 5));
 
-        this.threadManager = new ThreadManager();
-        //this.redisManager = new RedisManager(this);
+        this.buildJdaEarly(settings.string("token"), this.getGatewayIntents(), shard -> shard
+                .disableCache(CacheFlag.VOICE_STATE));
+        Awaitility.await().atMost(30, TimeUnit.SECONDS).until(this::isConnected);
+        this.latencyMonitor = new LatencyMonitor(this);
+        this.closeIfPingUnusable();
+
+        this.setupThrowable();
+        this.setupStorage();
+
         this.finishedGiveawayStorage = new FinishedGiveawayStorage(this);
         this.finishedGiveawayCache = new FinishedGiveawayCache(this);
         this.giveawayStorage = new GiveawayStorage(this);
@@ -89,11 +100,11 @@ public class GiveawayBot extends JdaBot {
 
         this.languageRegistry.loadLanguages(this);
 
-        this.initialize(this, this.getConfigStore().getConfig("settings").string("token"), ">", this.getGatewayIntents(), shard -> shard
-                .disableCache(CacheFlag.VOICE_STATE)); // This should basically be called as late as physically possible
-
         this.defaults = new Defaults(this);
         this.entryPipeline = new EntryPipeline(this);
+
+        this.initialize(this, this.getConfigStore().getConfig("settings").string("token"), ">", this.getGatewayIntents(), shard -> shard
+                .disableCache(CacheFlag.VOICE_STATE));
 
         Runtime.getRuntime().addShutdownHook(new ShutdownHook(this));
     }
@@ -108,15 +119,18 @@ public class GiveawayBot extends JdaBot {
                 new UnbanCommand(this),
                 new EntriesCommand(this),
                 new GiveawayCommand(this),
+                new HelpCommand(this),
                 new PresetCommand(this)
         );
 
         this.registerListeners(
                 new ReactionAddListener(this),
-                new MessageSendListener(this)
+                new MessageSendListener(this),
+                new GiveawayDeletionListener(this)
         );
-        new MetricsStarter().start(this);
+        new MetricsStarter().checkAndStart(this);
         this.getJda().getPresence().setPresence(OnlineStatus.ONLINE, Activity.playing("smartgiveaways.xyz"));
+        logger.info("Finished startup. The bot is now fully registered.");
     }
 
     @Override
@@ -133,7 +147,6 @@ public class GiveawayBot extends JdaBot {
         this.giveawayStorage.closeBack();
         this.finishedGiveawayStorage.closeBack();
         this.serverStorage.closeBack();
-        //this.redisManager.shutdown();
         this.threadManager.shutdownPools();
         timings.add(System.currentTimeMillis());
         logger.info("Completing shut down sequence.");
@@ -143,7 +156,17 @@ public class GiveawayBot extends JdaBot {
         }
     }
 
-    public void configRelations() {
+    private void closeIfPingUnusable() {
+        for (int i = 1; i <= 5; i++) {
+            if (this.latencyMonitor.isLatencyUsable()) {
+                logger.info("Successfully tested latency on attempt no. ".concat(String.valueOf(i)));
+                return;
+            }
+            logger.error("Failed testing latency on attempt no. ".concat(String.valueOf(i)));
+        }
+    }
+
+    private void configRelations() {
         this.getConfigStore().config("settings", Path::resolve, true);
     }
 
@@ -198,10 +221,6 @@ public class GiveawayBot extends JdaBot {
         return this.threadManager;
     }
 
-    /*public RedisManager getRedisManager() {
-        return this.redisManager;
-    }*/
-
     public FinishedGiveawayStorage getFinishedGiveawayStorage() {
         return this.finishedGiveawayStorage;
     }
@@ -209,10 +228,6 @@ public class GiveawayBot extends JdaBot {
     public FinishedGiveawayCache getFinishedGiveawayCache() {
         return this.finishedGiveawayCache;
     }
-
-    /*public Jedis getJedis() {
-        return this.redisManager.getConnection();
-    }*/
 
     public GiveawayStorage getGiveawayStorage() {
         return this.giveawayStorage;

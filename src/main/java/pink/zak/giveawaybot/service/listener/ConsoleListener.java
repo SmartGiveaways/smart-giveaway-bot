@@ -1,13 +1,13 @@
 package pink.zak.giveawaybot.service.listener;
 
-import pink.zak.giveawaybot.service.bot.SimpleBot;
+import pink.zak.giveawaybot.GiveawayBot;
 
 import java.util.Scanner;
 
 public class ConsoleListener implements Runnable {
-    private final SimpleBot bot;
+    private final GiveawayBot bot;
 
-    public ConsoleListener(SimpleBot bot) {
+    public ConsoleListener(GiveawayBot bot) {
         this.bot = bot;
     }
 
@@ -16,8 +16,23 @@ public class ConsoleListener implements Runnable {
         Scanner scanner = new Scanner(System.in);
         while (scanner.hasNextLine()) {
             String input = scanner.nextLine();
-            if (input.equalsIgnoreCase("stop") && this.bot.isInitialized()) {
-                System.exit(0);
+            switch (input.toLowerCase()) {
+                case "help":
+                    GiveawayBot.getLogger().info("""
+                            help -> Prints this command.
+                            reload-lang -> Reloads language values.
+                            stop -> Stops the bot and saves data.
+                            """);
+                case "reload-lang":
+                    this.bot.getLanguageRegistry().reloadLanguages(this.bot);
+                    break;
+                case "stop":
+                    if (this.bot.isInitialized()) {
+                        System.exit(0);
+                    }
+                    break;
+                default:
+                    break;
             }
         }
     }

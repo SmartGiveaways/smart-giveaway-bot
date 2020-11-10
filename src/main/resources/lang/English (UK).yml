@@ -2,11 +2,13 @@ identifier: "english-uk"
 
 values:
   # General messages
+  bot-doesnt-have-permissions: ":x: The bot doesn't have the correct permissions. Please reinvite the bot from <http://smartgiveaways.xyz/invite>."
   no-permission: ":x: No permission."
   couldnt-find-member: ":x: Couldn't find that member :worried:"
   no-active-giveaways: ":x: There are no active giveaways in this server."
   fatal-error-loading-server: ":warning: There was a fatal error loading your server. Please join the support discord and scream at Zak."
   generic-failure: ":x: Something went wrong. Please try again in a few minutes."
+  generic-embed-footer: "SmartGiveaways v1.0.0 - View commands at https://docs.smartgiveaways.xyz/commands"
   couldnt-find-channel: ":x: The specified channel could not be found. Make sure the bot can access it."
   couldnt-find-giveaway: ":x: Could not find a giveaway with that ID. Make sure the giveaway is finished and you're using the message ID."
 
@@ -39,11 +41,18 @@ values:
   self-not-entered: ":x: You are not entered into any giveaways."
   target-not-entered: ":x: %target% is not entered into any giveaways."
   entries-embed-title: "Giveaway entries for %target%"
-  entries-embed-giveaway-line: "**%item%** -> %entries% entries"
-  entries-embed-giveaway-line-plural: "**%item%** -> %entries% entry."
+  entries-embed-giveaway-line: "**%item%** -> %entries% entry.\n"
+  entries-embed-giveaway-line-plural: "**%item%** -> %entries% entries.\n"
 
   # >giveaway command messages
-
+  giveaway-embed-title: "Giveaway Command Help"
+  giveaway-embed-footer: "Want all commands? See >ghelp or go to https://docs.smartgiveaways.xyz/commands"
+  giveaway-embed-content: ">giveaway list\n
+                            >giveaway create <preset> <length> <channel> <winner amount> <item/topic>\n
+                            >giveaway create <preset> <length> <winner amount> <item/topic>\n
+                            >giveaway reroll <message id>\n
+                            >giveaway reroll <message id> <user> (WIP not done)"
+  giveaway-list-embed-title: "Current Giveaways"
   # NOT COMPLETE, BASE COMMAND NOT DONE
   giveaway-limit-failure: ":x: Your guild has reached the maximum number of 5 giveaways."
   no-preset-found-on-creation: ":x: Could not find the specified preset. Use `>preset list` to list them all."
@@ -56,3 +65,22 @@ values:
   parsing-reward-failed: "Issue parsing giveaway reward."
   # reroll messages
   reroll-over-24-hours: ":x: You can only reroll a giveaway within 24 hours."
+
+  # >ghelp command messages
+  help-embed-title: "SmartGiveaways Help"
+  help-embed-footer: "For more commands visit https://docs.smartgiveaways.xyz/commands"
+  help-limited-section: ">entries"
+  help-admin-section: ">giveaway\n
+                        >preset\n
+                        >gban <user> - Visibly bans a user from giveaways.\n
+                        >gsban <user> - Shadow bans a user from giveaways. Almost impossible to tell.\n
+                        >gunban <user> - Removes a user's ban or shadow ban."
+
+  # >preset command messages
+  preset-embed-title: "Preset Command Help"
+  preset-embed-content: ">preset settings - View all available settings\n
+                          >preset settings <preset> - View the settings of a preset\n
+                          >preset list\n
+                          >preset create <name>\n
+                          >preset delete <name>\n
+                          >preset set <preset> <setting> <value>"

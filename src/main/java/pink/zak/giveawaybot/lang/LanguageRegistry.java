@@ -6,6 +6,7 @@ import com.timvisee.yamlwrapper.YamlConfiguration;
 import lombok.SneakyThrows;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
+import org.awaitility.Awaitility;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.lang.enums.Language;
 import pink.zak.giveawaybot.lang.enums.Text;
@@ -23,6 +24,7 @@ import java.util.function.Consumer;
 
 public class LanguageRegistry {
     private final EnumMap<Language, LanguageContainer> languageMap = Maps.newEnumMap(Language.class);
+    private boolean isLoading;
 
     @SneakyThrows
     public void loadLanguages(SimpleBot bot) {
@@ -40,11 +42,22 @@ public class LanguageRegistry {
                 });
     }
 
+    public void reloadLanguages(SimpleBot bot) {
+        this.isLoading = true;
+        this.languageMap.clear();
+        this.loadLanguages(bot);
+        this.isLoading = false;
+    }
+
     public LangSub get(Language language, Text text) {
-        return this.languageMap.get(language).get(text);
+        return this.get(language, text, replacer -> replacer);
     }
 
     public LangSub get(Language language, Text text, Replace replace) {
+        Awaitility.await().atMost(5, TimeUnit.SECONDS).until(() -> !this.isLoading);
+        if (this.isLoading) {
+            return null;
+        }
         return this.languageMap.get(language).get(text, replace);
     }
 
@@ -55,9 +68,9 @@ public class LanguageRegistry {
     public LangSub get(Server server, Text text, Replace replace) {
         return this.get(server.getLanguage(), text, replace);
     }
-
     private class LanguageContainer {
         private final Map<Text, LangSub> values = Maps.newHashMap();
+
         private final Language language;
 
         public LanguageContainer(Language language, YamlConfiguration config) {

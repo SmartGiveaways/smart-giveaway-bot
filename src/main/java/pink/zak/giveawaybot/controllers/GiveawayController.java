@@ -17,6 +17,7 @@ import pink.zak.giveawaybot.cache.FinishedGiveawayCache;
 import pink.zak.giveawaybot.cache.GiveawayCache;
 import pink.zak.giveawaybot.cache.ServerCache;
 import pink.zak.giveawaybot.cache.UserCache;
+import pink.zak.giveawaybot.defaults.Defaults;
 import pink.zak.giveawaybot.enums.EntryType;
 import pink.zak.giveawaybot.enums.ReturnCode;
 import pink.zak.giveawaybot.enums.Setting;
@@ -49,6 +50,7 @@ public class GiveawayController {
     private final ServerCache serverCache;
     private final Preset defaultPreset;
     private final Palette palette;
+    private final Defaults defaults;
     private final GiveawayBot bot;
 
     public GiveawayController(GiveawayBot bot) {
@@ -59,6 +61,7 @@ public class GiveawayController {
         this.serverCache = bot.getServerCache();
         this.defaultPreset = bot.getDefaults().getDefaultPreset();
         this.palette = bot.getDefaults().getPalette();
+        this.defaults = bot.getDefaults();
         this.bot = bot;
         this.loadAllGiveaways();
         this.startGiveawayUpdater();
@@ -66,8 +69,11 @@ public class GiveawayController {
 
     public ImmutablePair<CurrentGiveaway, ReturnCode> createGiveaway(Server server, long length, int winnerAmount, TextChannel giveawayChannel, String presetName, String giveawayItem) {
         long endTime = System.currentTimeMillis() + length;
-        if (server.getActiveGiveaways().size() >= 50) {
+        if (server.getActiveGiveaways().size() >= 5) {
             return ImmutablePair.of(null, ReturnCode.GIVEAWAY_LIMIT_FAILURE);
+        }
+        if (!giveawayChannel.getGuild().getSelfMember().hasPermission(giveawayChannel, this.defaults.getRequiredPermissions())) {
+            return ImmutablePair.of(null, ReturnCode.PERMISSIONS_FAILURE);
         }
         Preset preset = presetName.equalsIgnoreCase("default") ? this.defaultPreset : server.getPreset(presetName);
         if (preset == null) {
@@ -106,7 +112,7 @@ public class GiveawayController {
             return ImmutablePair.of(giveaway, ReturnCode.SUCCESS);
         } catch (RateLimitedException ex) {
             GiveawayBot.getLogger().error("", ex);
-            return ImmutablePair.of((CurrentGiveaway) null, ReturnCode.RATE_LIMIT_FAILURE);
+            return ImmutablePair.of(null, ReturnCode.RATE_LIMIT_FAILURE);
         }
     }
 
@@ -114,12 +120,12 @@ public class GiveawayController {
         long loadStartTime = System.currentTimeMillis();
         this.bot.runAsync(ThreadFunction.STORAGE, () -> {
             for (CurrentGiveaway giveaway : this.giveawayStorage.loadAll()) {
-                if (!giveaway.isActive()) {
-                    this.endGiveaway(giveaway);
-                    continue;
-                }
                 if (this.getGiveawayMessage(giveaway) == null) {
                     this.deleteGiveaway(giveaway);
+                    continue;
+                }
+                if (!giveaway.isActive()) {
+                    this.endGiveaway(giveaway);
                     continue;
                 }
                 this.giveawayCache.addGiveaway(giveaway);
@@ -236,14 +242,14 @@ public class GiveawayController {
     }
 
     private void startGiveawayUpdater() {
-        this.threadManager.getUpdaterExecutor().scheduleAtFixedRate(() -> {
+        this.threadManager.getScheduler().scheduleAtFixedRate(() -> {
             for (CurrentGiveaway giveaway : this.giveawayCache.getMap().values()) {
                 if (!giveaway.isActive()) {
                     return;
                 }
                 Message message = this.getGiveawayMessage(giveaway);
                 if (message == null) {
-                    this.deleteGiveaway(giveaway);
+                    GiveawayBot.getLogger().warn("Giveaway did not delete correctly or the discord api is dying ({} in server {}).", giveaway.messageId(), giveaway.serverId());
                     return;
                 }
                 message.editMessage(new EmbedBuilder()
@@ -256,7 +262,7 @@ public class GiveawayController {
     }
 
     private void startGiveawayTimer(CurrentGiveaway giveaway) {
-        this.threadManager.getUpdaterExecutor().schedule(() -> {
+        this.threadManager.getScheduler().schedule(() -> {
             GiveawayBot.getLogger().info("Giveaway {} expired", giveaway.messageId());
             this.endGiveaway(giveaway);
         }, giveaway.timeToExpiry(), TimeUnit.MILLISECONDS);

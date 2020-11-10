@@ -1,4 +1,4 @@
-package pink.zak.giveawaybot.metrics;
+package pink.zak.giveawaybot.metrics.queries;
 
 import com.influxdb.client.write.Point;
 import pink.zak.giveawaybot.cache.GiveawayCache;

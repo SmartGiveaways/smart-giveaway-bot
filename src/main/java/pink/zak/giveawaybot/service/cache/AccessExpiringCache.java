@@ -20,7 +20,7 @@ public class AccessExpiringCache<K, V> extends Cache<K, V> {
 
     public AccessExpiringCache(GiveawayBot bot, Storage<V> storage, CacheExpiryListener<K, V> expiryListener, Consumer<V> removalAction, TimeUnit timeUnit, int delay, TimeUnit autoSaveUnit, int autoSaveInterval) {
         super(bot, removalAction, storage, autoSaveUnit, autoSaveInterval);
-        this.scheduledExecutor = bot.getThreadManager().getUpdaterExecutor();
+        this.scheduledExecutor = bot.getThreadManager().getScheduler();
         this.expiryListener = expiryListener;
         this.timeUnit = timeUnit;
         this.delay = delay;

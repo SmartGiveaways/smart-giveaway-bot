@@ -31,7 +31,7 @@ public class Cache<K, V> {
         this.removalAction = removalAction;
         this.storage = storage;
         if (autoSaveTimeUnit != null && autoSaveInterval > 0) {
-            this.startAutoSave(bot.getThreadManager().getUpdaterExecutor(), autoSaveTimeUnit, autoSaveInterval);
+            this.startAutoSave(bot.getThreadManager().getScheduler(), autoSaveTimeUnit, autoSaveInterval);
         }
     }
 

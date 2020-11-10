@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.service.command.CommandBase;
 import pink.zak.giveawaybot.service.command.command.SimpleCommand;
+import pink.zak.giveawaybot.service.config.Config;
 import pink.zak.giveawaybot.service.config.ConfigStore;
 import pink.zak.giveawaybot.service.listener.ConsoleListener;
 import pink.zak.giveawaybot.service.listener.ReadyListener;
@@ -30,6 +31,8 @@ public abstract class JdaBot implements SimpleBot {
     private final BackendFactory backendFactory;
     private final ConfigStore configStore;
     private final Path basePath;
+    private boolean connected;
+    private boolean initialized;
     private CommandBase commandBase;
     private String prefix;
     private ShardManager shardManager;
@@ -44,20 +47,33 @@ public abstract class JdaBot implements SimpleBot {
     }
 
     @SneakyThrows
+    public void buildJdaEarly(String token, Set<GatewayIntent> intents, UnaryOperator<DefaultShardManagerBuilder> jdaOperator) {
+        DefaultShardManagerBuilder builder = DefaultShardManagerBuilder.createDefault(token)
+                .setEnabledIntents(intents)
+                .addEventListeners(new ReadyListener(this));
+        jdaOperator.apply(builder);
+        this.shardManager = builder.build();
+    }
+
+    @SneakyThrows
     @Override
     public void initialize(GiveawayBot bot, String token, String prefix, Set<GatewayIntent> intents, UnaryOperator<DefaultShardManagerBuilder> jdaOperator) {
         this.commandBase = new CommandBase(bot);
         this.prefix = prefix;
-        try {
-            DefaultShardManagerBuilder builder = DefaultShardManagerBuilder.createDefault(token)
-                    .setEnabledIntents(intents)
-                    .addEventListeners(this.commandBase, new ReadyListener(this));
-            jdaOperator.apply(builder);
-            this.shardManager = builder.build();
-        } catch (LoginException e) {
-            logger.error("Unable to log into Discord, the following error occurred:", e);
+        if (this.shardManager == null) {
+            try {
+                DefaultShardManagerBuilder builder = DefaultShardManagerBuilder.createDefault(token)
+                        .setEnabledIntents(intents)
+                        .addEventListeners(new ReadyListener(this));
+                jdaOperator.apply(builder);
+                this.shardManager = builder.build();
+            } catch (LoginException e) {
+                logger.error("Unable to log into Discord, the following error occurred:", e);
+            }
         }
-        new Thread(new ConsoleListener(this)).start();
+        this.shardManager.addEventListener(this.commandBase);
+        new Thread(new ConsoleListener(bot)).start();
+        this.initialized = true;
     }
 
     @Override
@@ -84,10 +100,17 @@ public abstract class JdaBot implements SimpleBot {
         this.shardManager.addEventListener(listeners);
     }
 
+    public boolean isConnected() {
+        return this.connected;
+    }
+
+    public void setConnected(boolean connected) {
+        this.connected = connected;
+    }
 
     @Override
     public boolean isInitialized() {
-        return this.shardManager != null;
+        return this.initialized;
     }
 
     @Override
@@ -118,6 +141,11 @@ public abstract class JdaBot implements SimpleBot {
     @Override
     public ConfigStore getConfigStore() {
         return this.configStore;
+    }
+
+    @Override
+    public Config getConfig(String name) {
+        return this.configStore.getConfig(name);
     }
 
     @Override

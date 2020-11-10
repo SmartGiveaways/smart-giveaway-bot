@@ -2,6 +2,7 @@ package pink.zak.giveawaybot.service.command;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -16,6 +17,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.cache.ServerCache;
 import pink.zak.giveawaybot.lang.LanguageRegistry;
+import pink.zak.giveawaybot.lang.enums.Language;
 import pink.zak.giveawaybot.lang.enums.Text;
 import pink.zak.giveawaybot.models.Preset;
 import pink.zak.giveawaybot.models.Server;
@@ -31,9 +33,10 @@ import pink.zak.giveawaybot.threads.ThreadFunction;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class CommandBase extends ListenerAdapter {
     private final GiveawayBot bot;
@@ -41,16 +44,23 @@ public class CommandBase extends ListenerAdapter {
     private final ExecutorService executor;
     private final Set<SimpleCommand> commands = Sets.newHashSet();
     private final Cache<Long, Long> commandCooldowns;
-    private final Consumer<Throwable> deleteFailureThrowable;
     private final LanguageRegistry languageRegistry;
+    private final Permission[] requiredPermissions;
+    private final AtomicInteger executions = new AtomicInteger();
 
     public CommandBase(GiveawayBot bot) {
         this.bot = bot;
         this.serverCache = bot.getServerCache();
         this.executor = bot.getThreadManager().getAsyncExecutor(ThreadFunction.COMMANDS);
         this.commandCooldowns = new CacheBuilder<Long, Long>().expireAfterAccess(1, TimeUnit.SECONDS).setControlling(bot).build();
-        this.deleteFailureThrowable = bot.getDeleteFailureThrowable();
         this.languageRegistry = bot.getLanguageRegistry();
+        this.requiredPermissions = new Permission[]{Permission.MESSAGE_READ,
+                Permission.MESSAGE_EMBED_LINKS,
+                Permission.MESSAGE_HISTORY,
+                Permission.MESSAGE_EXT_EMOJI,
+                Permission.MESSAGE_ADD_REACTION,
+                Permission.VIEW_CHANNEL,
+                Permission.MESSAGE_MANAGE};
         this.registerArgumentTypes();
     }
 
@@ -66,7 +76,8 @@ public class CommandBase extends ListenerAdapter {
     @Override
     @SubscribeEvent
     public void onMessageReceived(MessageReceivedEvent event) {
-        if (event.getAuthor().isBot()) {
+        Member selfMember = event.getGuild().getSelfMember();
+        if (event.getAuthor().isBot() || !selfMember.hasPermission(event.getTextChannel(), Permission.MESSAGE_WRITE)) {
             return;
         }
         String rawMessage = event.getMessage().getContentRaw();
@@ -80,11 +91,16 @@ public class CommandBase extends ListenerAdapter {
         }
         String commandName = rawMessage.substring(1).split(" ")[0];
         this.serverCache.get(event.getGuild().getIdLong()).thenAccept(server -> {
+            if (!event.getGuild().getSelfMember().hasPermission(event.getTextChannel(), this.requiredPermissions)) {
+                this.languageRegistry.get(server, Text.BOT_DOESNT_HAVE_PERMISSIONS).to(event.getTextChannel());
+                return;
+            }
             if (server == null) {
+                this.languageRegistry.get(Language.ENGLISH_UK, Text.FATAL_ERROR_LOADING_SERVER).to(event.getTextChannel());
                 event.getTextChannel().sendMessage("There was a fatal error loading your server. Please join the support discord and scream at Zak.").queue();
                 return;
             }
-            this.executor.submit(() -> {
+            CompletableFuture.runAsync(() -> {
                 if (this.isOnCooldown(sender)) {
                     return;
                 }
@@ -101,7 +117,7 @@ public class CommandBase extends ListenerAdapter {
                     }
                     if (!rawMessage.contains(" ")) {
                         this.commandCooldowns.set(member.getIdLong(), System.currentTimeMillis());
-                        simpleCommand.middleMan(sender, server, event, Lists.newArrayList());
+                        this.executeCommand(simpleCommand, sender, server, event, Lists.newArrayList());
                         return;
                     }
                     String message = rawMessage.split(prefix + commandName + " ")[1];
@@ -117,17 +133,27 @@ public class CommandBase extends ListenerAdapter {
                     }
                     this.commandCooldowns.set(member.getIdLong(), System.currentTimeMillis());
                     if (subResult == null) {
-                        simpleCommand.middleMan(sender, server, event, args);
+                        this.executeCommand(simpleCommand, sender, server, event, args);
                         return;
                     }
-                    if (this.hasAccess(server, subResult, event.getMessage(), sender))
-                        subResult.middleMan(sender, server, event, args);
+                    if (this.hasAccess(server, subResult, event.getMessage(), sender)) {
+                        this.executeCommand(subResult, sender, server, event, args);
+                    }
                 }
+            }, this.executor).exceptionally(ex -> {
+                GiveawayBot.getLogger().error("Error stemmed from CommandBase input {}", rawMessage, ex);
+                return null;
             });
         }).exceptionally(ex -> {
             GiveawayBot.getLogger().error("Error stemmed from CommandBase input {}", rawMessage, ex);
             return null;
         });
+    }
+
+    private void executeCommand(Command command, Member sender, Server server, MessageReceivedEvent event, List<String> args) {
+        this.commandCooldowns.set(sender.getIdLong(), System.currentTimeMillis());
+        this.executions.getAndIncrement();
+        command.middleMan(sender, server, event, args);
     }
 
     private boolean hasAccess(Server server, Command simpleCommand, Message message, Member member) {
@@ -152,6 +178,10 @@ public class CommandBase extends ListenerAdapter {
 
     public Set<SimpleCommand> getCommands() {
         return this.commands;
+    }
+
+    public int retrieveExecutions() {
+        return this.executions.getAndUpdate(previous -> 0);
     }
 
     private void registerArgumentTypes() {

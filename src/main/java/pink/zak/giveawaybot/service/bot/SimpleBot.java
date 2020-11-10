@@ -4,9 +4,11 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
+import org.jetbrains.annotations.NotNull;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.service.command.CommandBase;
 import pink.zak.giveawaybot.service.command.command.SimpleCommand;
+import pink.zak.giveawaybot.service.config.Config;
 import pink.zak.giveawaybot.service.config.ConfigStore;
 import pink.zak.giveawaybot.service.registry.Registry;
 import pink.zak.giveawaybot.service.storage.BackendFactory;
@@ -22,15 +24,21 @@ public interface SimpleBot {
 
     void onConnect();
 
+    void buildJdaEarly(String token, Set<GatewayIntent> intents, UnaryOperator<DefaultShardManagerBuilder> jdaOperator);
+
     void initialize(GiveawayBot bot, String token, String prefix, Set<GatewayIntent> intents, UnaryOperator<DefaultShardManagerBuilder> jdaOperator);
 
     void initialize(GiveawayBot bot, String token, String prefix, Set<GatewayIntent> intents);
 
     void registerRegistries(Registry... registries);
 
-    void registerCommands(SimpleCommand... commands);
+    void registerCommands(@NotNull SimpleCommand... commands);
 
-    void registerListeners(Object... listeners);
+    void registerListeners(@NotNull Object... listeners);
+
+    boolean isConnected();
+
+    void setConnected(boolean connected);
 
     boolean isInitialized();
 
@@ -45,6 +53,8 @@ public interface SimpleBot {
     CommandBase getCommandBase();
 
     ConfigStore getConfigStore();
+
+    Config getConfig(String name);
 
     ShardManager getShardManager();
 
