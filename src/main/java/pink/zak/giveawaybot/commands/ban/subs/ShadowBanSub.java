@@ -45,6 +45,7 @@ public class ShadowBanSub extends SubCommand {
                 return;
             }
             user.shadowBan();
+            server.getBannedUsers().add(user.id());
             this.langFor(server, Text.SHADOW_BANNED_SUCCESSFULLY, replacer -> replacer.set("target", userPlaceholder)).to(textChannel);
         });
     }

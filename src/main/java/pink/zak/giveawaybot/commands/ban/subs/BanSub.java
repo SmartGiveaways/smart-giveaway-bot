@@ -39,6 +39,7 @@ public class BanSub extends SubCommand {
                 this.langFor(server, Text.CANNOT_BAN_IS_SHADOW_BANNED, replacer -> replacer.set("target", userPlaceholder)).to(textChannel);
                 return;
             }
+            server.getBannedUsers().add(user.id());
             user.ban();
             this.langFor(server, Text.BANNED_SUCCESSFULLY, replacer -> replacer.set("target", userPlaceholder)).to(textChannel);
         });

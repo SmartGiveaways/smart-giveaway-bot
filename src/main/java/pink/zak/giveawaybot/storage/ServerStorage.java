@@ -32,6 +32,7 @@ public class ServerStorage extends Storage<Server> {
             json.addProperty("presets", gson.toJson(this.serializePresets(server.getPresets())));
             json.addProperty("activeGiveaways", gson.toJson(server.getActiveGiveaways()));
             json.addProperty("managerRoles", gson.toJson(server.getManagerRoles()));
+            json.addProperty("bannedUsers", gson.toJson(server.getBannedUsers()));
             json.addProperty("language", server.getLanguage().toString());
             return json;
         };
@@ -43,9 +44,10 @@ public class ServerStorage extends Storage<Server> {
             long id = json.get("_id").getAsLong();
             Map<String, Preset> presets = this.deserializePresets(id, gson.fromJson(json.get("presets").getAsString(), new TypeToken<ConcurrentHashMap<String, HashMap<Setting, String>>>(){}.getType()));
             Set<Long> activeGiveaways = Sets.newConcurrentHashSet(gson.fromJson(json.get("activeGiveaways").getAsString(), new TypeToken<HashSet<Long>>(){}.getType()));
-            Set<Long> roleIds = gson.fromJson(json.get("managerRoles").getAsString(), new TypeToken<HashSet<Long>>(){}.getType());
+            Set<Long> managerRoles = gson.fromJson(json.get("managerRoles").getAsString(), new TypeToken<HashSet<Long>>(){}.getType());
+            Set<Long> bannedUsers = gson.fromJson(json.get("bannedUsers").getAsString(), new TypeToken<HashSet<Long>>(){}.getType());
             Language language = Language.valueOf(json.get("language").getAsString());
-            return new Server(this.bot, id, activeGiveaways, presets, roleIds, language);
+            return new Server(this.bot, id, activeGiveaways, presets, managerRoles, bannedUsers, language);
         };
     }
 

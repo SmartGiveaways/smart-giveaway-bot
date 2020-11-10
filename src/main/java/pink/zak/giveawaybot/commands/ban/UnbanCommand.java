@@ -55,6 +55,7 @@ public class UnbanCommand extends SimpleCommand {
                 }
                 if (user.isBanned()) {
                     this.langFor(server, Text.UNBANNED, replacer -> replacer.set("target", userPlaceholder)).to(textChannel);
+                    server.getBannedUsers().remove(user.id());
                     user.unBan();
                     return;
                 }

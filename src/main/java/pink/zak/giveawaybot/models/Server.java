@@ -21,20 +21,22 @@ public class Server {
     private final Set<Long> activeGiveaways;
     private final Map<String, Preset> presets;
     private final Set<Long> managerRoles;
+    private final Set<Long> bannedUsers;
     private Language language;
 
-    public Server(GiveawayBot bot, long id, Set<Long> activeGiveaways, Map<String, Preset> presets, Set<Long> managerRoles, Language language) {
+    public Server(GiveawayBot bot, long id, Set<Long> activeGiveaways, Map<String, Preset> presets, Set<Long> managerRoles, Set<Long> bannedUsers, Language language) {
         this.id = id;
         this.presets = presets;
         this.userStorage = new UserStorage(bot, this.getId());
         this.userCache = new UserCache(bot, this.userStorage, this.id);
         this.activeGiveaways = activeGiveaways;
         this.managerRoles = managerRoles;
+        this.bannedUsers = bannedUsers;
         this.language = language;
     }
 
     public Server(GiveawayBot bot, long id) {
-        this(bot, id, Sets.newConcurrentHashSet(), Maps.newConcurrentMap(), Sets.newHashSet(), Language.ENGLISH_UK);
+        this(bot, id, Sets.newConcurrentHashSet(), Maps.newConcurrentMap(), Sets.newHashSet(), Sets.newHashSet(), Language.ENGLISH_UK);
     }
 
     public long getId() {
@@ -108,6 +110,10 @@ public class Server {
 
     public void removeManagerRole(long managerRoleId) {
         this.managerRoles.remove(managerRoleId);
+    }
+
+    public Set<Long> getBannedUsers() {
+        return this.bannedUsers;
     }
 
     public void setLanguage(Language language) {

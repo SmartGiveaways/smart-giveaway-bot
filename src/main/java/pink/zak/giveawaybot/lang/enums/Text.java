@@ -27,11 +27,13 @@ public enum Text {
     BANNED_SUCCESSFULLY,
 
 
-    // Applies to >gsban
+    // Applies to >gban -s
     TARGET_ALREADY_SHADOW_BANNED,
     CANNOT_BAN_IS_BANNED, // You cannot shadow ban someone if they are banned normally.
     SHADOW_BANNED_SUCCESSFULLY,
 
+    // Applies to >gban list
+    BAN_LIST_EMBED_TITLE,
 
     // Applies to >gunban
     UNBAN_HELP,
@@ -82,6 +84,7 @@ public enum Text {
     PRESET_EMBED_CONTENT,
     // create sub
     PRESET_CREATE_RESTRICTED_NAME,
+    PRESET_CREATE_LIMIT_REACHED,
     PRESET_CREATE_ALREADY_CALLED,
     PRESET_CREATE_NAME_TOO_LONG,
     PRESET_CREATE_NAME_TOO_SHORT,
