@@ -34,6 +34,8 @@ public enum Text {
 
     // Applies to >gban list
     BAN_LIST_EMBED_TITLE,
+    BAN_LIST_PAGE_FOOTER,
+    BAN_LIST_FOOTER,
 
     // Applies to >gunban
     UNBAN_HELP,

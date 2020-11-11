@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import pink.zak.giveawaybot.GiveawayBot;
+import pink.zak.giveawaybot.commands.ban.subs.BanListSub;
 import pink.zak.giveawaybot.commands.ban.subs.BanSub;
 import pink.zak.giveawaybot.commands.ban.subs.ShadowBanSub;
 import pink.zak.giveawaybot.lang.LanguageRegistry;
@@ -26,6 +27,7 @@ public class BanCommand extends SimpleCommand {
 
         BanCmdUtils cmdUtils = new BanCmdUtils(bot);
         this.setSubCommands(
+                new BanListSub(bot),
                 new BanSub(bot, cmdUtils),
                 new ShadowBanSub(bot, cmdUtils)
         );

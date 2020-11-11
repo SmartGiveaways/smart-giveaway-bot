@@ -31,6 +31,10 @@ values:
   cannot-ban-is-banned: ":x: %target% is banned. Unban them first to overwrite with a shadow ban."
   shadow-banned-successfully: ":white_check_mark: shadow banned %target%."
 
+  ban-list-embed-title: "Banned Users"
+  ban-list-footer: "%amount% total bans"
+  ban-list-page-footer: "Page %page%/%maxPage% | %amount% total bans"
+
   # >gunban command messages
   unban-help: ""
   cannot-unban-self: ":x: Oi, get someone else to do it for you."
