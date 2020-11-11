@@ -24,12 +24,15 @@ public class LatencyMonitor {
     @SneakyThrows
     public LatencyMonitor(GiveawayBot bot) {
         Config settings = bot.getConfig("settings");
-        this.messageLines = new BufferedReader(new FileReader(bot.getBasePath().toAbsolutePath().resolve(settings.getConfiguration().getString("latency-tester.file-for-lines"))
-                .toFile())).lines().collect(Collectors.toList());
+        BufferedReader reader = new BufferedReader(new FileReader(bot.getBasePath().toAbsolutePath().resolve(settings.getConfiguration().getString("latency-tester.file-for-lines"))
+                .toFile()));
+        this.messageLines = reader.lines().collect(Collectors.toList());
         this.testChannel = bot.getShardManager().getTextChannelById(settings.getConfiguration().getLong("latency-tester.channel-id"));
         this.metrics = bot.getMetrics();
         this.lastTiming = Long.MAX_VALUE;
         bot.getThreadManager().getScheduler().scheduleAtFixedRate(this::testLatency, 0, 15, TimeUnit.SECONDS);
+
+        reader.close();
     }
 
     public void testLatency() {

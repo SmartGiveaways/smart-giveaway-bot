@@ -27,6 +27,7 @@ public class ConsoleListener implements Runnable {
                     GiveawayBot.getLogger().info("reload-lang -> Reloads language values (built embeds require restart).");
                     GiveawayBot.getLogger().info("stop -> Stops the bot and saves data.");
                     GiveawayBot.getLogger().info("dump -> Creates a debug dump.");
+                    break;
                 case "reload-lang":
                     this.bot.getLanguageRegistry().reloadLanguages(this.bot);
                     break;

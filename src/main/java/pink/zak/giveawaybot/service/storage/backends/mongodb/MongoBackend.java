@@ -89,7 +89,7 @@ public class MongoBackend implements Backend {
 
     @Override
     public void close() {
-        this.connectionFactory.close();
+        throw new UnsupportedOperationException("Only one instance is used, you must call this using the static method MongoConnectionFactory#close");
     }
 
     private BasicDBObject getSearchFromMap(Map<String, String> valuePairs) {

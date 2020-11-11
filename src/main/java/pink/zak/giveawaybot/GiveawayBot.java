@@ -27,6 +27,7 @@ import pink.zak.giveawaybot.metrics.MetricsStarter;
 import pink.zak.giveawaybot.metrics.helpers.LatencyMonitor;
 import pink.zak.giveawaybot.service.bot.JdaBot;
 import pink.zak.giveawaybot.service.config.Config;
+import pink.zak.giveawaybot.service.storage.backends.mongodb.MongoConnectionFactory;
 import pink.zak.giveawaybot.storage.FinishedGiveawayStorage;
 import pink.zak.giveawaybot.storage.GiveawayStorage;
 import pink.zak.giveawaybot.storage.ServerStorage;
@@ -138,9 +139,7 @@ public class GiveawayBot extends JdaBot {
         timings.add(System.currentTimeMillis());
         this.serverCache.shutdown();
         timings.add(System.currentTimeMillis());
-        this.giveawayStorage.closeBack();
-        this.finishedGiveawayStorage.closeBack();
-        this.serverStorage.closeBack();
+        MongoConnectionFactory.close();
         this.threadManager.shutdownPools();
         timings.add(System.currentTimeMillis());
         logger.info("Completing shut down sequence.");
