@@ -33,12 +33,12 @@
   - You fully test your changes before making a pull request.
   - d o n t    m a s s    r e f a c t o r
   
-## Code Review
+### Code Review
 
 We welcome anyone to review a pull request and bear in mind the code expectations listed above.
 We're not extremely strict and there's not a definite set of rules but as always, the best advice is to use common sense.
 
-## Developer's Certificate of Origin 1.1
+### Developer's Certificate of Origin 1.1
 
 By making a contribution to this project, I certify that:
 
