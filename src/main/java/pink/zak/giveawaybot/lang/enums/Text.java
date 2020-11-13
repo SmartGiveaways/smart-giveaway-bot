@@ -81,6 +81,10 @@ public enum Text {
     HELP_LIMITED_SECTION,
     HELP_ADMIN_SECTION,
 
+    // Applies to >gabout commands
+    ABOUT_EMBED_TITLE,
+    ABOUT_EMBED_CONTENT,
+
     // Applies to >preset commands
     PRESET_EMBED_TITLE,
     PRESET_EMBED_CONTENT,

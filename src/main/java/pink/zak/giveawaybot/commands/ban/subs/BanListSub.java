@@ -3,35 +3,93 @@ package pink.zak.giveawaybot.commands.ban.subs;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.events.GenericEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
+import net.dv8tion.jda.api.hooks.EventListener;
+import org.jetbrains.annotations.NotNull;
 import pink.zak.giveawaybot.GiveawayBot;
+import pink.zak.giveawaybot.cache.ServerCache;
 import pink.zak.giveawaybot.lang.enums.Text;
 import pink.zak.giveawaybot.models.Server;
 import pink.zak.giveawaybot.service.cache.Cache;
 import pink.zak.giveawaybot.service.cache.CacheBuilder;
 import pink.zak.giveawaybot.service.colour.Palette;
 import pink.zak.giveawaybot.service.command.command.SubCommand;
+import pink.zak.giveawaybot.service.tuple.MutablePair;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class BanListSub extends SubCommand {
+public class BanListSub extends SubCommand implements EventListener {
     private final Palette palette;
-    private final Cache<Long, Message> activeLists;
+    private final ServerCache serverCache;
+    private final Cache<Long, MutablePair<Message, Integer>> activeLists;
 
     public BanListSub(GiveawayBot bot) {
         super(bot, true);
         this.addFlat("list");
 
         this.palette = bot.getDefaults().getPalette();
-        this.activeLists = new CacheBuilder<Long, Message>().setControlling(bot).expireAfterAccess(10, TimeUnit.MINUTES).build();
+        this.serverCache = bot.getServerCache();
+        this.activeLists = new CacheBuilder<Long, MutablePair<Message, Integer>>().setControlling(bot).expireAfterAccess(10, TimeUnit.MINUTES).build();
     }
 
     @Override
     public void onExecute(Member sender, Server server, MessageReceivedEvent event, List<String> args) {
         int pages = (int) Math.ceil(server.getBannedUsers().size() / 10.0);
+        event.getTextChannel().sendMessage(this.buildEmbed(server, pages, 1)).queue(embed -> {
+            if (pages > 1) {
+                this.activeLists.set(embed.getIdLong(), MutablePair.of(embed, 1));
+                embed.addReaction("\u2B05").queue();
+                embed.addReaction("\u27A1").queue();
+            }
+        });
+    }
+
+    @Override
+    public void onEvent(@NotNull GenericEvent genericEvent) {
+        if (!(genericEvent instanceof GuildMessageReactionAddEvent event)) {
+            return;
+        }
+        long messageId = event.getMessageIdLong();
+        if (event.getUser().isBot() || event.getReactionEmote().isEmote() || !this.activeLists.contains(messageId)) {
+            return;
+        }
+        this.serverCache.get(event.getGuild().getIdLong()).thenAccept(server -> {
+            String emoji = event.getReactionEmote().getEmoji();
+            if (!emoji.equals("\u2B05") && !emoji.equals("\u27A1") || !server.canMemberManage(event.getMember())) {
+                return;
+            }
+            int totalPages = (int) Math.ceil(server.getBannedUsers().size() / 10.0);
+            MutablePair<Message, Integer> messageAndPage = this.activeLists.getSync(messageId);
+            if (messageAndPage == null) {
+                return;
+            }
+            if (emoji.equals("\u2B05")) { // Go back a page
+                int newPage = messageAndPage.getValue() - 1;
+                if (newPage > 0) {
+                    messageAndPage.getKey().editMessage(this.buildEmbed(server, totalPages, messageAndPage.getValue() - 1)).queue();
+                    messageAndPage.setValue(newPage);
+                }
+                return;
+            } // Rest must be go forward a page
+            int newPage = messageAndPage.getValue() + 1;
+            if (newPage <= totalPages) {
+                messageAndPage.getKey().editMessage(this.buildEmbed(server, totalPages, messageAndPage.getValue() + 1)).queue();
+                messageAndPage.setValue(newPage);
+            }
+        }).exceptionally(ex -> {
+            GiveawayBot.getLogger().error("BanListSub Page Reaction Listener: ", ex);
+            return null;
+        });
+
+    }
+
+    private MessageEmbed buildEmbed(Server server, int totalPages, int page) {
         StringBuilder descriptionBuilder = new StringBuilder();
-        for (int i = 0; i < server.getBannedUsers().size() && i < 10; i++) {
+        for (int i = (page - 1) * 10; i < server.getBannedUsers().size() && i < page * 10; i++) {
             long id = server.getBannedUsers().get(i);
             descriptionBuilder.append("<@")
                     .append(id)
@@ -39,21 +97,14 @@ public class BanListSub extends SubCommand {
                     .append(server.getUserCache().getSync(id).isBanned() ? "banned" : "shadow banned")
                     .append("\n");
         }
-
-        event.getTextChannel().sendMessage(new EmbedBuilder()
+        return new EmbedBuilder()
                 .setTitle(this.langFor(server, Text.BAN_LIST_EMBED_TITLE).get())
-                .setFooter(this.langFor(server, pages > 1 ? Text.BAN_LIST_PAGE_FOOTER : Text.BAN_LIST_FOOTER, replacer -> replacer
+                .setFooter(this.langFor(server, totalPages > 1 ? Text.BAN_LIST_PAGE_FOOTER : Text.BAN_LIST_FOOTER, replacer -> replacer
                         .set("amount", server.getBannedUsers().size())
-                        .set("page", 1)
-                        .set("maxPage", pages)).get())
+                        .set("page", page)
+                        .set("maxPage", totalPages)).get())
                 .setDescription(descriptionBuilder.toString())
                 .setColor(this.palette.primary())
-                .build()).queue(embed -> {
-            if (pages > 1) {
-                this.activeLists.set(embed.getIdLong(), embed);
-                embed.addReaction("\u2B05").queue();
-                embed.addReaction("\u27A1").queue();
-            }
-        });
+                .build();
     }
 }
