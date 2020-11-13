@@ -1,4 +1,4 @@
-package pink.zak.giveawaybot.entries.pipeline.workers;
+package pink.zak.giveawaybot.entries.workers;
 
 import com.google.common.collect.Maps;
 import pink.zak.giveawaybot.enums.EntryType;

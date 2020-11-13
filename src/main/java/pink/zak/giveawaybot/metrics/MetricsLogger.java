@@ -3,10 +3,8 @@ package pink.zak.giveawaybot.metrics;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.cache.GiveawayCache;
 import pink.zak.giveawaybot.cache.ServerCache;
-import pink.zak.giveawaybot.metrics.queries.CommandQuery;
-import pink.zak.giveawaybot.metrics.queries.GiveawayCacheQuery;
-import pink.zak.giveawaybot.metrics.queries.ServerCacheQuery;
-import pink.zak.giveawaybot.metrics.queries.ServerQuery;
+import pink.zak.giveawaybot.metrics.helpers.GenericBotMetrics;
+import pink.zak.giveawaybot.metrics.queries.*;
 import pink.zak.giveawaybot.models.Server;
 import pink.zak.giveawaybot.service.command.CommandBase;
 import pink.zak.metrics.Metrics;
@@ -16,7 +14,12 @@ import pink.zak.metrics.queries.stock.backends.ProcessStats;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class MetricsStarter {
+public class MetricsLogger {
+    private final GenericBotMetrics genericBotMetrics;
+
+    public MetricsLogger(GiveawayBot bot) {
+        this.genericBotMetrics = new GenericBotMetrics(bot);
+    }
 
     public void checkAndStart(GiveawayBot bot) {
         if (!bot.getConfig("settings").bool("enable-metrics")) {
@@ -46,6 +49,9 @@ public class MetricsStarter {
             metrics.<CommandBase>log(query -> query
                     .primary(commandBase)
                     .push(CommandQuery.COMMAND_EXECUTIONS));
+            metrics.<GenericBotMetrics>log(query -> query
+                    .primary(this.genericBotMetrics)
+                    .push(GenericQuery.ALL));
             for (Server server : serverCache.getMap().values()) {
                 metrics.<Server>log(query -> query
                         .primary(server)
@@ -53,5 +59,9 @@ public class MetricsStarter {
                 );
             }
         }, 0, 5, TimeUnit.SECONDS);
+    }
+
+    public int getGuildCount() {
+        return this.genericBotMetrics.getGuilds();
     }
 }

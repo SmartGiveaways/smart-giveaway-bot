@@ -86,6 +86,7 @@ values:
   # >gabout command messages
   about-embed-title: "About SmartGiveaways"
   about-embed-content: "Vote: XX\n
+                        Discord: [ttt](https://discord.gg/aS4PebKZpe)\n
                         Website: http://smartgiveaways.xyz/\n
 
                         Servers: %servers%\n

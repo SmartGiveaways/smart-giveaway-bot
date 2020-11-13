@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import pink.zak.giveawaybot.cache.FinishedGiveawayCache;
 import pink.zak.giveawaybot.cache.GiveawayCache;
 import pink.zak.giveawaybot.cache.ServerCache;
+import pink.zak.giveawaybot.commands.about.BotAboutCommand;
 import pink.zak.giveawaybot.commands.ban.BanCommand;
 import pink.zak.giveawaybot.commands.ban.UnbanCommand;
 import pink.zak.giveawaybot.commands.entries.EntriesCommand;
@@ -18,12 +19,12 @@ import pink.zak.giveawaybot.commands.help.HelpCommand;
 import pink.zak.giveawaybot.commands.preset.PresetCommand;
 import pink.zak.giveawaybot.controllers.GiveawayController;
 import pink.zak.giveawaybot.defaults.Defaults;
-import pink.zak.giveawaybot.entries.pipeline.EntryPipeline;
+import pink.zak.giveawaybot.entries.EntryPipeline;
 import pink.zak.giveawaybot.lang.LanguageRegistry;
 import pink.zak.giveawaybot.listener.GiveawayDeletionListener;
 import pink.zak.giveawaybot.listener.MessageSendListener;
 import pink.zak.giveawaybot.listener.ReactionAddListener;
-import pink.zak.giveawaybot.metrics.MetricsStarter;
+import pink.zak.giveawaybot.metrics.MetricsLogger;
 import pink.zak.giveawaybot.metrics.helpers.LatencyMonitor;
 import pink.zak.giveawaybot.service.bot.JdaBot;
 import pink.zak.giveawaybot.service.config.Config;
@@ -46,7 +47,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
 public class GiveawayBot extends JdaBot {
-    private Metrics metricsLogger;
+    private Metrics metrics;
     private LatencyMonitor latencyMonitor;
     private ThreadManager threadManager;
     private FinishedGiveawayStorage finishedGiveawayStorage;
@@ -57,6 +58,7 @@ public class GiveawayBot extends JdaBot {
     private ServerCache serverCache;
     private LanguageRegistry languageRegistry;
     private GiveawayController giveawayController;
+    private MetricsLogger metricsLogger;
     private Defaults defaults;
     private EntryPipeline entryPipeline;
 
@@ -73,7 +75,7 @@ public class GiveawayBot extends JdaBot {
         this.threadManager = new ThreadManager();
 
         Config settings = this.getConfigStore().getConfig("settings");
-        this.metricsLogger = new Metrics(new Metrics.Config(settings.string("influx-url"),
+        this.metrics = new Metrics(new Metrics.Config(settings.string("influx-url"),
                 settings.string("influx-token").toCharArray(),
                 settings.string("influx-org"),
                 settings.string("influx-bucket"), 5));
@@ -109,7 +111,11 @@ public class GiveawayBot extends JdaBot {
     public void onConnect() {
         this.getJda().getPresence().setPresence(OnlineStatus.IDLE, Activity.playing("Loading...."));
         this.giveawayController = new GiveawayController(this); // Makes use of JDA, retrieving messages
+        this.metricsLogger = new MetricsLogger(this);
+        this.metricsLogger.checkAndStart(this);
+
         this.registerCommands(
+                new BotAboutCommand(this),
                 new BanCommand(this),
                 new UnbanCommand(this),
                 new EntriesCommand(this),
@@ -123,7 +129,6 @@ public class GiveawayBot extends JdaBot {
                 new MessageSendListener(this),
                 new GiveawayDeletionListener(this)
         );
-        new MetricsStarter().checkAndStart(this);
         this.getJda().getPresence().setPresence(OnlineStatus.ONLINE, Activity.playing("smartgiveaways.xyz"));
         logger.info("Finished startup. The bot is now fully registered.");
     }
@@ -179,7 +184,7 @@ public class GiveawayBot extends JdaBot {
     }
 
     public Metrics getMetrics() {
-        return this.metricsLogger;
+        return this.metrics;
     }
 
     public void runOnMainThread(Runnable runnable) {
@@ -232,6 +237,10 @@ public class GiveawayBot extends JdaBot {
 
     public GiveawayController getGiveawayController() {
         return this.giveawayController;
+    }
+
+    public MetricsLogger getMetricsLogger() {
+        return this.metricsLogger;
     }
 
     public EntryPipeline getEntryPipeline() {

@@ -1,4 +1,4 @@
-package pink.zak.giveawaybot.entries.pipeline.workers;
+package pink.zak.giveawaybot.entries.workers;
 
 import pink.zak.giveawaybot.enums.EntryType;
 import pink.zak.giveawaybot.enums.Setting;
