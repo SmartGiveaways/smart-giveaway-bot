@@ -1,10 +1,9 @@
-package pink.zak.giveawaybot.service.cache;
+package pink.zak.giveawaybot.service.cache.caches;
 
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.service.storage.storage.Storage;
 import pink.zak.giveawaybot.threads.ThreadFunction;
 
-import java.util.Map;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
@@ -101,9 +100,7 @@ public class Cache<K, V> {
 
     public void invalidateAll() {
         if (this.storage == null) {
-            for (Map.Entry<K, V> entry : this.cacheMap.entrySet()) {
-                this.cacheMap.remove(entry.getKey());
-            }
+            this.cacheMap.clear();
             return;
         }
         for (K key : this.cacheMap.keySet()) {

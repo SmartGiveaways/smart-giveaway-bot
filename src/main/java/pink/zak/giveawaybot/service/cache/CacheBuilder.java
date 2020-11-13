@@ -1,6 +1,9 @@
 package pink.zak.giveawaybot.service.cache;
 
 import pink.zak.giveawaybot.GiveawayBot;
+import pink.zak.giveawaybot.service.cache.caches.AccessExpiringCache;
+import pink.zak.giveawaybot.service.cache.caches.Cache;
+import pink.zak.giveawaybot.service.cache.caches.WriteExpiringCache;
 import pink.zak.giveawaybot.service.cache.options.CacheExpiryListener;
 import pink.zak.giveawaybot.service.storage.storage.Storage;
 
@@ -16,10 +19,14 @@ public class CacheBuilder<K, V> {
     private int autoSaveInterval;
     private TimeUnit expiryTimeUnit;
     private int expiryDelay;
+    private boolean expireAfterAccess;
 
     public Cache<K, V> build() {
         if (this.expiryTimeUnit != null && this.expiryDelay > 0) {
-            return new AccessExpiringCache<>(this.bot, this.storage, this.expiryListener, this.removalAction, this.expiryTimeUnit, this.expiryDelay, this.autoSaveTimeUnit, this.autoSaveInterval);
+            if (this.expireAfterAccess) {
+                return new AccessExpiringCache<>(this.bot, this.storage, this.expiryListener, this.removalAction, this.expiryTimeUnit, this.expiryDelay, this.autoSaveTimeUnit, this.autoSaveInterval);
+            }
+            return new WriteExpiringCache<>(this.bot, this.storage, this.expiryListener, this.removalAction, this.expiryTimeUnit, this.expiryDelay, this.autoSaveTimeUnit, this.autoSaveInterval);
         }
         return new Cache<>(this.bot, this.removalAction, this.storage, this.autoSaveTimeUnit, this.autoSaveInterval);
     }
@@ -42,6 +49,14 @@ public class CacheBuilder<K, V> {
     public CacheBuilder<K, V> expireAfterAccess(int delay, TimeUnit timeUnit) {
         this.expiryTimeUnit = timeUnit;
         this.expiryDelay = delay;
+        this.expireAfterAccess = true;
+        return this;
+    }
+
+    public CacheBuilder<K, V> expireAfterWrite(int delay, TimeUnit timeUnit) {
+        this.expiryTimeUnit = timeUnit;
+        this.expiryDelay = delay;
+        this.expireAfterAccess = false;
         return this;
     }
 

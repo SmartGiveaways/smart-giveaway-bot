@@ -13,8 +13,8 @@ import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.cache.ServerCache;
 import pink.zak.giveawaybot.lang.enums.Text;
 import pink.zak.giveawaybot.models.Server;
-import pink.zak.giveawaybot.service.cache.Cache;
 import pink.zak.giveawaybot.service.cache.CacheBuilder;
+import pink.zak.giveawaybot.service.cache.caches.Cache;
 import pink.zak.giveawaybot.service.colour.Palette;
 import pink.zak.giveawaybot.service.command.command.SubCommand;
 import pink.zak.giveawaybot.service.tuple.MutablePair;
@@ -33,7 +33,11 @@ public class BanListSub extends SubCommand implements EventListener {
 
         this.palette = bot.getDefaults().getPalette();
         this.serverCache = bot.getServerCache();
-        this.activeLists = new CacheBuilder<Long, MutablePair<Message, Integer>>().setControlling(bot).expireAfterAccess(10, TimeUnit.MINUTES).build();
+        this.activeLists = new CacheBuilder<Long, MutablePair<Message, Integer>>()
+                .setControlling(bot)
+                .expireAfterWrite(10, TimeUnit.MINUTES)
+                .setRemovalAction(value -> value.getKey().clearReactions().queue())
+                .build();
     }
 
     @Override

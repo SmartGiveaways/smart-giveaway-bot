@@ -2,7 +2,7 @@ package pink.zak.giveawaybot.cache;
 
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.models.Server;
-import pink.zak.giveawaybot.service.cache.AccessExpiringCache;
+import pink.zak.giveawaybot.service.cache.caches.AccessExpiringCache;
 
 import java.util.concurrent.TimeUnit;
 

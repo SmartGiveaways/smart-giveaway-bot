@@ -3,7 +3,7 @@ package pink.zak.giveawaybot.cache;
 import com.google.common.collect.Maps;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.models.User;
-import pink.zak.giveawaybot.service.cache.AccessExpiringCache;
+import pink.zak.giveawaybot.service.cache.caches.AccessExpiringCache;
 import pink.zak.giveawaybot.service.storage.storage.Storage;
 
 import java.util.Map;

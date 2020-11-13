@@ -1,4 +1,4 @@
-package pink.zak.giveawaybot.service.cache;
+package pink.zak.giveawaybot.service.cache.caches;
 
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.service.cache.options.CacheExpiryListener;

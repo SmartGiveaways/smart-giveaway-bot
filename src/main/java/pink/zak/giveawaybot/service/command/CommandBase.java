@@ -21,7 +21,7 @@ import pink.zak.giveawaybot.lang.enums.Language;
 import pink.zak.giveawaybot.lang.enums.Text;
 import pink.zak.giveawaybot.models.Preset;
 import pink.zak.giveawaybot.models.Server;
-import pink.zak.giveawaybot.service.cache.Cache;
+import pink.zak.giveawaybot.service.cache.caches.Cache;
 import pink.zak.giveawaybot.service.cache.CacheBuilder;
 import pink.zak.giveawaybot.service.command.argument.ArgumentHandler;
 import pink.zak.giveawaybot.service.command.argument.ArgumentType;
