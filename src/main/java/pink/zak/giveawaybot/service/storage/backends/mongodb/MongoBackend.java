@@ -16,12 +16,10 @@ import java.util.Map;
 import java.util.Set;
 
 public class MongoBackend implements Backend {
-    private final MongoConnectionFactory connectionFactory;
     private final MongoCollection<Document> collection;
 
     public MongoBackend(SimpleBot bot, String collectionName) {
-        this.connectionFactory = new MongoConnectionFactory(bot.getStorageSettings());
-        this.collection = this.connectionFactory.getCollection(collectionName);
+        this.collection = MongoConnectionFactory.getCollection(collectionName);
     }
 
     @Override

@@ -3,10 +3,7 @@ package pink.zak.giveawaybot.service.command;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -48,6 +45,7 @@ public class CommandBase extends ListenerAdapter {
     private final LanguageRegistry languageRegistry;
     private final Permission[] requiredPermissions;
     private final AtomicInteger executions = new AtomicInteger();
+    private boolean lockdown;
 
     public CommandBase(GiveawayBot bot) {
         this.bot = bot;
@@ -78,7 +76,7 @@ public class CommandBase extends ListenerAdapter {
     @SubscribeEvent
     public void onMessageReceived(MessageReceivedEvent event) {
         Member selfMember = event.getGuild().getSelfMember();
-        if (event.getAuthor().isBot() || !selfMember.hasPermission(event.getTextChannel(), Permission.MESSAGE_WRITE)) {
+        if (event.getAuthor().isBot() || this.lockdown || !selfMember.hasPermission(event.getTextChannel(), Permission.MESSAGE_WRITE)) {
             return;
         }
         String rawMessage = event.getMessage().getContentRaw();
@@ -222,10 +220,25 @@ public class CommandBase extends ListenerAdapter {
                     }
                     return guild.getTextChannelById(id);
                 })
+                .registerArgumentType(Role.class, (string, guild) -> {
+                    String id = string.length() == 18 ? string : string.contains("&") ? string.length() == 21 ? string.substring(2, 20) : null : null;
+                    if (id == null) {
+                        return null;
+                    }
+                    return guild.getRoleById(id);
+                })
                 .registerArgumentType(Preset.class, (string, guild) -> Optional.ofNullable(this.serverCache.getSync(guild.getIdLong()).getPreset(string)))
                 .registerArgumentType(Integer.class, (string, guild) -> NumberUtils.toInt(string, -1))
                 .registerArgumentType(Long.class, (string, guild) -> NumberUtils.toLong(string, -1))
                 .registerArgumentType(Double.class, (string, guild) -> NumberUtils.toDouble(string, -1))
                 .registerArgumentType(Boolean.class, (string, guild) -> BooleanUtils.toBoolean(string));
+    }
+
+    public boolean isLockedDown() {
+        return this.lockdown;
+    }
+
+    public void setLockdown(boolean lockdown) {
+        this.lockdown = lockdown;
     }
 }

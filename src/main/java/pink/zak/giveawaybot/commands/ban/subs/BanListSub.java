@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.GenericEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
+import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.hooks.EventListener;
 import org.jetbrains.annotations.NotNull;
 import pink.zak.giveawaybot.GiveawayBot;
@@ -36,7 +37,11 @@ public class BanListSub extends SubCommand implements EventListener {
         this.activeLists = new CacheBuilder<Long, MutablePair<Message, Integer>>()
                 .setControlling(bot)
                 .expireAfterWrite(10, TimeUnit.MINUTES)
-                .setRemovalAction(value -> value.getKey().clearReactions().queue())
+                .setRemovalAction(value -> {
+                    try {
+                        value.getKey().clearReactions().queue();
+                    } catch (ErrorResponseException ignored) {}
+                })
                 .build();
     }
 

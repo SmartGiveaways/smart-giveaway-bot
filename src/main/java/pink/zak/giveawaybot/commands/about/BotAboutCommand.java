@@ -5,6 +5,7 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.cache.GiveawayCache;
+import pink.zak.giveawaybot.commands.about.subs.NerdSub;
 import pink.zak.giveawaybot.lang.LanguageRegistry;
 import pink.zak.giveawaybot.lang.enums.Text;
 import pink.zak.giveawaybot.metrics.MetricsLogger;
@@ -22,8 +23,11 @@ public class BotAboutCommand extends SimpleCommand {
     private final Palette palette;
 
     public BotAboutCommand(GiveawayBot bot) {
-        super(bot, "gabout");
-        this.setAliases("whatthisbotdo");
+        super(bot, false, "babout");
+        this.setAliases("binfo", "gabout", "ginfo", "whatthisbotdo");
+        this.setSubCommands(
+                new NerdSub(bot)
+        );
 
         this.metricsLogger = bot.getMetricsLogger();
         this.giveawayCache = bot.getGiveawayCache();

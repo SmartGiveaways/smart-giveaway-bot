@@ -43,7 +43,7 @@ public class ListSub extends SubCommand {
                     .append(this.giveawayController.getGiveawayMessage(giveaway).getJumpUrl())
                     .append(") -> (ID: ")
                     .append(giveaway.messageId())
-                    .append(")");
+                    .append(")\n");
         }
         event.getTextChannel().sendMessage(new EmbedBuilder()
                 .setTitle(this.langFor(server, Text.GIVEAWAY_LIST_EMBED_TITLE).get())

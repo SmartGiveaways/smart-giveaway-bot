@@ -109,7 +109,7 @@ public class GiveawayBot extends JdaBot {
 
     @Override
     public void onConnect() {
-        this.getJda().getPresence().setPresence(OnlineStatus.IDLE, Activity.playing("Loading...."));
+        this.getShardManager().setPresence(OnlineStatus.IDLE, Activity.playing("Loading...."));
         this.giveawayController = new GiveawayController(this); // Makes use of JDA, retrieving messages
         this.metricsLogger = new MetricsLogger(this);
         this.metricsLogger.checkAndStart(this);
@@ -129,13 +129,14 @@ public class GiveawayBot extends JdaBot {
                 new MessageSendListener(this),
                 new GiveawayDeletionListener(this)
         );
-        this.getJda().getPresence().setPresence(OnlineStatus.ONLINE, Activity.playing("smartgiveaways.xyz"));
+        this.getShardManager().setPresence(OnlineStatus.ONLINE, Activity.playing("smartgiveaways.xyz"));
         logger.info("Finished startup. The bot is now fully registered.");
     }
 
     @Override
     public void unload() {
         logger.info("Shutting down....");
+        this.lockdown();
         List<Long> timings = new ArrayList<>();
         timings.add(System.currentTimeMillis());
         this.giveawayCache.shutdown();
@@ -177,6 +178,11 @@ public class GiveawayBot extends JdaBot {
             this.storageSettings.setUsername(settings.string("mongo-username"));
             this.storageSettings.setPassword(settings.string("mongo-password"));
         }
+        new MongoConnectionFactory(this.getStorageSettings());
+    }
+
+    private void lockdown() {
+        this.getCommandBase().setLockdown(true);
     }
 
     public Defaults getDefaults() {

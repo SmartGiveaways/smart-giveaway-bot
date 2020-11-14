@@ -7,6 +7,7 @@ import pink.zak.giveawaybot.service.cache.singular.CachedValue;
 import java.util.concurrent.TimeUnit;
 
 public class GenericBotMetrics {
+    private final long startTime = System.currentTimeMillis();
     private CachedValue<Integer> guilds;
 
     public GenericBotMetrics(GiveawayBot bot) {
@@ -25,5 +26,9 @@ public class GenericBotMetrics {
             }
             return guildCount;
         });
+    }
+
+    public long getUptime() {
+        return System.currentTimeMillis() - this.startTime;
     }
 }

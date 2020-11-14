@@ -61,6 +61,10 @@ public class MetricsLogger {
         }, 0, 5, TimeUnit.SECONDS);
     }
 
+    public GenericBotMetrics getGenericBotMetrics() {
+        return this.genericBotMetrics;
+    }
+
     public int getGuildCount() {
         return this.genericBotMetrics.getGuilds();
     }

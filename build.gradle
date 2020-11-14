@@ -27,7 +27,7 @@ repositories {
 }
 
 dependencies {
-    implementation ('net.dv8tion:JDA:4.2.0_214') { exclude module: 'opus-java' }
+    implementation ('net.dv8tion:JDA:4.2.0_216') { exclude module: 'opus-java' }
     implementation 'com.google.guava:guava:29.0-jre'
     implementation 'org.apache.commons:commons-lang3:3.0'
     implementation 'com.timvisee:yamlwrapper:1.1.1'

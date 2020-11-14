@@ -1,5 +1,6 @@
 package pink.zak.giveawaybot.commands.giveaway.subs;
 
+import com.google.common.collect.Sets;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -39,7 +40,7 @@ public class RerollSub extends SubCommand {
                 this.langFor(server, Text.REROLL_OVER_24_HOURS).to(textChannel);
                 return;
             }
-            Set<Long> newWinners = this.giveawayController.generateWinners(giveaway.winnerAmount(), giveaway.totalEntries(), giveaway.userEntries());
+            Set<Long> newWinners = Sets.newHashSet()/*this.giveawayController.generateWinners(giveaway.winnerAmount(), giveaway.totalEntries(), giveaway.userEntries())*/; // TODO actually work
             Message message = this.giveawayController.getGiveawayMessage(giveaway);
             if (message != null) {
                 this.giveawayController.handleGiveawayEndMessages(giveaway, newWinners, giveaway.totalEntries(), message, server);

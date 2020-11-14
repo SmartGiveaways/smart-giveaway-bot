@@ -41,6 +41,18 @@ public class WriteExpiringCache<K, V> extends Cache<K, V> {
     }
 
     @Override
+    public CompletableFuture<V> set(K key, V value) {
+        this.writeTimes.put(key, System.currentTimeMillis());
+        return super.set(key, value);
+    }
+
+    @Override
+    public V setSync(K key, V value) {
+        this.writeTimes.put(key, System.currentTimeMillis());
+        return super.setSync(key, value);
+    }
+
+    @Override
     public V getSync(K key) {
         V retrieved = super.getSync(key);
         return this.getAndCheck(key, retrieved);

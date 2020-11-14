@@ -31,7 +31,7 @@ public class MongoConnectionFactory {
         return mongoDatabase;
     }
 
-    public MongoCollection<Document> getCollection(String collectionName) {
+    public static MongoCollection<Document> getCollection(String collectionName) {
         try {
             return mongoDatabase.getCollection(collectionName);
         } catch (IllegalArgumentException ex) {

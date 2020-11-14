@@ -39,7 +39,7 @@ public class ConsoleListener implements Runnable {
                 case "dump":
                     long startTime = System.currentTimeMillis();
                     String fileName = this.heapDump();
-                    System.out.println("Created your heap dump called " + fileName + " in " + (System.currentTimeMillis() - startTime) + "ms.");
+                    GiveawayBot.getLogger().info("Created your heap dump called " + fileName + " in " + (System.currentTimeMillis() - startTime) + "ms.");
                     break;
                 default:
                     break;
