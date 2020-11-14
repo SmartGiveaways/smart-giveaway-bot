@@ -40,13 +40,7 @@ public class HelpCommand extends SimpleCommand {
                     .addField("General Commands", languageRegistry.get(language, Text.HELP_LIMITED_SECTION).get(), false);
             this.limitedMessageEmbed.put(language, embedBuilder.build());
             embedBuilder.addField("Admin Commands",
-                    """
-                            >giveaway                  
-                            >preset            
-                            >gban <user> - Visibly bans a user from giveaways.
-                            >gsban <user> - Shadow bans a user from giveaways. Almost impossible to tell.
-                            >gunban <user> - Removes a user's ban or shadow ban.
-                            """, false);
+                    languageRegistry.get(language, Text.HELP_ADMIN_SECTION).get(), false);
             this.fullMessageEmbed.put(language, embedBuilder.build());
         }
     }

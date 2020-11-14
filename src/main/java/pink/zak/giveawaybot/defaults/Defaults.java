@@ -29,8 +29,6 @@ public class Defaults {
         defaultPreset.setSetting(Setting.REACT_TO_ENTER_EMOJI, new ReactionContainer("\uD83C\uDF89", this.jda));
         defaultPreset.setSetting(Setting.ENABLE_MESSAGE_ENTRIES, true);
         defaultPreset.setSetting(Setting.ENTRIES_PER_MESSAGE, 1);
-        defaultPreset.setSetting(Setting.ENABLE_INVITE_ENTRIES, true);
-        defaultPreset.setSetting(Setting.ENTRIES_PER_INVITE, 250);
         defaultPreset.setSetting(Setting.MAX_ENTRIES, 1000);
         defaultPreset.setSetting(Setting.PING_WINNERS, true);
     }

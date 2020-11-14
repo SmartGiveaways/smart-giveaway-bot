@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageReaction;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
+import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import net.dv8tion.jda.api.exceptions.RateLimitedException;
 import net.dv8tion.jda.api.requests.ErrorResponse;
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -113,6 +114,8 @@ public class GiveawayController {
         } catch (RateLimitedException ex) {
             GiveawayBot.getLogger().error("", ex);
             return ImmutablePair.of(null, ReturnCode.RATE_LIMIT_FAILURE);
+        } catch (InsufficientPermissionException ex) {
+            return ImmutablePair.of(null, ReturnCode.PERMISSIONS_FAILURE);
         }
     }
 

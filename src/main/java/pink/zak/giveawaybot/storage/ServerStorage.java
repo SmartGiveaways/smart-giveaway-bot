@@ -16,6 +16,7 @@ import pink.zak.giveawaybot.service.storage.storage.serialization.Serializer;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class ServerStorage extends Storage<Server> {
     private final GiveawayBot bot;
@@ -45,7 +46,7 @@ public class ServerStorage extends Storage<Server> {
             Map<String, Preset> presets = this.deserializePresets(id, gson.fromJson(json.get("presets").getAsString(), new TypeToken<ConcurrentHashMap<String, HashMap<Setting, String>>>(){}.getType()));
             Set<Long> activeGiveaways = Sets.newConcurrentHashSet(gson.fromJson(json.get("activeGiveaways").getAsString(), new TypeToken<HashSet<Long>>(){}.getType()));
             Set<Long> managerRoles = gson.fromJson(json.get("managerRoles").getAsString(), new TypeToken<HashSet<Long>>(){}.getType());
-            List<Long> bannedUsers = gson.fromJson(json.get("bannedUsers").getAsString(), new TypeToken<ArrayList<Long>>(){}.getType());
+            List<Long> bannedUsers = gson.fromJson(json.get("bannedUsers").getAsString(), new TypeToken<CopyOnWriteArrayList<Long>>(){}.getType());
             Language language = Language.valueOf(json.get("language").getAsString());
             return new Server(this.bot, id, activeGiveaways, presets, managerRoles, bannedUsers, language);
         };

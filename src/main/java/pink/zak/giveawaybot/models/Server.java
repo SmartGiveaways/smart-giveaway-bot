@@ -38,7 +38,7 @@ public class Server {
     }
 
     public Server(GiveawayBot bot, long id) {
-        this(bot, id, Sets.newConcurrentHashSet(), Maps.newConcurrentMap(), Sets.newHashSet(), Lists.newArrayList(), Language.ENGLISH_UK);
+        this(bot, id, Sets.newConcurrentHashSet(), Maps.newConcurrentMap(), Sets.newHashSet(), Lists.newCopyOnWriteArrayList(), Language.ENGLISH_UK);
     }
 
     public long getId() {
