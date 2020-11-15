@@ -1,6 +1,5 @@
 package pink.zak.test.giveawaybot;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import pink.zak.giveawaybot.service.time.Time;
 
@@ -23,19 +22,19 @@ class TimeTests {
         long hourParseFive = Time.parse("1hours");
         long hourParseSix = Time.parse("2hours");
 
-        Assertions.assertEquals(1000, secondParseOne);
-        Assertions.assertEquals(1000, secondParseTwo);
-        Assertions.assertEquals(1000, secondParseThree);
-        Assertions.assertEquals(4000, secondParseFour);
-        Assertions.assertEquals(60000, minuteParseOne);
-        Assertions.assertEquals(60000, minuteParseTwo);
-        Assertions.assertEquals(60000, minuteParseThree);
-        Assertions.assertEquals(240000, minuteParseFour);
-        Assertions.assertEquals(3600000, hourParseOne);
-        Assertions.assertEquals(3600000, hourParseTwo);
-        Assertions.assertEquals(3600000, hourParseThree);
-        Assertions.assertEquals(3600000, hourParseFour);
-        Assertions.assertEquals(3600000, hourParseFive);
-        Assertions.assertEquals(7200000, hourParseSix);
+        assert 1000 == secondParseOne;
+        assert 1000 == secondParseTwo;
+        assert 1000 == secondParseThree;
+        assert 4000 == secondParseFour;
+        assert 60000 == minuteParseOne;
+        assert 60000 == minuteParseTwo;
+        assert 60000 == minuteParseThree;
+        assert 240000 == minuteParseFour;
+        assert 3600000 == hourParseOne;
+        assert 3600000 == hourParseTwo;
+        assert 3600000 == hourParseThree;
+        assert 3600000 == hourParseFour;
+        assert 3600000 == hourParseFive;
+        assert 7200000 == hourParseSix;
     }
 }
