@@ -150,9 +150,7 @@ public class GiveawayController {
                 BigInteger totalEntries = BigInteger.ZERO;
                 Map<Long, BigInteger> userEntriesMap = Maps.newHashMap();
                 List<Long> enteredUsers = Lists.newArrayList(giveaway.enteredUsers().toArray(new Long[]{}));
-                System.out.println("Before: " + enteredUsers);
                 Collections.shuffle(enteredUsers, new Random());
-                System.out.println("Shuffled entered users: " + enteredUsers);
                 for (long enteredUserId : giveaway.enteredUsers()) {
                     User user = server.getUserCache().getSync(enteredUserId);
                     if (user == null || user.isBanned() || user.isShadowBanned()) {
@@ -178,7 +176,7 @@ public class GiveawayController {
                     return;
                 }
                 Set<Long> winners = this.generateWinners(giveaway.winnerAmount(), totalEntries, enteredUsers, userEntriesMap);
-                GiveawayBot.getLogger().info("Giveaway {} generated winners {}", giveaway.messageId(), winners);
+                GiveawayBot.getLogger().debug("Giveaway {} generated winners {}", giveaway.messageId(), winners);
                 this.handleGiveawayEndMessages(giveaway, winners, totalEntries, giveawayMessage, server);
                 // Convert to a FinishedGiveaway
                 this.finishedGiveawayCache.set(giveaway.messageId(), new FinishedGiveaway(giveaway, totalEntries, userEntriesMap, winners));
@@ -221,18 +219,12 @@ public class GiveawayController {
         if (userEntries.size() <= winnerAmount) {
             return userEntries.keySet();
         }
-        System.out.println("NEW GIVEAWAY: " + userEntries);
         BigInteger currentTotalEntries = totalEntries;
         for (int i = 1; i <= winnerAmount; i++) { // For each winner to be generated
             BigInteger decreasingRandom = NumberUtils.getRandomBigInteger(currentTotalEntries);
-            System.out.println(" ");
-            System.out.println(" ");
-            System.out.println("decreasingRandom: " + decreasingRandom.toString());
             for (long userId : enteredUsers) {
                 BigInteger entries = userEntries.get(userId);
-                System.out.println("Going for user " + enteredUsers + "with " + entries.toString() + " entries. Decreasing random: " + decreasingRandom.toString());
                 decreasingRandom = decreasingRandom.subtract(entries);
-                System.out.println("New decreasing random value: " + decreasingRandom.toString());
                 if (decreasingRandom.compareTo(BigInteger.ONE) < 0) {
                     winners.add(userId);
                     if (i + 1 <= winnerAmount) {
@@ -251,7 +243,7 @@ public class GiveawayController {
         this.giveawayCache.invalidateAsync(giveaway.messageId(), false);
         this.serverCache.get(giveaway.serverId()).thenAccept(server -> {
             server.getActiveGiveaways().remove(giveaway.messageId());
-            GiveawayBot.getLogger().info("Removing giveaway from server {}  :  {}", giveaway.serverId(), giveaway.messageId());
+            GiveawayBot.getLogger().debug("Removing giveaway from server {}  :  {}", giveaway.serverId(), giveaway.messageId());
             UserCache userCache = server.getUserCache();
             for (long enteredId : giveaway.enteredUsers()) {
                 userCache.get(enteredId).thenAccept(user -> user.entries().remove(giveaway.messageId()));
@@ -282,7 +274,7 @@ public class GiveawayController {
 
     private void startGiveawayTimer(CurrentGiveaway giveaway) {
         this.threadManager.getScheduler().schedule(() -> {
-            GiveawayBot.getLogger().info("Giveaway {} expired", giveaway.messageId());
+            GiveawayBot.getLogger().debug("Giveaway {} expired", giveaway.messageId());
             this.endGiveaway(giveaway);
         }, giveaway.timeToExpiry(), TimeUnit.MILLISECONDS);
     }
