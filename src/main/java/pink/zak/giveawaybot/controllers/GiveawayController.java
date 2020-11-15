@@ -210,10 +210,10 @@ public class GiveawayController {
         }
     }
 
-    public Set<Long> generateWinners(CurrentGiveaway giveaway, BigInteger totalEntries, Map<Long, BigInteger> userEntries) {
-        List<Long> enteredUsers = Lists.newArrayList(giveaway.enteredUsers().toArray(new Long[]{}));
+    public Set<Long> regenerateWinners(FinishedGiveaway giveaway) {
+        List<Long> enteredUsers = Lists.newArrayList(giveaway.userEntries().keySet().toArray(new Long[]{}));
         Collections.shuffle(enteredUsers);
-        return this.generateWinners(giveaway.winnerAmount(), totalEntries, enteredUsers, userEntries);
+        return this.generateWinners(giveaway.winnerAmount(), giveaway.totalEntries(), enteredUsers, giveaway.userEntries());
     }
 
     public Set<Long> generateWinners(int winnerAmount, BigInteger totalEntries, List<Long> enteredUsers, Map<Long, BigInteger> userEntries) {
