@@ -22,23 +22,11 @@ public class UserStorage extends MongoStorage<Long, User> implements CacheStorag
     private final Gson gson;
 
     public UserStorage(GiveawayBot bot, long serverId) {
-        super(bot, "users");
+        super(bot, "users", "userId");
         this.serverId = serverId;
 
         this.gson = new GsonBuilder().registerTypeAdapter(new TypeToken<EnumMap<EntryType, AtomicInteger>>(){}.getType(), new MapCreator<>(EntryType.class)).create();
     }
-
-    /*@Override
-    public Serializer<User> serializer() {
-        return (user, json, gson) -> {
-            json.addProperty("userId", String.valueOf(user.id()));
-            json.addProperty("serverId", String.valueOf(this.serverId));
-            json.addProperty("banned", String.valueOf(user.isBanned()));
-            json.addProperty("shadowBanned", String.valueOf(user.isShadowBanned()));
-            json.addProperty("entries", gson.toJson(user.entries()));
-            return json;
-        };
-    }*/
 
     @Override
     public MongoSerializer<User> serializer() {
@@ -51,17 +39,6 @@ public class UserStorage extends MongoStorage<Long, User> implements CacheStorag
             return document;
         };
     }
-
-    /*@Override
-    public Deserializer<User> deserializer() {
-        return (json, gson) -> {
-            long id = json.get("userId").getAsLong();
-            boolean banned = json.get("banned").getAsBoolean();
-            boolean shadowBanned = json.get("shadowBanned").getAsBoolean();
-            ConcurrentMap<Long, EnumMap<EntryType, AtomicInteger>> entries = gson.fromJson(json.get("entries").getAsString(), new TypeToken<ConcurrentHashMap<Long, EnumMap<EntryType, AtomicInteger>>>(){}.getType());
-            return new User(id, this.serverId, banned, shadowBanned, entries);
-        };
-    }*/
 
     @Override
     public MongoDeserializer<User> deserializer() {
@@ -78,17 +55,6 @@ public class UserStorage extends MongoStorage<Long, User> implements CacheStorag
     public User create(Long id) {
         return new User(id, this.serverId);
     }
-
-    /*@Override
-    public User create(String id) {
-        return new User(Long.parseLong(id), this.serverId);
-    }*/
-
-    /*@Override
-    public User load(Map<String, String> valuePairs) {
-        JsonObject json = super.backend.load(valuePairs);
-        return json == null ? this.create(valuePairs.values().toArray(new String[]{})[1]) : this.deserializer().apply(json, super.gson);
-    }*/
 
     public long getServerId() {
         return this.serverId;

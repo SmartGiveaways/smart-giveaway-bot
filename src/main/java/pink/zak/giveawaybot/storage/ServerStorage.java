@@ -28,19 +28,6 @@ public class ServerStorage extends MongoStorage<Long, Server> implements CacheSt
         this.bot = bot;
     }
 
-    /*@Override
-    public Serializer<Server> serializer() {
-        return (server, json, gson) -> {
-            json.addProperty("_id", String.valueOf(server.getId()));
-            json.addProperty("presets", gson.toJson(this.serializePresets(server.getPresets())));
-            json.addProperty("activeGiveaways", gson.toJson(server.getActiveGiveaways()));
-            json.addProperty("managerRoles", gson.toJson(server.getManagerRoles()));
-            json.addProperty("bannedUsers", gson.toJson(server.getBannedUsers()));
-            json.addProperty("language", server.getLanguage().toString());
-            return json;
-        };
-    }*/
-
     @Override
     public MongoSerializer<Server> serializer() {
         return (server, document) -> {
@@ -53,19 +40,6 @@ public class ServerStorage extends MongoStorage<Long, Server> implements CacheSt
             return document;
         };
     }
-
-    /*@Override
-    public Deserializer<Server> deserializer() {
-        return (json, gson) -> {
-            long id = json.get("_id").getAsLong();
-            Map<String, Preset> presets = this.deserializePresets(id, gson.fromJson(json.get("presets").getAsString(), new TypeToken<ConcurrentHashMap<String, HashMap<Setting, String>>>(){}.getType()));
-            Set<Long> activeGiveaways = Sets.newConcurrentHashSet(gson.fromJson(json.get("activeGiveaways").getAsString(), new TypeToken<HashSet<Long>>(){}.getType()));
-            Set<Long> managerRoles = gson.fromJson(json.get("managerRoles").getAsString(), new TypeToken<HashSet<Long>>(){}.getType());
-            List<Long> bannedUsers = gson.fromJson(json.get("bannedUsers").getAsString(), new TypeToken<CopyOnWriteArrayList<Long>>(){}.getType());
-            Language language = Language.valueOf(json.get("language").getAsString());
-            return new Server(this.bot, id, activeGiveaways, presets, managerRoles, bannedUsers, language);
-        };
-    }*/
 
     @Override
     public MongoDeserializer<Server> deserializer() {

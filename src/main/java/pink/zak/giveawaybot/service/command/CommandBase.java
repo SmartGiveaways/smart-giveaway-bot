@@ -156,7 +156,7 @@ public class CommandBase extends ListenerAdapter {
     }
 
     private boolean hasAccess(Server server, Command simpleCommand, Message message, Member member) {
-        if (simpleCommand.requiresManager() && !this.serverCache.get(member.getGuild().getIdLong()).join().canMemberManage(member)) {
+        if (simpleCommand.requiresManager() && !server.canMemberManage(member)) {
             this.languageRegistry.get(server, Text.NO_PERMISSION).to(message.getTextChannel());
             return false;
         }

@@ -19,11 +19,6 @@ public abstract class MongoStorage<K, T> {
         this.collection = bot.getMongoConnectionFactory().getCollection(collectionName);
         this.idKey = idKey;
     }
-
-    public MongoStorage(GiveawayBot bot, String collectionName) {
-        this(bot, collectionName, null);
-    }
-
     public abstract MongoSerializer<T> serializer();
 
     public abstract MongoDeserializer<T> deserializer();
@@ -33,8 +28,7 @@ public abstract class MongoStorage<K, T> {
     public T load(K primaryKey, Map<String, Object> keyValues) {
         Document foundDocument = this.find(new BasicDBObject(keyValues));
         if (foundDocument == null) {
-            this.create(primaryKey);
-            return null;
+            return this.create(primaryKey);
         }
         return this.deserializer().apply(foundDocument);
     }

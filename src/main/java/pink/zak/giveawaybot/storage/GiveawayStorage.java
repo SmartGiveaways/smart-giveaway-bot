@@ -20,22 +20,6 @@ public class GiveawayStorage extends MongoStorage<Long, CurrentGiveaway> impleme
         super(bot, "giveaways", "_id");
     }
 
-    /*@Override
-    public Serializer<CurrentGiveaway> serializer() {
-        return (giveaway, json, gson) -> {
-            json.addProperty("_id", String.valueOf(giveaway.messageId()));
-            json.addProperty("channelId", String.valueOf(giveaway.channelId()));
-            json.addProperty("serverId", String.valueOf(giveaway.serverId()));
-            json.addProperty("startTime", String.valueOf(giveaway.startTime()));
-            json.addProperty("endTime", String.valueOf(giveaway.endTime()));
-            json.addProperty("winnerAmount", String.valueOf(giveaway.winnerAmount()));
-            json.addProperty("presetName", giveaway.presetName());
-            json.addProperty("giveawayItem", giveaway.giveawayItem());
-            json.addProperty("enteredUsers", gson.toJson(giveaway.enteredUsers()));
-            return json;
-        };
-    }*/
-
     @Override
     public MongoSerializer<CurrentGiveaway> serializer() {
         return (giveaway, document) -> {
@@ -52,26 +36,10 @@ public class GiveawayStorage extends MongoStorage<Long, CurrentGiveaway> impleme
         };
     }
 
-    /*@Override
-    public Deserializer<CurrentGiveaway> deserializer() {
-        return (json, gson) -> {
-            long messageId = json.get("_id").getAsLong();
-            long channelId = json.get("channelId").getAsLong();
-            long serverId = json.get("serverId").getAsLong();
-            long startTime = json.get("startTime").getAsLong();
-            long endTime = json.get("endTime").getAsLong();
-            int winnerAmount = json.get("winnerAmount").getAsInt();
-            String presetName = json.get("presetName").getAsString();
-            String giveawayItem = json.get("giveawayItem").getAsString();
-            Set<Long> enteredUsers = Sets.newConcurrentHashSet(gson.fromJson(json.get("enteredUsers").getAsString(), new TypeToken<HashSet<Long>>(){}.getType()));
-            return new CurrentGiveaway(messageId, channelId, serverId, startTime, endTime, winnerAmount, presetName, giveawayItem, enteredUsers);
-        };
-    }*/
-
     @Override
     public MongoDeserializer<CurrentGiveaway> deserializer() {
         return document -> {
-            long messageId = document.getLong("messageId");
+            long messageId = document.getLong("_id");
             long channelId = document.getLong("channelId");
             long serverId = document.getLong("serverId");
             long startTime = document.getLong("startTime");
