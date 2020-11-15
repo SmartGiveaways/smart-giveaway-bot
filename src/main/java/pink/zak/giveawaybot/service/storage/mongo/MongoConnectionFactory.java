@@ -10,39 +10,36 @@ import org.bson.Document;
 import pink.zak.giveawaybot.service.storage.settings.StorageSettings;
 
 public class MongoConnectionFactory {
-    private static MongoClient mongoClient;
-    private static MongoDatabase mongoDatabase;
+    private final MongoClient mongoClient;
+    private final MongoDatabase mongoDatabase;
 
     public MongoConnectionFactory(StorageSettings storageSettings) {
-        if (mongoClient != null && mongoDatabase != null) {
-            return;
-        }
         ServerAddress address = new ServerAddress(storageSettings.getHost(), Integer.parseInt(storageSettings.getPort()));
         if (storageSettings.getPassword().isEmpty()) {
-            mongoClient = new MongoClient(address);
+            this.mongoClient = new MongoClient(address);
         } else {
             MongoCredential credential = MongoCredential.createCredential(storageSettings.getUsername(), storageSettings.getAuthDatabase(), storageSettings.getPassword().toCharArray());
-            mongoClient = new MongoClient(address, credential, new MongoClientOptions.Builder().build());
+            this.mongoClient = new MongoClient(address, credential, new MongoClientOptions.Builder().build());
         }
-        mongoDatabase = mongoClient.getDatabase(storageSettings.getDatabase());
+        this.mongoDatabase = this.mongoClient.getDatabase(storageSettings.getDatabase());
     }
 
-    public static MongoDatabase getDatabase() {
-        return mongoDatabase;
+    public MongoDatabase getDatabase() {
+        return this.mongoDatabase;
     }
 
-    public static MongoCollection<Document> getCollection(String collectionName) {
+    public MongoCollection<Document> getCollection(String collectionName) {
         try {
-            return mongoDatabase.getCollection(collectionName);
+            return this.mongoDatabase.getCollection(collectionName);
         } catch (IllegalArgumentException ex) {
-            mongoDatabase.createCollection(collectionName);
-            return mongoDatabase.getCollection(collectionName);
+            this.mongoDatabase.createCollection(collectionName);
+            return this.mongoDatabase.getCollection(collectionName);
         }
     }
 
-    public static void close() {
-        if (mongoClient != null) {
-            mongoClient.close();
+    public void close() {
+        if (this.mongoClient != null) {
+            this.mongoClient.close();
         }
     }
 }
