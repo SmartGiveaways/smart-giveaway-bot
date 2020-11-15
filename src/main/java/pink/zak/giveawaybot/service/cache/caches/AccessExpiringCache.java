@@ -2,7 +2,7 @@ package pink.zak.giveawaybot.service.cache.caches;
 
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.service.cache.options.CacheExpiryListener;
-import pink.zak.giveawaybot.service.storage.storage.Storage;
+import pink.zak.giveawaybot.service.cache.options.CacheStorage;
 
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -18,7 +18,7 @@ public class AccessExpiringCache<K, V> extends Cache<K, V> {
     private final TimeUnit timeUnit;
     private final int delay;
 
-    public AccessExpiringCache(GiveawayBot bot, Storage<V> storage, CacheExpiryListener<K, V> expiryListener, Consumer<V> removalAction, TimeUnit timeUnit, int delay, TimeUnit autoSaveUnit, int autoSaveInterval) {
+    public AccessExpiringCache(GiveawayBot bot, CacheStorage<K, V> storage, CacheExpiryListener<K, V> expiryListener, Consumer<V> removalAction, TimeUnit timeUnit, int delay, TimeUnit autoSaveUnit, int autoSaveInterval) {
         super(bot, removalAction, storage, autoSaveUnit, autoSaveInterval);
         this.scheduledExecutor = bot.getThreadManager().getScheduler();
         this.expiryListener = expiryListener;
@@ -28,15 +28,15 @@ public class AccessExpiringCache<K, V> extends Cache<K, V> {
         this.startScheduledCleanup();
     }
 
-    public AccessExpiringCache(GiveawayBot bot, Storage<V> storage, CacheExpiryListener<K, V> expiryListener, Consumer<V> removalAction, TimeUnit timeUnit, int delay) {
+    public AccessExpiringCache(GiveawayBot bot, CacheStorage<K, V> storage, CacheExpiryListener<K, V> expiryListener, Consumer<V> removalAction, TimeUnit timeUnit, int delay) {
         this(bot, storage, expiryListener, removalAction, timeUnit, delay, null, 0);
     }
 
-    public AccessExpiringCache(GiveawayBot bot, Storage<V> storage, TimeUnit timeUnit, int delay, TimeUnit autoSaveUnit, int autoSaveInterval) {
+    public AccessExpiringCache(GiveawayBot bot, CacheStorage<K, V> storage, TimeUnit timeUnit, int delay, TimeUnit autoSaveUnit, int autoSaveInterval) {
         this(bot, storage, null, null, timeUnit, delay, autoSaveUnit, autoSaveInterval);
     }
 
-    public AccessExpiringCache(GiveawayBot bot, Storage<V> storage, TimeUnit timeUnit, int delay) {
+    public AccessExpiringCache(GiveawayBot bot, CacheStorage<K, V> storage, TimeUnit timeUnit, int delay) {
         this(bot, storage, null, null, timeUnit, delay);
     }
 

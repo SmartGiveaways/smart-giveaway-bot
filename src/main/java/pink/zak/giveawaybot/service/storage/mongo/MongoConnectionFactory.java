@@ -1,4 +1,4 @@
-package pink.zak.giveawaybot.service.storage.backends.mongodb;
+package pink.zak.giveawaybot.service.storage.mongo;
 
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientOptions;

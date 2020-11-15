@@ -28,7 +28,7 @@ import pink.zak.giveawaybot.metrics.MetricsLogger;
 import pink.zak.giveawaybot.metrics.helpers.LatencyMonitor;
 import pink.zak.giveawaybot.service.bot.JdaBot;
 import pink.zak.giveawaybot.service.config.Config;
-import pink.zak.giveawaybot.service.storage.backends.mongodb.MongoConnectionFactory;
+import pink.zak.giveawaybot.service.storage.mongo.MongoConnectionFactory;
 import pink.zak.giveawaybot.storage.FinishedGiveawayStorage;
 import pink.zak.giveawaybot.storage.GiveawayStorage;
 import pink.zak.giveawaybot.storage.ServerStorage;
@@ -50,6 +50,7 @@ public class GiveawayBot extends JdaBot {
     private Metrics metrics;
     private LatencyMonitor latencyMonitor;
     private ThreadManager threadManager;
+    private MongoConnectionFactory mongoConnectionFactory;
     private FinishedGiveawayStorage finishedGiveawayStorage;
     private FinishedGiveawayCache finishedGiveawayCache;
     private GiveawayStorage giveawayStorage;
@@ -145,7 +146,7 @@ public class GiveawayBot extends JdaBot {
         timings.add(System.currentTimeMillis());
         this.serverCache.shutdown();
         timings.add(System.currentTimeMillis());
-        MongoConnectionFactory.close();
+        this.mongoConnectionFactory.close();
         this.threadManager.shutdownPools();
         timings.add(System.currentTimeMillis());
         logger.info("Completing shut down sequence.");
@@ -178,7 +179,7 @@ public class GiveawayBot extends JdaBot {
             this.storageSettings.setUsername(settings.string("mongo-username"));
             this.storageSettings.setPassword(settings.string("mongo-password"));
         }
-        new MongoConnectionFactory(this.getStorageSettings());
+        this.mongoConnectionFactory = new MongoConnectionFactory(this.getStorageSettings());
     }
 
     private void lockdown() {
@@ -211,6 +212,10 @@ public class GiveawayBot extends JdaBot {
 
     public ThreadManager getThreadManager() {
         return this.threadManager;
+    }
+
+    public MongoConnectionFactory getMongoConnectionFactory() {
+        return this.mongoConnectionFactory;
     }
 
     public FinishedGiveawayStorage getFinishedGiveawayStorage() {

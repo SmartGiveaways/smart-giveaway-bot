@@ -257,7 +257,7 @@ public class GiveawayController {
                 userCache.get(enteredId).thenAccept(user -> user.entries().remove(giveaway.messageId()));
             }
         });
-        this.giveawayStorage.delete(String.valueOf(giveaway.messageId()));
+        this.giveawayStorage.delete(giveaway.messageId());
     }
 
     private void startGiveawayUpdater() {

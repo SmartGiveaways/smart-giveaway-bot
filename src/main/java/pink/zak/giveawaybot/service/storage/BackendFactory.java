@@ -3,7 +3,6 @@ package pink.zak.giveawaybot.service.storage;
 import com.google.common.collect.Maps;
 import pink.zak.giveawaybot.service.bot.SimpleBot;
 import pink.zak.giveawaybot.service.storage.backends.FlatBackend;
-import pink.zak.giveawaybot.service.storage.backends.mongodb.MongoBackend;
 import pink.zak.giveawaybot.service.storage.settings.StorageType;
 
 import java.nio.file.Path;
@@ -19,8 +18,7 @@ public class BackendFactory {
 
     public BackendFactory(SimpleBot bot) {
         this.bot = bot;
-        this.addBackend(StorageType.JSON, destination -> new FlatBackend(this.bot.getBasePath().toAbsolutePath().resolve(destination)))
-                .addBackend(StorageType.MONGODB, destination -> new MongoBackend(bot, destination));
+        this.addBackend(StorageType.JSON, destination -> new FlatBackend(this.bot.getBasePath().toAbsolutePath().resolve(destination)));
     }
 
     public Backend create(String backendType, UnaryOperator<Path> path, String destination) {

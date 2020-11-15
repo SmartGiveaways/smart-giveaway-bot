@@ -1,7 +1,7 @@
 package pink.zak.giveawaybot.service.cache.caches;
 
 import pink.zak.giveawaybot.GiveawayBot;
-import pink.zak.giveawaybot.service.storage.storage.Storage;
+import pink.zak.giveawaybot.service.cache.options.CacheStorage;
 import pink.zak.giveawaybot.threads.ThreadFunction;
 
 import java.util.concurrent.*;
@@ -13,7 +13,7 @@ public class Cache<K, V> {
 
     protected final ExecutorService executor;
     protected final Consumer<V> removalAction;
-    protected final Storage<V> storage;
+    protected final CacheStorage<K, V> storage;
     protected final AtomicInteger hits = new AtomicInteger();
     protected final AtomicInteger loads = new AtomicInteger();
 
@@ -21,11 +21,11 @@ public class Cache<K, V> {
         this(bot, null, null);
     }
 
-    public Cache(GiveawayBot bot, Consumer<V> removalAction, Storage<V> storage) {
+    public Cache(GiveawayBot bot, Consumer<V> removalAction, CacheStorage<K, V> storage) {
         this(bot, removalAction, storage, null, 0);
     }
 
-    public Cache(GiveawayBot bot, Consumer<V> removalAction, Storage<V> storage, TimeUnit autoSaveTimeUnit, int autoSaveInterval) {
+    public Cache(GiveawayBot bot, Consumer<V> removalAction, CacheStorage<K, V> storage, TimeUnit autoSaveTimeUnit, int autoSaveInterval) {
         this.executor = bot.getAsyncExecutor(ThreadFunction.STORAGE);
         this.removalAction = removalAction;
         this.storage = storage;
@@ -41,7 +41,7 @@ public class Cache<K, V> {
             if (this.storage == null) {
                 return null;
             }
-            V loaded = this.storage.load(key.toString());
+            V loaded = this.storage.load(key);
             this.loads.incrementAndGet();
             if (loaded != null) {
                 return this.setSync(key, loaded);
@@ -69,7 +69,7 @@ public class Cache<K, V> {
     }
 
     public void save(K key) {
-        this.storage.save(key.toString(), this.getSync(key));
+        this.storage.save(this.getSync(key));
     }
 
     public void invalidate(K key) {

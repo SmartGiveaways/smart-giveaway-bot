@@ -5,7 +5,7 @@ import pink.zak.giveawaybot.service.cache.caches.AccessExpiringCache;
 import pink.zak.giveawaybot.service.cache.caches.Cache;
 import pink.zak.giveawaybot.service.cache.caches.WriteExpiringCache;
 import pink.zak.giveawaybot.service.cache.options.CacheExpiryListener;
-import pink.zak.giveawaybot.service.storage.storage.Storage;
+import pink.zak.giveawaybot.service.cache.options.CacheStorage;
 
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
@@ -14,7 +14,7 @@ public class CacheBuilder<K, V> {
     private GiveawayBot bot;
     private CacheExpiryListener<K, V> expiryListener;
     private Consumer<V> removalAction;
-    private Storage<V> storage;
+    private CacheStorage<K, V> storage;
     private TimeUnit autoSaveTimeUnit;
     private int autoSaveInterval;
     private TimeUnit expiryTimeUnit;
@@ -66,7 +66,7 @@ public class CacheBuilder<K, V> {
         return this;
     }
 
-    public CacheBuilder<K, V> setStorage(Storage<V> storage) {
+    public CacheBuilder<K, V> setStorage(CacheStorage<K, V> storage) {
         this.storage = storage;
         return this;
     }

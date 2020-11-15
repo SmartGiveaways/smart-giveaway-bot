@@ -10,7 +10,6 @@ import pink.zak.giveawaybot.models.Server;
 import pink.zak.giveawaybot.service.cache.singular.CachedValue;
 import pink.zak.giveawaybot.service.colour.Palette;
 import pink.zak.giveawaybot.service.command.command.SubCommand;
-import pink.zak.giveawaybot.service.storage.backends.mongodb.MongoConnectionFactory;
 import pink.zak.giveawaybot.service.time.Time;
 
 import java.util.List;
@@ -29,7 +28,7 @@ public class NerdSub extends SubCommand {
         this.genericMetrics = bot.getMetricsLogger().getGenericBotMetrics();
         this.giveawayCache = bot.getGiveawayCache();
         this.palette = bot.getDefaults().getPalette();
-        this.historicalGiveaways = new CachedValue<>(TimeUnit.MINUTES, 30, () -> MongoConnectionFactory.getCollection("finished-giveaways").countDocuments());
+        this.historicalGiveaways = new CachedValue<>(TimeUnit.MINUTES, 30, () -> bot.getMongoConnectionFactory().getCollection("finished-giveaways").countDocuments());
     }
 
     @Override

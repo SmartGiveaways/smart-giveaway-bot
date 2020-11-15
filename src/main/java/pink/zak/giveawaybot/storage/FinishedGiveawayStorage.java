@@ -1,25 +1,26 @@
 package pink.zak.giveawaybot.storage;
 
 import com.google.common.collect.Sets;
+import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.models.giveaway.FinishedGiveaway;
-import pink.zak.giveawaybot.service.cache.options.CacheLoader;
-import pink.zak.giveawaybot.service.storage.settings.StorageType;
-import pink.zak.giveawaybot.service.storage.storage.Storage;
-import pink.zak.giveawaybot.service.storage.storage.serialization.Deserializer;
-import pink.zak.giveawaybot.service.storage.storage.serialization.Serializer;
+import pink.zak.giveawaybot.service.cache.options.CacheStorage;
+import pink.zak.giveawaybot.service.storage.mongo.MongoDeserializer;
+import pink.zak.giveawaybot.service.storage.mongo.MongoSerializer;
+import pink.zak.giveawaybot.service.storage.mongo.MongoStorage;
 
 import java.math.BigInteger;
 import java.util.*;
 
-public class FinishedGiveawayStorage extends Storage<FinishedGiveaway> implements CacheLoader<UUID, FinishedGiveaway> {
+public class FinishedGiveawayStorage extends MongoStorage<Long, FinishedGiveaway> implements CacheStorage<Long, FinishedGiveaway> {
+    private final Gson gson = new Gson();
 
     public FinishedGiveawayStorage(GiveawayBot bot) {
-        super(bot, factory -> factory.create(StorageType.MONGODB, "finished-giveaways"));
+        super(bot, "finished-giveaways", "_id");
     }
 
-    @Override
+    /*@Override
     public Serializer<FinishedGiveaway> serializer() {
         return (giveaway, json, gson) -> {
             json.addProperty("_id", String.valueOf(giveaway.messageId()));
@@ -35,9 +36,27 @@ public class FinishedGiveawayStorage extends Storage<FinishedGiveaway> implement
             json.addProperty("winners", gson.toJson(giveaway.winners()));
             return json;
         };
-    }
+    }*/
 
     @Override
+    public MongoSerializer<FinishedGiveaway> serializer() {
+        return (giveaway, document) -> {
+            document.put("_id", giveaway.messageId());
+            document.put("channelId", giveaway.channelId());
+            document.put("serverId", giveaway.serverId());
+            document.put("startTime", giveaway.startTime());
+            document.put("endTime", giveaway.endTime());
+            document.put("winnerAmount", giveaway.winnerAmount());
+            document.put("presetName", giveaway.presetName());
+            document.put("giveawayItem", giveaway.giveawayItem());
+            document.put("totalEntries", giveaway.totalEntries().toString());
+            document.put("userEntries", gson.toJson(giveaway.userEntries()));
+            document.put("winners", gson.toJson(giveaway.winners()));
+            return document;
+        };
+    }
+
+    /*@Override
     public Deserializer<FinishedGiveaway> deserializer() {
         return (json, gson) -> {
             long messageId = json.get("_id").getAsLong();
@@ -53,15 +72,28 @@ public class FinishedGiveawayStorage extends Storage<FinishedGiveaway> implement
             Set<Long> winners = Sets.newConcurrentHashSet(gson.fromJson(json.get("winners").getAsString(), new TypeToken<HashSet<Long>>(){}.getType()));
             return new FinishedGiveaway(messageId, channelId, serverId, startTime, endTime, winnerAmount, presetName, giveawayItem, totalEntries, userEntries, winners);
         };
+    }*/
+
+    @Override
+    public MongoDeserializer<FinishedGiveaway> deserializer() {
+        return document -> {
+            long messageId = document.getLong("_id");
+            long channelId = document.getLong("channelId");
+            long serverId = document.getLong("serverId");
+            long startTime = document.getLong("startTime");
+            long endTime = document.getLong("endTime");
+            int winnerAmount = document.getInteger("winnerAmount");
+            String presetName = document.getString("presetName");
+            String giveawayItem = document.getString("giveawayItem");
+            BigInteger totalEntries = new BigInteger(document.getString("totalEntries"));
+            Map<Long, BigInteger> userEntries = gson.fromJson(document.getString("userEntries"), new TypeToken<HashMap<Long, BigInteger>>(){}.getType());
+            Set<Long> winners = Sets.newConcurrentHashSet(gson.fromJson(document.getString("winners"), new TypeToken<HashSet<Long>>(){}.getType()));
+            return new FinishedGiveaway(messageId, channelId, serverId, startTime, endTime, winnerAmount, presetName, giveawayItem, totalEntries, userEntries, winners);
+        };
     }
 
     @Override
-    public FinishedGiveaway create(String id) {
+    public FinishedGiveaway create(Long id) {
         return null;
-    }
-
-    @Override
-    public FinishedGiveaway load(UUID key) {
-        return super.load(key.toString());
     }
 }

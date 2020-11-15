@@ -16,7 +16,7 @@ public class FinishedGiveawayCache extends AccessExpiringCache<Long, FinishedGiv
     @Override
     public CompletableFuture<FinishedGiveaway> set(Long key, FinishedGiveaway value) {
         CompletableFuture<FinishedGiveaway> val = super.set(key, value);
-        val.thenAccept(giveaway -> this.storage.save(String.valueOf(giveaway.messageId()), giveaway));
+        val.thenAccept(this.storage::save);
         return val;
     }
 
