@@ -19,15 +19,18 @@ public class ReactionAddListener extends ListenerAdapter {
     private final ServerCache serverCache;
     private final GiveawayCache giveawayCache;
     private final Preset defaultPreset;
+    private final AtomicInteger entryCount;
     private final EnumMap<EntryType, AtomicInteger> baseMap;
 
     public ReactionAddListener(GiveawayBot bot) {
         this.serverCache = bot.getServerCache();
         this.giveawayCache = bot.getGiveawayCache();
         this.defaultPreset = bot.getDefaults().getDefaultPreset();
+        this.entryCount = bot.getMetricsLogger().getGenericBotMetrics().getEntryCount();
 
         this.baseMap = Maps.newEnumMap(EntryType.class);
         this.baseMap.put(EntryType.REACTION, new AtomicInteger(1));
+
     }
 
     @Override
@@ -56,6 +59,7 @@ public class ReactionAddListener extends ListenerAdapter {
                 server.getUserCache().get(userId).thenAccept(user -> {
                     giveaway.enteredUsers().add(userId);
                     user.entries().put(giveaway.messageId(), this.baseMap.clone());
+                    this.entryCount.incrementAndGet();
                 });
             }).exceptionally(ex -> {
                 GiveawayBot.getLogger().error("messageId:userId:serverId  {}:{}:{}", messageId, userId, server.getId(), ex);

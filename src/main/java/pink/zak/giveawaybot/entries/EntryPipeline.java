@@ -14,7 +14,7 @@ public class EntryPipeline {
     private final Preset defaultPreset;
 
     public EntryPipeline(GiveawayBot bot) {
-        this.checkStep = new EligibilityCheckStep();
+        this.checkStep = new EligibilityCheckStep(bot);
         this.serverCache = bot.getServerCache();
         this.giveawayCache = bot.getGiveawayCache();
         this.defaultPreset = bot.getDefaults().getDefaultPreset();

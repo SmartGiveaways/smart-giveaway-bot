@@ -1,6 +1,7 @@
 package pink.zak.giveawaybot.entries.workers;
 
 import com.google.common.collect.Maps;
+import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.enums.EntryType;
 import pink.zak.giveawaybot.enums.Setting;
 import pink.zak.giveawaybot.models.Preset;
@@ -12,8 +13,8 @@ import java.math.BigInteger;
 public class EligibilityCheckStep {
     private final RewardStep rewardStep;
 
-    public EligibilityCheckStep() {
-        this.rewardStep = new RewardStep();
+    public EligibilityCheckStep(GiveawayBot bot) {
+        this.rewardStep = new RewardStep(bot.getMetricsLogger().getGenericBotMetrics());
     }
 
     public void process(EntryType entryType, User user, CurrentGiveaway giveaway, Preset preset) {

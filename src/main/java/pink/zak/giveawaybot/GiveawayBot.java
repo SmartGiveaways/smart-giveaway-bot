@@ -80,7 +80,7 @@ public class GiveawayBot extends JdaBot {
         this.metrics = new Metrics(new Metrics.Config(settings.string("influx-url"),
                 settings.string("influx-token").toCharArray(),
                 settings.string("influx-org"),
-                settings.string("influx-bucket"), 5));
+                settings.string("influx-bucket"), 10));
 
         this.buildJdaEarly(settings.string("token"), this.getGatewayIntents(), shard -> shard
                 .disableCache(CacheFlag.VOICE_STATE));
@@ -101,7 +101,6 @@ public class GiveawayBot extends JdaBot {
         this.languageRegistry.loadLanguages(this);
 
         this.defaults = new Defaults(this);
-        this.entryPipeline = new EntryPipeline(this);
 
         this.initialize(this, this.getConfigStore().getConfig("settings").string("token"), ">", this.getGatewayIntents(), shard -> shard
                 .disableCache(CacheFlag.VOICE_STATE));
@@ -115,6 +114,8 @@ public class GiveawayBot extends JdaBot {
         this.giveawayController = new GiveawayController(this); // Makes use of JDA, retrieving messages
         this.metricsLogger = new MetricsLogger(this);
         this.metricsLogger.checkAndStart(this);
+
+        this.entryPipeline = new EntryPipeline(this);
 
         this.registerCommands(
                 new BotAboutCommand(this),
