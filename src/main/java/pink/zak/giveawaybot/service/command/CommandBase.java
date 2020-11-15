@@ -221,7 +221,7 @@ public class CommandBase extends ListenerAdapter {
                     return guild.getTextChannelById(id);
                 })
                 .registerArgumentType(Role.class, (string, guild) -> {
-                    String id = string.length() == 18 ? string : string.contains("&") ? string.length() == 21 ? string.substring(2, 20) : null : null;
+                    String id = string.length() == 18 ? string : string.contains("&") ? string.length() == 22 ? string.substring(3, 21) : null : null;
                     if (id == null) {
                         return null;
                     }

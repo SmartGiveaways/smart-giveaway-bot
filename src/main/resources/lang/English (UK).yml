@@ -5,12 +5,37 @@ values:
   bot-doesnt-have-permissions: ":x: The bot doesn't have the correct permissions. Please reinvite the bot from <https://smartgiveaways.xyz/invite>."
   no-permission: ":x: No permission."
   couldnt-find-member: ":x: Couldn't find that member :worried:"
+  couldnt-find-role: ":x: Could not find that role ;("
+  couldnt-find-channel: ":x: The specified channel could not be found. Make sure the bot can access it."
+  couldnt-find-giveaway: ":x: Could not find a giveaway with that ID. Make sure the giveaway is finished and you're using the message ID."
   no-active-giveaways: ":x: There are no active giveaways in this server."
   fatal-error-loading-server: ":warning: There was a fatal error loading your server. Please join the support discord and scream at Zak."
   generic-failure: ":x: Something went wrong. Please try again in a few minutes."
   generic-embed-footer: "SmartGiveaways b1 - View commands at https://docs.smartgiveaways.xyz/commands"
-  couldnt-find-channel: ":x: The specified channel could not be found. Make sure the bot can access it."
-  couldnt-find-giveaway: ":x: Could not find a giveaway with that ID. Make sure the giveaway is finished and you're using the message ID."
+
+  # >gabout command messages
+  about-embed-title: "About SmartGiveaways"
+  about-embed-content: "[Vote (Click)](https://www.youtube.com/watch?v=dQw4w9WgXcQ)\n
+                        [Discord (Click)](https://discord.gg/aS4PebKZpe)\n
+                        [Website (Click)](https://smartgiveaways.xyz/) \n
+
+                        Servers: %servers%\n
+                        Active Giveaways: %active_giveaways%"
+
+  # >gadmin command messages
+  admin-embed-title: "Admin Command Help"
+  admin-embed-content: ">gadmin roles - List manager roles\n
+                        >gadmin role add <role> - Add a manager role\n
+                        >gadmin role remove <role> - Remove a manager role\n"
+
+  admin-no-managers: ":x: There are not any manager roles right now. Add them with `>gadmin role add <role>"
+  admin-manager-list-title: "Manager Roles"
+
+  admin-manager-limit-reached: ":x: You can only have 5 manager roles. List them with >gadmin roles"
+  admin-manager-already-contains: ":x: That role can already manage this server."
+  admin-manager-doesnt-contain: ":x: That role is not a manager."
+  admin-manager-role-added: ":white_check_mark: %name% is now a manager role."
+  admin-manager-role-removed: ":white_check_mark: %name% is no longer a manager role."
 
   # General ban command messages
   cannot-ban-self: ":x: You can't ban yourself dummy."
@@ -36,7 +61,7 @@ values:
   ban-list-page-footer: "Page %page%/%maxPage% | %amount% total bans"
 
   # >gunban command messages
-  unban-help: ""
+  unban-help: ">gunban <user> - Unbans/Un shadowbans a user"
   cannot-unban-self: ":x: Oi, get someone else to do it for you."
   unban-not-banned: ":x: Slight problem... %target% is not banned or shadow banned. You only pardon the guilty."
   shadow-unbanned: ":white_check_mark: %target% is no longer shadow banned."
@@ -78,19 +103,11 @@ values:
   help-embed-footer: "For more commands visit https://docs.smartgiveaways.xyz/commands"
   help-limited-section: ">entries"
   help-admin-section: ">giveaway\n
-                        >preset\n
+                        >preset - Manage Presets\n
+                        >gadmin - Manage Manager Roles
                         >gban <user> - Visibly bans a user from giveaways.\n
                         >gsban <user> - Shadow bans a user from giveaways. Almost impossible to tell.\n
                         >gunban <user> - Removes a user's ban or shadow ban."
-
-  # >gabout command messages
-  about-embed-title: "About SmartGiveaways"
-  about-embed-content: "[Vote (Click)](https://www.youtube.com/watch?v=dQw4w9WgXcQ)\n
-                        [Discord (Click)](https://discord.gg/aS4PebKZpe)\n
-                        [Website (Click)](https://smartgiveaways.xyz/) \n
-
-                        Servers: %servers%\n
-                        Active Giveaways: %active_giveaways%"
 
   # >preset command messages
   preset-embed-title: "Preset Command Help"

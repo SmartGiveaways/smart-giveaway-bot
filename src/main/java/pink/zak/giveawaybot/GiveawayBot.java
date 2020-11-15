@@ -11,6 +11,7 @@ import pink.zak.giveawaybot.cache.FinishedGiveawayCache;
 import pink.zak.giveawaybot.cache.GiveawayCache;
 import pink.zak.giveawaybot.cache.ServerCache;
 import pink.zak.giveawaybot.commands.about.BotAboutCommand;
+import pink.zak.giveawaybot.commands.admin.AdminCommand;
 import pink.zak.giveawaybot.commands.ban.BanCommand;
 import pink.zak.giveawaybot.commands.ban.UnbanCommand;
 import pink.zak.giveawaybot.commands.entries.EntriesCommand;
@@ -117,6 +118,7 @@ public class GiveawayBot extends JdaBot {
 
         this.registerCommands(
                 new BotAboutCommand(this),
+                new AdminCommand(this),
                 new BanCommand(this),
                 new UnbanCommand(this),
                 new EntriesCommand(this),
