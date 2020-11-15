@@ -11,7 +11,7 @@ values:
   no-active-giveaways: ":x: There are no active giveaways in this server."
   fatal-error-loading-server: ":warning: There was a fatal error loading your server. Please join the support discord and scream at Zak."
   generic-failure: ":x: Something went wrong. Please try again in a few minutes."
-  generic-embed-footer: "SmartGiveaways b1 - View commands at https://docs.smartgiveaways.xyz/commands"
+  generic-embed-footer: "SmartGiveaways v1.0.0 - https://docs.smartgiveaways.xyz/"
 
   # >gabout command messages
   about-embed-title: "About SmartGiveaways"
@@ -102,9 +102,9 @@ values:
   help-embed-title: "SmartGiveaways Help"
   help-embed-footer: "For more commands visit https://docs.smartgiveaways.xyz/commands"
   help-limited-section: ">entries"
-  help-admin-section: ">giveaway\n
+  help-admin-section: ">giveaway - Manage Giveaways\n
                         >preset - Manage Presets\n
-                        >gadmin - Manage Manager Roles
+                        >gadmin - Manage Manager Roles\n
                         >gban <user> - Visibly bans a user from giveaways.\n
                         >gsban <user> - Shadow bans a user from giveaways. Almost impossible to tell.\n
                         >gunban <user> - Removes a user's ban or shadow ban."

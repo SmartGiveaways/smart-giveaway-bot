@@ -14,6 +14,10 @@ public class UserUtils {
         if (input.contains(" ")) {
             return -1;
         }
-        return Long.parseLong(input.length() == 18 ? input : input.length() == 21 ? input.substring(2, 20) : input.length() == 22 ? input.substring(3, 21) : "-1");
+        try {
+            return Long.parseLong(input.length() == 18 ? input : input.length() == 21 ? input.substring(2, 20) : input.length() == 22 ? input.substring(3, 21) : "-1");
+        } catch (NumberFormatException ex) {
+            return -1;
+        }
     }
 }

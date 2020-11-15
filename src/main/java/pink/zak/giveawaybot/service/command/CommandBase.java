@@ -214,18 +214,18 @@ public class CommandBase extends ListenerAdapter {
                     }
                 })
                 .registerArgumentType(TextChannel.class, (string, guild) -> {
-                    String id = string.length() == 21 ? string.substring(2, 20) : string.length() == 22 ? string.substring(3, 21) : null;
-                    if (id == null) {
+                    long channelId = UserUtils.parseIdInput(string);
+                    if (channelId == -1) {
                         return null;
                     }
-                    return guild.getTextChannelById(id);
+                    return guild.getTextChannelById(channelId);
                 })
                 .registerArgumentType(Role.class, (string, guild) -> {
-                    String id = string.length() == 18 ? string : string.contains("&") ? string.length() == 22 ? string.substring(3, 21) : null : null;
-                    if (id == null) {
+                    long roleId = UserUtils.parseIdInput(string);
+                    if (roleId == -1) {
                         return null;
                     }
-                    return guild.getRoleById(id);
+                    return guild.getRoleById(roleId);
                 })
                 .registerArgumentType(Preset.class, (string, guild) -> Optional.ofNullable(this.serverCache.getSync(guild.getIdLong()).getPreset(string)))
                 .registerArgumentType(Integer.class, (string, guild) -> NumberUtils.toInt(string, -1))
