@@ -30,7 +30,7 @@ public class LatencyMonitor {
         this.testChannel = bot.getShardManager().getTextChannelById(settings.getConfiguration().getLong("latency-tester.channel-id"));
         this.metrics = bot.getMetrics();
         this.lastTiming = Long.MAX_VALUE;
-        bot.getThreadManager().getScheduler().scheduleAtFixedRate(this::testLatency, 0, 15, TimeUnit.SECONDS);
+        bot.getThreadManager().getScheduler().scheduleAtFixedRate(this::testLatency, 0, 30, TimeUnit.SECONDS);
 
         reader.close();
     }

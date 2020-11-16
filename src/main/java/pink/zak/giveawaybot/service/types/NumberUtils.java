@@ -16,4 +16,8 @@ public class NumberUtils {
         } while (randomNumber.compareTo(max) >= 0);
         return randomNumber.add(BigInteger.ONE); // Added to make inclusive
     }
+
+    public static int getPercentage(int current, int max) {
+        return (current / max) * 100;
+    }
 }

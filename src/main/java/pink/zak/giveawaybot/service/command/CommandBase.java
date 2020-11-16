@@ -14,12 +14,11 @@ import org.apache.commons.lang3.math.NumberUtils;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.cache.ServerCache;
 import pink.zak.giveawaybot.lang.LanguageRegistry;
-import pink.zak.giveawaybot.lang.enums.Language;
 import pink.zak.giveawaybot.lang.enums.Text;
 import pink.zak.giveawaybot.models.Preset;
 import pink.zak.giveawaybot.models.Server;
-import pink.zak.giveawaybot.service.cache.caches.Cache;
 import pink.zak.giveawaybot.service.cache.CacheBuilder;
+import pink.zak.giveawaybot.service.cache.caches.Cache;
 import pink.zak.giveawaybot.service.command.argument.ArgumentHandler;
 import pink.zak.giveawaybot.service.command.argument.ArgumentType;
 import pink.zak.giveawaybot.service.command.command.Command;
@@ -95,8 +94,7 @@ public class CommandBase extends ListenerAdapter {
                 return;
             }
             if (server == null) {
-                this.languageRegistry.get(Language.ENGLISH_UK, Text.FATAL_ERROR_LOADING_SERVER).to(event.getTextChannel());
-                event.getTextChannel().sendMessage("There was a fatal error loading your server. Please join the support discord and scream at Zak.").queue();
+                this.languageRegistry.fallback(Text.FATAL_ERROR_LOADING_SERVER).to(event.getTextChannel());
                 return;
             }
             CompletableFuture.runAsync(() -> {

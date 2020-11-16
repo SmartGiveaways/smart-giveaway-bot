@@ -8,6 +8,8 @@ values:
   couldnt-find-role: ":x: Could not find that role ;("
   couldnt-find-channel: ":x: The specified channel could not be found. Make sure the bot can access it."
   couldnt-find-giveaway: ":x: Could not find a giveaway with that ID. Make sure the giveaway is finished and you're using the message ID."
+  couldnt-find-preset: ":x: Could not find that preset."
+  couldnt-find-setting: ":x: Could not find that setting. Use `>preset settings` if you're unsure."
   no-active-giveaways: ":x: There are no active giveaways in this server."
   fatal-error-loading-server: ":warning: There was a fatal error loading your server. Please join the support discord and scream at Zak."
   generic-failure: ":x: Something went wrong. Please try again in a few minutes."
@@ -61,7 +63,7 @@ values:
   ban-list-page-footer: "Page %page%/%maxPage% | %amount% total bans"
 
   # >gunban command messages
-  unban-help: ">gunban <user> - Unbans/Un shadowbans a user"
+  unban-help: ">gunban <user> - Unbans a user"
   cannot-unban-self: ":x: Oi, get someone else to do it for you."
   unban-not-banned: ":x: Slight problem... %target% is not banned or shadow banned. You only pardon the guilty."
   shadow-unbanned: ":white_check_mark: %target% is no longer shadow banned."
@@ -124,3 +126,24 @@ values:
   preset-create-name-too-long: "Preset names must be shorter than 20 characters."
   preset-create-name-too-short: "Preset names must be longer than 3 characters."
   preset-created: "Created your preset. Use `>preset settings` to see available settings."
+  # delete sub
+  preset-delete-show-presets-addon: " Here are your presets: %preset-list%"
+  preset-delete-in-use: "You cannot delete a preset that is currently being used by a giveaway."
+  preset-deleted: "The `%preset%` preset has been deleted."
+  # list options sub
+  preset-has-no-settings: ":x: The preset %preset% has no settings. Use `>preset settings` to view available settings and `>preset set %preset% <setting> <value>` to set them."
+  preset-list-embed-title: "Settings for the %preset% preset"
+  # set option sub
+  preset-cannot-modify-default: ":x: You cannot modify the default preset. Create your own using `>preset create <preset>`."
+  preset-setting-incorrect-input: ":x: Incorrect input for setting %setting%."
+  preset-setting-set: "Set the %setting% setting to %value%."
+  # preset settings descriptions
+  preset-enable-react-to-enter-description: "React to messages to enter"
+  preset-react-to-enter-emoji-description: "The emoji to react with"
+  preset-enable-message-entries-description: "Send messages to gain entries"
+  preset-entries-per-message-description: "Entries per sent message"
+  preset-max-entries-description: "Maximum entries per user"
+  preset-ping-winners-description: "Whether winners will be ghost pinged"
+  # preset settings limit messages
+  preset-entries-per-message-limit-message: "The max entries per message is 3"
+  preset-max-entries-limit-message: "Your max entries per person must be below 10000"

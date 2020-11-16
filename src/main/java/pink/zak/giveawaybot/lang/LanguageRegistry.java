@@ -14,6 +14,7 @@ import pink.zak.giveawaybot.models.Server;
 import pink.zak.giveawaybot.service.bot.SimpleBot;
 import pink.zak.giveawaybot.service.text.Replace;
 import pink.zak.giveawaybot.service.text.Replacer;
+import pink.zak.giveawaybot.service.types.NumberUtils;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -24,10 +25,12 @@ import java.util.function.Consumer;
 
 public class LanguageRegistry {
     private final EnumMap<Language, LanguageContainer> languageMap = Maps.newEnumMap(Language.class);
+    private Language defaultLanguage;
     private boolean isLoading;
 
     @SneakyThrows
     public void loadLanguages(SimpleBot bot) {
+        this.defaultLanguage = Language.match(bot.getConfig("settings").string("default-language"));
         Files.walk(bot.getBasePath().resolve("lang"))
                 .map(Path::toFile)
                 .filter(file -> file.getName().endsWith(".yml") || file.getName().endsWith(".yaml"))
@@ -40,6 +43,9 @@ public class LanguageRegistry {
                     }
                     this.languageMap.put(language, new LanguageContainer(language, config));
                 });
+        if (this.defaultLanguage == null || !this.languageMap.containsKey(this.defaultLanguage) || this.languageMap.get(this.defaultLanguage).values.size() < Language.values().length) {
+            GiveawayBot.getLogger().error("The default language does not meet the requirements of 100% or could not be found.");
+        }
     }
 
     public void reloadLanguages(SimpleBot bot) {
@@ -68,6 +74,15 @@ public class LanguageRegistry {
     public LangSub get(Server server, Text text, Replace replace) {
         return this.get(server.getLanguage(), text, replace);
     }
+
+    public LangSub fallback(Text text, Replace replace) {
+        return this.get(this.defaultLanguage, text, replace);
+    }
+
+    public LangSub fallback(Text text) {
+        return this.get(this.defaultLanguage, text);
+    }
+
     private class LanguageContainer {
         private final Map<Text, LangSub> values = Maps.newHashMap();
 
@@ -88,7 +103,14 @@ public class LanguageRegistry {
                 }
                 this.values.put(text, new LangSub(section.getString(key)));
             }
-            GiveawayBot.getLogger().info("[Language] {} loaded {} messages", this.language, this.values.size());
+            int coverage = NumberUtils.getPercentage(this.values.size(), Text.values().length);
+            if (coverage == 100) {
+                GiveawayBot.getLogger().info("[Language] {} loaded {}/{} messages ({}% coverage)", this.language, this.values.size(), Text.values().length, coverage);
+            } else if (coverage >= 80) {
+                GiveawayBot.getLogger().warn("[Language] {} loaded {}/{} messages ({}% coverage)", this.language, this.values.size(), Text.values().length, coverage);
+            } else {
+                GiveawayBot.getLogger().error("[Language] {} loaded {}/{} messages ({}% coverage)", this.language, this.values.size(), Text.values().length, coverage);
+            }
         }
 
         public LangSub get(Text text) {

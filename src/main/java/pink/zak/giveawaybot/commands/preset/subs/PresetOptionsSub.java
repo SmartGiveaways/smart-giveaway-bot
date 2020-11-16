@@ -5,6 +5,7 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.enums.Setting;
+import pink.zak.giveawaybot.lang.enums.Text;
 import pink.zak.giveawaybot.models.Preset;
 import pink.zak.giveawaybot.models.Server;
 import pink.zak.giveawaybot.service.colour.Palette;
@@ -31,11 +32,11 @@ public class PresetOptionsSub extends SubCommand {
         String presetName = this.parseArgument(args, event.getGuild(), 1);
         Preset preset = presetName.equalsIgnoreCase("default") ? this.defaultPreset : server.getPreset(presetName);
         if (preset == null) {
-            event.getChannel().sendMessage(":x: Could not find a preset called ".concat(presetName)).queue();
+            this.langFor(server, Text.COULDNT_FIND_PRESET).to(event.getTextChannel());
             return;
         }
         if (preset.settings().isEmpty()) {
-            event.getChannel().sendMessage(":x: The " + preset.name() + " preset has no settings. Use `>preset settings` to view available settings and `>preset set <preset> <setting> <value>` to set it.").queue();
+            this.langFor(server, Text.PRESET_HAS_NO_SETTINGS, replacer -> replacer.set("preset", preset.name())).to(event.getTextChannel());
             return;
         }
         StringBuilder builder = new StringBuilder();
@@ -46,9 +47,10 @@ public class PresetOptionsSub extends SubCommand {
                     .append("\n");
         }
         event.getChannel().sendMessage(new EmbedBuilder()
+                .setTitle(this.langFor(server, Text.PRESET_LIST_EMBED_TITLE, replacer -> replacer.set("preset", preset.name())).get())
+                .setFooter(this.langFor(server, Text.GENERIC_EMBED_FOOTER).get())
                 .setColor(this.palette.primary())
                 .setDescription(builder.toString())
-                .setTitle("Settings for the " + preset.name() + " preset:")
                 .build()).queue();
     }
 }

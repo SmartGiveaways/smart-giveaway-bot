@@ -23,7 +23,7 @@ public class UnbanCommand extends SimpleCommand {
 
     @Override
     public void onExecute(Member sender, Server server, MessageReceivedEvent event, List<String> args) {
-        event.getChannel().sendMessage(">unban <user> - Unbans a user if they are banned.").queue();
+        this.langFor(server, Text.UNBAN_HELP).to(event.getTextChannel());
     }
 
     private class UnbanSub extends SubCommand {

@@ -4,6 +4,7 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.enums.Setting;
+import pink.zak.giveawaybot.lang.enums.Text;
 import pink.zak.giveawaybot.models.Preset;
 import pink.zak.giveawaybot.models.Server;
 import pink.zak.giveawaybot.service.command.command.SubCommand;
@@ -25,31 +26,31 @@ public class SetOptionSub extends SubCommand {
     public void onExecute(Member sender, Server server, MessageReceivedEvent event, List<String> args) {
         String presetName = this.parseArgument(args, event.getGuild(), 1);
         if (presetName.equalsIgnoreCase("default")) {
-            event.getChannel().sendMessage(":x: You cannot modify the default preset. Create your own using `>preset create <preset>` or `>preset setup`.").queue();
+            this.langFor(server, Text.PRESET_CANNOT_MODIFY_DEFAULT).to(event.getTextChannel());
             return;
         }
         Preset preset = server.getPreset(presetName);
         if (preset == null) {
-            event.getChannel().sendMessage(":x: Could not find a preset called ".concat(presetName)).queue();
+            this.langFor(server, Text.COULDNT_FIND_PRESET).to(event.getTextChannel());
             return;
         }
         String settingName = this.parseArgument(args, event.getGuild(), 2);
         Setting setting = Setting.match(settingName);
         if (setting == null) {
-            event.getChannel().sendMessage(":x: Could not find a setting called " + settingName + ". Use `>preset settings` to list settings.").queue();
+            this.langFor(server, Text.COULDNT_FIND_SETTING).to(event.getTextChannel());
             return;
         }
         String inputValue = this.parseArgument(args, event.getGuild(), 3);
         if (!setting.checkInputAny(inputValue, event.getGuild())) {
-            event.getChannel().sendMessage(":x: Incorrect input for setting ".concat(settingName)).queue();
+            this.langFor(server, Text.PRESET_SETTING_INCORRECT_INPUT, replacer -> replacer.set("setting", setting.getPrimaryConfigName())).to(event.getTextChannel());
             return;
         }
         Object parsedValue = setting.parseAny(inputValue, event.getGuild());
         if (!setting.checkLimit(parsedValue)) {
-            event.getChannel().sendMessage(":x:".concat(setting.getLimitMessage())).queue();
+            this.langFor(server, setting.getLimitMessage()).to(event.getTextChannel());
             return;
         }
         preset.setSetting(setting, parsedValue);
-        event.getChannel().sendMessage("Set the " + setting.getPrimaryConfigName() + " setting to " + parsedValue + ".").queue();
+        this.langFor(server, Text.PRESET_SETTING_SET, replacer -> replacer.set("setting", setting.getPrimaryConfigName()).set("value", parsedValue)).to(event.getTextChannel());
     }
 }

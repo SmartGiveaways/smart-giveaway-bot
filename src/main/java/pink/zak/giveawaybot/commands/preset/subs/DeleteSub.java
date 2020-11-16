@@ -5,6 +5,7 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.cache.GiveawayCache;
+import pink.zak.giveawaybot.lang.enums.Text;
 import pink.zak.giveawaybot.models.Server;
 import pink.zak.giveawaybot.service.command.command.SubCommand;
 
@@ -25,20 +26,20 @@ public class DeleteSub extends SubCommand {
     public void onExecute(Member sender, Server server, MessageReceivedEvent event, List<String> args) {
         String presetName = this.parseArgument(args, event.getGuild(), 1);
         if (!server.getPresets().containsKey(presetName)) {
-            String message = ":x: I can only delete presets that exist.";
+            String message = this.langFor(server, Text.COULDNT_FIND_PRESET).get();
             if (server.getPresets().size() > 0) {
-                message = message + " Here are your presets: " + String.join(", ", server.getPresets().keySet()) + ".";
+                message = message + this.langFor(server, Text.PRESET_DELETE_SHOW_PRESETS_ADDON, replacer -> replacer.set("preset-list", String.join(", ", server.getPresets().keySet())));
             }
             event.getChannel().sendMessage(message).queue();
             return;
         }
         String lowerPresetName = presetName.toLowerCase();
         if (!this.canBeDeleted(server, lowerPresetName)) {
-            event.getChannel().sendMessage("That preset is being used in a giveaway right now. It must not be in use for you to delete it.").queue();
+            this.langFor(server, Text.PRESET_DELETE_IN_USE).to(event.getTextChannel());
             return;
         }
         server.getPresets().remove(lowerPresetName);
-        event.getChannel().sendMessage("Deleted the `" + presetName + "` preset.").queue();
+        this.langFor(server, Text.PRESET_DELETED, replacer -> replacer.set("preset", presetName)).to(event.getTextChannel());
     }
 
     @SneakyThrows

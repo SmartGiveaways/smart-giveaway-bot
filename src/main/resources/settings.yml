@@ -21,6 +21,8 @@ redis-port: 6379
 use-redis-ssl: true
 redis-password: "some-pass"
 
+default-language: "english-uk"
+
 latency-tester:
   file-for-lines: some-file.txt
   channel-id: 775406909216784385

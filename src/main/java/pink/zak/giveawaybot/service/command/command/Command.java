@@ -12,7 +12,7 @@ import java.util.List;
 
 public abstract class Command {
     protected final GiveawayBot bot;
-    private final LanguageRegistry languageRegistry;
+    protected final LanguageRegistry languageRegistry;
     private final boolean requiresManager;
 
     public Command(GiveawayBot bot, boolean requiresManager) {
