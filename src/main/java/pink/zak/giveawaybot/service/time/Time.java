@@ -1,7 +1,6 @@
 package pink.zak.giveawaybot.service.time;
 
 import lombok.experimental.UtilityClass;
-import org.apache.commons.lang3.StringUtils;
 
 @UtilityClass
 public class Time {
@@ -92,7 +91,7 @@ public class Time {
         StringBuilder amountBuilder = new StringBuilder();
         for (int i = 0; i < input.length(); i++) {
             Character charAt = input.charAt(i);
-            if (!StringUtils.isNumeric(String.valueOf(charAt))) {
+            if (!Character.isDigit((charAt))) {
                 identifierBuilder.append(charAt);
             } else {
                 amountBuilder.append(charAt);

@@ -27,9 +27,8 @@ repositories {
 }
 
 dependencies {
-    implementation ('net.dv8tion:JDA:4.2.0_216') { exclude module: 'opus-java' }
+    implementation('net.dv8tion:JDA:4.2.0_216') { exclude module: 'opus-java' }
     implementation 'com.google.guava:guava:29.0-jre'
-    implementation 'org.apache.commons:commons-lang3:3.0'
     implementation 'com.timvisee:yamlwrapper:1.1.1'
     implementation 'com.vdurmont:emoji-java:5.1.1'
     implementation 'org.mongodb:mongo-java-driver:3.12.7'
@@ -38,7 +37,7 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.12'
 
     // Technically non essentials
-    implementation 'ch.qos.logback:logback-classic:1.2.3' // Logback
+    implementation 'ch.qos.logback:logback-classic:1.2.3'
     implementation 'pink.zak:influx-metrics:1.0.0'
     implementation 'com.influxdb:influxdb-client-java:1.13.0-SNAPSHOT'
 
@@ -51,7 +50,14 @@ tasks.withType(JavaCompile).all {
 
 shadowJar {
     manifest {
-        attributes 'Class-Path': 'pink.zak.giveawaybot', 'Main-Class': 'pink.zak.giveawaybot.Main'
+        attributes 'Class-Path': 'pink.zak.giveawaybot',
+                'Main-Class': 'pink.zak.giveawaybot.Main',
+                'Specification-Title': 'JDA',
+                'Specification-Version': '4.2.0_216',
+                'Specification-Vendor': 'DV8FromTheWorld',
+                'Implementation-Title': 'SmartGiveaways Bot',
+                'Implementation-Version': this.version,
+                'Implementation-Vendor': 'SmartGiveaways'
     }
 }
 
@@ -59,7 +65,7 @@ test {
     useJUnitPlatform()
 }
 
-task depsize  {
+task depsize {
     doLast {
         final formatStr = "%,10.2f"
         final conf = configurations.default

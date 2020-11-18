@@ -8,7 +8,7 @@ import pink.zak.giveawaybot.commands.giveaway.GiveawayCmdUtils;
 import pink.zak.giveawaybot.models.Server;
 import pink.zak.giveawaybot.service.command.command.SubCommand;
 import pink.zak.giveawaybot.service.time.Time;
-import pink.zak.giveawaybot.service.types.StringUtils;
+import pink.zak.giveawaybot.service.types.NumberUtils;
 
 import java.util.List;
 
@@ -23,7 +23,7 @@ public class CreateWithChannelSub extends SubCommand {
         this.addArgument(String.class); // preset name
         this.addArgument(String.class); // length
         this.addArgument(TextChannel.class); // giveaway channel
-        this.addArgument(Integer.class, StringUtils::isNumerical); // winner amount
+        this.addArgument(Integer.class, NumberUtils::isInteger); // winner amount
         this.addArgument(String.class); // giveaway item placer
     }
 

@@ -20,7 +20,7 @@ public class GiveawayCmdUtils {
         if (this.performChecks(server, lengthMillis, winnerAmount, giveawayChannel, giveawayItem, responseChannel)) {
             return;
         }
-        switch (this.giveawayController.createGiveaway(server, lengthMillis, winnerAmount, giveawayChannel, presetName, giveawayItem).getRight()) {
+        switch (this.giveawayController.createGiveaway(server, lengthMillis, winnerAmount, giveawayChannel, presetName, giveawayItem).getValue()) {
             case GIVEAWAY_LIMIT_FAILURE:
                 this.lang.get(server, Text.GIVEAWAY_LIMIT_FAILURE).to(responseChannel);
                 break;

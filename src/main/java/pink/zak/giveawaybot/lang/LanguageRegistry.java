@@ -45,6 +45,7 @@ public class LanguageRegistry {
                 });
         if (this.defaultLanguage == null || !this.languageMap.containsKey(this.defaultLanguage) || this.languageMap.get(this.defaultLanguage).values.size() < Language.values().length) {
             GiveawayBot.getLogger().error("The default language does not meet the requirements of 100% or could not be found.");
+            System.exit(3);
         }
     }
 
@@ -64,7 +65,8 @@ public class LanguageRegistry {
         if (this.isLoading) {
             return null;
         }
-        return this.languageMap.get(language).get(text, replace);
+        LangSub retrieved = this.languageMap.get(language).get(text, replace);
+        return retrieved == null ? this.fallback(text, replace) : retrieved;
     }
 
     public LangSub get(Server server, Text text) {
@@ -85,7 +87,6 @@ public class LanguageRegistry {
 
     private class LanguageContainer {
         private final Map<Text, LangSub> values = Maps.newHashMap();
-
         private final Language language;
 
         public LanguageContainer(Language language, YamlConfiguration config) {
@@ -106,7 +107,7 @@ public class LanguageRegistry {
             int coverage = NumberUtils.getPercentage(this.values.size(), Text.values().length);
             if (coverage == 100) {
                 GiveawayBot.getLogger().info("[Language] {} loaded {}/{} messages ({}% coverage)", this.language, this.values.size(), Text.values().length, coverage);
-            } else if (coverage >= 80) {
+            } else if (coverage >= 90) {
                 GiveawayBot.getLogger().warn("[Language] {} loaded {}/{} messages ({}% coverage)", this.language, this.values.size(), Text.values().length, coverage);
             } else {
                 GiveawayBot.getLogger().error("[Language] {} loaded {}/{} messages ({}% coverage)", this.language, this.values.size(), Text.values().length, coverage);
@@ -118,7 +119,7 @@ public class LanguageRegistry {
         }
 
         public LangSub get(Text text, Replace replace) {
-            return this.values.get(text).replace(replace);
+            return this.values.containsKey(text) ? this.values.get(text).replace(replace) : null;
         }
 
         public Language getLanguage() {

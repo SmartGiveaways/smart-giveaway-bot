@@ -9,8 +9,6 @@ import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.hooks.SubscribeEvent;
 import net.dv8tion.jda.api.requests.ErrorResponse;
-import org.apache.commons.lang3.BooleanUtils;
-import org.apache.commons.lang3.math.NumberUtils;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.cache.ServerCache;
 import pink.zak.giveawaybot.lang.LanguageRegistry;
@@ -24,6 +22,8 @@ import pink.zak.giveawaybot.service.command.argument.ArgumentType;
 import pink.zak.giveawaybot.service.command.command.Command;
 import pink.zak.giveawaybot.service.command.command.SimpleCommand;
 import pink.zak.giveawaybot.service.command.command.SubCommand;
+import pink.zak.giveawaybot.service.types.BooleanUtils;
+import pink.zak.giveawaybot.service.types.NumberUtils;
 import pink.zak.giveawaybot.service.types.UserUtils;
 import pink.zak.giveawaybot.threads.ThreadFunction;
 
@@ -226,10 +226,10 @@ public class CommandBase extends ListenerAdapter {
                     return guild.getRoleById(roleId);
                 })
                 .registerArgumentType(Preset.class, (string, guild) -> Optional.ofNullable(this.serverCache.getSync(guild.getIdLong()).getPreset(string)))
-                .registerArgumentType(Integer.class, (string, guild) -> NumberUtils.toInt(string, -1))
-                .registerArgumentType(Long.class, (string, guild) -> NumberUtils.toLong(string, -1))
-                .registerArgumentType(Double.class, (string, guild) -> NumberUtils.toDouble(string, -1))
-                .registerArgumentType(Boolean.class, (string, guild) -> BooleanUtils.toBoolean(string));
+                .registerArgumentType(Integer.class, (string, guild) -> NumberUtils.parseInt(string, -1))
+                .registerArgumentType(Long.class, (string, guild) -> NumberUtils.parseLong(string, -1))
+                .registerArgumentType(Double.class, (string, guild) -> NumberUtils.parseDouble(string, -1))
+                .registerArgumentType(Boolean.class, (string, guild) -> BooleanUtils.parseBoolean(string));
     }
 
     public boolean isLockedDown() {

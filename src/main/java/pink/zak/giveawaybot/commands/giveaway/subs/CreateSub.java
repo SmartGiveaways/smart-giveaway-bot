@@ -8,7 +8,7 @@ import pink.zak.giveawaybot.commands.giveaway.GiveawayCmdUtils;
 import pink.zak.giveawaybot.models.Server;
 import pink.zak.giveawaybot.service.command.command.SubCommand;
 import pink.zak.giveawaybot.service.time.Time;
-import pink.zak.giveawaybot.service.types.StringUtils;
+import pink.zak.giveawaybot.service.types.NumberUtils;
 
 import java.util.List;
 
@@ -22,7 +22,7 @@ public class CreateSub extends SubCommand {
         this.addFlat("create");
         this.addArgument(String.class);
         this.addArgument(String.class);
-        this.addArgument(Integer.class, StringUtils::isNumerical);
+        this.addArgument(Integer.class, NumberUtils::isInteger);
         this.addArgument(String.class);
     }
 

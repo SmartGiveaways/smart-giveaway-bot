@@ -3,6 +3,7 @@ package pink.zak.giveawaybot.enums;
 import com.google.common.collect.Sets;
 import net.dv8tion.jda.api.entities.Guild;
 import pink.zak.giveawaybot.lang.enums.Text;
+import pink.zak.giveawaybot.service.types.NumberUtils;
 import pink.zak.giveawaybot.service.types.ReactionContainer;
 import pink.zak.giveawaybot.service.types.StringUtils;
 
@@ -19,8 +20,8 @@ public enum Setting {
         return ReactionContainer.fromUnknown(str, guild) != null;
     }, "reaction-emote", "react-emote", "reaction-emoji", "react-emoji", "react-to-enter-emote", "reaction"),
     ENABLE_MESSAGE_ENTRIES(Text.PRESET_ENABLE_MESSAGE_ENTRIES_DESCRIPTION, Boolean::parseBoolean, StringUtils::isBoolean, "enable-message-entries", "use-message-entries"),
-    ENTRIES_PER_MESSAGE(Text.PRESET_ENTRIES_PER_MESSAGE_DESCRIPTION, Text.PRESET_ENTRIES_PER_MESSAGE_LIMIT_MESSAGE, 3, Integer::parseInt, StringUtils::isNumerical, o -> ((Integer) o) <= 3, "entries-per-message", "message-entries"),
-    MAX_ENTRIES(Text.PRESET_MAX_ENTRIES_DESCRIPTION, Text.PRESET_MAX_ENTRIES_LIMIT_MESSAGE, 10000, Integer::parseInt, StringUtils::isNumerical, o -> ((Integer) o) <= 10000, "max-entries"),
+    ENTRIES_PER_MESSAGE(Text.PRESET_ENTRIES_PER_MESSAGE_DESCRIPTION, Text.PRESET_ENTRIES_PER_MESSAGE_LIMIT_MESSAGE, 3, Integer::parseInt, NumberUtils::isInteger, o -> ((Integer) o) <= 3, "entries-per-message", "message-entries"),
+    MAX_ENTRIES(Text.PRESET_MAX_ENTRIES_DESCRIPTION, Text.PRESET_MAX_ENTRIES_LIMIT_MESSAGE, 10000, Integer::parseInt, NumberUtils::isInteger, o -> ((Integer) o) <= 10000, "max-entries"),
     PING_WINNERS(Text.PRESET_PING_WINNERS_DESCRIPTION, Boolean::parseBoolean, StringUtils::isBoolean, "ping-winners", "ping-giveaway-winners");
 
     private final Text description;
