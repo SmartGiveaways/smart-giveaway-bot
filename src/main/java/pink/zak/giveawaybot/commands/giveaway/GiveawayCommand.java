@@ -46,9 +46,9 @@ public class GiveawayCommand extends SimpleCommand {
     private void buildMessages(LanguageRegistry languageRegistry, Palette palette) {
         for (Language language : Language.values()) {
             EmbedBuilder embedBuilder = new EmbedBuilder()
-                    .setTitle(languageRegistry.get(language, Text.GIVEAWAY_EMBED_TITLE).get())
-                    .setFooter(languageRegistry.get(language, Text.GIVEAWAY_EMBED_FOOTER).get())
-                    .setDescription(languageRegistry.get(language, Text.GIVEAWAY_EMBED_CONTENT).get())
+                    .setTitle(languageRegistry.get(language, Text.GIVEAWAY_HELP_EMBED_TITLE).get())
+                    .setFooter(languageRegistry.get(language, Text.GIVEAWAY_HELP_EMBED_FOOTER).get())
+                    .setDescription(languageRegistry.get(language, Text.GIVEAWAY_HELP_EMBED_CONTENT).get())
                     .setColor(palette.primary());
             this.embedMessages.put(language, embedBuilder.build());
         }

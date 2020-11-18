@@ -22,6 +22,8 @@ import pink.zak.giveawaybot.defaults.Defaults;
 import pink.zak.giveawaybot.enums.EntryType;
 import pink.zak.giveawaybot.enums.ReturnCode;
 import pink.zak.giveawaybot.enums.Setting;
+import pink.zak.giveawaybot.lang.LanguageRegistry;
+import pink.zak.giveawaybot.lang.enums.Text;
 import pink.zak.giveawaybot.models.Preset;
 import pink.zak.giveawaybot.models.Server;
 import pink.zak.giveawaybot.models.User;
@@ -45,6 +47,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class GiveawayController {
     private final ThreadManager threadManager;
+    private final LanguageRegistry languageRegistry;
     private final GiveawayCache giveawayCache;
     private final GiveawayStorage giveawayStorage;
     private final FinishedGiveawayCache finishedGiveawayCache;
@@ -56,6 +59,7 @@ public class GiveawayController {
 
     public GiveawayController(GiveawayBot bot) {
         this.threadManager = bot.getThreadManager();
+        this.languageRegistry = bot.getLanguageRegistry();
         this.giveawayCache = bot.getGiveawayCache();
         this.giveawayStorage = bot.getGiveawayStorage();
         this.finishedGiveawayCache = bot.getFinishedGiveawayCache();
@@ -82,9 +86,9 @@ public class GiveawayController {
         }
         try {
             Message message = giveawayChannel.sendMessage(new EmbedBuilder()
-                    .setTitle("Giveaway: ".concat(giveawayItem))
+                    .setTitle(this.languageRegistry.get(server, Text.GIVEAWAY_EMBED_TITLE, replacer -> replacer.set("item", giveawayItem)).get())
                     .setColor(this.palette.primary())
-                    .setFooter("Ends in " + Time.format(length) + " with " + winnerAmount + " winner" + (winnerAmount > 1 ? "s" : ""))
+                    .setFooter(this.getFooter(server, length, winnerAmount))
                     .build()).complete(true);
 
             CurrentGiveaway giveaway = new CurrentGiveaway(message.getIdLong(), giveawayChannel.getIdLong(), giveawayChannel.getGuild().getIdLong(), endTime, winnerAmount, presetName, giveawayItem);
@@ -170,9 +174,9 @@ public class GiveawayController {
                 if (totalEntries.equals(BigInteger.ZERO)) {
                     giveawayMessage.editMessage(new EmbedBuilder()
                             .setColor(this.palette.success())
-                            .setTitle("Giveaway: ".concat(giveaway.giveawayItem()))
-                            .setDescription("There were not enough entries to determine winners.")
-                            .setFooter("Ended with no winners.").build()).queue();
+                            .setTitle(this.languageRegistry.get(server, Text.GIVEAWAY_EMBED_TITLE, replacer -> replacer.set("item", giveaway.giveawayItem())).get())
+                            .setDescription(this.languageRegistry.get(server, Text.GIVEAWAY_FINISHED_EMBED_DESCRIPTION_NO_WINNERS).get())
+                            .setFooter(this.languageRegistry.get(server, Text.GIVEAWAY_FINISHED_EMBED_FOOTER_NO_WINNERS).get()).build()).queue();
                     return;
                 }
                 Set<Long> winners = this.generateWinners(giveaway.winnerAmount(), totalEntries, enteredUsers, userEntriesMap);
@@ -198,9 +202,12 @@ public class GiveawayController {
         }
         giveawayMessage.editMessage(new EmbedBuilder()
                 .setColor(this.palette.success())
-                .setTitle("Giveaway: ".concat(giveaway.giveawayItem()))
-                .setDescription((winners.size() > 1 ? "**Winners:**\n" : "**Winner:**\n") + descriptionBuilder.toString())
-                .setFooter("Ended with " + winners.size() + (winners.size() > 1 ? " winners" : " winner") + " and " + totalEntries.toString() + " entries.").build()).queue();
+                .setTitle(this.languageRegistry.get(server, Text.GIVEAWAY_EMBED_TITLE, replacer -> replacer.set("item", giveaway.giveawayItem())).get())
+                .setDescription(this.languageRegistry.get(server, winners.size() > 1 ? Text.GIVEAWAY_FINISHED_EMBED_DESCRIPTION_PLURAL : Text.GIVEAWAY_FINISHED_EMBED_DESCRIPTION_SINGULAR,
+                        replacer -> replacer.set("winners", descriptionBuilder.toString())).get())
+                .setFooter(this.languageRegistry.get(server, winners.size() > 1 ? Text.GIVEAWAY_FINISHED_EMBED_FOOTER_PLURAL : Text.GIVEAWAY_FINISHED_EMBED_FOOTER_SINGULAR,
+                        replacer -> replacer.set("winner-count", giveaway.winnerAmount()).set("entries", totalEntries)).get())
+                .build()).queue();
         // Handle the pinging of winners
         Preset preset = giveaway.presetName().equals("default") ? this.defaultPreset : server.getPreset(giveaway.presetName());
         if ((boolean) preset.getSetting(Setting.PING_WINNERS)) {
@@ -258,16 +265,22 @@ public class GiveawayController {
                 if (!giveaway.isActive()) {
                     return;
                 }
-                Message message = this.getGiveawayMessage(giveaway);
-                if (message == null) {
-                    GiveawayBot.getLogger().warn("Giveaway did not delete correctly or the discord api is dying ({} in server {}).", giveaway.messageId(), giveaway.serverId());
-                    return;
-                }
-                message.editMessage(new EmbedBuilder()
-                        .setTitle("Giveaway: ".concat(giveaway.giveawayItem()))
-                        .setColor(this.palette.primary())
-                        .setFooter("Ends in " + Time.format(giveaway.timeToExpiry()) + " with " + giveaway.winnerAmount() + " winner" + (giveaway.winnerAmount() > 1 ? "s" : ""))
-                        .build()).queue();
+                this.serverCache.get(giveaway.serverId()).thenAccept(server -> {
+                    Message message = this.getGiveawayMessage(giveaway);
+                    if (message == null) {
+                        GiveawayBot.getLogger().warn("Giveaway did not delete correctly or the discord api is dying ({} in server {}).", giveaway.messageId(), giveaway.serverId());
+                        return;
+                    }
+                    message.editMessage(new EmbedBuilder()
+                            .setTitle(this.languageRegistry.get(server, Text.GIVEAWAY_EMBED_TITLE, replacer -> replacer.set("item", giveaway.giveawayItem())).get())
+                            .setColor(this.palette.primary())
+                            .setFooter(this.getFooter(server, giveaway.timeToExpiry(), giveaway.winnerAmount()))
+                            .build()).queue();
+                }).exceptionally(ex -> {
+                    GiveawayBot.getLogger().error("Error in giveaway updater: ", ex);
+                    return null;
+                });
+
             }
         }, 30, 30, TimeUnit.SECONDS);
     }
@@ -298,5 +311,10 @@ public class GiveawayController {
         } catch (CompletionException | ErrorResponseException ignored) {
             return null;
         }
+    }
+
+    private String getFooter(Server server, long length, int winnerAmount) {
+        return this.languageRegistry.get(server, winnerAmount > 1 ? Text.GIVEAWAY_EMBED_FOOTER_PLURAL : Text.GIVEAWAY_EMBED_FOOTER_SINGULAR,
+                replacer -> replacer.set("time", Time.format(length)).set("winner-count", winnerAmount)).get();
     }
 }

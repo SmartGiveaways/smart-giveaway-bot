@@ -15,6 +15,20 @@ values:
   generic-failure: ":x: Something went wrong. Please try again in a few minutes."
   generic-embed-footer: "SmartGiveaways v1.0.0 - https://docs.smartgiveaways.xyz/"
 
+  # giveaway messages
+  giveaway-embed-title: "Giveaway: %item%"
+  giveaway-embed-footer-singular: "Ends in %time% with %winner-count% winner"
+  giveaway-embed-footer-plural: "Ends in %time% with %winner-count% winners"
+
+  giveaway-finished-embed-description-no-winners: "There were not enough entries to determine winners."
+  giveaway-finished-embed-footer-no-winners: "Ended with no winners."
+
+  giveaway-finished-embed-descriptiom-singular: "**Winner:**\n%winners%"
+  giveaway-finished-embed-descriptiom-plural: "**Winners:**\n%winners%"
+
+  giveaway-finished-embed-footer-singular: "Ended with %winner-count% winner and %entries% entries."
+  giveaway-finished-embed-footer-plural: "Ended with %winner-count% winners and %entries% entries."
+
   # >gabout command messages
   about-embed-title: "About SmartGiveaways"
   about-embed-content: "[Vote (Click)](https://www.youtube.com/watch?v=dQw4w9WgXcQ)\n
@@ -79,9 +93,9 @@ values:
   entries-embed-giveaway-line-plural: "**%item%** -> %entries% entries.\n"
 
   # >giveaway command messages
-  giveaway-embed-title: "Giveaway Command Help"
-  giveaway-embed-footer: "Want all commands? See >ghelp or go to https://docs.smartgiveaways.xyz/commands"
-  giveaway-embed-content: ">giveaway list\n
+  giveaway-help-embed-title: "Giveaway Command Help"
+  giveaway-help-embed-footer: "Want all commands? See >ghelp or go to https://docs.smartgiveaways.xyz/commands"
+  giveaway-help-embed-content: ">giveaway list\n
                             >giveaway create <preset> <length> <channel> <winner amount> <item/topic>\n
                             >giveaway create <preset> <length> <winner amount> <item/topic>\n
                             >giveaway reroll <message id>\n
@@ -119,6 +133,9 @@ values:
                           >preset create <name>\n
                           >preset delete <name>\n
                           >preset set <preset> <setting> <value>"
+  # list sub
+  preset-list-embed-title: "Current Presets (**%preset-count%**)"
+  preset-list-default-entry: "default - this preset cannot be removed"
   # create sub
   preset-create-restricted-name: "You cannot use the name %name%."
   preset-create-limit-reached: "You can only have 5 presets at a time. See `>preset` for help deleting some."
@@ -130,9 +147,11 @@ values:
   preset-delete-show-presets-addon: " Here are your presets: %preset-list%"
   preset-delete-in-use: "You cannot delete a preset that is currently being used by a giveaway."
   preset-deleted: "The `%preset%` preset has been deleted."
+  # options sub
+  preset-options-list-options-embed-title: "Available Options"
   # list options sub
   preset-has-no-settings: ":x: The preset %preset% has no settings. Use `>preset settings` to view available settings and `>preset set %preset% <setting> <value>` to set them."
-  preset-list-embed-title: "Settings for the %preset% preset"
+  preset-options-list-embed-title: "Settings for the %preset% preset"
   # set option sub
   preset-cannot-modify-default: ":x: You cannot modify the default preset. Create your own using `>preset create <preset>`."
   preset-setting-incorrect-input: ":x: Incorrect input for setting %setting%."

@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.enums.Setting;
 import pink.zak.giveawaybot.lang.enums.Language;
+import pink.zak.giveawaybot.lang.enums.Text;
 import pink.zak.giveawaybot.models.Server;
 import pink.zak.giveawaybot.service.colour.Palette;
 import pink.zak.giveawaybot.service.command.command.SubCommand;
@@ -44,7 +45,7 @@ public class OptionsSub extends SubCommand {
             }
             messageEmbeds.put(language, new EmbedBuilder()
                     .setColor(this.palette.primary())
-                    .setTitle("Available Options")
+                    .setTitle(this.languageRegistry.get(language, Text.PRESET_OPTIONS_LIST_OPTIONS_EMBED_TITLE).get())
                     .setDescription(builder.toString())
                     .build());
         }

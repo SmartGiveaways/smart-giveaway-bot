@@ -47,7 +47,7 @@ public class PresetOptionsSub extends SubCommand {
                     .append("\n");
         }
         event.getChannel().sendMessage(new EmbedBuilder()
-                .setTitle(this.langFor(server, Text.PRESET_LIST_EMBED_TITLE, replacer -> replacer.set("preset", preset.name())).get())
+                .setTitle(this.langFor(server, Text.PRESET_OPTIONS_LIST_EMBED_TITLE, replacer -> replacer.set("preset", preset.name())).get())
                 .setFooter(this.langFor(server, Text.GENERIC_EMBED_FOOTER).get())
                 .setColor(this.palette.primary())
                 .setDescription(builder.toString())
