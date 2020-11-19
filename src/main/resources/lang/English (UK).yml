@@ -105,7 +105,6 @@ values:
                             >giveaway reroll <message id>\n
                             >giveaway reroll <message id> <user> (WIP not done)"
   giveaway-list-embed-title: "Current Giveaways"
-  # NOT COMPLETE, BASE COMMAND NOT DONE
   giveaway-limit-failure: ":x: Your guild has reached the maximum number of 5 giveaways."
   no-preset-found-on-creation: ":x: Could not find the specified preset. Use `>preset list` to list them all."
   unknown-emoji-on-creation: ":x: Your giveaway was created but the reaction could not be added. Check the preset `%preset-name%` and make sure the reaction is valid. You must manually add it if you change it."
@@ -117,6 +116,8 @@ values:
   parsing-reward-failed: "Issue parsing giveaway reward."
   # reroll messages
   reroll-over-24-hours: ":x: You can only reroll a giveaway within 24 hours."
+  reroll-one-winner: "Your new winner is %winner%"
+  reroll-multiple-winners: "Your new winners are %winners% and %final-winner%"
 
   # >ghelp command messages
   help-embed-title: "SmartGiveaways Help"

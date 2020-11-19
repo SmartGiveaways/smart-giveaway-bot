@@ -112,6 +112,8 @@ public enum Text {
     PARSING_REWARD_FAILED,
     // reroll
     REROLL_OVER_24_HOURS,
+    REROLL_ONE_WINNER,
+    REROLL_MULTIPLE_WINNERS,
 
 
     // Applies to >ghelp commands

@@ -25,7 +25,7 @@ public class ConsoleListener implements Runnable {
         Scanner scanner = new Scanner(System.in);
         while (scanner.hasNextLine()) {
             String input = scanner.nextLine();
-            String[] args = input.split(" ");
+            String[] args = input.contains(" ") ? input.split(" ") : new String[]{input};
             String command = args[0];
             switch (command.toLowerCase()) {
                 case "help":

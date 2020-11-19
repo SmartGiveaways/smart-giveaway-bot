@@ -29,7 +29,6 @@ public class CreateSub extends SubCommand {
             this.langFor(server, Text.PRESET_CREATE_LIMIT_REACHED).to(event.getTextChannel());
             return;
         }
-        // TODO limit preset amount
         if (server.getPreset(name) != null) {
             this.langFor(server, Text.PRESET_CREATE_ALREADY_CALLED, replacer -> replacer.set("name", name)).to(event.getTextChannel());
             return;

@@ -29,8 +29,13 @@ public class RerollSub extends SubCommand {
 
     @Override
     public void onExecute(Member sender, Server server, MessageReceivedEvent event, List<String> args) {
-        this.giveawayCache.get(this.parseArgument(args, event.getGuild(), 1)).thenAccept(giveaway -> {
-            TextChannel textChannel = event.getTextChannel();
+        long idInput = this.parseArgument(args, event.getGuild(), 1);
+        TextChannel textChannel = event.getTextChannel();
+        if (idInput < 779076362073145394L) { // Just check the ID isn't too old to reduce hits on the database.
+            this.langFor(server, Text.COULDNT_FIND_GIVEAWAY).to(textChannel);
+            return;
+        }
+        this.giveawayCache.get(idInput).thenAccept(giveaway -> {
             if (giveaway == null) {
                 this.langFor(server, Text.COULDNT_FIND_GIVEAWAY).to(textChannel);
                 return;
@@ -45,23 +50,26 @@ public class RerollSub extends SubCommand {
                 this.giveawayController.handleGiveawayEndMessages(giveaway, newWinners, giveaway.totalEntries(), message, server);
             }
             Long[] winnersArray = newWinners.toArray(new Long[]{});
-            // TODO more messages
-            StringBuilder builder = new StringBuilder(":white_check_mark: Your new winner");
             if (winnersArray.length == 1) {
-                builder.append(" is <@").append(winnersArray[0]).append(">");
-            } else {
-                int count = 0;
-                builder.append("s are ");
-                for (long winner : winnersArray) {
-                    count += 1;
-                    if (count == winnersArray.length) {
-                        builder.append("and <@").append(winner).append(">");
-                    } else {
-                        builder.append("<@").append(winnersArray[count - 1]).append("> ");
+                this.langFor(server, Text.REROLL_ONE_WINNER, replacer -> replacer.set("winner", "<@" + winnersArray[0] + ">")).to(event.getTextChannel());
+                return;
+            }
+            int count = 0;
+            StringBuilder builder = new StringBuilder();
+            for (long winner : winnersArray) {
+                count += 1;
+                if (count == winnersArray.length) {
+                    this.langFor(server, Text.REROLL_MULTIPLE_WINNERS, replacer -> replacer
+                            .set("winners", builder.toString())
+                            .set("final-winner", "<@" + winner + ">")).to(event.getTextChannel());
+                    return;
+                } else {
+                    builder.append("<@").append(winnersArray[count - 1]).append(">");
+                    if (count + 1 != winnersArray.length) { // Make it so that a , is not added if there will then be an "and" after.
+                        builder.append(", ");
                     }
                 }
             }
-            event.getChannel().sendMessage(builder.toString()).queue();
         });
     }
 }
