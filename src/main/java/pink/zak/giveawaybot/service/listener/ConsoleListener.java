@@ -2,7 +2,9 @@ package pink.zak.giveawaybot.service.listener;
 
 import com.sun.management.HotSpotDiagnosticMXBean;
 import lombok.SneakyThrows;
+import org.slf4j.Logger;
 import pink.zak.giveawaybot.GiveawayBot;
+import pink.zak.giveawaybot.cache.ServerCache;
 
 import java.lang.management.ManagementFactory;
 import java.text.SimpleDateFormat;
@@ -11,9 +13,11 @@ import java.util.Scanner;
 
 public class ConsoleListener implements Runnable {
     private final GiveawayBot bot;
+    private final Logger logger;
 
     public ConsoleListener(GiveawayBot bot) {
         this.bot = bot;
+        this.logger = GiveawayBot.getLogger();
     }
 
     @Override
@@ -21,12 +25,16 @@ public class ConsoleListener implements Runnable {
         Scanner scanner = new Scanner(System.in);
         while (scanner.hasNextLine()) {
             String input = scanner.nextLine();
-            switch (input.toLowerCase()) {
+            String[] args = input.split(" ");
+            String command = args[0];
+            switch (command.toLowerCase()) {
                 case "help":
-                    GiveawayBot.getLogger().info("help -> Prints this command.");
-                    GiveawayBot.getLogger().info("reload-lang -> Reloads language values (built embeds require restart).");
-                    GiveawayBot.getLogger().info("stop -> Stops the bot and saves data.");
-                    GiveawayBot.getLogger().info("dump -> Creates a debug dump.");
+                    this.logger.info("""
+                            help -> Prints this command.
+                            reload-lang -> Reloads language values (built embeds require restart).
+                            stop -> Stops the bot and saves data.
+                            dump -> Creates a debug dump.
+                            """);
                     break;
                 case "reload-lang":
                     this.bot.getLanguageRegistry().reloadLanguages(this.bot);
@@ -39,8 +47,21 @@ public class ConsoleListener implements Runnable {
                 case "dump":
                     long startTime = System.currentTimeMillis();
                     String fileName = this.heapDump();
-                    GiveawayBot.getLogger().info("Created your heap dump called " + fileName + " in " + (System.currentTimeMillis() - startTime) + "ms.");
+                    this.logger.info("Created your heap dump called " + fileName + " in " + (System.currentTimeMillis() - startTime) + "ms.");
                     break;
+                case "unload-server":
+                    if (args.length < 2) {
+                        this.logger.info("You must specify a server ID.");
+                        return;
+                    }
+                    ServerCache serverCache = this.bot.getServerCache();
+                    long serverId = Long.parseLong(args[1]);
+                    if (!serverCache.contains(serverId)) {
+                        this.logger.info("The server {} is not cached", serverId);
+                        return;
+                    }
+                    this.logger.info("Invalidating {} async", serverId);
+                    serverCache.invalidateAsync(serverId);
                 default:
                     break;
             }
