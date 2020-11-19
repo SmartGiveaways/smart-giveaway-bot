@@ -72,14 +72,14 @@ public class Cache<K, V> {
         this.storage.save(this.getSync(key));
     }
 
-    public void invalidate(K key) {
+    public V invalidate(K key) {
         if (this.storage != null) {
             this.save(key);
         }
         if (this.removalAction != null) {
             this.removalAction.accept(this.cacheMap.get(key));
         }
-        this.cacheMap.remove(key);
+        return this.cacheMap.remove(key);
     }
 
     public void invalidateAsync(K key) {

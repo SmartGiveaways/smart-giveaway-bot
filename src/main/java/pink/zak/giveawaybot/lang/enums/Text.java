@@ -100,7 +100,7 @@ public enum Text {
     GIVEAWAY_HELP_EMBED_CONTENT,
     //
     GIVEAWAY_LIST_EMBED_TITLE,
-    // creating
+    // creating - create sub
     GIVEAWAY_LIMIT_FAILURE,
     NO_PRESET_FOUND_ON_CREATION,
     UNKNOWN_EMOJI_ON_CREATION,
@@ -110,6 +110,8 @@ public enum Text {
     WINNER_AMOUNT_TOO_LARGE,
     WINNER_AMOUNT_TOO_SMALL,
     PARSING_REWARD_FAILED,
+    // delete sub
+    GIVEAWAY_DELETED,
     // reroll
     REROLL_OVER_24_HOURS,
     REROLL_ONE_WINNER,

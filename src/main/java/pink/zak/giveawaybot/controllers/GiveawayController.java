@@ -42,10 +42,12 @@ import pink.zak.giveawaybot.threads.ThreadManager;
 import java.math.BigInteger;
 import java.util.*;
 import java.util.concurrent.CompletionException;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class GiveawayController {
+    private final Map<CurrentGiveaway, ScheduledFuture<?>> scheduledFutures = Maps.newConcurrentMap();
     private final ThreadManager threadManager;
     private final LanguageRegistry languageRegistry;
     private final GiveawayCache giveawayCache;
@@ -251,6 +253,9 @@ public class GiveawayController {
     public void deleteGiveaway(CurrentGiveaway giveaway) {
         this.giveawayCache.invalidateAsync(giveaway.messageId(), false);
         this.serverCache.get(giveaway.serverId()).thenAccept(server -> {
+            if (this.scheduledFutures.containsKey(giveaway) && !this.scheduledFutures.get(giveaway).isDone()) {
+                this.scheduledFutures.get(giveaway).cancel(false);
+            }
             server.getActiveGiveaways().remove(giveaway.messageId());
             GiveawayBot.getLogger().debug("Removing giveaway from server {}  :  {}", giveaway.serverId(), giveaway.messageId());
             UserCache userCache = server.getUserCache();
@@ -291,10 +296,10 @@ public class GiveawayController {
     }
 
     private void startGiveawayTimer(CurrentGiveaway giveaway) {
-        this.threadManager.getScheduler().schedule(() -> {
+        this.scheduledFutures.put(giveaway, this.threadManager.getScheduler().schedule(() -> {
             GiveawayBot.getLogger().debug("Giveaway {} expired", giveaway.messageId());
             this.endGiveaway(giveaway);
-        }, giveaway.timeToExpiry(), TimeUnit.MILLISECONDS);
+        }, giveaway.timeToExpiry(), TimeUnit.MILLISECONDS));
     }
 
     @SneakyThrows

@@ -102,6 +102,7 @@ values:
   giveaway-help-embed-content: ">giveaway list\n
                             >giveaway create <preset> <length> <channel> <winner amount> <item/topic>\n
                             >giveaway create <preset> <length> <winner amount> <item/topic>\n
+                            >giveaway delete <message id>\n
                             >giveaway reroll <message id>\n
                             >giveaway reroll <message id> <user> (WIP not done)"
   giveaway-list-embed-title: "Current Giveaways"
@@ -114,6 +115,8 @@ values:
   winner-amount-too-large: "Giveaways must have less than 20 winners."
   winner-amount-too-small: "Giveaways must have at least 1 winner."
   parsing-reward-failed: "Issue parsing giveaway reward."
+  # delete sub
+  giveaway-deleted: "Deleted the giveaway for: %giveaway-item%"
   # reroll messages
   reroll-over-24-hours: ":x: You can only reroll a giveaway within 24 hours."
   reroll-one-winner: "Your new winner is %winner%"

@@ -79,12 +79,12 @@ public class WriteExpiringCache<K, V> extends Cache<K, V> {
     }
 
     @Override
-    public void invalidate(K key) {
+    public V invalidate(K key) {
         this.writeTimes.remove(key);
         if (this.expiryListener != null) {
             this.expiryListener.onExpiry(key, this.getSync(key));
         }
-        super.invalidate(key);
+        return super.invalidate(key);
     }
 
     @Override
