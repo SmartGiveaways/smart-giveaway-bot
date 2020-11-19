@@ -22,7 +22,7 @@ If you have a bug or suggestion please make a new issue right [here](https://git
 SmartGiveaway is actively maintained, has new features added and bugs fixed at the moment. We welcome pull requests and direct fixes from the community here on GitHub but please,  don't make low quality or spammy pull requests. Make them at least a bit contentful.
 
 ## Da license bro
-Pwease abide by the LGPL-2.1 license for this project if you make any modifications and bear in mind that this still applies if you're self hosting the bot.
+Pwease abide by the LGPL-2.1 license for this project and bear in mind that this still applies if you're self hosting the bot. If you're on GitHub, click [here](https://github.com/SmartGiveaways/smart-giveaway-bot/blob/main/LICENSE) and GitHub will display some important points of the license. This is not legal advice.
 
 ## Self hosting
 No support is officially provided for self hosting but if you have issues directly related to the bot (not how you've set it up or getting it set up), we may help you if you're nice. Here's just some basic information about self hosting this bot.
