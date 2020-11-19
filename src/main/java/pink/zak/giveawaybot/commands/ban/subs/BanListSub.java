@@ -103,7 +103,7 @@ public class BanListSub extends SubCommand implements EventListener {
             descriptionBuilder.append("<@")
                     .append(id)
                     .append("> -> ")
-                    .append(server.getUserCache().getSync(id).isBanned() ? "banned" : "shadow banned")
+                    .append(server.getUserCache().getSync(id).isBanned() ? this.langFor(server, Text.BAN_LIST_BANNED) : Text.BAN_LIST_SHADOW_BANNED)
                     .append("\n");
         }
         return new EmbedBuilder()

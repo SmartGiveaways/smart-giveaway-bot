@@ -84,9 +84,11 @@ public class GiveawayController {
         if (preset == null) {
             return ImmutablePair.of(null, ReturnCode.NO_PRESET);
         }
+        boolean reactToEnter = (boolean) preset.getSetting(Setting.ENABLE_REACT_TO_ENTER);
         try {
             Message message = giveawayChannel.sendMessage(new EmbedBuilder()
                     .setTitle(this.languageRegistry.get(server, Text.GIVEAWAY_EMBED_TITLE, replacer -> replacer.set("item", giveawayItem)).get())
+                    .setDescription(this.languageRegistry.get(server, reactToEnter ? Text.GIVEAWAY_EMBED_DESCRIPTION_REACTION : Text.GIVEAWAY_EMBED_DESCRIPTION_ALL).get())
                     .setColor(this.palette.primary())
                     .setFooter(this.getFooter(server, length, winnerAmount))
                     .build()).complete(true);
@@ -94,7 +96,7 @@ public class GiveawayController {
             CurrentGiveaway giveaway = new CurrentGiveaway(message.getIdLong(), giveawayChannel.getIdLong(), giveawayChannel.getGuild().getIdLong(), endTime, winnerAmount, presetName, giveawayItem);
 
             // Add reaction
-            if ((boolean) preset.getSetting(Setting.ENABLE_REACT_TO_ENTER)) {
+            if (reactToEnter) {
                 MessageReaction.ReactionEmote reaction = ((ReactionContainer) preset.getSetting(Setting.REACT_TO_ENTER_EMOJI)).getReactionEmote();
                 if (reaction == null) {
                     return ImmutablePair.of(giveaway, ReturnCode.UNKNOWN_EMOJI);
@@ -271,8 +273,11 @@ public class GiveawayController {
                         GiveawayBot.getLogger().warn("Giveaway did not delete correctly or the discord api is dying ({} in server {}).", giveaway.messageId(), giveaway.serverId());
                         return;
                     }
+                    Preset preset = giveaway.presetName().equals("default") ? this.defaultPreset : server.getPreset(giveaway.presetName());
+                    boolean reactToEnter = preset != null && preset.hasSetting(Setting.ENABLE_REACT_TO_ENTER) && (boolean) preset.getSetting(Setting.ENABLE_REACT_TO_ENTER);
                     message.editMessage(new EmbedBuilder()
                             .setTitle(this.languageRegistry.get(server, Text.GIVEAWAY_EMBED_TITLE, replacer -> replacer.set("item", giveaway.giveawayItem())).get())
+                            .setDescription(this.languageRegistry.get(server, reactToEnter ? Text.GIVEAWAY_EMBED_DESCRIPTION_REACTION : Text.GIVEAWAY_EMBED_DESCRIPTION_ALL).get())
                             .setColor(this.palette.primary())
                             .setFooter(this.getFooter(server, giveaway.timeToExpiry(), giveaway.winnerAmount()))
                             .build()).queue();

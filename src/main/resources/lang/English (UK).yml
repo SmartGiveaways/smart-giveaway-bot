@@ -19,12 +19,14 @@ values:
   giveaway-embed-title: "Giveaway: %item%"
   giveaway-embed-footer-singular: "Ends in %time% with %winner-count% winner"
   giveaway-embed-footer-plural: "Ends in %time% with %winner-count% winners"
+  giveaway-embed-description-reaction: "React to be entered."
+  giveaway-embed-description-all: "Gain entries to be entered."
 
   giveaway-finished-embed-description-no-winners: "There were not enough entries to determine winners."
   giveaway-finished-embed-footer-no-winners: "Ended with no winners."
 
-  giveaway-finished-embed-descriptiom-singular: "**Winner:**\n%winners%"
-  giveaway-finished-embed-descriptiom-plural: "**Winners:**\n%winners%"
+  giveaway-finished-embed-description-singular: "**Winner:**\n%winners%"
+  giveaway-finished-embed-description-plural: "**Winners:**\n%winners%"
 
   giveaway-finished-embed-footer-singular: "Ended with %winner-count% winner and %entries% entries."
   giveaway-finished-embed-footer-plural: "Ended with %winner-count% winners and %entries% entries."
@@ -75,6 +77,8 @@ values:
   ban-list-embed-title: "Banned Users"
   ban-list-footer: "%amount% total bans"
   ban-list-page-footer: "Page %page%/%maxPage% | %amount% total bans"
+  ban-list-banned: "banned"
+  ban-list-shadow-banned: "banned"
 
   # >gunban command messages
   unban-help: ">gunban <user> - Unbans a user"
