@@ -46,7 +46,7 @@ public class SetOptionSub extends SubCommand {
             return;
         }
         Object parsedValue = setting.parseAny(inputValue, event.getGuild());
-        if (!setting.checkLimit(parsedValue)) {
+        if (!setting.checkLimit(server, parsedValue)) {
             this.langFor(server, setting.getLimitMessage()).to(event.getTextChannel());
             return;
         }

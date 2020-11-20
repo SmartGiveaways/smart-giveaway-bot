@@ -7,7 +7,7 @@ public class Time {
 
     public static String format(long millis) {
         int seconds = (int) Math.floor((double) millis / 1000);
-        if (seconds >= 18144000) {
+        if (seconds >= 2592000) {
             return formatMonthsWeeks(seconds);
         }
         if (seconds >= 604800) {
@@ -30,7 +30,7 @@ public class Time {
 
     public static String formatMonthsWeeks(int seconds) {
         int months = getMonths(seconds);
-        int remainderSeconds = seconds - months * 18144000;
+        int remainderSeconds = seconds - months * 2592000;
         int weeks = getWeeks(remainderSeconds);
         StringBuilder builder = new StringBuilder(months + " month");
         if (months > 1) {
@@ -148,7 +148,7 @@ public class Time {
     }
 
     private static int getMonths(double seconds) {
-        return (int) Math.floor(seconds / 18144000);
+        return (int) Math.floor(seconds / 2592000);
     }
 
     private static int getWeeks(double seconds) {

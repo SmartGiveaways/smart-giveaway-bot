@@ -3,6 +3,7 @@ package pink.zak.giveawaybot.enums;
 import com.google.common.collect.Sets;
 import net.dv8tion.jda.api.entities.Guild;
 import pink.zak.giveawaybot.lang.enums.Text;
+import pink.zak.giveawaybot.models.Server;
 import pink.zak.giveawaybot.service.types.NumberUtils;
 import pink.zak.giveawaybot.service.types.ReactionContainer;
 import pink.zak.giveawaybot.service.types.StringUtils;
@@ -11,7 +12,6 @@ import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
-import java.util.function.Predicate;
 
 public enum Setting {
 
@@ -20,8 +20,10 @@ public enum Setting {
         return ReactionContainer.fromUnknown(str, guild) != null;
     }, "reaction-emote", "react-emote", "reaction-emoji", "react-emoji", "react-to-enter-emote", "reaction"),
     ENABLE_MESSAGE_ENTRIES(Text.PRESET_ENABLE_MESSAGE_ENTRIES_DESCRIPTION, Boolean::parseBoolean, StringUtils::isBoolean, "enable-message-entries", "use-message-entries"),
-    ENTRIES_PER_MESSAGE(Text.PRESET_ENTRIES_PER_MESSAGE_DESCRIPTION, Text.PRESET_ENTRIES_PER_MESSAGE_LIMIT_MESSAGE, 3, Integer::parseInt, NumberUtils::isInteger, o -> ((Integer) o) <= 3, "entries-per-message", "message-entries"),
-    MAX_ENTRIES(Text.PRESET_MAX_ENTRIES_DESCRIPTION, Text.PRESET_MAX_ENTRIES_LIMIT_MESSAGE, 10000, Integer::parseInt, NumberUtils::isInteger, o -> ((Integer) o) <= 10000, "max-entries"),
+    ENTRIES_PER_MESSAGE(Text.PRESET_ENTRIES_PER_MESSAGE_DESCRIPTION, Text.PRESET_ENTRIES_PER_MESSAGE_LIMIT_MESSAGE, 3, 9,
+            Integer::parseInt, NumberUtils::isInteger, (server, input) -> ((Integer) input) <= (server.isPremium() ? 5 : 3), "entries-per-message", "message-entries"),
+    MAX_ENTRIES(Text.PRESET_MAX_ENTRIES_DESCRIPTION, Text.PRESET_MAX_ENTRIES_LIMIT_MESSAGE, 10000, 50000,
+            Integer::parseInt, NumberUtils::isInteger, (server, input) -> ((Integer) input) <= (server.isPremium() ? 50000 : 10000), "max-entries"),
     PING_WINNERS(Text.PRESET_PING_WINNERS_DESCRIPTION, Boolean::parseBoolean, StringUtils::isBoolean, "ping-winners", "ping-giveaway-winners");
 
     private final Text description;
@@ -35,12 +37,14 @@ public enum Setting {
 
     private final Text limitMessage;
     private final Object maxValue;
-    private final Predicate<Object> limitChecker;
+    private final Object maxPremiumValue;
+    private final BiPredicate<Server, Object> limitChecker;
 
-    Setting(Text description, Text limitMessage, Object maxValue, BiFunction<String, Guild, Object> guildParser, BiPredicate<String, Guild> guildInputChecker, Predicate<Object> limitChecker, String... configNames) {
+    Setting(Text description, Text limitMessage, Object maxValue, Object maxPremiumValue, BiFunction<String, Guild, Object> guildParser, BiPredicate<String, Guild> guildInputChecker, BiPredicate<Server, Object> limitChecker, String... configNames) {
         this.description = description;
         this.limitMessage = limitMessage;
         this.maxValue = maxValue;
+        this.maxPremiumValue = maxPremiumValue;
         this.guildParser = guildParser;
         this.guildInputChecker = guildInputChecker;
         this.limitChecker = limitChecker;
@@ -48,10 +52,11 @@ public enum Setting {
         this.configNames = Sets.newHashSet(configNames);
     }
 
-    Setting(Text description, Text limitMessage, Object maxValue, Function<String, Object> parser, Function<String, Boolean> inputChecker, Predicate<Object> limitChecker, String... configNames) {
+    Setting(Text description, Text limitMessage, Object maxValue, Object maxPremiumValue, Function<String, Object> parser, Function<String, Boolean> inputChecker, BiPredicate<Server, Object> limitChecker, String... configNames) {
         this.description = description;
         this.limitMessage = limitMessage;
         this.maxValue = maxValue;
+        this.maxPremiumValue = maxPremiumValue;
         this.parser = parser;
         this.inputChecker = inputChecker;
         this.limitChecker = limitChecker;
@@ -60,11 +65,11 @@ public enum Setting {
     }
 
     Setting(Text description, BiFunction<String, Guild, Object> guildParser, BiPredicate<String, Guild> guildInputChecker, String... configNames) {
-        this(description, null, null, guildParser, guildInputChecker, null, configNames);
+        this(description, null, null, null, guildParser, guildInputChecker, null, configNames);
     }
 
     Setting(Text description, Function<String, Object> parser, Function<String, Boolean> inputChecker, String... configNames) {
-        this(description, null, null, parser, inputChecker, null, configNames);
+        this(description, null, null, null, parser, inputChecker, null, configNames);
     }
 
     public Text getDescription() {
@@ -77,6 +82,10 @@ public enum Setting {
 
     public Object getMaxValue() {
         return this.maxValue;
+    }
+
+    public Object getMaxPremiumValue() {
+        return this.maxPremiumValue;
     }
 
     public Object parse(String input) {
@@ -103,8 +112,8 @@ public enum Setting {
         return this.inputChecker == null ? this.checkInput(input, guild) : this.checkInput(input);
     }
 
-    public boolean checkLimit(Object input) {
-        return this.limitChecker == null || this.limitChecker.test(input);
+    public boolean checkLimit(Server server, Object input) {
+        return this.limitChecker == null || this.limitChecker.test(server, input);
     }
 
     public Set<String> getConfigNames() {

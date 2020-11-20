@@ -66,6 +66,6 @@ public class NumberUtils {
     }
 
     public static int getPercentage(int current, int max) {
-        return (current / max) * 100;
+        return (int) ((((float) current) / max) * 100);
     }
 }

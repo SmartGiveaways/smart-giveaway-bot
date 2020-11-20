@@ -43,7 +43,7 @@ public class LanguageRegistry {
                     }
                     this.languageMap.put(language, new LanguageContainer(language, config));
                 });
-        if (this.defaultLanguage == null || !this.languageMap.containsKey(this.defaultLanguage) || this.languageMap.get(this.defaultLanguage).values.size() < Language.values().length) {
+        if (this.defaultLanguage == null || !this.languageMap.containsKey(this.defaultLanguage) || this.languageMap.get(this.defaultLanguage).getValues().size() < Language.values().length) {
             GiveawayBot.getLogger().error("The default language does not meet the requirements of 100% or could not be found.");
             System.exit(3);
         }
@@ -120,6 +120,10 @@ public class LanguageRegistry {
 
         public LangSub get(Text text, Replace replace) {
             return this.values.containsKey(text) ? this.values.get(text).replace(replace) : null;
+        }
+
+        public Map<Text, LangSub> getValues() {
+            return this.values;
         }
 
         public Language getLanguage() {

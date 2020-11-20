@@ -22,7 +22,7 @@ public class GiveawayCmdUtils {
         }
         switch (this.giveawayController.createGiveaway(server, lengthMillis, winnerAmount, giveawayChannel, presetName, giveawayItem).getValue()) {
             case GIVEAWAY_LIMIT_FAILURE:
-                this.lang.get(server, Text.GIVEAWAY_LIMIT_FAILURE).to(responseChannel);
+                this.lang.get(server, server.isPremium() ? Text.GIVEAWAY_LIMIT_FAILURE_PREMIUM : Text.GIVEAWAY_LIMIT_FAILURE).to(responseChannel);
                 break;
             case NO_PRESET:
                 this.lang.get(server, Text.NO_PRESET_FOUND_ON_CREATION).to(responseChannel);
@@ -46,13 +46,13 @@ public class GiveawayCmdUtils {
         }
     }
 
-    private boolean performChecks(Server server, long length, int winnerAmount, TextChannel giveawayChannel, String giveawayItem, TextChannel responseChannel) {
-        if (length < 30000) {
-            this.lang.get(server, Text.GIVEAWAY_LENGTH_TOO_SHORT).to(responseChannel);
+    private boolean performChecks(Server server, long lengthMillis, int winnerAmount, TextChannel giveawayChannel, String giveawayItem, TextChannel responseChannel) {
+        if (lengthMillis < (server.isPremium() ? 30000 : 300000)) {
+            this.lang.get(server, server.isPremium() ? Text.GIVEAWAY_LENGTH_TOO_SHORT_PREMIUM : Text.GIVEAWAY_LENGTH_TOO_SHORT).to(responseChannel);
             return true;
         }
-        if (length > 5184000000L) {
-            this.lang.get(server, Text.GIVEAWAY_LENGTH_TOO_LONG).to(responseChannel);
+        if (lengthMillis > (server.isPremium() ? 15552000000L : 604800000L)) {
+            this.lang.get(server, server.isPremium() ? Text.GIVEAWAY_LENGTH_TOO_LONG_PREMIUM : Text.GIVEAWAY_LENGTH_TOO_LONG).to(responseChannel);
             return true;
         }
         if (winnerAmount > 20) {

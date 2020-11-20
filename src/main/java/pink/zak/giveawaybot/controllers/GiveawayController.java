@@ -76,7 +76,7 @@ public class GiveawayController {
 
     public ImmutablePair<CurrentGiveaway, ReturnCode> createGiveaway(Server server, long length, int winnerAmount, TextChannel giveawayChannel, String presetName, String giveawayItem) {
         long endTime = System.currentTimeMillis() + length;
-        if (server.getActiveGiveaways().size() >= 5) {
+        if (server.getActiveGiveaways().size() >= (server.isPremium() ? 10 : 5)) {
             return ImmutablePair.of(null, ReturnCode.GIVEAWAY_LIMIT_FAILURE);
         }
         if (!giveawayChannel.getGuild().getSelfMember().hasPermission(giveawayChannel, this.defaults.getRequiredPermissions())) {
