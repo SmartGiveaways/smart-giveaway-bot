@@ -7,6 +7,12 @@ public class Time {
 
     public static String format(long millis) {
         int seconds = (int) Math.floor((double) millis / 1000);
+        if (seconds >= 18144000) {
+            return formatMonthsWeeks(seconds);
+        }
+        if (seconds >= 604800) {
+            return formatWeeksDays(seconds);
+        }
         if (seconds >= 86400) {
             return formatDaysHours(seconds);
         }
@@ -20,6 +26,42 @@ public class Time {
             return seconds + " seconds";
         }
         return seconds + " second";
+    }
+
+    public static String formatMonthsWeeks(int seconds) {
+        int months = getMonths(seconds);
+        int remainderSeconds = seconds - months * 18144000;
+        int weeks = getWeeks(remainderSeconds);
+        StringBuilder builder = new StringBuilder(months + " month");
+        if (months > 1) {
+            builder.append("s");
+        }
+        if (weeks == 0) {
+            return builder.toString();
+        }
+        builder.append(" ").append(weeks).append(" week");
+        if (weeks > 1) {
+            builder.append("s");
+        }
+        return builder.toString();
+    }
+
+    public static String formatWeeksDays(int seconds) {
+        int weeks = getWeeks(seconds);
+        int remainderSeconds = seconds - weeks * 604800;
+        int days = getDays(remainderSeconds);
+        StringBuilder builder = new StringBuilder(weeks + " week");
+        if (weeks > 1) {
+            builder.append("s");
+        }
+        if (days == 0) {
+            return builder.toString();
+        }
+        builder.append(" ").append(days).append(" day");
+        if (days > 1) {
+            builder.append("s");
+        }
+        return builder.toString();
     }
 
     public static String formatDaysHours(int seconds) {
@@ -103,6 +145,14 @@ public class Time {
         }
         long amount = amountBuilder.toString().isEmpty() ? 1 : Long.parseLong(amountBuilder.toString());
         return identifier.getMilliseconds(amount);
+    }
+
+    private static int getMonths(double seconds) {
+        return (int) Math.floor(seconds / 18144000);
+    }
+
+    private static int getWeeks(double seconds) {
+        return (int) Math.floor(seconds / 604800);
     }
 
     private static int getDays(double seconds) {

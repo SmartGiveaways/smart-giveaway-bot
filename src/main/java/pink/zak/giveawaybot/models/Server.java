@@ -24,9 +24,10 @@ public class Server {
     private final Map<String, Preset> presets;
     private final Set<Long> managerRoles;
     private final List<Long> bannedUsers;
+    private long premiumExpiry;
     private Language language;
 
-    public Server(GiveawayBot bot, long id, Set<Long> activeGiveaways, Map<String, Preset> presets, Set<Long> managerRoles, List<Long> bannedUsers, Language language) {
+    public Server(GiveawayBot bot, long id, Set<Long> activeGiveaways, Map<String, Preset> presets, Set<Long> managerRoles, List<Long> bannedUsers, long premiumExpiry, Language language) {
         this.id = id;
         this.presets = presets;
         this.userStorage = new UserStorage(bot, this.getId());
@@ -34,11 +35,12 @@ public class Server {
         this.activeGiveaways = activeGiveaways;
         this.managerRoles = managerRoles;
         this.bannedUsers = bannedUsers;
+        this.premiumExpiry = premiumExpiry;
         this.language = language;
     }
 
     public Server(GiveawayBot bot, long id) {
-        this(bot, id, Sets.newConcurrentHashSet(), Maps.newConcurrentMap(), Sets.newHashSet(), Lists.newCopyOnWriteArrayList(), Language.ENGLISH_UK);
+        this(bot, id, Sets.newConcurrentHashSet(), Maps.newConcurrentMap(), Sets.newHashSet(), Lists.newCopyOnWriteArrayList(), -1, Language.ENGLISH_UK);
     }
 
     public long getId() {
@@ -106,20 +108,24 @@ public class Server {
         return false;
     }
 
-    public void addManagerRole(long managerRoleId) {
-        this.managerRoles.add(managerRoleId);
-    }
-
-    public void removeManagerRole(long managerRoleId) {
-        this.managerRoles.remove(managerRoleId);
-    }
-
     public List<Long> getBannedUsers() {
         return this.bannedUsers;
     }
 
     public void setLanguage(Language language) {
         this.language = language;
+    }
+
+    public boolean isPremium() {
+        return this.premiumExpiry > System.currentTimeMillis();
+    }
+
+    public long getPremiumExpiry() {
+        return this.premiumExpiry;
+    }
+
+    public void setPremiumExpiry(long premiumExpiry) {
+        this.premiumExpiry = premiumExpiry;
     }
 
     public Language getLanguage() {

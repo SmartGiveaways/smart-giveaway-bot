@@ -36,6 +36,7 @@ public class ServerStorage extends MongoStorage<Long, Server> implements CacheSt
             document.put("activeGiveaways", this.gson.toJson(server.getActiveGiveaways()));
             document.put("managerRoles", this.gson.toJson(server.getManagerRoles()));
             document.put("bannedUsers", this.gson.toJson(server.getBannedUsers()));
+            document.put("premium", server.getPremiumExpiry());
             document.put("language", server.getLanguage().toString());
             return document;
         };
@@ -49,8 +50,9 @@ public class ServerStorage extends MongoStorage<Long, Server> implements CacheSt
             Set<Long> activeGiveaways = Sets.newConcurrentHashSet(this.gson.fromJson(document.getString("activeGiveaways"), new TypeToken<HashSet<Long>>(){}.getType()));
             Set<Long> managerRoles = this.gson.fromJson(document.getString("managerRoles"), new TypeToken<HashSet<Long>>(){}.getType());
             List<Long> bannedUsers = this.gson.fromJson(document.getString("bannedUsers"), new TypeToken<CopyOnWriteArrayList<Long>>(){}.getType());
+            long premium = document.getLong("premium");
             Language language = Language.valueOf(document.getString("language"));
-            return new Server(this.bot, id, activeGiveaways, presets, managerRoles, bannedUsers, language);
+            return new Server(this.bot, id, activeGiveaways, presets, managerRoles, bannedUsers, premium, language);
         };
     }
 

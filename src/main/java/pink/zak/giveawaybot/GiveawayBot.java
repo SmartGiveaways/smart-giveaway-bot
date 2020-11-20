@@ -17,6 +17,7 @@ import pink.zak.giveawaybot.commands.ban.UnbanCommand;
 import pink.zak.giveawaybot.commands.entries.EntriesCommand;
 import pink.zak.giveawaybot.commands.giveaway.GiveawayCommand;
 import pink.zak.giveawaybot.commands.help.HelpCommand;
+import pink.zak.giveawaybot.commands.premium.PremiumCommand;
 import pink.zak.giveawaybot.commands.preset.PresetCommand;
 import pink.zak.giveawaybot.controllers.GiveawayController;
 import pink.zak.giveawaybot.defaults.Defaults;
@@ -125,6 +126,7 @@ public class GiveawayBot extends JdaBot {
                 new EntriesCommand(this),
                 new GiveawayCommand(this),
                 new HelpCommand(this),
+                new PremiumCommand(this),
                 new PresetCommand(this)
         );
 
