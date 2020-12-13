@@ -2,7 +2,7 @@ package pink.zak.giveawaybot.commands.premium;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.lang.enums.Text;
 import pink.zak.giveawaybot.models.Server;
@@ -22,8 +22,8 @@ public class PremiumCommand extends SimpleCommand {
     }
 
     @Override
-    public void onExecute(Member sender, Server server, MessageReceivedEvent event, List<String> args) {
-        event.getTextChannel().sendMessage(new EmbedBuilder()
+    public void onExecute(Member sender, Server server, GuildMessageReceivedEvent event, List<String> args) {
+        event.getChannel().sendMessage(new EmbedBuilder()
                 .setTitle(this.langFor(server, Text.PREMIUM_EMBED_TITLE).get())
                 .setFooter(this.langFor(server, Text.PREMIUM_EMBED_FOOTER).get())
                 .setColor(this.palette.primary())

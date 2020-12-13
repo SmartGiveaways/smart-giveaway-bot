@@ -1,7 +1,7 @@
 package pink.zak.giveawaybot.service.command.command;
 
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.lang.LanguageRegistry;
 import pink.zak.giveawaybot.lang.enums.Text;
@@ -21,9 +21,9 @@ public abstract class Command {
         this.requiresManager = requiresManager;
     }
 
-    public abstract void onExecute(Member sender, Server server, MessageReceivedEvent event, List<String> args);
+    public abstract void onExecute(Member sender, Server server, GuildMessageReceivedEvent event, List<String> args);
 
-    public void middleMan(Member sender, Server server, MessageReceivedEvent event, List<String> args) {
+    public void middleMan(Member sender, Server server, GuildMessageReceivedEvent event, List<String> args) {
         this.onExecute(sender, server, event, args);
     }
 

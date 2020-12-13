@@ -4,7 +4,7 @@ import com.google.common.collect.Maps;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.enums.Setting;
 import pink.zak.giveawaybot.lang.enums.Language;
@@ -21,7 +21,7 @@ public class OptionsSub extends SubCommand {
     private final Map<Language, MessageEmbed> optionsList;
 
     public OptionsSub(GiveawayBot bot) {
-        super(bot);
+        super(bot, true, false, false);
         this.palette = bot.getDefaults().getPalette();
         this.optionsList = this.setupOptionsList();
 
@@ -29,7 +29,7 @@ public class OptionsSub extends SubCommand {
     }
 
     @Override
-    public void onExecute(Member sender, Server server, MessageReceivedEvent event, List<String> args) {
+    public void onExecute(Member sender, Server server, GuildMessageReceivedEvent event, List<String> args) {
         event.getChannel().sendMessage(this.optionsList.get(server.getLanguage())).queue();
     }
 

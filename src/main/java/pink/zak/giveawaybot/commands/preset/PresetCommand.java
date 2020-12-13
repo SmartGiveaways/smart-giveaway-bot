@@ -4,7 +4,7 @@ import com.google.common.collect.Maps;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.commands.preset.subs.*;
 import pink.zak.giveawaybot.lang.LanguageRegistry;
@@ -37,7 +37,7 @@ public class PresetCommand extends SimpleCommand {
     }
 
     @Override
-    public void onExecute(Member sender, Server server, MessageReceivedEvent event, List<String> args) {
+    public void onExecute(Member sender, Server server, GuildMessageReceivedEvent event, List<String> args) {
         event.getChannel().sendMessage(this.embedMessages.get(server.getLanguage())).queue();
     }
 

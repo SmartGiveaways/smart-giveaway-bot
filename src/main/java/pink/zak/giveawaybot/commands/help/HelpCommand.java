@@ -4,7 +4,7 @@ import com.google.common.collect.Maps;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.lang.LanguageRegistry;
 import pink.zak.giveawaybot.lang.enums.Language;
@@ -27,8 +27,8 @@ public class HelpCommand extends SimpleCommand {
     }
 
     @Override
-    public void onExecute(Member sender, Server server, MessageReceivedEvent event, List<String> args) {
-        event.getTextChannel().sendMessage(server.canMemberManage(sender) ? this.fullMessageEmbed.get(server.getLanguage()) : this.limitedMessageEmbed.get(server.getLanguage())).queue();
+    public void onExecute(Member sender, Server server, GuildMessageReceivedEvent event, List<String> args) {
+        event.getChannel().sendMessage(server.canMemberManage(sender) ? this.fullMessageEmbed.get(server.getLanguage()) : this.limitedMessageEmbed.get(server.getLanguage())).queue();
     }
 
     private void buildMessages(LanguageRegistry languageRegistry, Palette palette) {

@@ -9,6 +9,7 @@ import org.awaitility.Awaitility;
 import org.slf4j.Logger;
 import pink.zak.giveawaybot.cache.FinishedGiveawayCache;
 import pink.zak.giveawaybot.cache.GiveawayCache;
+import pink.zak.giveawaybot.cache.ScheduledGiveawayCache;
 import pink.zak.giveawaybot.cache.ServerCache;
 import pink.zak.giveawaybot.commands.about.BotAboutCommand;
 import pink.zak.giveawaybot.commands.admin.AdminCommand;
@@ -20,11 +21,11 @@ import pink.zak.giveawaybot.commands.help.HelpCommand;
 import pink.zak.giveawaybot.commands.premium.PremiumCommand;
 import pink.zak.giveawaybot.commands.preset.PresetCommand;
 import pink.zak.giveawaybot.controllers.GiveawayController;
+import pink.zak.giveawaybot.controllers.ScheduledGiveawayController;
 import pink.zak.giveawaybot.defaults.Defaults;
 import pink.zak.giveawaybot.entries.EntryPipeline;
 import pink.zak.giveawaybot.lang.LanguageRegistry;
 import pink.zak.giveawaybot.listener.GiveawayDeletionListener;
-import pink.zak.giveawaybot.listener.MessageSendListener;
 import pink.zak.giveawaybot.listener.ReactionAddListener;
 import pink.zak.giveawaybot.metrics.MetricsLogger;
 import pink.zak.giveawaybot.metrics.helpers.LatencyMonitor;
@@ -33,6 +34,7 @@ import pink.zak.giveawaybot.service.config.Config;
 import pink.zak.giveawaybot.service.storage.mongo.MongoConnectionFactory;
 import pink.zak.giveawaybot.storage.FinishedGiveawayStorage;
 import pink.zak.giveawaybot.storage.GiveawayStorage;
+import pink.zak.giveawaybot.storage.ScheduledGiveawayStorage;
 import pink.zak.giveawaybot.storage.ServerStorage;
 import pink.zak.giveawaybot.threads.ThreadFunction;
 import pink.zak.giveawaybot.threads.ThreadManager;
@@ -53,6 +55,8 @@ public class GiveawayBot extends JdaBot {
     private LatencyMonitor latencyMonitor;
     private ThreadManager threadManager;
     private MongoConnectionFactory mongoConnectionFactory;
+    private ScheduledGiveawayStorage scheduledGiveawayStorage;
+    private ScheduledGiveawayCache scheduledGiveawayCache;
     private FinishedGiveawayStorage finishedGiveawayStorage;
     private FinishedGiveawayCache finishedGiveawayCache;
     private GiveawayStorage giveawayStorage;
@@ -61,6 +65,7 @@ public class GiveawayBot extends JdaBot {
     private ServerCache serverCache;
     private LanguageRegistry languageRegistry;
     private GiveawayController giveawayController;
+    private ScheduledGiveawayController scheduledGiveawayController;
     private MetricsLogger metricsLogger;
     private Defaults defaults;
     private EntryPipeline entryPipeline;
@@ -93,6 +98,8 @@ public class GiveawayBot extends JdaBot {
 
         this.finishedGiveawayStorage = new FinishedGiveawayStorage(this);
         this.finishedGiveawayCache = new FinishedGiveawayCache(this);
+        this.scheduledGiveawayStorage = new ScheduledGiveawayStorage(this);
+        this.scheduledGiveawayCache = new ScheduledGiveawayCache(this);
         this.giveawayStorage = new GiveawayStorage(this);
         this.giveawayCache = new GiveawayCache(this);
         this.serverStorage = new ServerStorage(this);
@@ -113,6 +120,7 @@ public class GiveawayBot extends JdaBot {
     public void onConnect() {
         this.getShardManager().setPresence(OnlineStatus.IDLE, Activity.playing("Loading...."));
         this.giveawayController = new GiveawayController(this); // Makes use of JDA, retrieving messages
+        this.scheduledGiveawayController = new ScheduledGiveawayController(this); // Makes use of JDA, retrieving messages
         this.metricsLogger = new MetricsLogger(this);
         this.metricsLogger.checkAndStart(this);
 
@@ -130,9 +138,9 @@ public class GiveawayBot extends JdaBot {
                 new PresetCommand(this)
         );
 
+        this.messageEventRegistry.setServerCache(this.serverCache);
         this.registerListeners(
                 new ReactionAddListener(this),
-                new MessageSendListener(this),
                 new GiveawayDeletionListener(this)
         );
         this.getShardManager().setPresence(OnlineStatus.ONLINE, Activity.playing("smartgiveaways.xyz"));
@@ -164,10 +172,10 @@ public class GiveawayBot extends JdaBot {
     private void closeIfPingUnusable() {
         for (int i = 1; i <= 5; i++) {
             if (this.latencyMonitor.isLatencyUsable()) {
-                logger.info("Successfully tested latency on attempt no. ".concat(String.valueOf(i)));
+                logger.info("Successfully tested latency on attempt no. {}", i);
                 return;
             }
-            logger.error("Failed testing latency on attempt no. ".concat(String.valueOf(i)));
+            logger.error("Failed testing latency on attempt no. {}", i);
         }
     }
 
@@ -231,6 +239,14 @@ public class GiveawayBot extends JdaBot {
         return this.finishedGiveawayCache;
     }
 
+    public ScheduledGiveawayStorage getScheduledGiveawayStorage() {
+        return this.scheduledGiveawayStorage;
+    }
+
+    public ScheduledGiveawayCache getScheduledGiveawayCache() {
+        return this.scheduledGiveawayCache;
+    }
+
     public GiveawayStorage getGiveawayStorage() {
         return this.giveawayStorage;
     }
@@ -253,6 +269,10 @@ public class GiveawayBot extends JdaBot {
 
     public GiveawayController getGiveawayController() {
         return this.giveawayController;
+    }
+
+    public ScheduledGiveawayController getScheduledGiveawayController() {
+        return this.scheduledGiveawayController;
     }
 
     public MetricsLogger getMetricsLogger() {

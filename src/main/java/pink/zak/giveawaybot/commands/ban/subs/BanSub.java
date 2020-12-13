@@ -2,7 +2,7 @@ package pink.zak.giveawaybot.commands.ban.subs;
 
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.commands.ban.BanCmdUtils;
 import pink.zak.giveawaybot.lang.enums.Text;
@@ -16,16 +16,16 @@ public class BanSub extends SubCommand {
     private final BanCmdUtils cmdUtils;
 
     public BanSub(GiveawayBot bot, BanCmdUtils cmdUtils) {
-        super(bot, true);
+        super(bot, true, false, false);
         this.cmdUtils = cmdUtils;
 
         this.addArgument(Member.class);
     }
 
     @Override
-    public void onExecute(Member sender, Server server, MessageReceivedEvent event, List<String> args) {
+    public void onExecute(Member sender, Server server, GuildMessageReceivedEvent event, List<String> args) {
         Member target = this.parseArgument(args, event.getGuild(), 0);
-        TextChannel textChannel = event.getTextChannel();
+        TextChannel textChannel = event.getChannel();
         if (!this.cmdUtils.handleAndIsEligible(server, sender, target, textChannel)) {
             return;
         }

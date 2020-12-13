@@ -13,12 +13,12 @@ public class NumberUtils {
         return isNumerical(input, Integer.MAX_VALUE);
     }
 
-    public static boolean isLong(String input) {
-        return isNumerical(input, 19);
+    public static boolean isLikelyLong(String input) {
+        return isNumerical(input, 20);
     }
 
-    public static boolean isInteger(String input) {
-        return isNumerical(input, Integer.MAX_VALUE);
+    public static boolean isLikelyInteger(String input) {
+        return isNumerical(input, 11);
     }
 
     public static boolean isNumerical(String input, int maxLength) {

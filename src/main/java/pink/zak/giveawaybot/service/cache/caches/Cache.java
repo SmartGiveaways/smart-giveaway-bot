@@ -44,7 +44,7 @@ public class Cache<K, V> {
             V loaded = this.storage.load(key);
             this.loads.incrementAndGet();
             if (loaded != null) {
-                return this.setSync(key, loaded);
+                return this.set(key, loaded);
             }
             return null;
         }
@@ -55,13 +55,9 @@ public class Cache<K, V> {
         return CompletableFuture.supplyAsync(() -> this.getSync(key), this.executor);
     }
 
-    public V setSync(K key, V value) {
+    public V set(K key, V value) {
         this.cacheMap.put(key, value);
         return value;
-    }
-
-    public CompletableFuture<V> set(K key, V value) {
-        return CompletableFuture.supplyAsync(() -> this.setSync(key, value), this.executor);
     }
 
     public boolean contains(K key) {
@@ -82,20 +78,20 @@ public class Cache<K, V> {
         return this.cacheMap.remove(key);
     }
 
-    public void invalidateAsync(K key) {
-        CompletableFuture.runAsync(() -> this.invalidate(key), this.executor);
-    }
-
-    public void invalidate(K key, boolean save) {
+    public V invalidate(K key, boolean save) {
         if (save) {
             this.invalidate(key);
-            return;
+            return null;
         }
-        this.cacheMap.remove(key);
+        return this.cacheMap.remove(key);
     }
 
-    public void invalidateAsync(K key, boolean save) {
-        CompletableFuture.runAsync(() -> this.invalidate(key, save), this.executor);
+    public CompletableFuture<V> invalidateAsync(K key) {
+        return this.invalidateAsync(key, true);
+    }
+
+    public CompletableFuture<V> invalidateAsync(K key, boolean save) {
+        return CompletableFuture.supplyAsync(() -> this.invalidate(key, save), this.executor);
     }
 
     public void invalidateAll() {
@@ -108,8 +104,11 @@ public class Cache<K, V> {
         }
     }
 
-    public void invalidateAllAsync() {
-        CompletableFuture.runAsync(this::invalidateAll, this.executor);
+    public CompletableFuture<Void> invalidateAllAsync() {
+        return CompletableFuture.supplyAsync(() -> {
+            this.invalidateAll();
+            return null;
+        }, this.executor);
     }
 
     public int size() {
@@ -140,8 +139,8 @@ public class Cache<K, V> {
         this.loads.set(0);
     }
 
-    private void startAutoSave(ScheduledExecutorService scheduledExecutor, TimeUnit timeUnit, int interval) {
-        scheduledExecutor.scheduleAtFixedRate(() -> {
+    private void startAutoSave(ScheduledExecutorService scheduler, TimeUnit timeUnit, int interval) {
+        scheduler.scheduleAtFixedRate(() -> {
             this.executor.submit(() -> {
                 for (K key : this.cacheMap.keySet()) {
                     this.save(key);

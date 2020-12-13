@@ -26,7 +26,7 @@ public class MetricsLogger {
             GiveawayBot.getLogger().info("Metrics has not been enabled as it is disabled via configuration.");
             return;
         }
-        ScheduledExecutorService scheduledExecutor = bot.getThreadManager().getScheduler();
+        ScheduledExecutorService scheduler = bot.getThreadManager().getScheduler();
         Metrics metrics = bot.getMetrics();
 
         ProcessStats processStats = new ProcessStats();
@@ -34,7 +34,7 @@ public class MetricsLogger {
         CommandBase commandBase = bot.getCommandBase();
         ServerCache serverCache = bot.getServerCache();
 
-        scheduledExecutor.scheduleAtFixedRate(() -> {
+        scheduler.scheduleAtFixedRate(() -> {
             metrics.<ProcessStats>log(query -> query
                     .primary(processStats)
                     .push(SystemQuery.ALL));

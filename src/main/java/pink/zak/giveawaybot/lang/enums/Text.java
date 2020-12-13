@@ -113,6 +113,10 @@ public enum Text {
     WINNER_AMOUNT_TOO_LARGE,
     WINNER_AMOUNT_TOO_SMALL,
     PARSING_REWARD_FAILED,
+    // creating/scheduling - schedule sub
+    GIVEAWAY_SCHEDULED,
+    SCHEDULED_TIME_TOO_SOON,
+    SCHEDULED_GIVEAWAY_LIMIT_FAILURE,
     // delete sub
     GIVEAWAY_DELETED,
     // reroll

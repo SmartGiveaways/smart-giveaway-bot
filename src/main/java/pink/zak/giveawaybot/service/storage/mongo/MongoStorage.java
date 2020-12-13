@@ -7,11 +7,12 @@ import com.mongodb.client.model.Filters;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import pink.zak.giveawaybot.GiveawayBot;
+import pink.zak.giveawaybot.service.cache.options.CacheStorage;
 
 import java.util.Map;
 import java.util.Set;
 
-public abstract class MongoStorage<K, T> {
+public abstract class MongoStorage<K, T> implements CacheStorage<K, T> {
     private final MongoCollection<Document> collection;
     private final String idKey;
 

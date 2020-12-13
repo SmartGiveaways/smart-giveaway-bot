@@ -2,7 +2,7 @@ package pink.zak.giveawaybot.commands.ban;
 
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.lang.enums.Text;
 import pink.zak.giveawaybot.models.Server;
@@ -22,22 +22,22 @@ public class UnbanCommand extends SimpleCommand {
     }
 
     @Override
-    public void onExecute(Member sender, Server server, MessageReceivedEvent event, List<String> args) {
-        this.langFor(server, Text.UNBAN_HELP).to(event.getTextChannel());
+    public void onExecute(Member sender, Server server, GuildMessageReceivedEvent event, List<String> args) {
+        this.langFor(server, Text.UNBAN_HELP).to(event.getChannel());
     }
 
     private class UnbanSub extends SubCommand {
 
         public UnbanSub(GiveawayBot bot) {
-            super(bot, true);
+            super(bot, true, false, false);
 
             this.addArgument(Member.class);
         }
 
         @Override
-        public void onExecute(Member sender, Server server, MessageReceivedEvent event, List<String> args) {
+        public void onExecute(Member sender, Server server, GuildMessageReceivedEvent event, List<String> args) {
             Member target = this.parseArgument(args, event.getGuild(), 0);
-            TextChannel textChannel = event.getTextChannel();
+            TextChannel textChannel = event.getChannel();
             if (target == null) {
                 this.langFor(server, Text.COULDNT_FIND_MEMBER).to(textChannel);
                 return;

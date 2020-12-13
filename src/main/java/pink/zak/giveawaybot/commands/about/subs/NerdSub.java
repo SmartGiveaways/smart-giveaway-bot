@@ -2,7 +2,7 @@ package pink.zak.giveawaybot.commands.about.subs;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.cache.GiveawayCache;
 import pink.zak.giveawaybot.metrics.helpers.GenericBotMetrics;
@@ -22,7 +22,7 @@ public class NerdSub extends SubCommand {
     private final CachedValue<Long> historicalGiveaways;
 
     public NerdSub(GiveawayBot bot) {
-        super(bot, false);
+        super(bot, false, false, false);
         this.addFlatWithAliases("nerd", "nerds");
 
         this.genericMetrics = bot.getMetricsLogger().getGenericBotMetrics();
@@ -32,8 +32,8 @@ public class NerdSub extends SubCommand {
     }
 
     @Override
-    public void onExecute(Member sender, Server server, MessageReceivedEvent event, List<String> args) {
-        event.getTextChannel().sendMessage(new EmbedBuilder()
+    public void onExecute(Member sender, Server server, GuildMessageReceivedEvent event, List<String> args) {
+        event.getChannel().sendMessage(new EmbedBuilder()
                 .setColor(this.palette.primary())
                 .addField("__Running Information__", "**Uptime:** ".concat(Time.format(this.genericMetrics.getUptime())), true)
                 .addField("", "**Servers:** ".concat(String.valueOf(this.genericMetrics.getGuilds())), true)

@@ -4,60 +4,60 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.github.jengelman.gradle.plugins:shadow:6.0.0'
+        classpath "com.github.jengelman.gradle.plugins:shadow:6.0.0"
     }
 }
 
 plugins {
     id "org.sonarqube" version "3.0"
-    id 'java'
-    id 'com.github.johnrengelman.shadow' version "6.0.0"
+    id "java"
+    id "com.github.johnrengelman.shadow" version "6.0.0"
 }
 
-group 'pink.zak'
-version '1.0'
+group "pink.zak"
+version "1.0"
 
 repositories {
     mavenCentral()
     mavenLocal()
     jcenter()
-    maven { url 'https://repo.codemc.org/repository/maven-public/' }
-    maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
-    maven { url 'https://jitpack.io' }
+    maven { url "https://repo.codemc.org/repository/maven-public/" }
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+    maven { url "https://jitpack.io" }
 }
 
 dependencies {
-    implementation('net.dv8tion:JDA:4.2.0_216') { exclude module: 'opus-java' }
-    implementation 'com.google.guava:guava:29.0-jre'
-    implementation 'com.timvisee:yamlwrapper:1.1.1'
-    implementation 'com.vdurmont:emoji-java:5.1.1'
-    implementation 'org.mongodb:mongo-java-driver:3.12.7'
-    implementation 'org.awaitility:awaitility:4.0.3'
-    compileOnly 'org.projectlombok:lombok:1.18.12'
-    annotationProcessor 'org.projectlombok:lombok:1.18.12'
+    implementation("net.dv8tion:JDA:4.2.0_216") { exclude module: "opus-java" }
+    implementation "com.google.guava:guava:29.0-jre"
+    implementation "com.timvisee:yamlwrapper:1.1.1"
+    implementation "com.vdurmont:emoji-java:5.1.1"
+    implementation "org.mongodb:mongo-java-driver:3.12.7"
+    implementation "org.awaitility:awaitility:4.0.3"
+    compileOnly "org.projectlombok:lombok:1.18.12"
+    annotationProcessor "org.projectlombok:lombok:1.18.12"
 
     // Technically non essentials
-    implementation 'ch.qos.logback:logback-classic:1.2.3'
-    implementation 'pink.zak:influx-metrics:1.0.0'
-    implementation 'com.influxdb:influxdb-client-java:1.13.0-SNAPSHOT'
+    implementation "ch.qos.logback:logback-classic:1.2.3"
+    implementation "pink.zak:influx-metrics:1.0.2"
+    implementation "com.influxdb:influxdb-client-java:1.13.0"
 
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.4.2'
+    testImplementation "org.junit.jupiter:junit-jupiter:5.4.2"
 }
 
 tasks.withType(JavaCompile).all {
-    options.compilerArgs += ['--enable-preview']
+    options.compilerArgs += ["--enable-preview"]
 }
 
 shadowJar {
     manifest {
-        attributes 'Class-Path': 'pink.zak.giveawaybot',
-                'Main-Class': 'pink.zak.giveawaybot.Main',
-                'Specification-Title': 'JDA',
-                'Specification-Version': '4.2.0_216',
-                'Specification-Vendor': 'DV8FromTheWorld',
-                'Implementation-Title': 'SmartGiveaways Bot',
-                'Implementation-Version': this.version,
-                'Implementation-Vendor': 'SmartGiveaways'
+        attributes "Class-Path": "pink.zak.giveawaybot",
+                "Main-Class": "pink.zak.giveawaybot.Main",
+                "Specification-Title": "JDA",
+                "Specification-Version": "4.2.0_216",
+                "Specification-Vendor": "DV8FromTheWorld",
+                "Implementation-Title": "SmartGiveaways Bot",
+                "Implementation-Version": this.version,
+                "Implementation-Vendor": "SmartGiveaways"
     }
 }
 
@@ -71,7 +71,7 @@ task depsize {
         final conf = configurations.default
         final size = conf.collect { it.length() / (1024 * 1024) }.sum()
         final out = new StringBuffer()
-        out << 'Total dependencies size:'.padRight(45)
+        out << "Total dependencies size:".padRight(45)
         out << "${String.format(formatStr, size)} Mb\n\n"
         conf.sort { -it.length() }
                 .each {

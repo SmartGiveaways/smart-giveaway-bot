@@ -5,7 +5,7 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.GenericEvent;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.hooks.EventListener;
@@ -29,7 +29,7 @@ public class BanListSub extends SubCommand implements EventListener {
     private final Cache<Long, MutablePair<Message, Integer>> activeLists;
 
     public BanListSub(GiveawayBot bot) {
-        super(bot, true);
+        super(bot, true, false, false);
         this.addFlat("list");
 
         this.palette = bot.getDefaults().getPalette();
@@ -46,9 +46,9 @@ public class BanListSub extends SubCommand implements EventListener {
     }
 
     @Override
-    public void onExecute(Member sender, Server server, MessageReceivedEvent event, List<String> args) {
+    public void onExecute(Member sender, Server server, GuildMessageReceivedEvent event, List<String> args) {
         int pages = (int) Math.ceil(server.getBannedUsers().size() / 10.0);
-        event.getTextChannel().sendMessage(this.buildEmbed(server, pages, 1)).queue(embed -> {
+        event.getChannel().sendMessage(this.buildEmbed(server, pages, 1)).queue(embed -> {
             if (pages > 1) {
                 this.activeLists.set(embed.getIdLong(), MutablePair.of(embed, 1));
                 embed.addReaction("\u2B05").queue();
@@ -103,7 +103,7 @@ public class BanListSub extends SubCommand implements EventListener {
             descriptionBuilder.append("<@")
                     .append(id)
                     .append("> -> ")
-                    .append(server.getUserCache().getSync(id).isBanned() ? this.langFor(server, Text.BAN_LIST_BANNED) : Text.BAN_LIST_SHADOW_BANNED)
+                    .append(this.langFor(server, server.getUserCache().getSync(id).isBanned() ? Text.BAN_LIST_BANNED : Text.BAN_LIST_SHADOW_BANNED))
                     .append("\n");
         }
         return new EmbedBuilder()

@@ -99,12 +99,15 @@ values:
   # >giveaway command messages
   giveaway-help-embed-title: "Giveaway Command Help"
   giveaway-help-embed-footer: "Want all commands? See >ghelp or go to https://docs.sgs.pink/commands"
-  giveaway-help-embed-content: ">giveaway list\n
-                            >giveaway create <preset> <length> <channel> <winner amount> <item/topic>\n
-                            >giveaway create <preset> <length> <winner amount> <item/topic>\n
-                            >giveaway delete <message id>\n
-                            >giveaway reroll <message id>\n
-                            >giveaway reroll <message id> <user> (WIP not done)"
+  giveaway-help-embed-content: ">g list\n
+                            >g scheduled\n
+                            >g schedule <preset> <delay> <length> <channel> <winner amount> <item/topic>\n
+                            >g schedule <preset> <delay> <length> <winner amount> <item/topic>\n
+                            >g create <preset> <length> <channel> <winner amount> <item/topic>\n
+                            >g create <preset> <length> <winner amount> <item/topic>\n
+                            >g delete <message id>\n
+                            >g reroll <message id>\n
+                            >g reroll <message id> <user> (WIP not done)"
   giveaway-list-embed-title: "Current Giveaways"
   giveaway-limit-failure: ":x: Your guild has reached the maximum number of 5 giveaways."
   giveaway-limit-failure-premium: ":x: Your guild has reached the maximum number of 10 premium giveaways."
@@ -118,6 +121,10 @@ values:
   winner-amount-too-large: "Giveaways must have less than 20 winners."
   winner-amount-too-small: "Giveaways must have at least 1 winner."
   parsing-reward-failed: "Issue parsing giveaway reward."
+  # schedule sub
+  giveaway-scheduled: ":white_check_mark: Your giveaway has been scheduled in the channel %channel%. It will be posted at %time%."
+  scheduled-time-too-soon: "The scheduled time must be more than 2 minutes away."
+  scheduled-giveaway-limit-failure: ":x: Your guild has reached the maximum of 10 scheduled giveaways."
   # delete sub
   giveaway-deleted: "Deleted the giveaway for: %giveaway-item%"
   # reroll messages

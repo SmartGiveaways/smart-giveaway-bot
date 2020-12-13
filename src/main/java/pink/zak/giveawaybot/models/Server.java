@@ -15,24 +15,29 @@ import pink.zak.giveawaybot.storage.UserStorage;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 public class Server {
     private final long id;
     private final UserStorage userStorage;
     private final UserCache userCache;
     private final Set<Long> activeGiveaways;
+    private final Set<UUID> scheduledGiveaways;
     private final Map<String, Preset> presets;
     private final Set<Long> managerRoles;
     private final List<Long> bannedUsers;
     private long premiumExpiry;
     private Language language;
 
-    public Server(GiveawayBot bot, long id, Set<Long> activeGiveaways, Map<String, Preset> presets, Set<Long> managerRoles, List<Long> bannedUsers, long premiumExpiry, Language language) {
+    public Server(GiveawayBot bot, long id, Set<Long> activeGiveaways, Set<UUID> scheduledGiveaways,
+                  Map<String, Preset> presets, Set<Long> managerRoles, List<Long> bannedUsers, long premiumExpiry,
+                  Language language) {
         this.id = id;
         this.presets = presets;
-        this.userStorage = new UserStorage(bot, this.getId());
+        this.userStorage = new UserStorage(bot, this.id);
         this.userCache = new UserCache(bot, this.userStorage, this.id);
         this.activeGiveaways = activeGiveaways;
+        this.scheduledGiveaways = scheduledGiveaways;
         this.managerRoles = managerRoles;
         this.bannedUsers = bannedUsers;
         this.premiumExpiry = premiumExpiry;
@@ -40,7 +45,9 @@ public class Server {
     }
 
     public Server(GiveawayBot bot, long id) {
-        this(bot, id, Sets.newConcurrentHashSet(), Maps.newConcurrentMap(), Sets.newHashSet(), Lists.newCopyOnWriteArrayList(), -1, Language.ENGLISH_UK);
+        this(bot, id, Sets.newConcurrentHashSet(), Sets.newConcurrentHashSet(),
+                Maps.newConcurrentMap(), Sets.newHashSet(), Lists.newCopyOnWriteArrayList(), -1,
+                Language.ENGLISH_UK);
     }
 
     public long getId() {
@@ -75,6 +82,10 @@ public class Server {
 
     public void addActiveGiveaway(CurrentGiveaway giveaway) {
         this.activeGiveaways.add(giveaway.messageId());
+    }
+
+    public Set<UUID> getScheduledGiveaways() {
+        return this.scheduledGiveaways;
     }
 
     public Preset getPreset(String name) {

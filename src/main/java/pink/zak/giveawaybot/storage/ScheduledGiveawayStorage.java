@@ -1,28 +1,23 @@
 package pink.zak.giveawaybot.storage;
 
-import com.google.common.collect.Sets;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import pink.zak.giveawaybot.GiveawayBot;
-import pink.zak.giveawaybot.models.giveaway.CurrentGiveaway;
+import pink.zak.giveawaybot.models.giveaway.ScheduledGiveaway;
 import pink.zak.giveawaybot.service.storage.mongo.MongoDeserializer;
 import pink.zak.giveawaybot.service.storage.mongo.MongoSerializer;
 import pink.zak.giveawaybot.service.storage.mongo.MongoStorage;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.UUID;
 
-public class GiveawayStorage extends MongoStorage<Long, CurrentGiveaway> {
-    private final Gson gson = new Gson();
+public class ScheduledGiveawayStorage extends MongoStorage<UUID, ScheduledGiveaway> {
 
-    public GiveawayStorage(GiveawayBot bot) {
-        super(bot, "giveaways", "_id");
+    public ScheduledGiveawayStorage(GiveawayBot bot) {
+        super(bot, "scheduled-giveaways", "_id");
     }
 
     @Override
-    public MongoSerializer<CurrentGiveaway> serializer() {
+    public MongoSerializer<ScheduledGiveaway> serializer() {
         return (giveaway, document) -> {
-            document.put("_id", giveaway.messageId());
+            document.put("_id", giveaway.uuid().toString());
             document.put("channelId", giveaway.channelId());
             document.put("serverId", giveaway.serverId());
             document.put("startTime", giveaway.startTime());
@@ -30,15 +25,14 @@ public class GiveawayStorage extends MongoStorage<Long, CurrentGiveaway> {
             document.put("winnerAmount", giveaway.winnerAmount());
             document.put("presetName", giveaway.presetName());
             document.put("giveawayItem", giveaway.giveawayItem());
-            document.put("enteredUsers", this.gson.toJson(giveaway.enteredUsers()));
             return document;
         };
     }
 
     @Override
-    public MongoDeserializer<CurrentGiveaway> deserializer() {
+    public MongoDeserializer<ScheduledGiveaway> deserializer() {
         return document -> {
-            long messageId = document.getLong("_id");
+            UUID id = UUID.fromString(document.getString("_id"));
             long channelId = document.getLong("channelId");
             long serverId = document.getLong("serverId");
             long startTime = document.getLong("startTime");
@@ -46,13 +40,12 @@ public class GiveawayStorage extends MongoStorage<Long, CurrentGiveaway> {
             int winnerAmount = document.getInteger("winnerAmount");
             String presetName = document.getString("presetName");
             String giveawayItem = document.getString("giveawayItem");
-            Set<Long> enteredUsers = Sets.newConcurrentHashSet(this.gson.fromJson(document.getString("enteredUsers"), new TypeToken<HashSet<Long>>(){}.getType()));
-            return new CurrentGiveaway(messageId, channelId, serverId, startTime, endTime, winnerAmount, presetName, giveawayItem, enteredUsers);
+            return new ScheduledGiveaway(id, channelId, serverId, startTime, endTime, winnerAmount, presetName, giveawayItem);
         };
     }
 
     @Override
-    public CurrentGiveaway create(Long id) {
+    public ScheduledGiveaway create(UUID id) {
         return null;
     }
 }

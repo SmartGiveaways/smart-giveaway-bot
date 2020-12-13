@@ -6,7 +6,6 @@ import com.google.gson.reflect.TypeToken;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.enums.EntryType;
 import pink.zak.giveawaybot.models.User;
-import pink.zak.giveawaybot.service.cache.options.CacheStorage;
 import pink.zak.giveawaybot.service.storage.mongo.MongoDeserializer;
 import pink.zak.giveawaybot.service.storage.mongo.MongoSerializer;
 import pink.zak.giveawaybot.service.storage.mongo.MongoStorage;
@@ -17,7 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class UserStorage extends MongoStorage<Long, User> implements CacheStorage<Long, User> {
+public class UserStorage extends MongoStorage<Long, User> {
     private final long serverId;
     private final Gson gson;
 

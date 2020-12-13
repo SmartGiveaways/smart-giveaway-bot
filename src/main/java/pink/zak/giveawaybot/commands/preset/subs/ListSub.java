@@ -2,7 +2,7 @@ package pink.zak.giveawaybot.commands.preset.subs;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.lang.enums.Text;
 import pink.zak.giveawaybot.models.Preset;
@@ -16,14 +16,14 @@ public class ListSub extends SubCommand {
     private final Palette palette;
 
     public ListSub(GiveawayBot bot) {
-        super(bot);
+        super(bot, true, false, false);
         this.palette = bot.getDefaults().getPalette();
 
         this.addFlat("list");
     }
 
     @Override
-    public void onExecute(Member sender, Server server, MessageReceivedEvent event, List<String> args) {
+    public void onExecute(Member sender, Server server, GuildMessageReceivedEvent event, List<String> args) {
         StringBuilder listBuilder = new StringBuilder(this.langFor(server, Text.PRESET_LIST_DEFAULT_ENTRY).get());
         for (Preset preset : server.getPresets().values()) {
             listBuilder.append("\n")

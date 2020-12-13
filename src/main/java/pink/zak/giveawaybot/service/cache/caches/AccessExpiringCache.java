@@ -13,14 +13,14 @@ import java.util.function.Consumer;
 
 public class AccessExpiringCache<K, V> extends Cache<K, V> {
     protected final Map<K, Long> accessTimes = new ConcurrentHashMap<>();
-    private final ScheduledExecutorService scheduledExecutor;
+    private final ScheduledExecutorService scheduler;
     private final CacheExpiryListener<K, V> expiryListener;
     private final TimeUnit timeUnit;
     private final int delay;
 
     public AccessExpiringCache(GiveawayBot bot, CacheStorage<K, V> storage, CacheExpiryListener<K, V> expiryListener, Consumer<V> removalAction, TimeUnit timeUnit, int delay, TimeUnit autoSaveUnit, int autoSaveInterval) {
         super(bot, removalAction, storage, autoSaveUnit, autoSaveInterval);
-        this.scheduledExecutor = bot.getThreadManager().getScheduler();
+        this.scheduler = bot.getThreadManager().getScheduler();
         this.expiryListener = expiryListener;
         this.timeUnit = timeUnit;
         this.delay = delay;
@@ -72,12 +72,12 @@ public class AccessExpiringCache<K, V> extends Cache<K, V> {
     }
 
     @Override
-    public void invalidate(K key, boolean save) {
+    public V invalidate(K key, boolean save) {
         this.accessTimes.remove(key);
         if (save && this.expiryListener != null) {
             this.expiryListener.onExpiry(key, this.getSync(key));
         }
-        super.invalidate(key, save);
+        return super.invalidate(key, save);
     }
 
     @Override
@@ -87,13 +87,13 @@ public class AccessExpiringCache<K, V> extends Cache<K, V> {
     }
 
     @Override
-    public void invalidateAllAsync() {
+    public CompletableFuture<Void> invalidateAllAsync() {
         this.accessTimes.clear();
-        super.invalidateAllAsync();
+        return super.invalidateAllAsync();
     }
 
     private void startScheduledCleanup() {
-        this.scheduledExecutor.scheduleAtFixedRate(() -> {
+        this.scheduler.scheduleAtFixedRate(() -> {
             long currentTime = System.currentTimeMillis();
             for (Map.Entry<K, Long> entry : this.accessTimes.entrySet()) {
                 if (currentTime - entry.getValue() > this.timeUnit.toMillis(this.delay)) {

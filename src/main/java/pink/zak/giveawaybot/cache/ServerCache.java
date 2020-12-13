@@ -13,9 +13,9 @@ public class ServerCache extends AccessExpiringCache<Long, Server> {
     }
 
     public void shutdown() {
-        for (Server server : this.getMap().values()) {
+        /*for (Server server : this.getMap().values()) {
             server.getUserCache().invalidateAll();
-        }
+        }*/ // In theory, this shouldn't be required due to the removal action
         this.invalidateAll();
     }
 }

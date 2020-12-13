@@ -10,7 +10,6 @@ import pink.zak.giveawaybot.enums.Setting;
 import pink.zak.giveawaybot.lang.enums.Language;
 import pink.zak.giveawaybot.models.Preset;
 import pink.zak.giveawaybot.models.Server;
-import pink.zak.giveawaybot.service.cache.options.CacheStorage;
 import pink.zak.giveawaybot.service.storage.mongo.MongoDeserializer;
 import pink.zak.giveawaybot.service.storage.mongo.MongoSerializer;
 import pink.zak.giveawaybot.service.storage.mongo.MongoStorage;
@@ -19,7 +18,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class ServerStorage extends MongoStorage<Long, Server> implements CacheStorage<Long, Server> {
+public class ServerStorage extends MongoStorage<Long, Server> {
     private final GiveawayBot bot;
     private final Gson gson = new Gson();
 
@@ -34,6 +33,7 @@ public class ServerStorage extends MongoStorage<Long, Server> implements CacheSt
             document.put("_id", server.getId());
             document.put("presets", this.gson.toJson(this.serializePresets(server.getPresets())));
             document.put("activeGiveaways", this.gson.toJson(server.getActiveGiveaways()));
+            document.put("scheduledGiveaways", this.gson.toJson(server.getScheduledGiveaways()));
             document.put("managerRoles", this.gson.toJson(server.getManagerRoles()));
             document.put("bannedUsers", this.gson.toJson(server.getBannedUsers()));
             document.put("premium", server.getPremiumExpiry());
@@ -48,11 +48,13 @@ public class ServerStorage extends MongoStorage<Long, Server> implements CacheSt
             long id = document.getLong("_id");
             Map<String, Preset> presets = this.deserializePresets(id, this.gson.fromJson(document.getString("presets"), new TypeToken<ConcurrentHashMap<String, HashMap<Setting, String>>>(){}.getType()));
             Set<Long> activeGiveaways = Sets.newConcurrentHashSet(this.gson.fromJson(document.getString("activeGiveaways"), new TypeToken<HashSet<Long>>(){}.getType()));
+            Set<UUID> scheduledGiveaways = Sets.newConcurrentHashSet(this.gson.fromJson(document.getString("scheduledGiveaways"), new TypeToken<HashSet<UUID>>(){}.getType()));
             Set<Long> managerRoles = this.gson.fromJson(document.getString("managerRoles"), new TypeToken<HashSet<Long>>(){}.getType());
             List<Long> bannedUsers = this.gson.fromJson(document.getString("bannedUsers"), new TypeToken<CopyOnWriteArrayList<Long>>(){}.getType());
             long premium = document.getLong("premium");
             Language language = Language.valueOf(document.getString("language"));
-            return new Server(this.bot, id, activeGiveaways, presets, managerRoles, bannedUsers, premium, language);
+            // TODO scheduled giveaways
+            return new Server(this.bot, id, activeGiveaways, scheduledGiveaways, presets, managerRoles, bannedUsers, premium, language);
         };
     }
 

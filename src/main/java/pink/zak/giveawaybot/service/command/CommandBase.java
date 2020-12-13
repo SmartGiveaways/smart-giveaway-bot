@@ -4,15 +4,14 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
-import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.hooks.SubscribeEvent;
 import net.dv8tion.jda.api.requests.ErrorResponse;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.cache.ServerCache;
 import pink.zak.giveawaybot.lang.LanguageRegistry;
 import pink.zak.giveawaybot.lang.enums.Text;
+import pink.zak.giveawaybot.listener.message.GiveawayMessageListener;
 import pink.zak.giveawaybot.models.Preset;
 import pink.zak.giveawaybot.models.Server;
 import pink.zak.giveawaybot.service.cache.CacheBuilder;
@@ -35,7 +34,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class CommandBase extends ListenerAdapter {
+public class CommandBase implements GiveawayMessageListener {
     private final GiveawayBot bot;
     private final ServerCache serverCache;
     private final ExecutorService executor;
@@ -71,11 +70,9 @@ public class CommandBase extends ListenerAdapter {
         return this;
     }
 
-    @Override
-    @SubscribeEvent
-    public void onMessageReceived(MessageReceivedEvent event) {
+    public void onExecute(Server server, GuildMessageReceivedEvent event) {
         Member selfMember = event.getGuild().getSelfMember();
-        if (event.getAuthor().isBot() || this.lockdown || !selfMember.hasPermission(event.getTextChannel(), Permission.MESSAGE_WRITE)) {
+        if (event.getAuthor().isBot() || this.lockdown || !selfMember.hasPermission(event.getChannel(), Permission.MESSAGE_WRITE)) {
             return;
         }
         String rawMessage = event.getMessage().getContentRaw();
@@ -88,66 +85,62 @@ public class CommandBase extends ListenerAdapter {
             return;
         }
         String commandName = rawMessage.substring(1).split(" ")[0];
-        this.serverCache.get(event.getGuild().getIdLong()).thenAccept(server -> {
-            if (!event.getGuild().getSelfMember().hasPermission(event.getTextChannel(), this.requiredPermissions)) {
-                this.languageRegistry.get(server, Text.BOT_DOESNT_HAVE_PERMISSIONS).to(event.getTextChannel());
+        TextChannel channel = event.getChannel();
+        if (!event.getGuild().getSelfMember().hasPermission(channel, this.requiredPermissions)) {
+            this.languageRegistry.get(server, Text.BOT_DOESNT_HAVE_PERMISSIONS).to(channel);
+            return;
+        }
+        if (server == null) {
+            this.languageRegistry.fallback(Text.FATAL_ERROR_LOADING_SERVER).to(channel);
+            return;
+        }
+        CompletableFuture.runAsync(() -> {
+            if (this.isOnCooldown(sender)) {
                 return;
             }
-            if (server == null) {
-                this.languageRegistry.fallback(Text.FATAL_ERROR_LOADING_SERVER).to(event.getTextChannel());
-                return;
-            }
-            CompletableFuture.runAsync(() -> {
-                if (this.isOnCooldown(sender)) {
+            for (SimpleCommand simpleCommand : this.commands) {
+                if (!simpleCommand.doesCommandMatch(commandName)) {
+                    continue;
+                }
+                if (!this.hasAccess(server, simpleCommand, event.getMessage(), sender)) {
                     return;
                 }
-                for (SimpleCommand simpleCommand : this.commands) {
-                    if (!simpleCommand.doesCommandMatch(commandName)) {
-                        continue;
-                    }
-                    if (!this.hasAccess(server, simpleCommand, event.getMessage(), sender)) {
-                        return;
-                    }
-                    Member member = event.getMember();
-                    if (member == null) {
-                        return;
-                    }
-                    if (!rawMessage.contains(" ")) {
-                        this.commandCooldowns.set(member.getIdLong(), System.currentTimeMillis());
-                        this.executeCommand(simpleCommand, sender, server, event, Lists.newArrayList());
-                        return;
-                    }
-                    String message = rawMessage.split(prefix + commandName + " ")[1];
-                    List<String> args = Lists.newArrayList(message.split(" "));
-                    args.removeIf(String::isEmpty);
-
-                    SubCommand subResult = null;
-                    for (SubCommand subCommand : simpleCommand.getSubCommands()) {
-                        if ((args.size() > subCommand.getArgumentsSize() && subCommand.isEndless() && subCommand.isEndlessMatch(args)) || (subCommand.getArgumentsSize() == args.size() && subCommand.isMatch(args))) {
-                            subResult = subCommand;
-                            break;
-                        }
-                    }
+                Member member = event.getMember();
+                if (member == null) {
+                    return;
+                }
+                if (!rawMessage.contains(" ")) {
                     this.commandCooldowns.set(member.getIdLong(), System.currentTimeMillis());
-                    if (subResult == null) {
-                        this.executeCommand(simpleCommand, sender, server, event, args);
-                        return;
-                    }
-                    if (this.hasAccess(server, subResult, event.getMessage(), sender)) {
-                        this.executeCommand(subResult, sender, server, event, args);
+                    this.executeCommand(simpleCommand, sender, server, event, Lists.newArrayList());
+                    return;
+                }
+                String message = rawMessage.split(prefix + commandName + " ")[1];
+                List<String> args = Lists.newArrayList(message.split(" "));
+                args.removeIf(String::isEmpty);
+
+                SubCommand subResult = null;
+                for (SubCommand subCommand : simpleCommand.getSubCommands()) {
+                    if ((args.size() > subCommand.getArgumentsSize() && subCommand.isEndless() && subCommand.isEndlessMatch(args)) || (subCommand.getArgumentsSize() == args.size() && subCommand.isMatch(args))) {
+                        subResult = subCommand;
+                        break;
                     }
                 }
-            }, this.executor).exceptionally(ex -> {
-                GiveawayBot.getLogger().error("Error stemmed from CommandBase input {}", rawMessage, ex);
-                return null;
-            });
-        }).exceptionally(ex -> {
+                this.commandCooldowns.set(member.getIdLong(), System.currentTimeMillis());
+                if (subResult == null) {
+                    this.executeCommand(simpleCommand, sender, server, event, args);
+                    return;
+                }
+                if (this.hasAccess(server, subResult, event.getMessage(), sender)) {
+                    this.executeCommand(subResult, sender, server, event, args);
+                }
+            }
+        }, this.executor).exceptionally(ex -> {
             GiveawayBot.getLogger().error("Error stemmed from CommandBase input {}", rawMessage, ex);
             return null;
         });
     }
 
-    private void executeCommand(Command command, Member sender, Server server, MessageReceivedEvent event, List<String> args) {
+    private void executeCommand(Command command, Member sender, Server server, GuildMessageReceivedEvent event, List<String> args) {
         this.commandCooldowns.set(sender.getIdLong(), System.currentTimeMillis());
         this.executions.getAndIncrement();
         command.middleMan(sender, server, event, args);

@@ -3,7 +3,7 @@ package pink.zak.giveawaybot.service.command.command;
 import com.google.common.collect.Lists;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.models.Server;
 import pink.zak.giveawaybot.service.command.argument.Argument;
@@ -16,17 +16,9 @@ public abstract class SubCommand extends Command {
     private final boolean endless;
     private List<Argument<?>> arguments = Lists.newArrayList();
 
-    public SubCommand(GiveawayBot bot, boolean requiresManager, boolean endless) {
+    public SubCommand(GiveawayBot bot, boolean requiresManager, boolean premium, boolean endless) {
         super(bot, requiresManager);
         this.endless = endless;
-    }
-
-    public SubCommand(GiveawayBot bot, boolean requiresManager) {
-        this(bot, requiresManager, false);
-    }
-
-    public SubCommand(GiveawayBot bot) {
-        this(bot, false, false);
     }
 
     public boolean isEndless() {
@@ -123,5 +115,5 @@ public abstract class SubCommand extends Command {
     }
 
     @Override
-    public abstract void onExecute(Member sender, Server server, MessageReceivedEvent event, List<String> args);
+    public abstract void onExecute(Member sender, Server server, GuildMessageReceivedEvent event, List<String> args);
 }

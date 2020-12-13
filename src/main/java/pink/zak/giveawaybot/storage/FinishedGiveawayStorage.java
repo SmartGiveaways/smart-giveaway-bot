@@ -5,15 +5,17 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.models.giveaway.FinishedGiveaway;
-import pink.zak.giveawaybot.service.cache.options.CacheStorage;
 import pink.zak.giveawaybot.service.storage.mongo.MongoDeserializer;
 import pink.zak.giveawaybot.service.storage.mongo.MongoSerializer;
 import pink.zak.giveawaybot.service.storage.mongo.MongoStorage;
 
 import java.math.BigInteger;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
-public class FinishedGiveawayStorage extends MongoStorage<Long, FinishedGiveaway> implements CacheStorage<Long, FinishedGiveaway> {
+public class FinishedGiveawayStorage extends MongoStorage<Long, FinishedGiveaway> {
     private final Gson gson = new Gson();
 
     public FinishedGiveawayStorage(GiveawayBot bot) {

@@ -1,8 +1,8 @@
-package pink.zak.giveawaybot.commands.giveaway.subs;
+package pink.zak.giveawaybot.commands.giveaway.subs.create;
 
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.commands.giveaway.GiveawayCmdUtils;
 import pink.zak.giveawaybot.models.Server;
@@ -16,21 +16,21 @@ public class CreateSub extends SubCommand {
     private final GiveawayCmdUtils cmdUtils;
 
     public CreateSub(GiveawayBot bot, GiveawayCmdUtils cmdUtils) {
-        super(bot, false, true);
+        super(bot, true, false, true);
         this.cmdUtils = cmdUtils;
 
         this.addFlat("create");
         this.addArgument(String.class);
         this.addArgument(String.class);
-        this.addArgument(Integer.class, NumberUtils::isInteger);
+        this.addArgument(Integer.class, NumberUtils::isLikelyInteger);
         this.addArgument(String.class);
     }
 
     @Override
-    public void onExecute(Member sender, Server server, MessageReceivedEvent event, List<String> args) {
+    public void onExecute(Member sender, Server server, GuildMessageReceivedEvent event, List<String> args) {
         String presetName = this.parseArgument(args, event.getGuild(), 1);
         long lengthMillis = Time.parse(this.parseArgument(args, event.getGuild(), 2));
-        TextChannel responseChannel = event.getTextChannel();
+        TextChannel responseChannel = event.getChannel();
         int winnerAmount = this.parseArgument(args, event.getGuild(), 3);
         String giveawayItem = String.join(" ", this.getEnd(args));
 

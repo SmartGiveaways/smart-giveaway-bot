@@ -4,7 +4,6 @@ import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.models.giveaway.FinishedGiveaway;
 import pink.zak.giveawaybot.service.cache.caches.AccessExpiringCache;
 
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
 public class FinishedGiveawayCache extends AccessExpiringCache<Long, FinishedGiveaway> {
@@ -14,10 +13,10 @@ public class FinishedGiveawayCache extends AccessExpiringCache<Long, FinishedGiv
     }
 
     @Override
-    public CompletableFuture<FinishedGiveaway> set(Long key, FinishedGiveaway value) {
-        CompletableFuture<FinishedGiveaway> val = super.set(key, value);
-        val.thenAccept(this.storage::save);
-        return val;
+    public FinishedGiveaway set(Long key, FinishedGiveaway value) {
+        super.set(key, value);
+        this.storage.save(value);
+        return value;
     }
 
     public void shutdown() {

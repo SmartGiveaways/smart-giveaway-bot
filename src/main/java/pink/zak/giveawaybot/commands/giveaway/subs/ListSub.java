@@ -2,7 +2,7 @@ package pink.zak.giveawaybot.commands.giveaway.subs;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.cache.GiveawayCache;
 import pink.zak.giveawaybot.controllers.GiveawayController;
@@ -20,7 +20,7 @@ public class ListSub extends SubCommand {
     private final GiveawayController giveawayController;
 
     public ListSub(GiveawayBot bot) {
-        super(bot, true);
+        super(bot, true, false, false);
         this.addFlatWithAliases("list", "show");
 
         this.palette = bot.getDefaults().getPalette();
@@ -29,9 +29,9 @@ public class ListSub extends SubCommand {
     }
 
     @Override
-    public void onExecute(Member sender, Server server, MessageReceivedEvent event, List<String> args) {
+    public void onExecute(Member sender, Server server, GuildMessageReceivedEvent event, List<String> args) {
         if (server.getActiveGiveaways().isEmpty()) {
-            this.langFor(server, Text.NO_ACTIVE_GIVEAWAYS).to(event.getTextChannel());
+            this.langFor(server, Text.NO_ACTIVE_GIVEAWAYS).to(event.getChannel());
             return;
         }
         StringBuilder descriptionBuilder = new StringBuilder();
@@ -45,7 +45,7 @@ public class ListSub extends SubCommand {
                     .append(giveaway.messageId())
                     .append(")\n");
         }
-        event.getTextChannel().sendMessage(new EmbedBuilder()
+        event.getChannel().sendMessage(new EmbedBuilder()
                 .setTitle(this.langFor(server, Text.GIVEAWAY_LIST_EMBED_TITLE).get())
                 .setFooter(this.langFor(server, Text.GENERIC_EMBED_FOOTER).get())
                 .setDescription(descriptionBuilder.toString())

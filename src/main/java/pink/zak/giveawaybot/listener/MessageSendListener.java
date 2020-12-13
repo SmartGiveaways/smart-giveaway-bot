@@ -1,13 +1,13 @@
 package pink.zak.giveawaybot.listener;
 
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
-import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import org.jetbrains.annotations.NotNull;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.entries.EntryPipeline;
 import pink.zak.giveawaybot.enums.EntryType;
+import pink.zak.giveawaybot.listener.message.GiveawayMessageListener;
+import pink.zak.giveawaybot.models.Server;
 
-public class MessageSendListener extends ListenerAdapter {
+public class MessageSendListener implements GiveawayMessageListener {
     private final EntryPipeline entryPipeline;
 
     public MessageSendListener(GiveawayBot bot) {
@@ -15,10 +15,7 @@ public class MessageSendListener extends ListenerAdapter {
     }
 
     @Override
-    public void onGuildMessageReceived(@NotNull GuildMessageReceivedEvent event) {
-        if (event.getAuthor().isBot()) {
-            return;
-        }
-        this.entryPipeline.process(EntryType.MESSAGES, event.getGuild().getIdLong(), event.getAuthor().getIdLong());
+    public void onExecute(Server server, GuildMessageReceivedEvent event) {
+        this.entryPipeline.process(EntryType.MESSAGES, server, event.getAuthor().getIdLong());
     }
 }

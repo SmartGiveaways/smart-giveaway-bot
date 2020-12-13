@@ -2,7 +2,7 @@ package pink.zak.giveawaybot.commands.about;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.cache.GiveawayCache;
 import pink.zak.giveawaybot.commands.about.subs.NerdSub;
@@ -37,8 +37,8 @@ public class BotAboutCommand extends SimpleCommand {
     }
 
     @Override
-    public void onExecute(Member sender, Server server, MessageReceivedEvent event, List<String> args) {
-        event.getTextChannel().sendMessage(new EmbedBuilder()
+    public void onExecute(Member sender, Server server, GuildMessageReceivedEvent event, List<String> args) {
+        event.getChannel().sendMessage(new EmbedBuilder()
                 .setTitle(this.languageRegistry.get(server, Text.ABOUT_EMBED_TITLE).get())
                 .setFooter(this.languageRegistry.get(server, Text.GENERIC_EMBED_FOOTER).get())
                 .setColor(this.palette.primary())

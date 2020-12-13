@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.sharding.ShardManager;
 import net.dv8tion.jda.internal.utils.JDALogger;
 import org.slf4j.Logger;
 import pink.zak.giveawaybot.GiveawayBot;
+import pink.zak.giveawaybot.listener.message.MessageEventRegistry;
 import pink.zak.giveawaybot.service.command.CommandBase;
 import pink.zak.giveawaybot.service.command.command.SimpleCommand;
 import pink.zak.giveawaybot.service.config.Config;
@@ -27,6 +28,7 @@ import java.util.function.UnaryOperator;
 
 public abstract class JdaBot implements SimpleBot {
     public static final Logger logger = JDALogger.getLog(GiveawayBot.class);
+    protected final MessageEventRegistry messageEventRegistry = new MessageEventRegistry();
     protected final StorageSettings storageSettings;
     private final BackendFactory backendFactory;
     private final ConfigStore configStore;
@@ -71,7 +73,8 @@ public abstract class JdaBot implements SimpleBot {
                 logger.error("Unable to log into Discord, the following error occurred:", e);
             }
         }
-        this.shardManager.addEventListener(this.commandBase);
+        this.shardManager.addEventListener(this.messageEventRegistry);
+        this.messageEventRegistry.addListener(this.commandBase);
         new Thread(new ConsoleListener(bot)).start();
         this.initialized = true;
     }

@@ -42,7 +42,7 @@ public class UserCache extends AccessExpiringCache<Long, User> {
             User loaded = this.storage.load(userId, this.getUserValues(userId));
             super.loads.incrementAndGet();
             if (loaded != null) {
-                return this.setSync(userId, loaded);
+                return this.set(userId, loaded);
             }
             return null;
         }

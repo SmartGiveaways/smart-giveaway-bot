@@ -6,6 +6,7 @@ import pink.zak.giveawaybot.cache.ServerCache;
 import pink.zak.giveawaybot.entries.workers.EligibilityCheckStep;
 import pink.zak.giveawaybot.enums.EntryType;
 import pink.zak.giveawaybot.models.Preset;
+import pink.zak.giveawaybot.models.Server;
 
 public class EntryPipeline {
     private final EligibilityCheckStep checkStep;
@@ -20,27 +21,25 @@ public class EntryPipeline {
         this.defaultPreset = bot.getDefaults().getDefaultPreset();
     }
 
-    public void process(EntryType entryType, long guildId, long userId) {
-        this.serverCache.get(guildId).thenAccept(server -> {
-            if (server.getActiveGiveaways().isEmpty()) {
+    public void process(EntryType entryType, Server server, long userId) {
+        if (server.getActiveGiveaways().isEmpty()) {
+            return;
+        }
+        server.getUserCache().get(userId).thenAccept(user -> {
+            if (user.isBanned()) {
                 return;
             }
-            server.getUserCache().get(userId).thenAccept(user -> {
-                if (user.isBanned()) {
-                    return;
-                }
-                for (long giveawayId : server.getActiveGiveaways()) {
-                    this.giveawayCache.get(giveawayId).thenAccept(giveaway -> {
-                        if (giveaway == null) {
-                            return;
-                        }
-                        this.checkStep.process(entryType, user, giveaway, giveaway.presetName().equals("default") ? this.defaultPreset : server.getPreset(giveaway.presetName()));
-                    }).exceptionally(ex -> {
-                        GiveawayBot.getLogger().error("Server " + guildId + " user " + userId + " giveaway id " + giveawayId , ex);
-                        return null;
-                    });
-                }
-            });
+            for (long giveawayId : server.getActiveGiveaways()) {
+                this.giveawayCache.get(giveawayId).thenAccept(giveaway -> {
+                    if (giveaway == null) {
+                        return;
+                    }
+                    this.checkStep.process(entryType, user, giveaway, giveaway.presetName().equals("default") ? this.defaultPreset : server.getPreset(giveaway.presetName()));
+                }).exceptionally(ex -> {
+                    GiveawayBot.getLogger().error("Server " + server.getId() + " user " + userId + " giveaway id " + giveawayId, ex);
+                    return null;
+                });
+            }
         });
     }
 }

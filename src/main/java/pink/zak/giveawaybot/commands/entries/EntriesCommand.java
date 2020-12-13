@@ -3,7 +3,7 @@ package pink.zak.giveawaybot.commands.entries;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.cache.GiveawayCache;
 import pink.zak.giveawaybot.lang.enums.Text;
@@ -33,26 +33,26 @@ public class EntriesCommand extends SimpleCommand {
     }
 
     @Override
-    public void onExecute(Member sender, Server server, MessageReceivedEvent event, List<String> args) {
-        this.runLogic(sender, server, event.getTextChannel(), true);
+    public void onExecute(Member sender, Server server, GuildMessageReceivedEvent event, List<String> args) {
+        this.runLogic(sender, server, event.getChannel(), true);
     }
 
     private class UserEntriesSub extends SubCommand {
 
         public UserEntriesSub(GiveawayBot bot) {
-            super(bot, true);
+            super(bot, true, false, false);
 
             this.addArgument(Member.class); // target
         }
 
         @Override
-        public void onExecute(Member sender, Server server, MessageReceivedEvent event, List<String> args) {
+        public void onExecute(Member sender, Server server, GuildMessageReceivedEvent event, List<String> args) {
             Member target = this.parseArgument(args, event.getGuild(), 0);
             if (target == null) {
-                this.langFor(server, Text.COULDNT_FIND_MEMBER).to(event.getTextChannel());
+                this.langFor(server, Text.COULDNT_FIND_MEMBER).to(event.getChannel());
                 return;
             }
-            runLogic(target, server, event.getTextChannel(), false);
+            runLogic(target, server, event.getChannel(), false);
         }
     }
 
