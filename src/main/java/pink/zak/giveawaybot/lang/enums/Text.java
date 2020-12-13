@@ -14,6 +14,7 @@ public enum Text {
     FATAL_ERROR_LOADING_SERVER,
     GENERIC_FAILURE,
     GENERIC_EMBED_FOOTER,
+    COMMAND_REQUIRES_PREMIUM,
 
     // Applies to giveaway messages / embeds
     GIVEAWAY_EMBED_TITLE,

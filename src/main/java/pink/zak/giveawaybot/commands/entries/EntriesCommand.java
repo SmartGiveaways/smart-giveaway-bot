@@ -23,7 +23,7 @@ public class EntriesCommand extends SimpleCommand {
     private final Palette palette;
 
     public EntriesCommand(GiveawayBot bot) {
-        super(bot, false, "entries");
+        super(bot, "entries", false, false);
         this.giveawayCache = bot.getGiveawayCache();
         this.palette = bot.getDefaults().getPalette();
 

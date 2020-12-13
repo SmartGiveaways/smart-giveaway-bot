@@ -21,7 +21,7 @@ public class HelpCommand extends SimpleCommand {
     private final Map<Language, MessageEmbed> fullMessageEmbed = Maps.newHashMap();
 
     public HelpCommand(GiveawayBot bot) {
-        super(bot, false, "ghelp");
+        super(bot, "ghelp", false, false);
 
         this.buildMessages(bot.getLanguageRegistry(), bot.getDefaults().getPalette());
     }

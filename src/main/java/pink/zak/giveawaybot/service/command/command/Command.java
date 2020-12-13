@@ -13,12 +13,14 @@ import java.util.List;
 public abstract class Command {
     protected final GiveawayBot bot;
     protected final LanguageRegistry languageRegistry;
-    private final boolean requiresManager;
+    private final boolean manager;
+    private final boolean requiresPremium;
 
-    public Command(GiveawayBot bot, boolean requiresManager) {
+    public Command(GiveawayBot bot, boolean manager, boolean premium) {
         this.bot = bot;
         this.languageRegistry = bot.getLanguageRegistry();
-        this.requiresManager = requiresManager;
+        this.manager = manager;
+        this.requiresPremium = premium;
     }
 
     public abstract void onExecute(Member sender, Server server, GuildMessageReceivedEvent event, List<String> args);
@@ -28,7 +30,11 @@ public abstract class Command {
     }
 
     public boolean requiresManager() {
-        return this.requiresManager;
+        return this.manager;
+    }
+
+    public boolean requiresPremium() {
+        return this.requiresPremium;
     }
 
     protected LanguageRegistry.LangSub langFor(Server server, Text text, Replace replace) {

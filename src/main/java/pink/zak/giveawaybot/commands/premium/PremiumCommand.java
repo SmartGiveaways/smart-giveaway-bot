@@ -16,7 +16,7 @@ public class PremiumCommand extends SimpleCommand {
     private final Palette palette;
 
     public PremiumCommand(GiveawayBot bot) {
-        super(bot, false, "premium");
+        super(bot, "premium", false, false);
 
         this.palette = bot.getDefaults().getPalette();
     }

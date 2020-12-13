@@ -23,7 +23,7 @@ public class BanCommand extends SimpleCommand {
     private final Map<Language, MessageEmbed> messageEmbeds = Maps.newHashMap();
 
     public BanCommand(GiveawayBot bot) {
-        super(bot, true, "gban");
+        super(bot, "gban", true, false);
 
         BanCmdUtils cmdUtils = new BanCmdUtils(bot);
         BanListSub banListSub = new BanListSub(bot);

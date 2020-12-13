@@ -27,7 +27,7 @@ public class GiveawayCommand extends SimpleCommand {
     private final Map<Language, MessageEmbed> embedMessages = Maps.newHashMap();
 
     public GiveawayCommand(GiveawayBot bot) {
-        super(bot, true, "giveaway");
+        super(bot, "giveaway", true, false);
         GiveawayCmdUtils cmdUtils = new GiveawayCmdUtils(bot);
         this.setAliases("g");
 

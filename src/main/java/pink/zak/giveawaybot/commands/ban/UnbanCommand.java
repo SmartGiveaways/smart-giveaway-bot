@@ -15,7 +15,7 @@ import java.util.List;
 public class UnbanCommand extends SimpleCommand {
 
     public UnbanCommand(GiveawayBot bot) {
-        super(bot, true, "gunban");
+        super(bot, "gunban", true, false);
         this.setAliases("gpardon");
 
         this.setSubCommands(new UnbanSub(bot));

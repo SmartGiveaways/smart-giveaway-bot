@@ -21,7 +21,7 @@ public class PresetCommand extends SimpleCommand {
     private final Map<Language, MessageEmbed> embedMessages = Maps.newHashMap();
 
     public PresetCommand(GiveawayBot bot) {
-        super(bot, "preset");
+        super(bot, "preset", true, false);
 
         this.setAliases("presets");
         this.setSubCommands(

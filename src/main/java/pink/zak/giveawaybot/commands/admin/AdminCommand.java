@@ -23,7 +23,7 @@ public class AdminCommand extends SimpleCommand {
     private final Map<Language, MessageEmbed> messageEmbeds = Maps.newHashMap();
 
     public AdminCommand(GiveawayBot bot) {
-        super(bot, true, "gadmin");
+        super(bot, "gadmin", true, false);
 
         this.setAliases("gmanage", "gmng", "gadmn");
         this.setSubCommands(

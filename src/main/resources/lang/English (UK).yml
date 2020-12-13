@@ -14,6 +14,7 @@ values:
   fatal-error-loading-server: ":warning: There was a fatal error loading your server. Please join the support discord and scream at Zak."
   generic-failure: ":x: Something went wrong. Please try again in a few minutes."
   generic-embed-footer: "SmartGiveaways v1.0.0 - https://docs.sgs.pink/"
+  command-requires-premium: "This command requires premium. Donate here https://sgs.pink/premium."
 
   # giveaway messages
   giveaway-embed-title: "Giveaway: %item%"

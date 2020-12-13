@@ -105,6 +105,10 @@ public class CommandBase implements GiveawayMessageListener {
                 if (!this.hasAccess(server, simpleCommand, event.getMessage(), sender)) {
                     return;
                 }
+                if (!server.isPremium() && simpleCommand.requiresPremium()) {
+                    this.languageRegistry.get(server, Text.COMMAND_REQUIRES_PREMIUM).to(channel);
+                    return;
+                }
                 Member member = event.getMember();
                 if (member == null) {
                     return;
@@ -128,6 +132,10 @@ public class CommandBase implements GiveawayMessageListener {
                 this.commandCooldowns.set(member.getIdLong(), System.currentTimeMillis());
                 if (subResult == null) {
                     this.executeCommand(simpleCommand, sender, server, event, args);
+                    return;
+                }
+                if (!server.isPremium() && subResult.requiresPremium()) {
+                    this.languageRegistry.get(server, Text.COMMAND_REQUIRES_PREMIUM).to(channel);
                     return;
                 }
                 if (this.hasAccess(server, subResult, event.getMessage(), sender)) {

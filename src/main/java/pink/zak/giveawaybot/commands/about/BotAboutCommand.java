@@ -23,7 +23,7 @@ public class BotAboutCommand extends SimpleCommand {
     private final Palette palette;
 
     public BotAboutCommand(GiveawayBot bot) {
-        super(bot, false, "babout");
+        super(bot, "babout", false, false);
         this.setAliases("binfo", "gabout", "ginfo", "whatthisbotdo");
         this.setSubCommands(
                 new NerdSub(bot)

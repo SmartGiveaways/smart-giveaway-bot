@@ -16,8 +16,8 @@ public abstract class SubCommand extends Command {
     private final boolean endless;
     private List<Argument<?>> arguments = Lists.newArrayList();
 
-    public SubCommand(GiveawayBot bot, boolean requiresManager, boolean premium, boolean endless) {
-        super(bot, requiresManager);
+    public SubCommand(GiveawayBot bot, boolean manager, boolean premium, boolean endless) {
+        super(bot, manager, premium);
         this.endless = endless;
     }
 
