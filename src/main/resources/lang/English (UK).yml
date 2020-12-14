@@ -11,6 +11,7 @@ values:
   couldnt-find-preset: ":x: Could not find that preset."
   couldnt-find-setting: ":x: Could not find that setting. Use `>preset settings` if you're unsure."
   no-active-giveaways: ":x: There are no active giveaways in this server."
+  no-scheduled-giveaways: ":x: There are no scheduled giveaways in this server."
   fatal-error-loading-server: ":warning: There was a fatal error loading your server. Please join the support discord and scream at Zak."
   generic-failure: ":x: Something went wrong. Please try again in a few minutes."
   generic-embed-footer: "SmartGiveaways v1.0.0 - https://docs.sgs.pink/"
@@ -101,7 +102,7 @@ values:
   giveaway-help-embed-title: "Giveaway Command Help"
   giveaway-help-embed-footer: "Want all commands? See >ghelp or go to https://docs.sgs.pink/commands"
   giveaway-help-embed-content: ">g list\n
-                            >g scheduled\n
+                            >g list scheduled\n
                             >g schedule <preset> <delay> <length> <channel> <winner amount> <item/topic>\n
                             >g schedule <preset> <delay> <length> <winner amount> <item/topic>\n
                             >g create <preset> <length> <channel> <winner amount> <item/topic>\n
@@ -123,10 +124,12 @@ values:
   winner-amount-too-small: "Giveaways must have at least 1 winner."
   parsing-reward-failed: "Issue parsing giveaway reward."
   # schedule sub
+  scheduled-giveaway-list-embed-title: "Scheduled Giveaways"
   giveaway-scheduled: ":white_check_mark: Your giveaway has been scheduled in the channel %channel%. It will be posted at %time%."
   scheduled-time-too-soon: "The scheduled time must be more than 2 minutes away."
   scheduled-time-too-far-away: "The scheduled time must be less than 2 months."
   scheduled-giveaway-limit-failure: ":x: Your guild has reached the maximum of 10 scheduled giveaways."
+  scheduled-giveaway-limit-failure-future: ":x: At the time specified, your guild would have more than 10 giveaways running."
   # delete sub
   giveaway-deleted: "Deleted the giveaway for: %giveaway-item%"
   # reroll messages

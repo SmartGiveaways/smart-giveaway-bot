@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.commands.giveaway.subs.DeleteSub;
+import pink.zak.giveawaybot.commands.giveaway.subs.ListScheduledSub;
 import pink.zak.giveawaybot.commands.giveaway.subs.ListSub;
 import pink.zak.giveawaybot.commands.giveaway.subs.RerollSub;
 import pink.zak.giveawaybot.commands.giveaway.subs.create.CreateSub;
@@ -37,6 +38,7 @@ public class GiveawayCommand extends SimpleCommand {
                 new ScheduleSub(bot, cmdUtils),
                 new ScheduleWithChannelSub(bot, cmdUtils),
                 new DeleteSub(bot),
+                new ListScheduledSub(bot),
                 new ListSub(bot),
                 new RerollSub(bot)
         );

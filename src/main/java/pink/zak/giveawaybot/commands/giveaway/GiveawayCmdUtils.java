@@ -12,16 +12,10 @@ import pink.zak.giveawaybot.models.giveaway.ScheduledGiveaway;
 import pink.zak.giveawaybot.service.time.TimeIdentifier;
 import pink.zak.giveawaybot.service.tuple.ImmutablePair;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
-
 public class GiveawayCmdUtils {
     private final GiveawayController giveawayController;
     private final ScheduledGiveawayController scheduledGiveawayController;
     private final LanguageRegistry lang;
-    private final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd kk:mm:ss");
 
     public GiveawayCmdUtils(GiveawayBot bot) {
         this.giveawayController = bot.getGiveawayController();
@@ -46,6 +40,9 @@ public class GiveawayCmdUtils {
             case GIVEAWAY_LIMIT_FAILURE:
                 this.lang.get(server, Text.SCHEDULED_GIVEAWAY_LIMIT_FAILURE).to(responseChannel);
                 break;
+            case FUTURE_GIVEAWAY_LIMIT_FAILURE:
+                this.lang.get(server, Text.SCHEDULED_GIVEAWAY_LIMIT_FAILURE_FUTURE).to(responseChannel);
+                break;
             case NO_PRESET:
                 this.lang.get(server, Text.NO_PRESET_FOUND_ON_CREATION).to(responseChannel);
                 break;
@@ -53,15 +50,13 @@ public class GiveawayCmdUtils {
                 this.lang.get(server, Text.BOT_DOESNT_HAVE_PERMISSIONS).to(responseChannel);
                 break;
             case SUCCESS:
-                String formattedTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(returnedInfo.getKey().startTime()), ZoneOffset.UTC).format(this.dateFormat);
                 this.lang.get(server, Text.GIVEAWAY_SCHEDULED, replacer -> replacer
                         .set("channel", giveawayChannel.getAsMention())
-                        .set("time", formattedTime + " UTC+0")).to(responseChannel);
+                        .set("time", returnedInfo.getKey().getStartFormatted())).to(responseChannel);
                 break;
             default:
                 GiveawayBot.getLogger().error("You messed up bad. GiveawayCmdUtils 1");
                 break;
-
         }
     }
 

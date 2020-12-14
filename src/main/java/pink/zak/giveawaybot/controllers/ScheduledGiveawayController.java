@@ -47,7 +47,14 @@ public class ScheduledGiveawayController {
         if (!presetName.equalsIgnoreCase("default") && server.getPreset(presetName) == null) {
             return ImmutablePair.of(null, ReturnCode.NO_PRESET);
         }
-        ScheduledGiveaway giveaway = new ScheduledGiveaway(giveawayChannel.getIdLong(), server.getId(), timeUntil, length, winnerAmount, presetName, giveawayItem);
+        long startTime = System.currentTimeMillis() + timeUntil;
+        long endTime = startTime + length;
+        if (this.giveawayController.getGiveawayCountAt(server, startTime, endTime) >= 10) {
+            return ImmutablePair.of(null, ReturnCode.FUTURE_GIVEAWAY_LIMIT_FAILURE);
+        }
+        ScheduledGiveaway giveaway = new ScheduledGiveaway(giveawayChannel.getIdLong(), server.getId(), startTime, endTime, winnerAmount, presetName, giveawayItem);
+        this.scheduledGiveawayCache.set(giveaway.uuid(), giveaway);
+        server.getScheduledGiveaways().add(giveaway.uuid());
         this.schedule(giveaway);
         return ImmutablePair.of(giveaway, ReturnCode.SUCCESS);
     }
@@ -73,6 +80,7 @@ public class ScheduledGiveawayController {
                 return;
             }
             this.scheduledGiveawayCache.invalidateAsync(giveaway.uuid(), false);
+            server.getScheduledGiveaways().remove(giveaway.uuid());
             this.giveawayController.createGiveaway(
                     server, giveaway.endTime() - System.currentTimeMillis(), giveaway.winnerAmount(), giveawayChannel, giveaway.presetName(), giveaway.giveawayItem()
             );

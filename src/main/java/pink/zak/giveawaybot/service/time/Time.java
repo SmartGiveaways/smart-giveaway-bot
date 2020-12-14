@@ -2,8 +2,15 @@ package pink.zak.giveawaybot.service.time;
 
 import lombok.experimental.UtilityClass;
 
+import java.time.format.DateTimeFormatter;
+
 @UtilityClass
 public class Time {
+    private static final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd kk:mm:ss");
+
+    public static DateTimeFormatter getDateFormat() {
+        return dateFormat;
+    }
 
     public static String format(long millis) {
         int seconds = (int) Math.floor((double) millis / 1000);

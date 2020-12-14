@@ -24,7 +24,10 @@ import pink.zak.giveawaybot.lang.enums.Text;
 import pink.zak.giveawaybot.models.Preset;
 import pink.zak.giveawaybot.models.Server;
 import pink.zak.giveawaybot.models.User;
-import pink.zak.giveawaybot.models.giveaway.*;
+import pink.zak.giveawaybot.models.giveaway.CurrentGiveaway;
+import pink.zak.giveawaybot.models.giveaway.FinishedGiveaway;
+import pink.zak.giveawaybot.models.giveaway.Giveaway;
+import pink.zak.giveawaybot.models.giveaway.RichGiveaway;
 import pink.zak.giveawaybot.service.colour.Palette;
 import pink.zak.giveawaybot.service.time.Time;
 import pink.zak.giveawaybot.service.tuple.ImmutablePair;
@@ -124,6 +127,42 @@ public class GiveawayController {
         }
     }
 
+    /**
+     * Gets the most giveaways concurrently active in a certain period
+     * Surprisingly performance efficient (sub 1ms when giveaways are cached)
+     */
+    public int getGiveawayCountAt(Server server, long startTime, long endTime) {
+        Set<Long> checkpoints = Sets.newHashSet(startTime, endTime);
+        Set<Giveaway> giveaways = Sets.newHashSet();
+        for (long id : server.getActiveGiveaways()) {
+            giveaways.add(this.giveawayCache.getSync(id));
+        }
+        for (UUID id : server.getScheduledGiveaways()) {
+            giveaways.add(this.scheduledGiveawayCache.getSync(id));
+        }
+        for (Giveaway giveaway : giveaways) {
+            if (giveaway.startTime() >= startTime && giveaway.startTime() <= endTime) {
+                checkpoints.add(giveaway.startTime());
+            }
+            if (giveaway.endTime() <= endTime && giveaway.endTime() >= startTime) {
+                checkpoints.add(giveaway.endTime());
+            }
+        }
+        int maxCount = 0;
+        for (long checkpoint : checkpoints) {
+            int checkpointCount = 0;
+            for (Giveaway giveaway : giveaways) {
+                if (giveaway.startTime() <= checkpoint && giveaway.endTime() >= checkpoint) {
+                    checkpointCount++;
+                }
+            }
+            if (checkpointCount > maxCount) {
+                maxCount = checkpointCount;
+            }
+        }
+        return maxCount;
+    }
+
     public void loadAllGiveaways() {
         long loadStartTime = System.currentTimeMillis();
         this.bot.runAsync(ThreadFunction.STORAGE, () -> {
@@ -133,7 +172,7 @@ public class GiveawayController {
                     continue;
                 }
                 if (!giveaway.isActive()) {
-                    this.endGiveaway(giveaway);
+                    this.bot.runAsync(ThreadFunction.STORAGE, () -> this.endGiveaway(giveaway));
                     continue;
                 }
                 this.giveawayCache.addGiveaway(giveaway);
