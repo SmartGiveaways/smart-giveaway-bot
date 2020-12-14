@@ -27,6 +27,7 @@ import pink.zak.giveawaybot.entries.EntryPipeline;
 import pink.zak.giveawaybot.lang.LanguageRegistry;
 import pink.zak.giveawaybot.listener.GiveawayDeletionListener;
 import pink.zak.giveawaybot.listener.ReactionAddListener;
+import pink.zak.giveawaybot.listener.message.MessageSendListener;
 import pink.zak.giveawaybot.metrics.MetricsLogger;
 import pink.zak.giveawaybot.metrics.helpers.LatencyMonitor;
 import pink.zak.giveawaybot.service.bot.JdaBot;
@@ -140,6 +141,7 @@ public class GiveawayBot extends JdaBot {
 
         this.messageEventRegistry.setServerCache(this.serverCache);
         this.registerListeners(
+                new MessageSendListener(this),
                 new ReactionAddListener(this),
                 new GiveawayDeletionListener(this)
         );
@@ -205,6 +207,10 @@ public class GiveawayBot extends JdaBot {
 
     public Metrics getMetrics() {
         return this.metrics;
+    }
+
+    public LatencyMonitor getLatencyMonitor() {
+        return this.latencyMonitor;
     }
 
     public void runOnMainThread(Runnable runnable) {

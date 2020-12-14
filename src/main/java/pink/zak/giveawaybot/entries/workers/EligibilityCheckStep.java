@@ -28,6 +28,9 @@ public class EligibilityCheckStep {
             user.entries().put(giveaway.messageId(), Maps.newEnumMap(EntryType.class));
             giveaway.enteredUsers().add(user.id());
         }
+        if (!user.entries().containsKey(giveaway.messageId())) {
+            user.entries().put(giveaway.messageId(), Maps.newEnumMap(EntryType.class));
+        }
         if (user.hasEntries(giveaway.messageId()) && user.entries(giveaway.messageId()).compareTo(new BigInteger(String.valueOf(preset.getSetting(Setting.MAX_ENTRIES)))) > -1) {
             return;
         }

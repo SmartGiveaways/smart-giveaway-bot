@@ -28,4 +28,9 @@ public record CurrentGiveaway(long messageId, long channelId, long serverId, lon
     public boolean isActive() {
         return this.timeToExpiry() > 0;
     }
+
+    @Override
+    public String messageLink() {
+        return "https://discord.com/channels/" + this.serverId + "/" + this.channelId + "/" + this.messageId;
+    }
 }

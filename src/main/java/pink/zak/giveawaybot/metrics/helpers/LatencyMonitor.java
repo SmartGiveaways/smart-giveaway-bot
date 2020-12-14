@@ -35,7 +35,7 @@ public class LatencyMonitor {
         reader.close();
     }
 
-    public void testLatency() {
+    private void testLatency() {
         long startTime = System.currentTimeMillis();
         this.testChannel.sendMessage(this.messageLines.get(ThreadLocalRandom.current().nextInt(0, this.messageLines.size() - 1))).queue(message -> {
             this.lastTiming = System.currentTimeMillis() - startTime;

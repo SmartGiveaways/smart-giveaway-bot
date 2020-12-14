@@ -38,6 +38,7 @@ public class HelpCommand extends SimpleCommand {
                     .setTitle(languageRegistry.get(language, Text.HELP_EMBED_TITLE).get())
                     .setFooter(languageRegistry.get(language, Text.HELP_EMBED_FOOTER).get())
                     .setColor(palette.primary())
+                    .setDescription(languageRegistry.get(language, Text.GENERIC_COMMAND_USAGE_EXAMPLE, replacer -> replacer.set("command", "command")).get())
                     .addField("General Commands", languageRegistry.get(language, Text.HELP_LIMITED_SECTION).get(), false);
             this.limitedMessageEmbed.put(language, embedBuilder.build());
             embedBuilder.addField("Admin Commands",

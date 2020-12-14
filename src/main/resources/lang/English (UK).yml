@@ -8,11 +8,13 @@ values:
   couldnt-find-role: ":x: Could not find that role ;("
   couldnt-find-channel: ":x: The specified channel could not be found. Make sure the bot can access it."
   couldnt-find-giveaway: ":x: Could not find a giveaway with that ID. Make sure the giveaway is finished and you're using the message ID."
+  couldnt-find-scheduled-giveaway: ":x: Could not find a scheduled giveaway with that UUID. Use `>g list scheduled` to list scheduled giveaways.."
   couldnt-find-preset: ":x: Could not find that preset."
   couldnt-find-setting: ":x: Could not find that setting. Use `>preset settings` if you're unsure."
   no-active-giveaways: ":x: There are no active giveaways in this server."
   no-scheduled-giveaways: ":x: There are no scheduled giveaways in this server."
   fatal-error-loading-server: ":warning: There was a fatal error loading your server. Please join the support discord and scream at Zak."
+  generic-command-usage-example: "`>%command% <required> [optional]`\n\n"
   generic-failure: ":x: Something went wrong. Please try again in a few minutes."
   generic-embed-footer: "SmartGiveaways v1.0.0 - https://docs.sgs.pink/"
   command-requires-premium: "This command requires premium. Donate here https://sgs.pink/premium."
@@ -46,7 +48,15 @@ values:
   admin-embed-title: "Admin Command Help"
   admin-embed-content: ">gadmin roles - List manager roles\n
                         >gadmin role add <role> - Add a manager role\n
-                        >gadmin role remove <role> - Remove a manager role\n"
+                        >gadmin role remove <role> - Remove a manager role\n
+                        >gadmin languages - List the available languages
+                        >gadmin language <language> - Set the server language
+                        >gadmin "
+
+  admin-list-languages-embed-title: "Available Languages"
+  admin-list-languages-embed-footer: "Use >gadmin language <language> to set the language"
+  admin-language-not-found: "Could not find that language. Use >gadmin languages to list the available languages."
+  admin-set-language: "Your language has been set to English UK."
 
   admin-no-managers: ":x: There are not any manager roles right now. Add them with `>gadmin role add <role>"
   admin-manager-list-title: "Manager Roles"
@@ -101,15 +111,11 @@ values:
   # >giveaway command messages
   giveaway-help-embed-title: "Giveaway Command Help"
   giveaway-help-embed-footer: "Want all commands? See >ghelp or go to https://docs.sgs.pink/commands"
-  giveaway-help-embed-content: ">g list\n
-                            >g list scheduled\n
-                            >g schedule <preset> <delay> <length> <channel> <winner amount> <item/topic>\n
-                            >g schedule <preset> <delay> <length> <winner amount> <item/topic>\n
-                            >g create <preset> <length> <channel> <winner amount> <item/topic>\n
-                            >g create <preset> <length> <winner amount> <item/topic>\n
-                            >g delete <message id>\n
-                            >g reroll <message id>\n
-                            >g reroll <message id> <user> (WIP not done)"
+  giveaway-help-embed-content: ":newspaper: >g list [scheduled]\n
+                            <a:loading1:788070036635779072> >g schedule <preset> <delay> <length> [channel] <winner amount> <item/topic>\n
+                            <a:tada1:788070725755600957> >g create <preset> <length> [channel] <winner amount> <item/topic>\n
+                            :wastebasket: >g delete <message id>\n
+                            :game_die: >g reroll <message id> [user] (WIP not done)"
   giveaway-list-embed-title: "Current Giveaways"
   giveaway-limit-failure: ":x: Your guild has reached the maximum number of 5 giveaways."
   giveaway-limit-failure-premium: ":x: Your guild has reached the maximum number of 10 premium giveaways."
@@ -131,7 +137,8 @@ values:
   scheduled-giveaway-limit-failure: ":x: Your guild has reached the maximum of 10 scheduled giveaways."
   scheduled-giveaway-limit-failure-future: ":x: At the time specified, your guild would have more than 10 giveaways running."
   # delete sub
-  giveaway-deleted: "Deleted the giveaway for: %giveaway-item%"
+  scheduled-giveaway-deleted: "Deleted the scheduled giveaway for: %item%"
+  giveaway-deleted: "Deleted the giveaway for: %item%"
   # reroll messages
   reroll-over-24-hours: ":x: You can only reroll a giveaway within 24 hours."
   reroll-one-winner: "Your new winner is %winner%"

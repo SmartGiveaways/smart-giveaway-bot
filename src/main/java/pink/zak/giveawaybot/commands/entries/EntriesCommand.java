@@ -79,7 +79,7 @@ public class EntriesCommand extends SimpleCommand {
                 if (giveaway != null) {
                     descriptionBuilder.append(this.langFor(server,
                             entries.compareTo(BigInteger.ONE) < 1 ? Text.ENTRIES_EMBED_GIVEAWAY_LINE : Text.ENTRIES_EMBED_GIVEAWAY_LINE_PLURAL, replacer -> replacer
-                                    .set("item", giveaway.giveawayItem())
+                                    .set("item", "[" + giveaway.giveawayItem() + "](" + giveaway.messageLink() + ")")
                                     .set("entries", entries.toString())).get());
                 }
             }

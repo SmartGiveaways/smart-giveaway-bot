@@ -1,4 +1,4 @@
-package pink.zak.giveawaybot.commands.admin.subs;
+package pink.zak.giveawaybot.commands.admin.subs.manager;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;

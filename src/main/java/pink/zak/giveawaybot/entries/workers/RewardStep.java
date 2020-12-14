@@ -18,7 +18,6 @@ public class RewardStep {
     }
 
     public void process(EntryType entryType, User user, CurrentGiveaway giveaway, Preset preset) {
-
         EnumMap<EntryType, AtomicInteger> entries = user.entries().get(giveaway.messageId());
         switch (entryType) {
             case MESSAGES -> this.add(entryType, entries, (int) preset.getSetting(Setting.ENTRIES_PER_MESSAGE));

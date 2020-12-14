@@ -37,7 +37,7 @@ public class GiveawayCommand extends SimpleCommand {
                 new CreateWithChannelSub(bot, cmdUtils),
                 new ScheduleSub(bot, cmdUtils),
                 new ScheduleWithChannelSub(bot, cmdUtils),
-                new DeleteSub(bot),
+                new DeleteSub(bot, this),
                 new ListScheduledSub(bot),
                 new ListSub(bot),
                 new RerollSub(bot)
@@ -56,7 +56,8 @@ public class GiveawayCommand extends SimpleCommand {
             EmbedBuilder embedBuilder = new EmbedBuilder()
                     .setTitle(languageRegistry.get(language, Text.GIVEAWAY_HELP_EMBED_TITLE).get())
                     .setFooter(languageRegistry.get(language, Text.GIVEAWAY_HELP_EMBED_FOOTER).get())
-                    .setDescription(languageRegistry.get(language, Text.GIVEAWAY_HELP_EMBED_CONTENT).get())
+                    .setDescription(languageRegistry.get(language, Text.GENERIC_COMMAND_USAGE_EXAMPLE, replacer -> replacer.set("command", "g")) +
+                            languageRegistry.get(language, Text.GIVEAWAY_HELP_EMBED_CONTENT).get())
                     .setColor(palette.primary());
             this.embedMessages.put(language, embedBuilder.build());
         }

@@ -1,5 +1,7 @@
 package pink.zak.giveawaybot.controllers;
 
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.sharding.ShardManager;
@@ -13,6 +15,7 @@ import pink.zak.giveawaybot.models.giveaway.ScheduledGiveaway;
 import pink.zak.giveawaybot.service.tuple.ImmutablePair;
 import pink.zak.giveawaybot.storage.ScheduledGiveawayStorage;
 
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -37,7 +40,7 @@ public class ScheduledGiveawayController {
         this.load();
     }
 
-    public ImmutablePair<ScheduledGiveaway, ReturnCode> schedule(Server server, String presetName, long timeUntil, long length, TextChannel giveawayChannel, int winnerAmount, String giveawayItem) {
+    public ImmutablePair<ScheduledGiveaway, ReturnCode> schedule(Server server, String presetName, long startTime, long endTime, TextChannel giveawayChannel, int winnerAmount, String giveawayItem) {
         if (server.getScheduledGiveaways().size() >= 10) {
             return ImmutablePair.of(null, ReturnCode.GIVEAWAY_LIMIT_FAILURE);
         }
@@ -47,8 +50,6 @@ public class ScheduledGiveawayController {
         if (!presetName.equalsIgnoreCase("default") && server.getPreset(presetName) == null) {
             return ImmutablePair.of(null, ReturnCode.NO_PRESET);
         }
-        long startTime = System.currentTimeMillis() + timeUntil;
-        long endTime = startTime + length;
         if (this.giveawayController.getGiveawayCountAt(server, startTime, endTime) >= 10) {
             return ImmutablePair.of(null, ReturnCode.FUTURE_GIVEAWAY_LIMIT_FAILURE);
         }
@@ -82,15 +83,37 @@ public class ScheduledGiveawayController {
             this.scheduledGiveawayCache.invalidateAsync(giveaway.uuid(), false);
             server.getScheduledGiveaways().remove(giveaway.uuid());
             this.giveawayController.createGiveaway(
-                    server, giveaway.endTime() - System.currentTimeMillis(), giveaway.winnerAmount(), giveawayChannel, giveaway.presetName(), giveaway.giveawayItem()
+                    server, giveaway.endTime() - giveaway.startTime(), giveaway.endTime(), giveaway.winnerAmount(), giveawayChannel, giveaway.presetName(), giveaway.giveawayItem()
             );
         });
     }
 
+    public void deleteGiveaway(Server server, ScheduledGiveaway giveaway) {
+        this.scheduledGiveawayCache.invalidate(giveaway.uuid(), false);
+        this.scheduledGiveawayStorage.delete(giveaway.uuid());
+        server.getScheduledGiveaways().remove(giveaway.uuid());
+    }
+
     private void load() {
         Set<ScheduledGiveaway> giveaways = this.scheduledGiveawayStorage.loadAll();
+        Map<Long, Set<ScheduledGiveaway>> giveawaysToRemove = Maps.newHashMap();
         for (ScheduledGiveaway giveaway : giveaways) {
+            if (System.currentTimeMillis() - giveaway.endTime() > 5000) {
+                if (giveawaysToRemove.containsKey(giveaway.serverId())) {
+                    giveawaysToRemove.get(giveaway.serverId()).add(giveaway);
+                } else {
+                    giveawaysToRemove.put(giveaway.serverId(), Sets.newHashSet(giveaway));
+                }
+                continue;
+            }
             this.schedule(giveaway);
+        }
+        for (long serverId : giveawaysToRemove.keySet()) {
+            this.serverCache.get(serverId).thenAccept(server -> {
+                for (ScheduledGiveaway giveaway : giveawaysToRemove.get(serverId)) {
+                    this.deleteGiveaway(server, giveaway);
+                }
+            });
         }
     }
 }

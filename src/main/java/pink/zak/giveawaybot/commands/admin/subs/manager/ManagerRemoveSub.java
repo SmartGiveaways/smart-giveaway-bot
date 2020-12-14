@@ -1,4 +1,4 @@
-package pink.zak.giveawaybot.commands.admin.subs;
+package pink.zak.giveawaybot.commands.admin.subs.manager;
 
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
@@ -10,31 +10,27 @@ import pink.zak.giveawaybot.service.command.command.SubCommand;
 
 import java.util.List;
 
-public class ManagerAddSub extends SubCommand {
+public class ManagerRemoveSub extends SubCommand {
 
-    public ManagerAddSub(GiveawayBot bot) {
+    public ManagerRemoveSub(GiveawayBot bot) {
         super(bot, true, false, false);
         this.addFlatWithAliases("role", "manager");
-        this.addFlat("add");
+        this.addFlat("remove");
         this.addArgument(Role.class);
     }
 
     @Override
     public void onExecute(Member sender, Server server, GuildMessageReceivedEvent event, List<String> args) {
-        if (server.getManagerRoles().size() >= 5) {
-            this.langFor(server, Text.ADMIN_MANAGER_LIMIT_REACHED).to(event.getChannel());
-            return;
-        }
         Role role = this.parseArgument(args, event.getGuild(), 2);
         if (role == null) {
             this.langFor(server, Text.COULDNT_FIND_ROLE).to(event.getChannel());
             return;
         }
-        if (server.getManagerRoles().contains(role.getIdLong())) {
-            this.langFor(server, Text.ADMIN_MANAGER_ALREADY_CONTAINS).to(event.getChannel());
+        if (!server.getManagerRoles().contains(role.getIdLong())) {
+            this.langFor(server, Text.ADMIN_MANAGER_DOESNT_CONTAIN).to(event.getChannel());
             return;
         }
-        server.getManagerRoles().add(role.getIdLong());
-        this.langFor(server, Text.ADMIN_MANAGER_ROLE_ADDED, replacer -> replacer.set("name", role.getName())).to(event.getChannel());
+        server.getManagerRoles().remove(role.getIdLong());
+        this.langFor(server, Text.ADMIN_MANAGER_ROLE_REMOVED, replacer -> replacer.set("name", role.getName())).to(event.getChannel());
     }
 }

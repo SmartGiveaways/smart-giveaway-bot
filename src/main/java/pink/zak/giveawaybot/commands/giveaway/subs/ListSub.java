@@ -35,12 +35,12 @@ public class ListSub extends SubCommand {
             return;
         }
         StringBuilder descriptionBuilder = new StringBuilder();
-            for (long giveawayId : server.getActiveGiveaways()) {
+        for (long giveawayId : server.getActiveGiveaways()) {
             CurrentGiveaway giveaway = this.giveawayCache.getSync(giveawayId);
             descriptionBuilder.append("[**")
                     .append(giveaway.giveawayItem())
                     .append("**](")
-                    .append(this.giveawayController.getGiveawayMessage(giveaway).getJumpUrl())
+                    .append(giveaway.messageLink())
                     .append(") -> (ID: ")
                     .append(giveaway.messageId())
                     .append(")\n");

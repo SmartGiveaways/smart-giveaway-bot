@@ -24,7 +24,9 @@ public class GiveawayCmdUtils {
     }
 
     public void schedule(Server server, String presetName, long timeUntil, long lengthMillis, TextChannel responseChannel, TextChannel giveawayChannel, int winnerAmount, String giveawayItem) {
-        if (this.performChecks(server, lengthMillis, winnerAmount, giveawayChannel, giveawayItem, responseChannel)) {
+        long startTime = System.currentTimeMillis() + timeUntil;
+        long endTime = startTime + lengthMillis;
+        if (this.performChecks(server, startTime, endTime, lengthMillis, winnerAmount, giveawayChannel, giveawayItem, responseChannel)) {
             return;
         }
         if (timeUntil < 120000) {
@@ -35,7 +37,7 @@ public class GiveawayCmdUtils {
             this.lang.get(server, Text.SCHEDULED_TIME_TOO_FAR_AWAY).to(responseChannel);
             return;
         }
-        ImmutablePair<ScheduledGiveaway, ReturnCode> returnedInfo = this.scheduledGiveawayController.schedule(server, presetName, timeUntil, lengthMillis, giveawayChannel, winnerAmount, giveawayItem);
+        ImmutablePair<ScheduledGiveaway, ReturnCode> returnedInfo = this.scheduledGiveawayController.schedule(server, presetName, startTime, endTime, giveawayChannel, winnerAmount, giveawayItem);
         switch (returnedInfo.getValue()) {
             case GIVEAWAY_LIMIT_FAILURE:
                 this.lang.get(server, Text.SCHEDULED_GIVEAWAY_LIMIT_FAILURE).to(responseChannel);
@@ -61,10 +63,12 @@ public class GiveawayCmdUtils {
     }
 
     public void create(Server server, long lengthMillis, int winnerAmount, String presetName, String giveawayItem, TextChannel giveawayChannel, TextChannel responseChannel) {
-        if (this.performChecks(server, lengthMillis, winnerAmount, giveawayChannel, giveawayItem, responseChannel)) {
+        long startTime = System.currentTimeMillis();
+        long endTime = startTime + lengthMillis;
+        if (this.performChecks(server, startTime, endTime, lengthMillis, winnerAmount, giveawayChannel, giveawayItem, responseChannel)) {
             return;
         }
-        switch (this.giveawayController.createGiveaway(server, lengthMillis, winnerAmount, giveawayChannel, presetName, giveawayItem).getValue()) {
+        switch (this.giveawayController.createGiveaway(server, lengthMillis, endTime, winnerAmount, giveawayChannel, presetName, giveawayItem).getValue()) {
             case GIVEAWAY_LIMIT_FAILURE:
                 this.lang.get(server, server.isPremium() ? Text.GIVEAWAY_LIMIT_FAILURE_PREMIUM : Text.GIVEAWAY_LIMIT_FAILURE).to(responseChannel);
                 break;
@@ -90,12 +94,12 @@ public class GiveawayCmdUtils {
         }
     }
 
-    private boolean performChecks(Server server, long lengthMillis, int winnerAmount, TextChannel giveawayChannel, String giveawayItem, TextChannel responseChannel) {
+    private boolean performChecks(Server server, long startTime, long endTime, long lengthMillis, int winnerAmount, TextChannel giveawayChannel, String giveawayItem, TextChannel responseChannel) {
         if (lengthMillis < (server.isPremium() ? 30000 : 300000)) {
             this.lang.get(server, server.isPremium() ? Text.GIVEAWAY_LENGTH_TOO_SHORT_PREMIUM : Text.GIVEAWAY_LENGTH_TOO_SHORT).to(responseChannel);
             return true;
         }
-        if (lengthMillis > (server.isPremium() ? 15552000000L : 604800000L)) {
+        if (lengthMillis > (server.isPremium() ? TimeIdentifier.MONTH.getMilliseconds() * 6 : TimeIdentifier.WEEK.getMilliseconds())) {
             this.lang.get(server, server.isPremium() ? Text.GIVEAWAY_LENGTH_TOO_LONG_PREMIUM : Text.GIVEAWAY_LENGTH_TOO_LONG).to(responseChannel);
             return true;
         }
@@ -113,6 +117,10 @@ public class GiveawayCmdUtils {
         }
         if (giveawayItem.isEmpty() || giveawayItem.equals(" ") || giveawayItem.length() > 20) {
             this.lang.get(server, Text.PARSING_REWARD_FAILED).to(responseChannel);
+            return true;
+        }
+        if (!server.getScheduledGiveaways().isEmpty() && this.giveawayController.getGiveawayCountAt(server, startTime, endTime) >= 10) {
+            this.lang.get(server, Text.SCHEDULED_GIVEAWAY_LIMIT_FAILURE_FUTURE).to(responseChannel);
             return true;
         }
         return false;

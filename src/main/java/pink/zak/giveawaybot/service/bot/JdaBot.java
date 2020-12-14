@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.sharding.ShardManager;
 import net.dv8tion.jda.internal.utils.JDALogger;
 import org.slf4j.Logger;
 import pink.zak.giveawaybot.GiveawayBot;
+import pink.zak.giveawaybot.listener.message.GiveawayMessageListener;
 import pink.zak.giveawaybot.listener.message.MessageEventRegistry;
 import pink.zak.giveawaybot.service.command.CommandBase;
 import pink.zak.giveawaybot.service.command.command.SimpleCommand;
@@ -100,7 +101,13 @@ public abstract class JdaBot implements SimpleBot {
 
     @Override
     public void registerListeners(Object... listeners) {
-        this.shardManager.addEventListener(listeners);
+        for (Object listener : listeners) {
+            if (listener instanceof GiveawayMessageListener messageListener) {
+                this.messageEventRegistry.addListener(messageListener);
+            } else {
+                this.shardManager.addEventListener(listener);
+            }
+        }
     }
 
     public boolean isConnected() {

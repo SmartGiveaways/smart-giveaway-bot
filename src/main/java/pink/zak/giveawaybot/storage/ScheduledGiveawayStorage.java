@@ -1,5 +1,6 @@
 package pink.zak.giveawaybot.storage;
 
+import com.mongodb.client.model.Filters;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.models.giveaway.ScheduledGiveaway;
 import pink.zak.giveawaybot.service.storage.mongo.MongoDeserializer;
@@ -47,5 +48,10 @@ public class ScheduledGiveawayStorage extends MongoStorage<UUID, ScheduledGiveaw
     @Override
     public ScheduledGiveaway create(UUID id) {
         return null;
+    }
+
+    @Override
+    public void delete(UUID key) {
+        super.delete(Filters.eq("_id", key.toString()));
     }
 }

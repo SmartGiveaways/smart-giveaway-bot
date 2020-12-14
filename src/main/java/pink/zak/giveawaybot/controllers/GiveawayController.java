@@ -21,6 +21,7 @@ import pink.zak.giveawaybot.enums.ReturnCode;
 import pink.zak.giveawaybot.enums.Setting;
 import pink.zak.giveawaybot.lang.LanguageRegistry;
 import pink.zak.giveawaybot.lang.enums.Text;
+import pink.zak.giveawaybot.metrics.helpers.LatencyMonitor;
 import pink.zak.giveawaybot.models.Preset;
 import pink.zak.giveawaybot.models.Server;
 import pink.zak.giveawaybot.models.User;
@@ -30,6 +31,7 @@ import pink.zak.giveawaybot.models.giveaway.Giveaway;
 import pink.zak.giveawaybot.models.giveaway.RichGiveaway;
 import pink.zak.giveawaybot.service.colour.Palette;
 import pink.zak.giveawaybot.service.time.Time;
+import pink.zak.giveawaybot.service.time.TimeIdentifier;
 import pink.zak.giveawaybot.service.tuple.ImmutablePair;
 import pink.zak.giveawaybot.service.types.NumberUtils;
 import pink.zak.giveawaybot.service.types.ReactionContainer;
@@ -74,8 +76,7 @@ public class GiveawayController {
         this.startGiveawayUpdater();
     }
 
-    public ImmutablePair<CurrentGiveaway, ReturnCode> createGiveaway(Server server, long length, int winnerAmount, TextChannel giveawayChannel, String presetName, String giveawayItem) {
-        long endTime = System.currentTimeMillis() + length;
+    public ImmutablePair<CurrentGiveaway, ReturnCode> createGiveaway(Server server, long length, long endTime, int winnerAmount, TextChannel giveawayChannel, String presetName, String giveawayItem) {
         if (server.getActiveGiveaways().size() >= (server.isPremium() ? 10 : 5)) {
             return ImmutablePair.of(null, ReturnCode.GIVEAWAY_LIMIT_FAILURE);
         }
@@ -308,12 +309,18 @@ public class GiveawayController {
     }
 
     private void startGiveawayUpdater() {
+        AtomicInteger counter = new AtomicInteger();
+        LatencyMonitor latencyMonitor = bot.getLatencyMonitor();
         this.threadManager.getScheduler().scheduleAtFixedRate(() -> {
+            counter.getAndIncrement();
             for (CurrentGiveaway giveaway : this.giveawayCache.getMap().values()) {
                 if (!giveaway.isActive()) {
                     return;
                 }
                 this.serverCache.get(giveaway.serverId()).thenAccept(server -> {
+                    if (!latencyMonitor.isLatencyUsable() || !this.shouldUpdateMessage(counter, giveaway)) {
+                        return;
+                    }
                     Message message = this.getGiveawayMessage(giveaway);
                     if (message == null) {
                         GiveawayBot.getLogger().warn("Giveaway did not delete correctly or the discord api is dying ({} in server {}).", giveaway.messageId(), giveaway.serverId());
@@ -334,6 +341,24 @@ public class GiveawayController {
 
             }
         }, 30, 30, TimeUnit.SECONDS);
+    }
+
+    private boolean shouldUpdateMessage(AtomicInteger counter, CurrentGiveaway giveaway) {
+        int count = counter.get();
+        long timeToExpiry = giveaway.timeToExpiry();
+        if (timeToExpiry >= TimeIdentifier.WEEK.getMilliseconds()) {
+            return count % 2880 == 0;
+        }
+        if (timeToExpiry >= TimeIdentifier.DAY.getMilliseconds()) {
+            return count % 480 == 0;
+        }
+        if (timeToExpiry >= TimeIdentifier.HOUR.getMilliseconds()) {
+            return count % 30 == 0;
+        }
+        if (timeToExpiry >= TimeIdentifier.MINUTE.getMilliseconds() * 30) {
+            return count % 10 == 0;
+        }
+        return true;
     }
 
     private void startGiveawayTimer(CurrentGiveaway giveaway) {
