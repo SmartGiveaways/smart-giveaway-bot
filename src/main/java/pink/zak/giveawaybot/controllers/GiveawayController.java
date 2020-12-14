@@ -127,12 +127,7 @@ public class GiveawayController {
         }
     }
 
-    /**
-     * Gets the most giveaways concurrently active in a certain period
-     * Surprisingly performance efficient (sub 1ms when giveaways are cached)
-     */
-    public int getGiveawayCountAt(Server server, long startTime, long endTime) {
-        Set<Long> checkpoints = Sets.newHashSet(startTime, endTime);
+    public Set<Giveaway> getCurrentAndScheduledGiveaways(Server server) {
         Set<Giveaway> giveaways = Sets.newHashSet();
         for (long id : server.getActiveGiveaways()) {
             giveaways.add(this.giveawayCache.getSync(id));
@@ -140,6 +135,16 @@ public class GiveawayController {
         for (UUID id : server.getScheduledGiveaways()) {
             giveaways.add(this.scheduledGiveawayCache.getSync(id));
         }
+        return giveaways;
+    }
+
+    /**
+     * Gets the most giveaways concurrently active in a certain period
+     * Surprisingly performance efficient (sub 1ms when giveaways are cached)
+     */
+    public int getGiveawayCountAt(Server server, long startTime, long endTime) {
+        Set<Long> checkpoints = Sets.newHashSet(startTime, endTime);
+        Set<Giveaway> giveaways = this.getCurrentAndScheduledGiveaways(server);
         for (Giveaway giveaway : giveaways) {
             if (giveaway.startTime() >= startTime && giveaway.startTime() <= endTime) {
                 checkpoints.add(giveaway.startTime());

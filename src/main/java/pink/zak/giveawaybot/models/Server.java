@@ -1,6 +1,5 @@
 package pink.zak.giveawaybot.models;
 
-import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -11,7 +10,6 @@ import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.cache.UserCache;
 import pink.zak.giveawaybot.lang.enums.Language;
 import pink.zak.giveawaybot.models.giveaway.CurrentGiveaway;
-import pink.zak.giveawaybot.models.giveaway.Giveaway;
 import pink.zak.giveawaybot.storage.UserStorage;
 
 import java.util.List;
