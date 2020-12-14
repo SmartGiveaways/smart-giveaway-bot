@@ -22,6 +22,7 @@ public class HelpCommand extends SimpleCommand {
 
     public HelpCommand(GiveawayBot bot) {
         super(bot, "ghelp", false, false);
+        this.setAliases("gh");
 
         this.buildMessages(bot.getLanguageRegistry(), bot.getDefaults().getPalette());
     }

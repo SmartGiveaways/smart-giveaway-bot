@@ -117,6 +117,7 @@ public enum Text {
     // creating/scheduling - schedule sub
     GIVEAWAY_SCHEDULED,
     SCHEDULED_TIME_TOO_SOON,
+    SCHEDULED_TIME_TOO_FAR_AWAY,
     SCHEDULED_GIVEAWAY_LIMIT_FAILURE,
     // delete sub
     GIVEAWAY_DELETED,

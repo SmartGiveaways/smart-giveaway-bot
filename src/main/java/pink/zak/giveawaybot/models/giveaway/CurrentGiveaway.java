@@ -7,7 +7,7 @@ import java.util.Set;
 
 public record CurrentGiveaway(long messageId, long channelId, long serverId, long startTime, long endTime,
                               int winnerAmount, String presetName, String giveawayItem,
-                              Set<Long> enteredUsers) implements Giveaway {
+                              Set<Long> enteredUsers) implements RichGiveaway {
 
     public CurrentGiveaway(long messageId, long channelId, long serverId, long startTime, long endTime, int winnerAmount, String presetName, String giveawayItem) {
         this(messageId, channelId, serverId, startTime, endTime, winnerAmount, presetName, giveawayItem, Sets.newHashSet());

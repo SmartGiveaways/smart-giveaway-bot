@@ -79,7 +79,7 @@ values:
   ban-list-footer: "%amount% total bans"
   ban-list-page-footer: "Page %page%/%maxPage% | %amount% total bans"
   ban-list-banned: "banned"
-  ban-list-shadow-banned: "banned"
+  ban-list-shadow-banned: "shadow banned"
 
   # >gunban command messages
   unban-help: ">gunban <user> - Unbans a user"
@@ -125,6 +125,7 @@ values:
   # schedule sub
   giveaway-scheduled: ":white_check_mark: Your giveaway has been scheduled in the channel %channel%. It will be posted at %time%."
   scheduled-time-too-soon: "The scheduled time must be more than 2 minutes away."
+  scheduled-time-too-far-away: "The scheduled time must be less than 2 months."
   scheduled-giveaway-limit-failure: ":x: Your guild has reached the maximum of 10 scheduled giveaways."
   # delete sub
   giveaway-deleted: "Deleted the giveaway for: %giveaway-item%"

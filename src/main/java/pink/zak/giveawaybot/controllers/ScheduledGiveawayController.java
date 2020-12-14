@@ -9,7 +9,6 @@ import pink.zak.giveawaybot.cache.ServerCache;
 import pink.zak.giveawaybot.defaults.Defaults;
 import pink.zak.giveawaybot.enums.ReturnCode;
 import pink.zak.giveawaybot.models.Server;
-import pink.zak.giveawaybot.models.giveaway.CurrentGiveaway;
 import pink.zak.giveawaybot.models.giveaway.ScheduledGiveaway;
 import pink.zak.giveawaybot.service.tuple.ImmutablePair;
 import pink.zak.giveawaybot.storage.ScheduledGiveawayStorage;
@@ -35,6 +34,7 @@ public class ScheduledGiveawayController {
         this.scheduledGiveawayStorage = bot.getScheduledGiveawayStorage();
         this.scheduledGiveawayCache = bot.getScheduledGiveawayCache();
         this.defaults = bot.getDefaults();
+        this.load();
     }
 
     public ImmutablePair<ScheduledGiveaway, ReturnCode> schedule(Server server, String presetName, long timeUntil, long length, TextChannel giveawayChannel, int winnerAmount, String giveawayItem) {
@@ -73,7 +73,7 @@ public class ScheduledGiveawayController {
                 return;
             }
             this.scheduledGiveawayCache.invalidateAsync(giveaway.uuid(), false);
-            ImmutablePair<CurrentGiveaway, ReturnCode> returnData = this.giveawayController.createGiveaway(
+            this.giveawayController.createGiveaway(
                     server, giveaway.endTime() - System.currentTimeMillis(), giveaway.winnerAmount(), giveawayChannel, giveaway.presetName(), giveaway.giveawayItem()
             );
         });

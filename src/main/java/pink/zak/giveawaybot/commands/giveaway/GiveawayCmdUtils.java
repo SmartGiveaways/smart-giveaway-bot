@@ -9,16 +9,19 @@ import pink.zak.giveawaybot.lang.LanguageRegistry;
 import pink.zak.giveawaybot.lang.enums.Text;
 import pink.zak.giveawaybot.models.Server;
 import pink.zak.giveawaybot.models.giveaway.ScheduledGiveaway;
+import pink.zak.giveawaybot.service.time.TimeIdentifier;
 import pink.zak.giveawaybot.service.tuple.ImmutablePair;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 
 public class GiveawayCmdUtils {
     private final GiveawayController giveawayController;
     private final ScheduledGiveawayController scheduledGiveawayController;
     private final LanguageRegistry lang;
-    private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+    private final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd kk:mm:ss");
 
     public GiveawayCmdUtils(GiveawayBot bot) {
         this.giveawayController = bot.getGiveawayController();
@@ -30,8 +33,12 @@ public class GiveawayCmdUtils {
         if (this.performChecks(server, lengthMillis, winnerAmount, giveawayChannel, giveawayItem, responseChannel)) {
             return;
         }
-        if (timeUntil <= 120000) {
+        if (timeUntil < 120000) {
             this.lang.get(server, Text.SCHEDULED_TIME_TOO_SOON).to(responseChannel);
+            return;
+        }
+        if (timeUntil > TimeIdentifier.MONTH.getMilliseconds()) {
+            this.lang.get(server, Text.SCHEDULED_TIME_TOO_FAR_AWAY).to(responseChannel);
             return;
         }
         ImmutablePair<ScheduledGiveaway, ReturnCode> returnedInfo = this.scheduledGiveawayController.schedule(server, presetName, timeUntil, lengthMillis, giveawayChannel, winnerAmount, giveawayItem);
@@ -46,9 +53,10 @@ public class GiveawayCmdUtils {
                 this.lang.get(server, Text.BOT_DOESNT_HAVE_PERMISSIONS).to(responseChannel);
                 break;
             case SUCCESS:
+                String formattedTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(returnedInfo.getKey().startTime()), ZoneOffset.UTC).format(this.dateFormat);
                 this.lang.get(server, Text.GIVEAWAY_SCHEDULED, replacer -> replacer
                         .set("channel", giveawayChannel.getAsMention())
-                        .set("time", this.dateFormat.format(new Date(returnedInfo.getKey().startTime())))).to(responseChannel);
+                        .set("time", formattedTime + " UTC+0")).to(responseChannel);
                 break;
             default:
                 GiveawayBot.getLogger().error("You messed up bad. GiveawayCmdUtils 1");

@@ -6,7 +6,7 @@ import java.util.Set;
 
 public record FinishedGiveaway(long messageId, long channelId, long serverId, long startTime, long endTime,
                                int winnerAmount, String presetName, String giveawayItem, BigInteger totalEntries,
-                               Map<Long, BigInteger> userEntries, Set<Long> winners) implements Giveaway {
+                               Map<Long, BigInteger> userEntries, Set<Long> winners) implements RichGiveaway {
 
     public FinishedGiveaway(CurrentGiveaway giveaway, BigInteger totalEntries, Map<Long, BigInteger> userEntries, Set<Long> winners) {
         this(giveaway.messageId(), giveaway.channelId(), giveaway.serverId(), giveaway.startTime(),

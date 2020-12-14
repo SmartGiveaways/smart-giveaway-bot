@@ -14,10 +14,7 @@ import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import net.dv8tion.jda.api.exceptions.RateLimitedException;
 import net.dv8tion.jda.api.requests.ErrorResponse;
 import pink.zak.giveawaybot.GiveawayBot;
-import pink.zak.giveawaybot.cache.FinishedGiveawayCache;
-import pink.zak.giveawaybot.cache.GiveawayCache;
-import pink.zak.giveawaybot.cache.ServerCache;
-import pink.zak.giveawaybot.cache.UserCache;
+import pink.zak.giveawaybot.cache.*;
 import pink.zak.giveawaybot.defaults.Defaults;
 import pink.zak.giveawaybot.enums.EntryType;
 import pink.zak.giveawaybot.enums.ReturnCode;
@@ -27,9 +24,7 @@ import pink.zak.giveawaybot.lang.enums.Text;
 import pink.zak.giveawaybot.models.Preset;
 import pink.zak.giveawaybot.models.Server;
 import pink.zak.giveawaybot.models.User;
-import pink.zak.giveawaybot.models.giveaway.CurrentGiveaway;
-import pink.zak.giveawaybot.models.giveaway.FinishedGiveaway;
-import pink.zak.giveawaybot.models.giveaway.Giveaway;
+import pink.zak.giveawaybot.models.giveaway.*;
 import pink.zak.giveawaybot.service.colour.Palette;
 import pink.zak.giveawaybot.service.time.Time;
 import pink.zak.giveawaybot.service.tuple.ImmutablePair;
@@ -53,6 +48,7 @@ public class GiveawayController {
     private final GiveawayCache giveawayCache;
     private final GiveawayStorage giveawayStorage;
     private final FinishedGiveawayCache finishedGiveawayCache;
+    private final ScheduledGiveawayCache scheduledGiveawayCache;
     private final ServerCache serverCache;
     private final Preset defaultPreset;
     private final Palette palette;
@@ -65,6 +61,7 @@ public class GiveawayController {
         this.giveawayCache = bot.getGiveawayCache();
         this.giveawayStorage = bot.getGiveawayStorage();
         this.finishedGiveawayCache = bot.getFinishedGiveawayCache();
+        this.scheduledGiveawayCache = bot.getScheduledGiveawayCache();
         this.serverCache = bot.getServerCache();
         this.defaultPreset = bot.getDefaults().getDefaultPreset();
         this.palette = bot.getDefaults().getPalette();
@@ -199,7 +196,7 @@ public class GiveawayController {
         this.deleteGiveaway(giveaway);
     }
 
-    public void handleGiveawayEndMessages(Giveaway giveaway, Set<Long> winners, BigInteger totalEntries, Message giveawayMessage, Server server) {
+    public void handleGiveawayEndMessages(RichGiveaway giveaway, Set<Long> winners, BigInteger totalEntries, Message giveawayMessage, Server server) {
         StringBuilder descriptionBuilder = new StringBuilder();
         for (long winnerId : winners) {
             descriptionBuilder.append("<@").append(winnerId).append(">\n");
@@ -303,7 +300,7 @@ public class GiveawayController {
     }
 
     @SneakyThrows
-    public Message getGiveawayMessage(Giveaway giveaway) {
+    public Message getGiveawayMessage(RichGiveaway giveaway) {
         Guild guild = this.bot.getShardManager().getGuildById(giveaway.serverId());
         if (guild == null) {
             return null;
