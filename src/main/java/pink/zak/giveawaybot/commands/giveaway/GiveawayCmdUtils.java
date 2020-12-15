@@ -77,6 +77,7 @@ public class GiveawayCmdUtils {
                 break;
             case PERMISSIONS_FAILURE:
                 this.lang.get(server, Text.BOT_DOESNT_HAVE_PERMISSIONS).to(responseChannel);
+                break;
             case GENERIC_FAILURE:
             case RATE_LIMIT_FAILURE:
                 this.lang.get(server, Text.GENERIC_FAILURE).to(responseChannel);

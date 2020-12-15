@@ -5,18 +5,22 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.cache.GiveawayCache;
+import pink.zak.giveawaybot.cache.ScheduledGiveawayCache;
 import pink.zak.giveawaybot.lang.enums.Text;
 import pink.zak.giveawaybot.models.Server;
 import pink.zak.giveawaybot.service.command.command.SubCommand;
 
 import java.util.List;
+import java.util.UUID;
 
 public class DeleteSub extends SubCommand {
     private final GiveawayCache giveawayCache;
+    private final ScheduledGiveawayCache scheduledGiveawayCache;
 
     public DeleteSub(GiveawayBot bot) {
         super(bot, true, false, false);
         this.giveawayCache = bot.getGiveawayCache();
+        this.scheduledGiveawayCache = bot.getScheduledGiveawayCache();
 
         this.addFlatWithAliases("delete", "remove");
         this.addArgument(String.class); // Preset name
@@ -44,8 +48,13 @@ public class DeleteSub extends SubCommand {
 
     @SneakyThrows
     private boolean canBeDeleted(Server server, String presetName) {
-        for (long giveawayUuid : server.getActiveGiveaways()) {
-            if (this.giveawayCache.get(giveawayUuid).thenApply(giveaway -> giveaway.presetName().equals(presetName)).get()) {
+        for (long id : server.getActiveGiveaways()) {
+            if (this.giveawayCache.getSync(id).presetName().equals(presetName)) {
+                return false;
+            }
+        }
+        for (UUID uuid : server.getScheduledGiveaways()) {
+            if (this.scheduledGiveawayCache.getSync(uuid).presetName().equals(presetName)) {
                 return false;
             }
         }

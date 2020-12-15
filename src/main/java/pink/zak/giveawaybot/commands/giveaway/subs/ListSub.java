@@ -5,7 +5,6 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.cache.GiveawayCache;
-import pink.zak.giveawaybot.controllers.GiveawayController;
 import pink.zak.giveawaybot.lang.enums.Text;
 import pink.zak.giveawaybot.models.Server;
 import pink.zak.giveawaybot.models.giveaway.CurrentGiveaway;
@@ -17,7 +16,6 @@ import java.util.List;
 public class ListSub extends SubCommand {
     private final Palette palette;
     private final GiveawayCache giveawayCache;
-    private final GiveawayController giveawayController;
 
     public ListSub(GiveawayBot bot) {
         super(bot, true, false, false);
@@ -25,7 +23,6 @@ public class ListSub extends SubCommand {
 
         this.palette = bot.getDefaults().getPalette();
         this.giveawayCache = bot.getGiveawayCache();
-        this.giveawayController = bot.getGiveawayController();
     }
 
     @Override
