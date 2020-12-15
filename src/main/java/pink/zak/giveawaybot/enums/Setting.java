@@ -21,9 +21,9 @@ public enum Setting {
     }, "reaction-emote", "react-emote", "reaction-emoji", "react-emoji", "react-to-enter-emote", "reaction"),
     ENABLE_MESSAGE_ENTRIES(Text.PRESET_ENABLE_MESSAGE_ENTRIES_DESCRIPTION, Boolean::parseBoolean, StringUtils::isBoolean, "enable-message-entries", "use-message-entries"),
     ENTRIES_PER_MESSAGE(Text.PRESET_ENTRIES_PER_MESSAGE_DESCRIPTION, Text.PRESET_ENTRIES_PER_MESSAGE_LIMIT_MESSAGE, 3, 9,
-            Integer::parseInt, NumberUtils::isLikelyInteger, (server, input) -> ((Integer) input) <= (server.isPremium() ? 5 : 3), "entries-per-message", "message-entries"),
+            str -> NumberUtils.parseInt(str, -1), str -> {int parsed = NumberUtils.parseInt(str, -1); return parsed > 0;}, (server, input) -> ((Integer) input) <= (server.isPremium() ? 5 : 3), "entries-per-message", "message-entries"),
     MAX_ENTRIES(Text.PRESET_MAX_ENTRIES_DESCRIPTION, Text.PRESET_MAX_ENTRIES_LIMIT_MESSAGE, 10000, 50000,
-            Integer::parseInt, NumberUtils::isLikelyInteger, (server, input) -> ((Integer) input) <= (server.isPremium() ? 50000 : 10000), "max-entries"),
+            str -> NumberUtils.parseInt(str, -1), str -> {int parsed = NumberUtils.parseInt(str, -1); return parsed > 0;}, (server, input) -> ((Integer) input) <= (server.isPremium() ? 50000 : 10000), "max-entries"),
     PING_WINNERS(Text.PRESET_PING_WINNERS_DESCRIPTION, Boolean::parseBoolean, StringUtils::isBoolean, "ping-winners", "ping-giveaway-winners");
 
     private final Text description;

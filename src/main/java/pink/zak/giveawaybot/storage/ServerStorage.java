@@ -63,7 +63,7 @@ public class ServerStorage extends MongoStorage<Long, Server> {
         return new Server(this.bot, id);
     }
 
-    private Map<String, EnumMap<Setting, String>> serializePresets(Map<String, Preset> unserialized) {
+    public Map<String, EnumMap<Setting, String>> serializePresets(Map<String, Preset> unserialized) {
         Map<String, EnumMap<Setting, String>> serialized = Maps.newHashMap();
         for (Map.Entry<String, Preset> preset : unserialized.entrySet()) {
             serialized.put(preset.getKey(), preset.getValue().serialized());
@@ -71,7 +71,7 @@ public class ServerStorage extends MongoStorage<Long, Server> {
         return serialized;
     }
 
-    private Map<String, Preset> deserializePresets(long guildId, Map<String, Map<Setting, String>> serialized) {
+    public Map<String, Preset> deserializePresets(long guildId, Map<String, Map<Setting, String>> serialized) {
         if (serialized.isEmpty()) {
             return Maps.newConcurrentMap();
         }

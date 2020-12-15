@@ -191,6 +191,9 @@ values:
   preset-create-name-too-long: "Preset names must be shorter than 20 characters."
   preset-create-name-too-short: "Preset names must be longer than 3 characters."
   preset-created: "Created your preset. Use `>preset settings` to see available settings."
+  # export sub
+  preset-exported-all: "Here's an export of all your presets."
+  preset-exported-single: "Here's your export of your %preset% preset."
   # delete sub
   preset-delete-show-presets-addon: " Here are your presets: %preset-list%"
   preset-delete-in-use: "You cannot delete a preset that is currently being used by a giveaway."
@@ -212,5 +215,5 @@ values:
   preset-max-entries-description: "Maximum entries per user"
   preset-ping-winners-description: "Whether winners will be ghost pinged"
   # preset settings limit messages
-  preset-entries-per-message-limit-message: "The max entries per message is 3"
-  preset-max-entries-limit-message: "Your max entries per person must be below 10000"
+  preset-entries-per-message-limit-message: "The max entries per message is %max%"
+  preset-max-entries-limit-message: "Your max entries per person must be below %max%"

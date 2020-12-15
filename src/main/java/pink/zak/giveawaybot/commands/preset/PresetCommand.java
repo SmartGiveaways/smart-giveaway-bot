@@ -14,6 +14,7 @@ public class PresetCommand extends SimpleHelpCommand {
         this.setSubCommands(
                 new CreateSub(bot),
                 new DeleteSub(bot),
+                new ExportSub(bot),
                 new ListSub(bot),
                 new OptionsSub(bot),
                 new PresetOptionsSub(bot),

@@ -47,7 +47,7 @@ public class SetOptionSub extends SubCommand {
         }
         Object parsedValue = setting.parseAny(inputValue, event.getGuild());
         if (!setting.checkLimit(server, parsedValue)) {
-            this.langFor(server, setting.getLimitMessage()).to(event.getChannel());
+            this.langFor(server, setting.getLimitMessage(), replacer -> replacer.set("max", server.isPremium() ? setting.getMaxPremiumValue() : setting.getMaxValue())).to(event.getChannel());
             return;
         }
         preset.setSetting(setting, parsedValue);

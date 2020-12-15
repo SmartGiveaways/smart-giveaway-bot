@@ -27,7 +27,6 @@ import pink.zak.giveawaybot.service.types.UserUtils;
 import pink.zak.giveawaybot.threads.ThreadFunction;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
@@ -226,7 +225,7 @@ public class CommandBase implements GiveawayMessageListener {
                     }
                     return guild.getRoleById(roleId);
                 })
-                .registerArgumentType(Preset.class, (string, guild) -> Optional.ofNullable(this.serverCache.getSync(guild.getIdLong()).getPreset(string)))
+                .registerArgumentType(Preset.class, (string, guild) -> this.serverCache.getSync(guild.getIdLong()).getPreset(string.toLowerCase()))
                 .registerArgumentType(Integer.class, (string, guild) -> NumberUtils.parseInt(string, -1))
                 .registerArgumentType(Long.class, (string, guild) -> NumberUtils.parseLong(string, -1))
                 .registerArgumentType(Double.class, (string, guild) -> NumberUtils.parseDouble(string, -1))
