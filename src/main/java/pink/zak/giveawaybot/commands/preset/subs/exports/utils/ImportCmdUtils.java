@@ -92,6 +92,7 @@ public class ImportCmdUtils extends ListenerAdapter {
                 case INVALID_FILE_PARSING -> this.languageRegistry.get(server, Text.PRESET_IMPORT_INVALID_FILE, replacer -> replacer.set("exception", "JsonParseException")).to(channel);
                 case INVALID_FILE_EXTENSION -> this.languageRegistry.get(server, Text.PRESET_IMPORT_INVALID_FILE, replacer -> replacer.set("exception", "InvalidFileExtension")).to(channel);
                 case INVALID_FILE_MISSING_ELEMENTS -> this.languageRegistry.get(server, Text.PRESET_IMPORT_INVALID_FILE, replacer -> replacer.set("exception", "MissingPresetElements")).to(channel);
+                default -> {}
             }
         }).exceptionally(ex -> {
             ex.printStackTrace();

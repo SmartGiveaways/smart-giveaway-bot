@@ -109,7 +109,7 @@ public class WriteExpiringCache<K, V> extends Cache<K, V> {
         this.scheduler.scheduleAtFixedRate(() -> {
             long currentTime = System.currentTimeMillis();
             for (Map.Entry<K, Long> entry : this.expiryTimes.entrySet()) {
-                if (System.currentTimeMillis() > entry.getValue()) {
+                if (currentTime > entry.getValue()) {
                     this.invalidate(entry.getKey());
                 }
             }
