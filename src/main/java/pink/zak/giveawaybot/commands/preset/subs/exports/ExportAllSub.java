@@ -12,6 +12,7 @@ import pink.zak.giveawaybot.service.command.command.SubCommand;
 import pink.zak.giveawaybot.storage.ServerStorage;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -40,10 +41,9 @@ public class ExportAllSub extends SubCommand {
         jsonObject.put("singular", false);
         jsonObject.put("preset-values", json);
 
-        InputStream inputStream = new ByteArrayInputStream(jsonObject.toString().getBytes(StandardCharsets.UTF_8));
-        try {
+        try (InputStream inputStream = new ByteArrayInputStream(jsonObject.toString().getBytes(StandardCharsets.UTF_8))) {
             channel.sendMessage(this.langFor(server, Text.PRESET_EXPORTED_ALL).get()).addFile(inputStream, fileName).queue(message -> {}, Throwable::printStackTrace);
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

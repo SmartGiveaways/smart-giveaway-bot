@@ -12,6 +12,7 @@ import pink.zak.giveawaybot.models.Server;
 import pink.zak.giveawaybot.service.command.command.SubCommand;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -44,12 +45,11 @@ public class ExportSub extends SubCommand {
         jsonObject.put("preset-name", preset.name());
         jsonObject.put("preset-values", json);
 
-        InputStream inputStream = new ByteArrayInputStream(jsonObject.toString().getBytes(StandardCharsets.UTF_8));
-        try {
+        try (InputStream inputStream = new ByteArrayInputStream(jsonObject.toString().getBytes(StandardCharsets.UTF_8))) {
             channel.sendMessage(this.langFor(server, Text.PRESET_EXPORTED_SINGLE, replacer -> replacer
                     .set("preset", preset.name())).get()).addFile(inputStream, fileName).queue(message -> {}, Throwable::printStackTrace);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
     }
 }
