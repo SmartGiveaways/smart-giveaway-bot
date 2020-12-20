@@ -84,7 +84,6 @@ public class GiveawayBot extends JdaBot {
         this.threadManager = new ThreadManager();
 
         Config settings = this.getConfigStore().getConfig("settings");
-
         if (settings.bool("enable-metrics")) {
             this.metrics = new Metrics(new Metrics.Config(settings.string("influx-url"),
                     settings.string("influx-token").toCharArray(),
@@ -214,10 +213,6 @@ public class GiveawayBot extends JdaBot {
 
     public LatencyMonitor getLatencyMonitor() {
         return this.latencyMonitor;
-    }
-
-    public void runOnMainThread(Runnable runnable) {
-        this.threadManager.runOnMainThread(runnable);
     }
 
     public CompletableFuture<?> runAsync(ThreadFunction function, Supplier<?> supplier) {

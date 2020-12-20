@@ -2,24 +2,15 @@ package pink.zak.giveawaybot.threads;
 
 import com.google.common.collect.Maps;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import lombok.SneakyThrows;
 
 import java.util.Map;
 import java.util.concurrent.*;
 
 public class ThreadManager {
     private final Map<ThreadFunction, ExecutorService> threadPools = Maps.newEnumMap(ThreadFunction.class);
-    private final Thread mainThread;
 
     public ThreadManager() {
-        this.mainThread = Thread.currentThread();
         this.initiatePools();
-    }
-
-    @SneakyThrows
-    public void runOnMainThread(Runnable runnable) {
-        this.mainThread.join();
-        runnable.run();
     }
 
     public Future<?> runAsync(ThreadFunction function, Runnable runnable) {
