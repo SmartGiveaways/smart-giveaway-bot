@@ -16,9 +16,9 @@ import java.util.function.Function;
 public enum Setting {
 
     ENABLE_REACT_TO_ENTER(Text.PRESET_ENABLE_REACT_TO_ENTER_DESCRIPTION, Boolean::parseBoolean, StringUtils::isBoolean, "react-to-enter"),
-    REACT_TO_ENTER_EMOJI(Text.PRESET_REACT_TO_ENTER_EMOJI_DESCRIPTION, ReactionContainer::fromUnknown, (str, guild) -> {
-        return ReactionContainer.fromUnknown(str, guild) != null;
-    }, "reaction-emote", "react-emote", "reaction-emoji", "react-emoji", "react-to-enter-emote", "reaction"),
+    REACT_TO_ENTER_EMOJI(Text.PRESET_REACT_TO_ENTER_EMOJI_DESCRIPTION, ReactionContainer::fromUnknown, (str, guild) ->
+            ReactionContainer.fromUnknown(str, guild) != null
+            , "reaction-emote", "react-emote", "reaction-emoji", "react-emoji", "react-to-enter-emote", "reaction"),
     ENABLE_MESSAGE_ENTRIES(Text.PRESET_ENABLE_MESSAGE_ENTRIES_DESCRIPTION, Boolean::parseBoolean, StringUtils::isBoolean, "enable-message-entries", "use-message-entries"),
     ENTRIES_PER_MESSAGE(Text.PRESET_ENTRIES_PER_MESSAGE_DESCRIPTION, Text.PRESET_ENTRIES_PER_MESSAGE_LIMIT_MESSAGE, 3, 9,
             str -> NumberUtils.parseInt(str, -1), str -> {
@@ -30,7 +30,9 @@ public enum Setting {
         int parsed = NumberUtils.parseInt(str, -1);
         return parsed > 0;
     }, (server, input) -> ((Integer) input) <= (server.isPremium() ? 50000 : 10000), "max-entries"),
-    PING_WINNERS(Text.PRESET_PING_WINNERS_DESCRIPTION, Boolean::parseBoolean, StringUtils::isBoolean, "ping-winners", "ping-giveaway-winners");
+    PING_WINNERS(Text.PRESET_PING_WINNERS_DESCRIPTION, Boolean::parseBoolean, StringUtils::isBoolean, "ping-winners", "ping-giveaway-winners"),
+    WINNERS_MESSAGE(Text.PRESET_ENABLE_WINNERS_MESSAGE, Boolean::parseBoolean, StringUtils::isBoolean, "winner-message", "winners-message"),
+    DM_WINNERS(Text.PRESET_ENABLE_DM_WINNERS, Boolean::parseBoolean, StringUtils::isBoolean, "dm-winners");
 
     private final Text description;
     private final Set<String> configNames;

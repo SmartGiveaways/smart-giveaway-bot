@@ -162,7 +162,6 @@ values:
                                         Thanks for supporting us!"
   premium-embed-description-not-purchased: "You don't have premium right now. Here's some benefits:\n
                                             \n
-                                            Upload Custom Language Files\n
                                             Import and Export Presets\n
                                             Increased Giveaway Duration Limits\n
                                             Increased Giveaway History\n
@@ -221,7 +220,9 @@ values:
   preset-enable-message-entries-description: "Send messages to gain entries"
   preset-entries-per-message-description: "Entries per sent message"
   preset-max-entries-description: "Maximum entries per user"
-  preset-ping-winners-description: "Whether winners will be ghost pinged"
+  preset-ping-winners-description: "Whether winners will be pinged (ghost or in winner message)"
+  preset-enable-winners-message: "Whether a message will be sent in the giveaway channel when it ends"
+  preset-enable-dm-winners: "Whether the bot will attempt to DM winners"
   # preset settings limit messages
   preset-entries-per-message-limit-message: "The max entries per message is %max%"
   preset-max-entries-limit-message: "Your max entries per person must be below %max%"

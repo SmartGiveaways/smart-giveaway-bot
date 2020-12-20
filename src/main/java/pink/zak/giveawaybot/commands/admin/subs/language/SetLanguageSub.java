@@ -15,12 +15,12 @@ public class SetLanguageSub extends SubCommand {
     public SetLanguageSub(GiveawayBot bot) {
         super(bot, true, false, false);
         this.addFlatWithAliases("language", "languages", "lang", "langs");
-        this.addArgument(String.class); // The language
+        this.addArgument(Language.class); // The language
     }
 
     @Override
     public void onExecute(Member sender, Server server, GuildMessageReceivedEvent event, List<String> args) {
-        Language language = Language.match(this.parseArgument(args, event.getGuild(), 1));
+        Language language = this.parseArgument(args, event.getGuild(), 1);
         if (language == null) {
             this.langFor(server, Text.ADMIN_LANGUAGE_NOT_FOUND).to(event.getChannel());
             return;

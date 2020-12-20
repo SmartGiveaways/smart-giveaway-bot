@@ -18,10 +18,13 @@ import pink.zak.giveawaybot.service.types.NumberUtils;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public class LanguageRegistry {
     private final EnumMap<Language, LanguageContainer> languageMap = Maps.newEnumMap(Language.class);
@@ -43,8 +46,14 @@ public class LanguageRegistry {
                     }
                     this.languageMap.put(language, new LanguageContainer(language, config));
                 });
-        if (this.defaultLanguage == null || !this.languageMap.containsKey(this.defaultLanguage) || this.languageMap.get(this.defaultLanguage).getValues().size() < Language.values().length) {
-            GiveawayBot.getLogger().error("The default language does not meet the requirements of 100% or could not be found.");
+        if (this.defaultLanguage == null || !this.languageMap.containsKey(this.defaultLanguage)) {
+            GiveawayBot.getLogger().error("The default language could not be found.");
+            System.exit(3);
+        }
+        Set<Text> presentTexts = this.languageMap.get(this.defaultLanguage).getValues().keySet();
+        if (presentTexts.size() < Text.values().length) {
+            GiveawayBot.getLogger().error("The default language does not meet the 100% coverage requirement. These values are missing: {}",
+                    Arrays.stream(Text.values()).filter(text -> !presentTexts.contains(text)).collect(Collectors.toSet()));
             System.exit(3);
         }
     }
