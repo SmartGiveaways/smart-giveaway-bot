@@ -21,27 +21,27 @@ repositories {
     mavenCentral()
     mavenLocal()
     jcenter()
-    maven { url "https://repo.codemc.org/repository/maven-public/" }
-    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-    maven { url "https://jitpack.io" }
+    maven { url("https://repo.codemc.org/repository/maven-public/") }
+    maven { url("https://oss.sonatype.org/content/repositories/snapshots/") }
+    maven { url("https://jitpack.io") }
 }
 
 dependencies {
     implementation("net.dv8tion:JDA:4.2.0_216") { exclude module: "opus-java" }
-    implementation "com.google.guava:guava:29.0-jre"
-    implementation "com.timvisee:yamlwrapper:1.1.1"
-    implementation "com.vdurmont:emoji-java:5.1.1"
-    implementation "org.mongodb:mongo-java-driver:3.12.7"
-    implementation "org.awaitility:awaitility:4.0.3"
-    compileOnly "org.projectlombok:lombok:1.18.12"
-    annotationProcessor "org.projectlombok:lombok:1.18.12"
+    implementation("com.google.guava:guava:29.0-jre")
+    implementation("com.timvisee:yamlwrapper:1.1.1")
+    implementation("com.vdurmont:emoji-java:5.1.1")
+    implementation("org.mongodb:mongo-java-driver:3.12.7")
+    implementation("org.awaitility:awaitility:4.0.3")
+    compileOnly("org.projectlombok:lombok:1.18.12")
+    annotationProcessor("org.projectlombok:lombok:1.18.12")
 
     // Technically non essentials
-    implementation "ch.qos.logback:logback-classic:1.2.3"
-    implementation "pink.zak:influx-metrics:1.0.2"
-    implementation "com.influxdb:influxdb-client-java:1.13.0"
+    implementation("ch.qos.logback:logback-classic:1.2.3")
+    implementation("com.github.ZakShearman:influx-metrics:1.0.1")
+    implementation("com.influxdb:influxdb-client-java:1.13.0")
 
-    testImplementation "org.junit.jupiter:junit-jupiter:5.4.2"
+    testImplementation("org.junit.jupiter:junit-jupiter:5.4.2")
 }
 
 tasks.withType(JavaCompile).all {
