@@ -39,9 +39,11 @@ public class LatencyMonitor {
         long startTime = System.currentTimeMillis();
         this.testChannel.sendMessage(this.messageLines.get(ThreadLocalRandom.current().nextInt(0, this.messageLines.size() - 1))).queue(message -> {
             this.lastTiming = System.currentTimeMillis() - startTime;
-            this.metrics.<LatencyMonitor>log(query -> query
-                    .primary(this)
-                    .push(LatencyQuery.LATENCY));
+            if (this.metrics != null) {
+                this.metrics.<LatencyMonitor>log(query -> query
+                        .primary(this)
+                        .push(LatencyQuery.LATENCY));
+            }
         });
     }
 

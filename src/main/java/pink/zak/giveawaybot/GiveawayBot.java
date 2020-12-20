@@ -84,10 +84,13 @@ public class GiveawayBot extends JdaBot {
         this.threadManager = new ThreadManager();
 
         Config settings = this.getConfigStore().getConfig("settings");
-        this.metrics = new Metrics(new Metrics.Config(settings.string("influx-url"),
-                settings.string("influx-token").toCharArray(),
-                settings.string("influx-org"),
-                settings.string("influx-bucket"), 10));
+
+        if (settings.bool("enable-metrics")) {
+            this.metrics = new Metrics(new Metrics.Config(settings.string("influx-url"),
+                    settings.string("influx-token").toCharArray(),
+                    settings.string("influx-org"),
+                    settings.string("influx-bucket"), 10));
+        }
 
         this.buildJdaEarly(settings.string("token"), this.getGatewayIntents(), shard -> shard
                 .disableCache(CacheFlag.VOICE_STATE));
