@@ -2,7 +2,6 @@ package pink.zak.giveawaybot.metrics.helpers;
 
 import lombok.SneakyThrows;
 import net.dv8tion.jda.api.entities.TextChannel;
-import org.awaitility.Awaitility;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.metrics.queries.LatencyQuery;
 import pink.zak.giveawaybot.service.config.Config;
@@ -49,14 +48,14 @@ public class LatencyMonitor {
 
     public boolean isLatencyDesirable() {
         if (this.lastTiming == Long.MAX_VALUE) {
-            Awaitility.await().atMost(2, TimeUnit.SECONDS).until(() -> this.lastTiming < Long.MAX_VALUE);
+            GiveawayBot.getLogger().warn("isLatencyDesirable called when no latency is set yet.");
         }
         return this.lastTiming < 2000;
     }
 
     public boolean isLatencyUsable() {
         if (this.lastTiming == Long.MAX_VALUE) {
-            Awaitility.await().atMost(5, TimeUnit.SECONDS).until(() -> this.lastTiming < Long.MAX_VALUE);
+            GiveawayBot.getLogger().warn("isLatencyUsable called when no latency is set yet.");
         }
         return this.lastTiming < 5000;
     }

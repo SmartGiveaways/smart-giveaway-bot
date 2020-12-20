@@ -29,6 +29,7 @@ import java.util.function.UnaryOperator;
 
 public abstract class JdaBot implements SimpleBot {
     public static final Logger logger = JDALogger.getLog(GiveawayBot.class);
+    private boolean buildEarlyUsed;
     protected final MessageEventRegistry messageEventRegistry = new MessageEventRegistry();
     protected final StorageSettings storageSettings;
     private final BackendFactory backendFactory;
@@ -51,29 +52,38 @@ public abstract class JdaBot implements SimpleBot {
 
     @SneakyThrows
     public void buildJdaEarly(String token, Set<GatewayIntent> intents, UnaryOperator<DefaultShardManagerBuilder> jdaOperator) {
+        this.buildEarlyUsed = true;
+        ReadyListener readyListener = new ReadyListener(this);
         DefaultShardManagerBuilder builder = DefaultShardManagerBuilder.createDefault(token)
                 .setEnabledIntents(intents)
-                .addEventListeners(new ReadyListener(this));
+                .addEventListeners(readyListener);
         jdaOperator.apply(builder);
         this.shardManager = builder.build();
+        readyListener.setRequiredShards(this.shardManager.getShardsTotal());
     }
 
     @SneakyThrows
     @Override
     public void initialize(GiveawayBot bot, String token, String prefix, Set<GatewayIntent> intents, UnaryOperator<DefaultShardManagerBuilder> jdaOperator) {
-        this.commandBase = new CommandBase(bot);
-        this.prefix = prefix;
         if (this.shardManager == null) {
             try {
                 DefaultShardManagerBuilder builder = DefaultShardManagerBuilder.createDefault(token)
-                        .setEnabledIntents(intents)
-                        .addEventListeners(new ReadyListener(this));
+                        .setEnabledIntents(intents);
+                if (!this.buildEarlyUsed) {
+                    builder.addEventListeners(new ReadyListener(this));
+                }
                 jdaOperator.apply(builder);
                 this.shardManager = builder.build();
             } catch (LoginException e) {
                 logger.error("Unable to log into Discord, the following error occurred:", e);
             }
         }
+        this.buildVariables(bot, prefix);
+    }
+
+    public void buildVariables(GiveawayBot bot, String prefix) {
+        this.commandBase = new CommandBase(bot);
+        this.prefix = prefix;
         this.shardManager.addEventListener(this.messageEventRegistry);
         this.messageEventRegistry.addListener(this.commandBase);
         new Thread(new ConsoleListener(bot)).start();

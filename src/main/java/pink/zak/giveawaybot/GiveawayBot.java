@@ -1,11 +1,11 @@
 package pink.zak.giveawaybot;
 
 import com.google.common.collect.Sets;
+import lombok.SneakyThrows;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
-import org.awaitility.Awaitility;
 import org.slf4j.Logger;
 import pink.zak.giveawaybot.cache.FinishedGiveawayCache;
 import pink.zak.giveawaybot.cache.GiveawayCache;
@@ -47,7 +47,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
 public class GiveawayBot extends JdaBot {
@@ -83,43 +82,40 @@ public class GiveawayBot extends JdaBot {
         this.threadManager = new ThreadManager();
 
         Config settings = this.getConfigStore().getConfig("settings");
+
+        super.buildJdaEarly(settings.string("token"), this.getGatewayIntents(), shard -> shard
+                .disableCache(CacheFlag.VOICE_STATE));
         if (settings.bool("enable-metrics")) {
             this.metrics = new Metrics(new Metrics.Config(settings.string("influx-url"),
                     settings.string("influx-token").toCharArray(),
                     settings.string("influx-org"),
                     settings.string("influx-bucket"), 10));
         }
-
-        this.buildJdaEarly(settings.string("token"), this.getGatewayIntents(), shard -> shard
-                .disableCache(CacheFlag.VOICE_STATE));
-        Awaitility.await().atMost(30, TimeUnit.SECONDS).until(this::isConnected);
-        this.latencyMonitor = new LatencyMonitor(this);
-        this.closeIfPingUnusable();
-
         this.setupStorage();
-
         this.finishedGiveawayStorage = new FinishedGiveawayStorage(this);
-        this.finishedGiveawayCache = new FinishedGiveawayCache(this);
         this.scheduledGiveawayStorage = new ScheduledGiveawayStorage(this);
-        this.scheduledGiveawayCache = new ScheduledGiveawayCache(this);
         this.giveawayStorage = new GiveawayStorage(this);
-        this.giveawayCache = new GiveawayCache(this);
         this.serverStorage = new ServerStorage(this);
-        this.serverCache = new ServerCache(this);
-        this.languageRegistry = new LanguageRegistry();
-
-        this.languageRegistry.loadLanguages(this);
 
         this.defaults = new Defaults(this);
+        this.languageRegistry = new LanguageRegistry();
+        this.languageRegistry.startLang(this);
 
-        this.initialize(this, this.getConfigStore().getConfig("settings").string("token"), ">", this.getGatewayIntents(), shard -> shard
-                .disableCache(CacheFlag.VOICE_STATE));
+        this.finishedGiveawayCache = new FinishedGiveawayCache(this);
+        this.scheduledGiveawayCache = new ScheduledGiveawayCache(this);
+        this.giveawayCache = new GiveawayCache(this);
+        this.serverCache = new ServerCache(this);
+
+        super.buildVariables(this, ">");
 
         Runtime.getRuntime().addShutdownHook(new ShutdownHook(this));
     }
 
     @Override
     public void onConnect() {
+        this.latencyMonitor = new LatencyMonitor(this);
+        this.closeIfPingUnusable();
+
         this.getShardManager().setPresence(OnlineStatus.IDLE, Activity.playing("Loading...."));
         this.giveawayController = new GiveawayController(this); // Makes use of JDA, retrieving messages
         this.scheduledGiveawayController = new ScheduledGiveawayController(this); // Makes use of JDA, retrieving messages
@@ -172,13 +168,21 @@ public class GiveawayBot extends JdaBot {
         }
     }
 
+    @SneakyThrows
     private void closeIfPingUnusable() {
-        for (int i = 1; i <= 5; i++) {
+        while (this.latencyMonitor.getLastTiming() == Long.MAX_VALUE) {
+            Thread.sleep(10);
+        }
+        for (int i = 1; i <= 10; i++) {
             if (this.latencyMonitor.isLatencyUsable()) {
                 logger.info("Successfully tested latency on attempt no. {}", i);
                 return;
             }
             logger.error("Failed testing latency on attempt no. {}", i);
+            Thread.sleep(1000);
+            if (i == 5) {
+                System.exit(4);
+            }
         }
     }
 

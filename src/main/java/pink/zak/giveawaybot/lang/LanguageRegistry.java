@@ -1,12 +1,12 @@
 package pink.zak.giveawaybot.lang;
 
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import com.timvisee.yamlwrapper.ConfigurationSection;
 import com.timvisee.yamlwrapper.YamlConfiguration;
 import lombok.SneakyThrows;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
-import org.awaitility.Awaitility;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.lang.enums.Language;
 import pink.zak.giveawaybot.lang.enums.Text;
@@ -22,30 +22,16 @@ import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class LanguageRegistry {
     private final EnumMap<Language, LanguageContainer> languageMap = Maps.newEnumMap(Language.class);
     private Language defaultLanguage;
-    private boolean isLoading;
 
-    @SneakyThrows
-    public void loadLanguages(SimpleBot bot) {
+    public void startLang(SimpleBot bot) {
         this.defaultLanguage = Language.match(bot.getConfig("settings").string("default-language"));
-        Files.walk(bot.getBasePath().resolve("lang"))
-                .map(Path::toFile)
-                .filter(file -> file.getName().endsWith(".yml") || file.getName().endsWith(".yaml"))
-                .map(YamlConfiguration::loadFromFile)
-                .forEach(config -> {
-                    Language language = Language.match(config.getString("identifier"));
-                    if (language == null) {
-                        GiveawayBot.getLogger().error("Could not find identifier for language file {}", config.getName());
-                        return;
-                    }
-                    this.languageMap.put(language, new LanguageContainer(language, config));
-                });
+        this.loadLanguages(bot);
         if (this.defaultLanguage == null || !this.languageMap.containsKey(this.defaultLanguage)) {
             GiveawayBot.getLogger().error("The default language could not be found.");
             System.exit(3);
@@ -58,11 +44,32 @@ public class LanguageRegistry {
         }
     }
 
+    @SneakyThrows
+    public Set<Language> loadLanguages(SimpleBot bot) {
+        Set<Language> updatedLanguages = Sets.newHashSet();
+        Files.walk(bot.getBasePath().resolve("lang"))
+                .map(Path::toFile)
+                .filter(file -> file.getName().endsWith(".yml") || file.getName().endsWith(".yaml"))
+                .map(YamlConfiguration::loadFromFile)
+                .forEach(config -> {
+                    Language language = Language.match(config.getString("identifier"));
+                    if (language == null) {
+                        GiveawayBot.getLogger().error("Could not find identifier for language file {}", config.getName());
+                        return;
+                    }
+                    updatedLanguages.add(language);
+                    this.languageMap.put(language, new LanguageContainer(language, config));
+                });
+        return updatedLanguages;
+    }
+
+    @SneakyThrows
     public void reloadLanguages(SimpleBot bot) {
-        this.isLoading = true;
-        this.languageMap.clear();
-        this.loadLanguages(bot);
-        this.isLoading = false;
+        Set<Language> loadedLanguages = this.loadLanguages(bot);
+        this.languageMap.keySet().stream().filter(existingLang -> !loadedLanguages.contains(existingLang)).forEach(existingLang -> {
+            this.languageMap.remove(existingLang);
+            GiveawayBot.getLogger().warn("Removed {} on language reload.", existingLang);
+        });
     }
 
     public LangSub get(Language language, Text text) {
@@ -70,10 +77,6 @@ public class LanguageRegistry {
     }
 
     public LangSub get(Language language, Text text, Replace replace) {
-        Awaitility.await().atMost(5, TimeUnit.SECONDS).until(() -> !this.isLoading);
-        if (this.isLoading) {
-            return null;
-        }
         LangSub retrieved = this.languageMap.get(language).get(text, replace);
         return retrieved == null ? this.fallback(text, replace) : retrieved;
     }
