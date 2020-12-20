@@ -13,7 +13,7 @@
             <fileNamePattern>logs/archived/%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
             <!-- Max size per file -->
             <maxFileSize>40MB</maxFileSize>
-            <totalSizeCap>20GB</totalSizeCap>
+            <totalSizeCap>10GB</totalSizeCap>
             <!-- Retention in days -->
             <maxHistory>120</maxHistory>
         </rollingPolicy>

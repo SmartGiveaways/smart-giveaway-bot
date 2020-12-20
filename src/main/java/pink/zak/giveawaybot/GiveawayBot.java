@@ -47,7 +47,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
@@ -219,8 +218,8 @@ public class GiveawayBot extends JdaBot {
         return CompletableFuture.supplyAsync(supplier, this.threadManager.getAsyncExecutor(function));
     }
 
-    public Future<?> runAsync(ThreadFunction function, Runnable runnable) {
-        return this.threadManager.runAsync(function, runnable);
+    public void runAsync(ThreadFunction function, Runnable runnable) {
+        this.threadManager.runAsync(function, runnable);
     }
 
     public ExecutorService getAsyncExecutor(ThreadFunction function) {

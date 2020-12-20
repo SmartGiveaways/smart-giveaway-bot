@@ -13,8 +13,8 @@ public class ThreadManager {
         this.initiatePools();
     }
 
-    public Future<?> runAsync(ThreadFunction function, Runnable runnable) {
-        return this.threadPools.get(function).submit(runnable);
+    public void runAsync(ThreadFunction function, Runnable runnable) {
+        this.threadPools.get(function).submit(runnable);
     }
 
     private void initiatePools() {
