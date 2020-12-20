@@ -12,6 +12,22 @@ import java.util.List;
 public class ReactionContainer {
     private MessageReaction.ReactionEmote reactionEmote;
 
+    public ReactionContainer(String unicode, JDA api) {
+        this.reactionEmote = MessageReaction.ReactionEmote.fromUnicode(unicode, api);
+    }
+
+    public ReactionContainer(Emote emote) {
+        try {
+            this.reactionEmote = MessageReaction.ReactionEmote.fromCustom(emote);
+        } catch (NullPointerException ex) {
+            this.reactionEmote = null;
+        }
+    }
+
+    public ReactionContainer(MessageReaction.ReactionEmote emote) {
+        this.reactionEmote = emote;
+    }
+
     @SneakyThrows
     public static ReactionContainer fromUnknown(String input, Guild guild) {
         if (input.startsWith("<") && input.endsWith(">") && input.contains(":")) {
@@ -36,22 +52,6 @@ public class ReactionContainer {
             return new ReactionContainer(parsed.get(0), guild.getJDA());
         }
         return null;
-    }
-
-    public ReactionContainer(String unicode, JDA api) {
-        this.reactionEmote = MessageReaction.ReactionEmote.fromUnicode(unicode, api);
-    }
-
-    public ReactionContainer(Emote emote) {
-        try {
-            this.reactionEmote = MessageReaction.ReactionEmote.fromCustom(emote);
-        } catch (NullPointerException ex) {
-            this.reactionEmote = null;
-        }
-    }
-
-    public ReactionContainer(MessageReaction.ReactionEmote emote) {
-        this.reactionEmote = emote;
     }
 
     public MessageReaction.ReactionEmote getReactionEmote() {

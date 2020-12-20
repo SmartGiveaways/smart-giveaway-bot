@@ -21,24 +21,29 @@ public enum Setting {
     }, "reaction-emote", "react-emote", "reaction-emoji", "react-emoji", "react-to-enter-emote", "reaction"),
     ENABLE_MESSAGE_ENTRIES(Text.PRESET_ENABLE_MESSAGE_ENTRIES_DESCRIPTION, Boolean::parseBoolean, StringUtils::isBoolean, "enable-message-entries", "use-message-entries"),
     ENTRIES_PER_MESSAGE(Text.PRESET_ENTRIES_PER_MESSAGE_DESCRIPTION, Text.PRESET_ENTRIES_PER_MESSAGE_LIMIT_MESSAGE, 3, 9,
-            str -> NumberUtils.parseInt(str, -1), str -> {int parsed = NumberUtils.parseInt(str, -1); return parsed > 0;}, (server, input) -> ((Integer) input) <= (server.isPremium() ? 5 : 3), "entries-per-message", "message-entries"),
+            str -> NumberUtils.parseInt(str, -1), str -> {
+        int parsed = NumberUtils.parseInt(str, -1);
+        return parsed > 0;
+    }, (server, input) -> ((Integer) input) <= (server.isPremium() ? 5 : 3), "entries-per-message", "message-entries"),
     MAX_ENTRIES(Text.PRESET_MAX_ENTRIES_DESCRIPTION, Text.PRESET_MAX_ENTRIES_LIMIT_MESSAGE, 10000, 50000,
-            str -> NumberUtils.parseInt(str, -1), str -> {int parsed = NumberUtils.parseInt(str, -1); return parsed > 0;}, (server, input) -> ((Integer) input) <= (server.isPremium() ? 50000 : 10000), "max-entries"),
+            str -> NumberUtils.parseInt(str, -1), str -> {
+        int parsed = NumberUtils.parseInt(str, -1);
+        return parsed > 0;
+    }, (server, input) -> ((Integer) input) <= (server.isPremium() ? 50000 : 10000), "max-entries"),
     PING_WINNERS(Text.PRESET_PING_WINNERS_DESCRIPTION, Boolean::parseBoolean, StringUtils::isBoolean, "ping-winners", "ping-giveaway-winners");
 
     private final Text description;
     private final Set<String> configNames;
     private final String primaryConfigName;
+    private final Text limitMessage;
+    private final Object maxValue;
+    private final Object maxPremiumValue;
+    private final BiPredicate<Server, Object> limitChecker;
     // Nullable values
     private BiPredicate<String, Guild> guildInputChecker;
     private Function<String, Boolean> inputChecker;
     private Function<String, Object> parser;
     private BiFunction<String, Guild, Object> guildParser;
-
-    private final Text limitMessage;
-    private final Object maxValue;
-    private final Object maxPremiumValue;
-    private final BiPredicate<Server, Object> limitChecker;
 
     Setting(Text description, Text limitMessage, Object maxValue, Object maxPremiumValue, BiFunction<String, Guild, Object> guildParser, BiPredicate<String, Guild> guildInputChecker, BiPredicate<Server, Object> limitChecker, String... configNames) {
         this.description = description;
@@ -70,6 +75,16 @@ public enum Setting {
 
     Setting(Text description, Function<String, Object> parser, Function<String, Boolean> inputChecker, String... configNames) {
         this(description, null, null, null, parser, inputChecker, null, configNames);
+    }
+
+    public static Setting match(String input) {
+        String lowerInput = input.toLowerCase();
+        for (Setting setting : Setting.values()) {
+            if (setting.toString().equalsIgnoreCase(input) || setting.getConfigNames().contains(lowerInput)) {
+                return setting;
+            }
+        }
+        return null;
     }
 
     public Text getDescription() {
@@ -122,15 +137,5 @@ public enum Setting {
 
     public String getPrimaryConfigName() {
         return this.primaryConfigName;
-    }
-
-    public static Setting match(String input) {
-        String lowerInput = input.toLowerCase();
-        for (Setting setting : Setting.values()) {
-            if (setting.toString().equalsIgnoreCase(input) || setting.getConfigNames().contains(lowerInput)) {
-                return setting;
-            }
-        }
-        return null;
     }
 }

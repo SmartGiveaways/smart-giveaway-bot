@@ -20,6 +20,7 @@ public abstract class MongoStorage<K, T> implements CacheStorage<K, T> {
         this.collection = bot.getMongoConnectionFactory().getCollection(collectionName);
         this.idKey = idKey;
     }
+
     public abstract MongoSerializer<T> serializer();
 
     public abstract MongoDeserializer<T> deserializer();

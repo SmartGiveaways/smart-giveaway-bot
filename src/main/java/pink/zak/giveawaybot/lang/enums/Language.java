@@ -12,14 +12,6 @@ public enum Language {
         this.identifiers = identifiers;
     }
 
-    public String getName() {
-        return this.name;
-    }
-
-    public String[] getIdentifiers() {
-        return this.identifiers;
-    }
-
     public static Language match(String identifier) {
         String lowerIdentifier = identifier.toLowerCase();
         for (Language language : Language.values()) {
@@ -30,5 +22,13 @@ public enum Language {
             }
         }
         return null;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public String[] getIdentifiers() {
+        return this.identifiers;
     }
 }

@@ -24,7 +24,8 @@ public class UserStorage extends MongoStorage<Long, User> {
         super(bot, "users", "userId");
         this.serverId = serverId;
 
-        this.gson = new GsonBuilder().registerTypeAdapter(new TypeToken<EnumMap<EntryType, AtomicInteger>>(){}.getType(), new MapCreator<>(EntryType.class)).create();
+        this.gson = new GsonBuilder().registerTypeAdapter(new TypeToken<EnumMap<EntryType, AtomicInteger>>() {
+        }.getType(), new MapCreator<>(EntryType.class)).create();
     }
 
     @Override
@@ -45,7 +46,7 @@ public class UserStorage extends MongoStorage<Long, User> {
             long userId = document.getLong("userId");
             boolean banned = document.getBoolean("banned");
             boolean shadowBanned = document.getBoolean("shadowBanned");
-            ConcurrentMap<Long, EnumMap<EntryType, AtomicInteger>> entries = this.gson.fromJson(document.getString("entries"), new TypeToken<ConcurrentHashMap<Long, EnumMap<EntryType, AtomicInteger>>>(){}.getType());
+            ConcurrentMap<Long, EnumMap<EntryType, AtomicInteger>> entries = this.gson.fromJson(document.getString("entries"), new TypeToken<ConcurrentHashMap<Long, EnumMap<EntryType, AtomicInteger>>>() {}.getType());
             return new User(userId, this.serverId, banned, shadowBanned, entries);
         };
     }

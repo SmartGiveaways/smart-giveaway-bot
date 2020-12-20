@@ -40,7 +40,8 @@ public class BanListSub extends SubCommand implements EventListener {
                 .setRemovalAction(value -> {
                     try {
                         value.getKey().clearReactions().queue();
-                    } catch (ErrorResponseException ignored) {}
+                    } catch (ErrorResponseException ignored) {
+                    }
                 })
                 .build();
     }

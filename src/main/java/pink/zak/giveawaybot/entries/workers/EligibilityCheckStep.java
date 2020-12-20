@@ -38,7 +38,7 @@ public class EligibilityCheckStep {
     }
 
     private boolean isEntryEnabled(EntryType entryType, Preset preset) {
-        return (boolean) switch (entryType) {
+        return switch (entryType) {
             case MESSAGES -> preset.getSetting(Setting.ENABLE_MESSAGE_ENTRIES);
             case REACTION -> preset.getSetting(Setting.ENABLE_REACT_TO_ENTER);
         };

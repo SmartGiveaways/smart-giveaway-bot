@@ -11,8 +11,8 @@ import java.util.function.Function;
 
 public class ConfigStore {
     private final SimpleBot bot;
-    private Map<String, Config> configMap = Maps.newHashMap();
-    private Map<String, String> commons = Maps.newHashMap();
+    private final Map<String, Config> configMap = Maps.newHashMap();
+    private final Map<String, String> commons = Maps.newHashMap();
 
     public ConfigStore(SimpleBot bot) {
         this.bot = bot;

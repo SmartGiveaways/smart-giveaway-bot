@@ -12,8 +12,8 @@ import pink.zak.giveawaybot.service.types.ReactionContainer;
 import java.awt.*;
 
 public class Defaults {
-    private final JDA jda;
     public static final Preset defaultPreset = new Preset("default");
+    private final JDA jda;
     private Permission[] requiredPermissions;
     private Palette palette;
 

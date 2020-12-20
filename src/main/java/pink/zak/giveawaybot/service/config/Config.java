@@ -22,7 +22,7 @@ public class Config {
     private final boolean reloadable;
     private YamlConfiguration configuration;
     private Map<String, Object> valueMap;
-    private Set<String> enduringKeys;
+    private final Set<String> enduringKeys;
 
     public Config(SimpleBot bot, UnaryOperator<Path> path, boolean reloadable, String... enduringKeys) {
         this.basePath = bot.getBasePath();

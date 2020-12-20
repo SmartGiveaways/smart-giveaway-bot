@@ -5,10 +5,9 @@ import java.util.function.Supplier;
 
 public class CachedValue<V> {
     private final Supplier<V> valueSupplier;
-    private V value;
-
     private final TimeUnit timeUnit;
     private final int delay;
+    private V value;
     private long lastUpdateTime;
 
     public CachedValue(TimeUnit timeUnit, int delay, Supplier<V> valueSupplier) {

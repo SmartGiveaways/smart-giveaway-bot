@@ -191,9 +191,17 @@ values:
   preset-create-name-too-long: "Preset names must be shorter than 20 characters."
   preset-create-name-too-short: "Preset names must be longer than 3 characters."
   preset-created: "Created your preset. Use `>preset settings` to see available settings."
-  # export sub
+  # export/import subs
   preset-exported-all: "Here's an export of all your presets."
   preset-exported-single: "Here's your export of your %preset% preset."
+  preset-import-no-attachment: "You must attach an export file to your command message."
+  preset-import-confirm-override-plural: "Applying this import will override the following presets: %presets%. React with :white_check_mark: within 60 seconds to confirm this action."
+  preset-import-confirm-override-singular: "Applying this import will override the `%preset%` preset. React with :white_check_mark: within 60 seconds  to confirm this action."
+  preset-import-confirm: "React with :white_check_mark: to confirm adding this preset."
+  preset-import-too-many: "Your preset(s) could not be imported as you would go over the limit of 10 presets."
+  preset-import-invalid-file: "The file you gave to import was invalid (`%exception%`)."
+  preset-imported-plural: "Successfully imported the following presets: %presets%"
+  preset-imported-singular: "Successfully imported the `%preset%` preset."
   # delete sub
   preset-delete-show-presets-addon: " Here are your presets: %preset-list%"
   preset-delete-in-use: "You cannot delete a preset that is currently being used by a giveaway."

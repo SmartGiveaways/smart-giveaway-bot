@@ -20,6 +20,17 @@ public enum TimeIdentifier {
         this.identifiers = identifiers;
     }
 
+    public static TimeIdentifier match(String input) {
+        for (TimeIdentifier identifier : TimeIdentifier.values()) {
+            for (String possibility : identifier.getIdentifiers()) {
+                if (possibility.equalsIgnoreCase(input)) {
+                    return identifier;
+                }
+            }
+        }
+        return null;
+    }
+
     public String[] getIdentifiers() {
         return this.identifiers;
     }
@@ -33,16 +44,5 @@ public enum TimeIdentifier {
 
     public long getMilliseconds() {
         return this.milliseconds;
-    }
-
-    public static TimeIdentifier match(String input) {
-        for (TimeIdentifier identifier : TimeIdentifier.values()) {
-            for (String possibility : identifier.getIdentifiers()) {
-                if (possibility.equalsIgnoreCase(input)) {
-                    return identifier;
-                }
-            }
-        }
-        return null;
     }
 }

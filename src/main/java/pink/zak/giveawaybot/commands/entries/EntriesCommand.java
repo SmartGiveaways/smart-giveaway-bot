@@ -37,25 +37,6 @@ public class EntriesCommand extends SimpleCommand {
         this.runLogic(sender, server, event.getChannel(), true);
     }
 
-    private class UserEntriesSub extends SubCommand {
-
-        public UserEntriesSub(GiveawayBot bot) {
-            super(bot, true, false, false);
-
-            this.addArgument(Member.class); // target
-        }
-
-        @Override
-        public void onExecute(Member sender, Server server, GuildMessageReceivedEvent event, List<String> args) {
-            Member target = this.parseArgument(args, event.getGuild(), 0);
-            if (target == null) {
-                this.langFor(server, Text.COULDNT_FIND_MEMBER).to(event.getChannel());
-                return;
-            }
-            runLogic(target, server, event.getChannel(), false);
-        }
-    }
-
     private void runLogic(Member target, Server server, TextChannel channel, boolean self) {
         String targetName = UserUtils.getNameDiscrim(target);
         if (server.getActiveGiveaways().isEmpty()) {
@@ -85,12 +66,31 @@ public class EntriesCommand extends SimpleCommand {
             }
             channel.sendMessage(new EmbedBuilder()
                     .setTitle(this.langFor(server, Text.ENTRIES_EMBED_TITLE, replacer -> replacer.set("target", targetName)).get())
-                            .setColor(this.palette.primary())
-                            .setDescription(descriptionBuilder.toString())
-                            .build()).queue();
+                    .setColor(this.palette.primary())
+                    .setDescription(descriptionBuilder.toString())
+                    .build()).queue();
         }).exceptionally(ex -> {
             GiveawayBot.getLogger().error("", ex);
             return null;
         });
+    }
+
+    private class UserEntriesSub extends SubCommand {
+
+        public UserEntriesSub(GiveawayBot bot) {
+            super(bot, true, false, false);
+
+            this.addArgument(Member.class); // target
+        }
+
+        @Override
+        public void onExecute(Member sender, Server server, GuildMessageReceivedEvent event, List<String> args) {
+            Member target = this.parseArgument(args, event.getGuild(), 0);
+            if (target == null) {
+                this.langFor(server, Text.COULDNT_FIND_MEMBER).to(event.getChannel());
+                return;
+            }
+            runLogic(target, server, event.getChannel(), false);
+        }
     }
 }

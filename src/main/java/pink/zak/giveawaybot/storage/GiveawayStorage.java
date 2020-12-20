@@ -46,7 +46,7 @@ public class GiveawayStorage extends MongoStorage<Long, CurrentGiveaway> {
             int winnerAmount = document.getInteger("winnerAmount");
             String presetName = document.getString("presetName");
             String giveawayItem = document.getString("giveawayItem");
-            Set<Long> enteredUsers = Sets.newConcurrentHashSet(this.gson.fromJson(document.getString("enteredUsers"), new TypeToken<HashSet<Long>>(){}.getType()));
+            Set<Long> enteredUsers = Sets.newConcurrentHashSet(this.gson.fromJson(document.getString("enteredUsers"), new TypeToken<HashSet<Long>>() {}.getType()));
             return new CurrentGiveaway(messageId, channelId, serverId, startTime, endTime, winnerAmount, presetName, giveawayItem, enteredUsers);
         };
     }

@@ -52,8 +52,8 @@ public class FinishedGiveawayStorage extends MongoStorage<Long, FinishedGiveaway
             String presetName = document.getString("presetName");
             String giveawayItem = document.getString("giveawayItem");
             BigInteger totalEntries = new BigInteger(document.getString("totalEntries"));
-            Map<Long, BigInteger> userEntries = gson.fromJson(document.getString("userEntries"), new TypeToken<HashMap<Long, BigInteger>>(){}.getType());
-            Set<Long> winners = Sets.newConcurrentHashSet(gson.fromJson(document.getString("winners"), new TypeToken<HashSet<Long>>(){}.getType()));
+            Map<Long, BigInteger> userEntries = gson.fromJson(document.getString("userEntries"), new TypeToken<HashMap<Long, BigInteger>>() {}.getType());
+            Set<Long> winners = Sets.newConcurrentHashSet(gson.fromJson(document.getString("winners"), new TypeToken<HashSet<Long>>() {}.getType()));
             return new FinishedGiveaway(messageId, channelId, serverId, startTime, endTime, winnerAmount, presetName, giveawayItem, totalEntries, userEntries, winners);
         };
     }

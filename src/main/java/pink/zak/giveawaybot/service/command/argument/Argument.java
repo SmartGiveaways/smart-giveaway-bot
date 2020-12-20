@@ -25,7 +25,7 @@ public class Argument<T> {
     /**
      * Creates an argument for use with a SimpleCommand.
      *
-     * @param type     The clazz type of the argument, e.g a Player, OfflinePlayer, Integer or User.
+     * @param type         The clazz type of the argument, e.g a Player, OfflinePlayer, Integer or User.
      * @param argumentName The type of argument (used in help), e.g player or amount.
      */
     public Argument(ArgumentType<T> type, String argumentName) {
@@ -37,9 +37,9 @@ public class Argument<T> {
     /**
      * Creates an argument for use with a SimpleCommand which has aliases.
      *
-     * @param type     The clazz type of the argument, e.g a Player, OfflinePlayer, Integer or User.
+     * @param type         The clazz type of the argument, e.g a Player, OfflinePlayer, Integer or User.
      * @param argumentName The type of argument (used in help), e.g player or amount.
-     * @param aliases  The alternatives (aliases) that can be used.
+     * @param aliases      The alternatives (aliases) that can be used.
      */
     public Argument(ArgumentType<T> type, String argumentName, String... aliases) {
         this.type = type;

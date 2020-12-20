@@ -16,6 +16,7 @@ import pink.zak.giveawaybot.service.storage.mongo.MongoStorage;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class ServerStorage extends MongoStorage<Long, Server> {
@@ -46,11 +47,11 @@ public class ServerStorage extends MongoStorage<Long, Server> {
     public MongoDeserializer<Server> deserializer() {
         return document -> {
             long id = document.getLong("_id");
-            Map<String, Preset> presets = this.deserializePresets(id, this.gson.fromJson(document.getString("presets"), new TypeToken<ConcurrentHashMap<String, HashMap<Setting, String>>>(){}.getType()));
-            Set<Long> activeGiveaways = Sets.newConcurrentHashSet(this.gson.fromJson(document.getString("activeGiveaways"), new TypeToken<HashSet<Long>>(){}.getType()));
-            Set<UUID> scheduledGiveaways = Sets.newConcurrentHashSet(this.gson.fromJson(document.getString("scheduledGiveaways"), new TypeToken<HashSet<UUID>>(){}.getType()));
-            Set<Long> managerRoles = this.gson.fromJson(document.getString("managerRoles"), new TypeToken<HashSet<Long>>(){}.getType());
-            List<Long> bannedUsers = this.gson.fromJson(document.getString("bannedUsers"), new TypeToken<CopyOnWriteArrayList<Long>>(){}.getType());
+            Map<String, Preset> presets = this.deserializePresets(id, this.gson.fromJson(document.getString("presets"), new TypeToken<ConcurrentHashMap<String, HashMap<Setting, String>>>() {}.getType()));
+            Set<Long> activeGiveaways = Sets.newConcurrentHashSet(this.gson.fromJson(document.getString("activeGiveaways"), new TypeToken<HashSet<Long>>() {}.getType()));
+            Set<UUID> scheduledGiveaways = Sets.newConcurrentHashSet(this.gson.fromJson(document.getString("scheduledGiveaways"), new TypeToken<HashSet<UUID>>() {}.getType()));
+            Set<Long> managerRoles = this.gson.fromJson(document.getString("managerRoles"), new TypeToken<HashSet<Long>>() {}.getType());
+            List<Long> bannedUsers = this.gson.fromJson(document.getString("bannedUsers"), new TypeToken<CopyOnWriteArrayList<Long>>() {}.getType());
             long premium = document.getLong("premium");
             Language language = Language.valueOf(document.getString("language"));
             // TODO scheduled giveaways
@@ -73,21 +74,25 @@ public class ServerStorage extends MongoStorage<Long, Server> {
 
     public Map<String, Preset> deserializePresets(long guildId, Map<String, Map<Setting, String>> serialized) {
         if (serialized.isEmpty()) {
-            return Maps.newConcurrentMap();
+            return new ConcurrentSkipListMap<>();
         }
         Guild guild = this.bot.getShardManager().getGuildById(guildId);
-        Map<String, Preset> deserialized = Maps.newHashMap();
+        Map<String, Preset> deserialized = new ConcurrentSkipListMap<>();
         for (Map.Entry<String, Map<Setting, String>> entry : serialized.entrySet()) {
-            EnumMap<Setting, Object> enumMap = Maps.newEnumMap(Setting.class);
-            for (Map.Entry<Setting, String> innerEntry : entry.getValue().entrySet()) {
-                Object parsed = innerEntry.getKey().parseAny(innerEntry.getValue(), guild);
-                if (parsed == null) {
-                    continue;
-                }
-                enumMap.put(innerEntry.getKey(), parsed);
-            }
-            deserialized.put(entry.getKey(), new Preset(entry.getKey(), enumMap));
+            deserialized.put(entry.getKey(), new Preset(entry.getKey(), this.convertPresetValue(guild, entry.getValue())));
         }
         return deserialized;
+    }
+
+    public EnumMap<Setting, Object> convertPresetValue(Guild guild, Map<Setting, String> unconverted) {
+        EnumMap<Setting, Object> enumMap = Maps.newEnumMap(Setting.class);
+        for (Map.Entry<Setting, String> innerEntry : unconverted.entrySet()) {
+            Object parsed = innerEntry.getKey().parseAny(innerEntry.getValue(), guild);
+            if (parsed == null) {
+                continue;
+            }
+            enumMap.put(innerEntry.getKey(), parsed);
+        }
+        return enumMap;
     }
 }

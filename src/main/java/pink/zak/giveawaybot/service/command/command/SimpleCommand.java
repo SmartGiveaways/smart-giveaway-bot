@@ -24,24 +24,24 @@ public abstract class SimpleCommand extends Command {
         return this.subCommands;
     }
 
-    public void setAliases(Set<String> aliases) {
-        this.aliases = aliases;
-    }
-
-    public void setAliases(String... aliases) {
-        this.aliases.addAll(Arrays.asList(aliases));
-    }
-
-    public Set<String> getAliases() {
-        return this.aliases;
-    }
-
     public void setSubCommands(Set<SubCommand> subCommands) {
         this.subCommands = subCommands;
     }
 
     protected void setSubCommands(SubCommand... subCommands) {
         this.subCommands.addAll(Arrays.asList(subCommands));
+    }
+
+    public Set<String> getAliases() {
+        return this.aliases;
+    }
+
+    public void setAliases(Set<String> aliases) {
+        this.aliases = aliases;
+    }
+
+    public void setAliases(String... aliases) {
+        this.aliases.addAll(Arrays.asList(aliases));
     }
 
     public boolean doesCommandMatch(String command) {
