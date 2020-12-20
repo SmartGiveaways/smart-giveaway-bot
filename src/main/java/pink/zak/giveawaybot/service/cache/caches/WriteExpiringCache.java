@@ -12,18 +12,16 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 public class WriteExpiringCache<K, V> extends Cache<K, V> {
-    protected final Map<K, Long> writeTimes = new ConcurrentHashMap<>();
+    protected final Map<K, Long> expiryTimes = new ConcurrentHashMap<>();
     private final ScheduledExecutorService scheduler;
     private final CacheExpiryListener<K, V> expiryListener;
-    private final TimeUnit timeUnit;
-    private final int delay;
+    private final long delayMillis;
 
     public WriteExpiringCache(GiveawayBot bot, CacheStorage<K, V> storage, CacheExpiryListener<K, V> expiryListener, Consumer<V> removalAction, TimeUnit timeUnit, int delay, TimeUnit autoSaveUnit, int autoSaveInterval) {
         super(bot, removalAction, storage, autoSaveUnit, autoSaveInterval);
         this.scheduler = bot.getThreadManager().getScheduler();
         this.expiryListener = expiryListener;
-        this.timeUnit = timeUnit;
-        this.delay = delay;
+        this.delayMillis = timeUnit.toMillis(delay);
 
         this.startScheduledCleanup();
     }
@@ -42,7 +40,7 @@ public class WriteExpiringCache<K, V> extends Cache<K, V> {
 
     @Override
     public V set(K key, V value) {
-        this.writeTimes.put(key, System.currentTimeMillis());
+        this.expiryTimes.put(key, System.currentTimeMillis() + this.delayMillis);
         return super.set(key, value);
     }
 
@@ -65,7 +63,7 @@ public class WriteExpiringCache<K, V> extends Cache<K, V> {
         if (retrieved == null) {
             return null;
         }
-        if (System.currentTimeMillis() - this.writeTimes.get(key) > this.timeUnit.toMillis(this.delay)) {
+        if (this.expiryTimes.get(key) <= System.currentTimeMillis()) {
             this.invalidate(key);
             return null;
         }
@@ -74,7 +72,7 @@ public class WriteExpiringCache<K, V> extends Cache<K, V> {
 
     @Override
     public V invalidate(K key) {
-        this.writeTimes.remove(key);
+        this.expiryTimes.remove(key);
         if (this.expiryListener != null) {
             this.expiryListener.onExpiry(key, this.getSync(key));
         }
@@ -83,7 +81,7 @@ public class WriteExpiringCache<K, V> extends Cache<K, V> {
 
     @Override
     public V invalidate(K key, boolean save) {
-        this.writeTimes.remove(key);
+        this.expiryTimes.remove(key);
         if (save && this.expiryListener != null) {
             this.expiryListener.onExpiry(key, this.getSync(key));
         }
@@ -92,21 +90,26 @@ public class WriteExpiringCache<K, V> extends Cache<K, V> {
 
     @Override
     public void invalidateAll() {
-        this.writeTimes.clear();
+        this.expiryTimes.clear();
         super.invalidateAll();
     }
 
     @Override
     public CompletableFuture<Void> invalidateAllAsync() {
-        this.writeTimes.clear();
+        this.expiryTimes.clear();
         return super.invalidateAllAsync();
+    }
+
+    @Override
+    public boolean contains(K key) {
+        return super.contains(key) && this.expiryTimes.containsKey(key) && System.currentTimeMillis() < this.expiryTimes.get(key);
     }
 
     private void startScheduledCleanup() {
         this.scheduler.scheduleAtFixedRate(() -> {
             long currentTime = System.currentTimeMillis();
-            for (Map.Entry<K, Long> entry : this.writeTimes.entrySet()) {
-                if (currentTime - entry.getValue() > this.timeUnit.toMillis(this.delay)) {
+            for (Map.Entry<K, Long> entry : this.expiryTimes.entrySet()) {
+                if (System.currentTimeMillis() > entry.getValue()) {
                     this.invalidate(entry.getKey());
                 }
             }
