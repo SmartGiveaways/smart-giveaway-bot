@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
+    <conversionRule conversionWord="highlight" converterClass="pink.zak.giveawaybot.service.logback.HighlightingConverter" />
+
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%d{HH:mm:ss} [%-12.-12thread] %-6level >> %msg%n</pattern>
+            <pattern>%cyan(%d{HH:mm:ss} [%-12.-12thread]) %highlight(%-6level >> %msg%n)</pattern>
         </encoder>
     </appender>
 
