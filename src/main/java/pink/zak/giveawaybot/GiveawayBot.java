@@ -23,7 +23,7 @@ import pink.zak.giveawaybot.commands.preset.PresetCommand;
 import pink.zak.giveawaybot.controllers.GiveawayController;
 import pink.zak.giveawaybot.controllers.ScheduledGiveawayController;
 import pink.zak.giveawaybot.defaults.Defaults;
-import pink.zak.giveawaybot.entries.EntryPipeline;
+import pink.zak.giveawaybot.pipelines.entries.EntryPipeline;
 import pink.zak.giveawaybot.lang.LanguageRegistry;
 import pink.zak.giveawaybot.listener.GiveawayDeletionListener;
 import pink.zak.giveawaybot.listener.ReactionAddListener;
@@ -106,6 +106,8 @@ public class GiveawayBot extends JdaBot {
         this.giveawayCache = new GiveawayCache(this);
         this.serverCache = new ServerCache(this);
 
+        this.entryPipeline = new EntryPipeline(this);
+
         super.buildVariables(this, ">");
 
         Runtime.getRuntime().addShutdownHook(new ShutdownHook(this));
@@ -121,8 +123,6 @@ public class GiveawayBot extends JdaBot {
         this.scheduledGiveawayController = new ScheduledGiveawayController(this); // Makes use of JDA, retrieving messages
         this.metricsLogger = new MetricsLogger(this);
         this.metricsLogger.checkAndStart(this);
-
-        this.entryPipeline = new EntryPipeline(this);
 
         this.registerCommands(
                 new BotAboutCommand(this),
