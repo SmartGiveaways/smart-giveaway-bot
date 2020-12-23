@@ -21,6 +21,6 @@ public class BanCommand extends SimpleHelpCommand {
         );
         bot.registerListeners(banListSub);
 
-        this.buildMessages(Text.BAN_EMBED_TITLE, Text.BAN_EMBED_CONTENT);
+        this.setupMessages(Text.BAN_EMBED_TITLE, Text.BAN_EMBED_CONTENT);
     }
 }

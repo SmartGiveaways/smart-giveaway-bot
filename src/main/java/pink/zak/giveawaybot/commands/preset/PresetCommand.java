@@ -28,6 +28,6 @@ public class PresetCommand extends SimpleHelpCommand {
                 new SetOptionSub(bot)
         );
 
-        this.buildMessages(Text.PRESET_EMBED_TITLE, Text.PRESET_EMBED_CONTENT);
+        this.setupMessages(Text.PRESET_EMBED_TITLE, Text.PRESET_EMBED_CONTENT);
     }
 }

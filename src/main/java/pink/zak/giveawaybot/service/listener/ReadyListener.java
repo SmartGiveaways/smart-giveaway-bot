@@ -20,6 +20,12 @@ public class ReadyListener extends ListenerAdapter {
     public void setRequiredShards(int requiredShards) {
         GiveawayBot.getLogger().info("Set required shards to {}", requiredShards);
         this.requiredShards = requiredShards;
+        if (this.countedShards.get() > this.requiredShards && this.bot.isInitialized()) {
+            this.bot.onConnect();
+        }
+    }
+
+    public void readyIfReady() {
         if (this.countedShards.get() > this.requiredShards) {
             this.bot.onConnect();
         }
@@ -34,6 +40,8 @@ public class ReadyListener extends ListenerAdapter {
         }
         GiveawayBot.getLogger().info("All shards are up! Calling onConnect");
         this.bot.setConnected(true);
-        this.bot.onConnect();
+        if (this.bot.isInitialized()) {
+            this.bot.onConnect();
+        }
     }
 }

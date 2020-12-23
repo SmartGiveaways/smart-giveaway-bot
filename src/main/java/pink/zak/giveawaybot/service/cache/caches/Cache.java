@@ -139,6 +139,10 @@ public class Cache<K, V> {
         this.loads.set(0);
     }
 
+    public CacheStorage<K, V> getStorage() {
+        return this.storage;
+    }
+
     private void startAutoSave(ScheduledExecutorService scheduler, TimeUnit timeUnit, int interval) {
         scheduler.scheduleAtFixedRate(() -> {
             this.executor.submit(() -> {

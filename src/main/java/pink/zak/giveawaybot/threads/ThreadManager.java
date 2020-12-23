@@ -19,7 +19,7 @@ public class ThreadManager {
 
     private void initiatePools() {
         this.threadPools.put(ThreadFunction.STORAGE, Executors.newFixedThreadPool(2, this.getThreadFactory("storage")));
-        this.threadPools.put(ThreadFunction.COMMANDS, Executors.newFixedThreadPool(2, this.getThreadFactory("commands")));
+        this.threadPools.put(ThreadFunction.GENERAL, Executors.newFixedThreadPool(2, this.getThreadFactory("commands")));
         this.threadPools.put(ThreadFunction.SCHEDULERS, Executors.newScheduledThreadPool(2, this.getThreadFactory("scheduling")));
     }
 

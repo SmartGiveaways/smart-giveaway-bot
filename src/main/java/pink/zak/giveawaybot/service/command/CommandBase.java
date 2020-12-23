@@ -48,7 +48,7 @@ public class CommandBase implements GiveawayMessageListener {
     public CommandBase(GiveawayBot bot) {
         this.bot = bot;
         this.serverCache = bot.getServerCache();
-        this.executor = bot.getThreadManager().getAsyncExecutor(ThreadFunction.COMMANDS);
+        this.executor = bot.getThreadManager().getAsyncExecutor(ThreadFunction.GENERAL);
         this.commandCooldowns = new CacheBuilder<Long, Long>().expireAfterAccess(1, TimeUnit.SECONDS).setControlling(bot).build();
         this.languageRegistry = bot.getLanguageRegistry();
         this.requiredPermissions = new Permission[]{Permission.MESSAGE_READ,

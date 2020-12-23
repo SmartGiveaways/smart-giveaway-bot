@@ -24,7 +24,7 @@ public enum Setting {
             str -> NumberUtils.parseInt(str, -1), str -> {
         int parsed = NumberUtils.parseInt(str, -1);
         return parsed > 0;
-    }, (server, input) -> ((Integer) input) <= (server.isPremium() ? 5 : 3), "entries-per-message", "message-entries"),
+    }, (server, input) -> ((Integer) input) <= (server.isPremium() ? 9 : 3), "entries-per-message", "message-entries"),
     MAX_ENTRIES(Text.PRESET_MAX_ENTRIES_DESCRIPTION, Text.PRESET_MAX_ENTRIES_LIMIT_MESSAGE, 10000, 50000,
             str -> NumberUtils.parseInt(str, -1), str -> {
         int parsed = NumberUtils.parseInt(str, -1);

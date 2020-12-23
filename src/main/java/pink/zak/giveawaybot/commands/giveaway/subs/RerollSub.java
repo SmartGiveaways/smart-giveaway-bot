@@ -9,6 +9,8 @@ import pink.zak.giveawaybot.cache.FinishedGiveawayCache;
 import pink.zak.giveawaybot.controllers.GiveawayController;
 import pink.zak.giveawaybot.lang.enums.Text;
 import pink.zak.giveawaybot.models.Server;
+import pink.zak.giveawaybot.pipelines.giveaway.steps.MessageStep;
+import pink.zak.giveawaybot.pipelines.giveaway.steps.WinnerStep;
 import pink.zak.giveawaybot.service.command.command.SubCommand;
 
 import java.util.List;
@@ -17,11 +19,15 @@ import java.util.Set;
 public class RerollSub extends SubCommand {
     private final FinishedGiveawayCache giveawayCache;
     private final GiveawayController giveawayController;
+    private final MessageStep messageStep;
+    private final WinnerStep winnerStep;
 
     public RerollSub(GiveawayBot bot) {
         super(bot, true, false, false);
         this.giveawayCache = bot.getFinishedGiveawayCache();
         this.giveawayController = bot.getGiveawayController();
+        this.messageStep = new MessageStep(bot);
+        this.winnerStep = new WinnerStep(this.messageStep);
 
         this.addFlat("reroll");
         this.addArgument(Long.class); // The giveaway message ID
@@ -44,10 +50,11 @@ public class RerollSub extends SubCommand {
                 this.langFor(server, Text.REROLL_OVER_24_HOURS).to(textChannel);
                 return;
             }
-            Set<Long> newWinners = this.giveawayController.regenerateWinners(giveaway);
+            Set<Long> newWinners = this.winnerStep.regenerateWinners(giveaway);
             Message message = this.giveawayController.getGiveawayMessage(giveaway);
+            giveaway.setWinners(newWinners);
             if (message != null) {
-                this.giveawayController.handleGiveawayEndMessages(giveaway, newWinners, giveaway.totalEntries(), message, server);
+                this.messageStep.sendFinishedMessage(server, giveaway, message, newWinners, giveaway.totalEntries());
             }
             Long[] winnersArray = newWinners.toArray(new Long[]{});
             if (winnersArray.length == 1) {

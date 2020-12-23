@@ -22,6 +22,6 @@ public class AdminCommand extends SimpleHelpCommand {
                 new ManagerAddSub(bot),
                 new ManagerRemoveSub(bot)
         );
-        this.buildMessages(Text.ADMIN_EMBED_TITLE, Text.ADMIN_EMBED_CONTENT);
+        this.setupMessages(Text.ADMIN_EMBED_TITLE, Text.ADMIN_EMBED_CONTENT);
     }
 }

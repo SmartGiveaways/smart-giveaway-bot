@@ -30,6 +30,6 @@ public class GiveawayCommand extends SimpleHelpCommand {
                 new RerollSub(bot)
         );
 
-        this.buildMessages(Text.GIVEAWAY_HELP_EMBED_TITLE, Text.GIVEAWAY_HELP_EMBED_FOOTER, Text.GIVEAWAY_HELP_EMBED_CONTENT);
+        this.setupMessages(Text.GIVEAWAY_HELP_EMBED_TITLE, Text.GIVEAWAY_HELP_EMBED_FOOTER, Text.GIVEAWAY_HELP_EMBED_CONTENT);
     }
 }

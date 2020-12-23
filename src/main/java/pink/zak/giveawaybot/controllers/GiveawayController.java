@@ -1,6 +1,5 @@
 package pink.zak.giveawaybot.controllers;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import lombok.SneakyThrows;
@@ -14,9 +13,11 @@ import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import net.dv8tion.jda.api.exceptions.RateLimitedException;
 import net.dv8tion.jda.api.requests.ErrorResponse;
 import pink.zak.giveawaybot.GiveawayBot;
-import pink.zak.giveawaybot.cache.*;
+import pink.zak.giveawaybot.cache.FinishedGiveawayCache;
+import pink.zak.giveawaybot.cache.GiveawayCache;
+import pink.zak.giveawaybot.cache.ScheduledGiveawayCache;
+import pink.zak.giveawaybot.cache.ServerCache;
 import pink.zak.giveawaybot.defaults.Defaults;
-import pink.zak.giveawaybot.enums.EntryType;
 import pink.zak.giveawaybot.enums.ReturnCode;
 import pink.zak.giveawaybot.enums.Setting;
 import pink.zak.giveawaybot.lang.LanguageRegistry;
@@ -24,23 +25,23 @@ import pink.zak.giveawaybot.lang.enums.Text;
 import pink.zak.giveawaybot.metrics.helpers.LatencyMonitor;
 import pink.zak.giveawaybot.models.Preset;
 import pink.zak.giveawaybot.models.Server;
-import pink.zak.giveawaybot.models.User;
 import pink.zak.giveawaybot.models.giveaway.CurrentGiveaway;
-import pink.zak.giveawaybot.models.giveaway.FinishedGiveaway;
 import pink.zak.giveawaybot.models.giveaway.Giveaway;
 import pink.zak.giveawaybot.models.giveaway.RichGiveaway;
+import pink.zak.giveawaybot.pipelines.giveaway.GiveawayPipeline;
+import pink.zak.giveawaybot.pipelines.giveaway.steps.DeletionStep;
 import pink.zak.giveawaybot.service.colour.Palette;
 import pink.zak.giveawaybot.service.time.Time;
 import pink.zak.giveawaybot.service.time.TimeIdentifier;
 import pink.zak.giveawaybot.service.tuple.ImmutablePair;
-import pink.zak.giveawaybot.service.types.NumberUtils;
 import pink.zak.giveawaybot.service.types.ReactionContainer;
 import pink.zak.giveawaybot.storage.GiveawayStorage;
 import pink.zak.giveawaybot.threads.ThreadFunction;
 import pink.zak.giveawaybot.threads.ThreadManager;
 
-import java.math.BigInteger;
-import java.util.*;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
@@ -60,6 +61,9 @@ public class GiveawayController {
     private final Defaults defaults;
     private final GiveawayBot bot;
 
+    private final GiveawayPipeline giveawayPipeline;
+    private final DeletionStep deletionStep;
+
     public GiveawayController(GiveawayBot bot) {
         this.threadManager = bot.getThreadManager();
         this.languageRegistry = bot.getLanguageRegistry();
@@ -72,6 +76,10 @@ public class GiveawayController {
         this.palette = bot.getDefaults().getPalette();
         this.defaults = bot.getDefaults();
         this.bot = bot;
+
+        this.giveawayPipeline = new GiveawayPipeline(bot, this);
+        this.deletionStep = new DeletionStep(bot, this);
+
         this.loadAllGiveaways();
         this.startGiveawayUpdater();
     }
@@ -174,11 +182,11 @@ public class GiveawayController {
         this.bot.runAsync(ThreadFunction.STORAGE, () -> {
             for (CurrentGiveaway giveaway : this.giveawayStorage.loadAll()) {
                 if (this.getGiveawayMessage(giveaway) == null) {
-                    this.deleteGiveaway(giveaway);
+                    this.deletionStep.delete(giveaway);
                     continue;
                 }
                 if (!giveaway.isActive()) {
-                    this.bot.runAsync(ThreadFunction.STORAGE, () -> this.endGiveaway(giveaway));
+                    this.giveawayPipeline.endGiveaway(giveaway);
                     continue;
                 }
                 this.giveawayCache.addGiveaway(giveaway);
@@ -193,134 +201,23 @@ public class GiveawayController {
         });
     }
 
-    private void endGiveaway(CurrentGiveaway giveaway) {
-        Message giveawayMessage = this.getGiveawayMessage(giveaway);
-        if (giveawayMessage != null) {
-            this.serverCache.get(giveaway.serverId()).thenAccept(server -> {
-                BigInteger totalEntries = BigInteger.ZERO;
-                Map<Long, BigInteger> userEntriesMap = Maps.newHashMap();
-                List<Long> enteredUsers = Lists.newArrayList(giveaway.enteredUsers().toArray(new Long[]{}));
-                Collections.shuffle(enteredUsers, new Random());
-                for (long enteredUserId : giveaway.enteredUsers()) {
-                    User user = server.getUserCache().getSync(enteredUserId);
-                    if (user == null || user.isBanned() || user.isShadowBanned()) {
-                        continue;
-                    }
-                    Map<EntryType, AtomicInteger> entries = user.entries().get(giveaway.messageId());
-                    if (entries != null) {
-                        BigInteger totalUserEntries = BigInteger.ZERO;
-                        for (AtomicInteger entryTypeAmount : entries.values()) {
-                            totalEntries = totalEntries.add(BigInteger.valueOf(entryTypeAmount.get()));
-                            totalUserEntries = totalUserEntries.add(BigInteger.valueOf(entryTypeAmount.get()));
-                        }
-                        userEntriesMap.put(user.id(), totalUserEntries);
-                    }
-                }
-                server.getActiveGiveaways().remove(giveaway.channelId());
-                if (totalEntries.equals(BigInteger.ZERO)) {
-                    giveawayMessage.editMessage(new EmbedBuilder()
-                            .setColor(this.palette.success())
-                            .setTitle(this.languageRegistry.get(server, Text.GIVEAWAY_EMBED_TITLE, replacer -> replacer.set("item", giveaway.giveawayItem())).get())
-                            .setDescription(this.languageRegistry.get(server, Text.GIVEAWAY_FINISHED_EMBED_DESCRIPTION_NO_WINNERS).get())
-                            .setFooter(this.languageRegistry.get(server, Text.GIVEAWAY_FINISHED_EMBED_FOOTER_NO_WINNERS).get()).build()).queue();
-                    return;
-                }
-                Set<Long> winners = this.generateWinners(giveaway.winnerAmount(), totalEntries, enteredUsers, userEntriesMap);
-                GiveawayBot.getLogger().debug("Giveaway {} generated winners {}", giveaway.messageId(), winners);
-                this.handleGiveawayEndMessages(giveaway, winners, totalEntries, giveawayMessage, server);
-                // Convert to a FinishedGiveaway
-                this.finishedGiveawayCache.set(giveaway.messageId(), new FinishedGiveaway(giveaway, totalEntries, userEntriesMap, winners));
-            }).whenComplete((unused, throwable) -> {
-                this.deleteGiveaway(giveaway);
-            }).exceptionally(ex -> {
-                GiveawayBot.getLogger().error("", ex);
-                return null;
-            });
-            return;
-        }
-        this.deleteGiveaway(giveaway);
-    }
-
-    public void handleGiveawayEndMessages(RichGiveaway giveaway, Set<Long> winners, BigInteger totalEntries, Message giveawayMessage, Server server) {
-        StringBuilder descriptionBuilder = new StringBuilder();
-        for (long winnerId : winners) {
-            descriptionBuilder.append("<@").append(winnerId).append(">\n");
-        }
-        giveawayMessage.editMessage(new EmbedBuilder()
-                .setColor(this.palette.success())
-                .setTitle(this.languageRegistry.get(server, Text.GIVEAWAY_EMBED_TITLE, replacer -> replacer.set("item", giveaway.giveawayItem())).get())
-                .setDescription(this.languageRegistry.get(server, winners.size() > 1 ? Text.GIVEAWAY_FINISHED_EMBED_DESCRIPTION_PLURAL : Text.GIVEAWAY_FINISHED_EMBED_DESCRIPTION_SINGULAR,
-                        replacer -> replacer.set("winners", descriptionBuilder.toString())).get())
-                .setFooter(this.languageRegistry.get(server, winners.size() > 1 ? Text.GIVEAWAY_FINISHED_EMBED_FOOTER_PLURAL : Text.GIVEAWAY_FINISHED_EMBED_FOOTER_SINGULAR,
-                        replacer -> replacer.set("winner-count", giveaway.winnerAmount()).set("entries", totalEntries)).get())
-                .build()).queue();
-        // Handle the pinging of winners
-        Preset preset = giveaway.presetName().equals("default") ? this.defaultPreset : server.getPreset(giveaway.presetName());
-        if ((boolean) preset.getSetting(Setting.PING_WINNERS)) {
-            giveawayMessage.getTextChannel().sendMessage(descriptionBuilder.toString()).queue(message -> message.delete().queue());
-        }
-    }
-
-    public Set<Long> regenerateWinners(FinishedGiveaway giveaway) {
-        List<Long> enteredUsers = Lists.newArrayList(giveaway.userEntries().keySet().toArray(new Long[]{}));
-        Collections.shuffle(enteredUsers);
-        return this.generateWinners(giveaway.winnerAmount(), giveaway.totalEntries(), enteredUsers, giveaway.userEntries());
-    }
-
-    public Set<Long> generateWinners(int winnerAmount, BigInteger totalEntries, List<Long> enteredUsers, Map<Long, BigInteger> userEntries) {
-        Set<Long> winners = Sets.newHashSet();
-        if (userEntries.size() <= winnerAmount) {
-            return userEntries.keySet();
-        }
-        BigInteger currentTotalEntries = totalEntries;
-        for (int i = 1; i <= winnerAmount; i++) { // For each winner to be generated
-            BigInteger decreasingRandom = NumberUtils.getRandomBigInteger(currentTotalEntries);
-            for (long userId : enteredUsers) {
-                BigInteger entries = userEntries.get(userId);
-                decreasingRandom = decreasingRandom.subtract(entries);
-                if (decreasingRandom.compareTo(BigInteger.ONE) < 0) {
-                    winners.add(userId);
-                    if (i + 1 <= winnerAmount) {
-                        enteredUsers.remove(userId);
-                        currentTotalEntries = currentTotalEntries.subtract(entries);
-                    }
-                    break;
-                }
-            }
-
-        }
-        return winners;
-    }
-
-    public void deleteGiveaway(CurrentGiveaway giveaway) {
-        this.giveawayCache.invalidateAsync(giveaway.messageId(), false);
-        this.serverCache.get(giveaway.serverId()).thenAccept(server -> {
-            if (this.scheduledFutures.containsKey(giveaway) && !this.scheduledFutures.get(giveaway).isDone()) {
-                this.scheduledFutures.get(giveaway).cancel(false);
-            }
-            server.getActiveGiveaways().remove(giveaway.messageId());
-            GiveawayBot.getLogger().debug("Removing giveaway from server {}  :  {}", giveaway.serverId(), giveaway.messageId());
-            UserCache userCache = server.getUserCache();
-            for (long enteredId : giveaway.enteredUsers()) {
-                userCache.get(enteredId).thenAccept(user -> user.entries().remove(giveaway.messageId()));
-            }
-        });
-        this.giveawayStorage.delete(giveaway.messageId());
-    }
-
     private void startGiveawayUpdater() {
         AtomicInteger counter = new AtomicInteger();
-        LatencyMonitor latencyMonitor = bot.getLatencyMonitor();
+        LatencyMonitor latencyMonitor = this.bot.getLatencyMonitor();
         this.threadManager.getScheduler().scheduleAtFixedRate(() -> {
+            if (!latencyMonitor.isLatencyUsable()) {
+                GiveawayBot.getLogger().warn("Latency was not usable so did not update giveaways ({}ms)", latencyMonitor.getLastTiming());
+                return;
+            }
             counter.getAndIncrement();
             for (CurrentGiveaway giveaway : this.giveawayCache.getMap().values()) {
                 if (!giveaway.isActive()) {
                     return;
                 }
+                if (!latencyMonitor.isLatencyUsable() || !this.shouldUpdateMessage(counter, giveaway)) {
+                    return;
+                }
                 this.serverCache.get(giveaway.serverId()).thenAccept(server -> {
-                    if (!latencyMonitor.isLatencyUsable() || !this.shouldUpdateMessage(counter, giveaway)) {
-                        return;
-                    }
                     Message message = this.getGiveawayMessage(giveaway);
                     if (message == null) {
                         GiveawayBot.getLogger().warn("Giveaway did not delete correctly or the discord api is dying ({} in server {}).", giveaway.messageId(), giveaway.serverId());
@@ -364,7 +261,7 @@ public class GiveawayController {
     private void startGiveawayTimer(CurrentGiveaway giveaway) {
         this.scheduledFutures.put(giveaway, this.threadManager.getScheduler().schedule(() -> {
             GiveawayBot.getLogger().debug("Giveaway {} expired", giveaway.messageId());
-            this.endGiveaway(giveaway);
+            this.giveawayPipeline.endGiveaway(giveaway);
         }, giveaway.timeToExpiry(), TimeUnit.MILLISECONDS));
     }
 
@@ -392,5 +289,9 @@ public class GiveawayController {
     private String getFooter(Server server, long length, int winnerAmount) {
         return this.languageRegistry.get(server, winnerAmount > 1 ? Text.GIVEAWAY_EMBED_FOOTER_PLURAL : Text.GIVEAWAY_EMBED_FOOTER_SINGULAR,
                 replacer -> replacer.set("time", Time.format(length)).set("winner-count", winnerAmount)).get();
+    }
+
+    public Map<CurrentGiveaway, ScheduledFuture<?>> getScheduledFutures() {
+        return this.scheduledFutures;
     }
 }

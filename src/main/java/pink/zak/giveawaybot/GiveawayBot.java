@@ -31,7 +31,9 @@ import pink.zak.giveawaybot.listener.message.MessageSendListener;
 import pink.zak.giveawaybot.metrics.MetricsLogger;
 import pink.zak.giveawaybot.metrics.helpers.LatencyMonitor;
 import pink.zak.giveawaybot.service.bot.JdaBot;
+import pink.zak.giveawaybot.service.command.command.Command;
 import pink.zak.giveawaybot.service.config.Config;
+import pink.zak.giveawaybot.service.config.Reloadable;
 import pink.zak.giveawaybot.service.storage.mongo.MongoConnectionFactory;
 import pink.zak.giveawaybot.storage.FinishedGiveawayStorage;
 import pink.zak.giveawaybot.storage.GiveawayStorage;
@@ -106,6 +108,7 @@ public class GiveawayBot extends JdaBot {
         this.giveawayCache = new GiveawayCache(this);
         this.serverCache = new ServerCache(this);
 
+        this.metricsLogger = new MetricsLogger(this);
         this.entryPipeline = new EntryPipeline(this);
 
         super.buildVariables(this, ">");
@@ -121,7 +124,6 @@ public class GiveawayBot extends JdaBot {
         this.getShardManager().setPresence(OnlineStatus.IDLE, Activity.playing("Loading...."));
         this.giveawayController = new GiveawayController(this); // Makes use of JDA, retrieving messages
         this.scheduledGiveawayController = new ScheduledGiveawayController(this); // Makes use of JDA, retrieving messages
-        this.metricsLogger = new MetricsLogger(this);
         this.metricsLogger.checkAndStart(this);
 
         this.registerCommands(
@@ -144,6 +146,15 @@ public class GiveawayBot extends JdaBot {
         );
         this.getShardManager().setPresence(OnlineStatus.ONLINE, Activity.playing("smartgiveaways.xyz"));
         logger.info("Finished startup. The bot is now fully registered.");
+    }
+
+    public void reload() {
+        this.languageRegistry.reloadLanguages(this);
+        for (Command command : this.getCommandBase().getCommands()) {
+            if (command instanceof Reloadable reloadableCommand) {
+                reloadableCommand.reload(this);
+            }
+        }
     }
 
     @Override

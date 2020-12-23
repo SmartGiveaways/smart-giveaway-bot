@@ -13,7 +13,7 @@ public record Preset(String name, EnumMap<Setting, Object> settings) {
         this(name, Maps.newEnumMap(Setting.class));
     }
 
-    public Object getSetting(Setting setting) {
+    public Object getSetting(Setting setting) { // TODO will generic types work? Try sometimes
         return this.hasSetting(setting) ? this.settings.get(setting) : Defaults.defaultPreset.getSetting(setting);
     }
 

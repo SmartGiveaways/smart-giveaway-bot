@@ -2,6 +2,6 @@ package pink.zak.giveawaybot.threads;
 
 public enum ThreadFunction {
     STORAGE,
-    COMMANDS,
+    GENERAL,
     SCHEDULERS
 }

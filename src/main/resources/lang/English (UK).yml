@@ -37,21 +37,20 @@ values:
 
   # >gabout command messages
   about-embed-title: "About SmartGiveaways"
-  about-embed-content: "[Vote (Click)](https://www.youtube.com/watch?v=dQw4w9WgXcQ)\n
-                        [Discord (Click)](https://discord.gg/aS4PebKZpe)\n
-                        [Website (Click)](https://smartgiveaways.xyz/) \n
+  about-embed-content: ":ballot_box: [Vote (Click)](https://www.youtube.com/watch?v=dQw4w9WgXcQ)\n
+                        <:discord:790985028732452924> [Discord (Click)](https://discord.gg/aS4PebKZpe)\n
+                        :globe_with_meridians: [Website (Click)](https://smartgiveaways.xyz/) \n
 
-                        Servers: %servers%\n
-                        Active Giveaways: %active_giveaways%"
+                        :1234: Servers: %servers%\n
+                        :tada: Active Giveaways: %active_giveaways%"
 
   # >gadmin command messages
   admin-embed-title: "Admin Command Help"
-  admin-embed-content: ">gadmin roles - List manager roles\n
-                        >gadmin role add <role> - Add a manager role\n
-                        >gadmin role remove <role> - Remove a manager role\n
-                        >gadmin languages - List the available languages
-                        >gadmin language <language> - Set the server language
-                        >gadmin "
+  # Dear editors. Make sure to change flag_gb to the flag of the country that this language represents, or something similar and appropriate.
+  admin-embed-content: "<:roleslist:790995048882896916> >gadmin roles - List manager roles\n
+                        <:rolesedit:790991442759516191> >gadmin role <add/remove> <role> - Add or remove a manager role\n
+                        :globe_with_meridians: >gadmin languages - List the available languages\n
+                        :flag_gb: >gadmin language <language> - Set the server language"
 
   admin-list-languages-embed-title: "Available Languages"
   admin-list-languages-embed-footer: "Use >gadmin language <language> to set the language"
@@ -147,13 +146,13 @@ values:
   # >ghelp command messages
   help-embed-title: "SmartGiveaways Help"
   help-embed-footer: "For more commands visit https://sgs.pink/commands"
-  help-limited-section: ">entries"
-  help-admin-section: ">giveaway - Manage Giveaways\n
-                        >preset - Manage Presets\n
-                        >gadmin - Manage Manager Roles\n
-                        >gban <user> - Visibly bans a user from giveaways.\n
-                        >gsban <user> - Shadow bans a user from giveaways. Almost impossible to tell.\n
-                        >gunban <user> - Removes a user's ban or shadow ban."
+  help-limited-section: ":tickets: >entries"
+  help-admin-section: ":tada: >giveaway - Manage Giveaways\n
+                        :level_slider: >preset - Manage Presets\n
+                        :gear: >gadmin - Manage Manager Roles\n
+                        :hammer: >gban <user> - Visibly bans a user from giveaways.\n
+                        :detective: >gsban <user> - Shadow bans a user from giveaways. Almost impossible to tell.\n
+                        :angel: >gunban <user> - Removes a user's ban or shadow ban."
 
   # >premium command messages
   premium-embed-title: "Premium Status"

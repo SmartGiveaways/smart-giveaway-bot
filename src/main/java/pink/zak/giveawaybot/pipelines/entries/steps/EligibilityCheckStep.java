@@ -1,4 +1,4 @@
-package pink.zak.giveawaybot.pipelines.entries.workers;
+package pink.zak.giveawaybot.pipelines.entries.steps;
 
 import com.google.common.collect.Maps;
 import pink.zak.giveawaybot.GiveawayBot;

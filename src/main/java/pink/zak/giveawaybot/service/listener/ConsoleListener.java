@@ -29,15 +29,13 @@ public class ConsoleListener implements Runnable {
             String command = args[0];
             switch (command.toLowerCase()) {
                 case "help":
-                    this.logger.info("""
-                            help -> Prints this command.
-                            reload-lang -> Reloads language values (built embeds require restart).
-                            stop -> Stops the bot and saves data.
-                            dump -> Creates a debug dump.
-                            """);
+                    this.logger.info("help -> Prints this command.");
+                    this.logger.info("reload -> Reloads language values (built embeds require restart).");
+                    this.logger.info("stop -> Stops the bot and saves data.");
+                    this.logger.info("dump -> Creates a debug dump.");
                     break;
-                case "reload-lang":
-                    this.bot.getLanguageRegistry().reloadLanguages(this.bot);
+                case "reload":
+                    this.bot.reload();
                     break;
                 case "stop":
                     if (this.bot.isInitialized()) {

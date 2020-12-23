@@ -9,11 +9,7 @@ import java.util.function.BiFunction;
 public enum GenericQuery implements QueryInterface<GenericBotMetrics> {
 
     GUILDS((metrics, point) -> point.addField("guilds", metrics.getGuilds())),
-    ENTRIES((metrics, point) -> {
-        int count = metrics.getEntryCount().get();
-        metrics.resetEntryCount();
-        return point.addField("entries", count);
-    }),
+    ENTRIES((metrics, point) -> point.addField("entries", metrics.resetEntryCount())),
     ALL((server, point) -> {
         for (GenericQuery query : values()) {
             if (!query.toString().equals("ALL")) {

@@ -7,25 +7,25 @@ import org.jetbrains.annotations.NotNull;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.cache.GiveawayCache;
 import pink.zak.giveawaybot.cache.ServerCache;
-import pink.zak.giveawaybot.controllers.GiveawayController;
 import pink.zak.giveawaybot.models.giveaway.CurrentGiveaway;
+import pink.zak.giveawaybot.pipelines.giveaway.steps.DeletionStep;
 
 public class GiveawayDeletionListener extends ListenerAdapter {
     private final GiveawayCache giveawayCache;
-    private final GiveawayController giveawayController;
     private final ServerCache serverCache;
+    private final DeletionStep deletionStep;
 
     public GiveawayDeletionListener(GiveawayBot bot) {
         this.giveawayCache = bot.getGiveawayCache();
-        this.giveawayController = bot.getGiveawayController();
         this.serverCache = bot.getServerCache();
+        this.deletionStep = new DeletionStep(bot);
     }
 
     public void onGuildMessageDelete(GuildMessageDeleteEvent event) {
         this.giveawayCache.get(event.getMessageIdLong()).thenAccept(giveaway -> {
             if (giveaway != null) {
                 GiveawayBot.getLogger().info("Giveaway {} in server {} was deleted", giveaway.messageId(), giveaway.serverId());
-                this.giveawayController.deleteGiveaway(giveaway);
+                this.deletionStep.delete(giveaway);
             }
         });
     }
@@ -37,7 +37,7 @@ public class GiveawayDeletionListener extends ListenerAdapter {
             }
             for (CurrentGiveaway giveaway : this.giveawayCache.getMap().values()) {
                 if (giveaway.channelId() == event.getChannel().getIdLong()) {
-                    this.giveawayController.deleteGiveaway(giveaway);
+                    this.deletionStep.delete(giveaway);
                 }
             }
         });

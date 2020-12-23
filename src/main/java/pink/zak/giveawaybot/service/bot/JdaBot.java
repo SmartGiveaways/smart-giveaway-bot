@@ -41,6 +41,8 @@ public abstract class JdaBot implements SimpleBot {
     private String prefix;
     private ShardManager shardManager;
 
+    private ReadyListener readyListener;
+
     @SneakyThrows
     public JdaBot(UnaryOperator<Path> subBasePath) {
         this.storageSettings = new StorageSettings();
@@ -53,13 +55,13 @@ public abstract class JdaBot implements SimpleBot {
     @SneakyThrows
     public void buildJdaEarly(String token, Set<GatewayIntent> intents, UnaryOperator<DefaultShardManagerBuilder> jdaOperator) {
         this.buildEarlyUsed = true;
-        ReadyListener readyListener = new ReadyListener(this);
+        this.readyListener = new ReadyListener(this);
         DefaultShardManagerBuilder builder = DefaultShardManagerBuilder.createDefault(token)
                 .setEnabledIntents(intents)
-                .addEventListeners(readyListener);
+                .addEventListeners(this.readyListener);
         jdaOperator.apply(builder);
         this.shardManager = builder.build();
-        readyListener.setRequiredShards(this.shardManager.getShardsTotal());
+        this.readyListener.setRequiredShards(this.shardManager.getShardsTotal());
     }
 
     @SneakyThrows
@@ -88,6 +90,7 @@ public abstract class JdaBot implements SimpleBot {
         this.messageEventRegistry.addListener(this.commandBase);
         new Thread(new ConsoleListener(bot)).start();
         this.initialized = true;
+        this.readyListener.readyIfReady();
     }
 
     @Override

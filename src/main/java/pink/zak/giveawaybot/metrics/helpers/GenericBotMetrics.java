@@ -28,8 +28,8 @@ public class GenericBotMetrics {
         return this.entryCount;
     }
 
-    public void resetEntryCount() {
-        this.entryCount.updateAndGet(current -> 0);
+    public int resetEntryCount() {
+        return this.entryCount.getAndUpdate(current -> 0);
     }
 
     private void addJdaStats(GiveawayBot bot) {

@@ -2,7 +2,7 @@ package pink.zak.giveawaybot.pipelines.entries;
 
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.cache.GiveawayCache;
-import pink.zak.giveawaybot.pipelines.entries.workers.EligibilityCheckStep;
+import pink.zak.giveawaybot.pipelines.entries.steps.EligibilityCheckStep;
 import pink.zak.giveawaybot.enums.EntryType;
 import pink.zak.giveawaybot.models.Preset;
 import pink.zak.giveawaybot.models.Server;
