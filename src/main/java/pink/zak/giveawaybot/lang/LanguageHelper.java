@@ -7,7 +7,7 @@ import pink.zak.giveawaybot.lang.model.Language;
 import pink.zak.giveawaybot.service.types.NumberUtils;
 
 @UtilityClass
-public class LanguageVerifierUtils {
+public class LanguageHelper {
 
     public static int getAndWarnCoverage(Language language) {
         int size = language.getValues().size();

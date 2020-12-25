@@ -111,7 +111,7 @@ public class GiveawayBot extends JdaBot {
         this.metricsLogger = new MetricsLogger(this);
         this.entryPipeline = new EntryPipeline(this);
 
-        super.buildVariables(this, ">");
+        super.buildVariables(this, settings.string("prefix"));
 
         Runtime.getRuntime().addShutdownHook(new ShutdownHook(this));
     }
