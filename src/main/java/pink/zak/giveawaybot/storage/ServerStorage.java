@@ -7,7 +7,6 @@ import com.google.gson.reflect.TypeToken;
 import net.dv8tion.jda.api.entities.Guild;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.enums.Setting;
-import pink.zak.giveawaybot.lang.enums.Language;
 import pink.zak.giveawaybot.models.Preset;
 import pink.zak.giveawaybot.models.Server;
 import pink.zak.giveawaybot.service.storage.mongo.MongoDeserializer;
@@ -38,7 +37,7 @@ public class ServerStorage extends MongoStorage<Long, Server> {
             document.put("managerRoles", this.gson.toJson(server.getManagerRoles()));
             document.put("bannedUsers", this.gson.toJson(server.getBannedUsers()));
             document.put("premium", server.getPremiumExpiry());
-            document.put("language", server.getLanguage().toString());
+            document.put("language", server.getLanguage());
             return document;
         };
     }
@@ -53,8 +52,7 @@ public class ServerStorage extends MongoStorage<Long, Server> {
             Set<Long> managerRoles = this.gson.fromJson(document.getString("managerRoles"), new TypeToken<HashSet<Long>>() {}.getType());
             List<Long> bannedUsers = this.gson.fromJson(document.getString("bannedUsers"), new TypeToken<CopyOnWriteArrayList<Long>>() {}.getType());
             long premium = document.getLong("premium");
-            Language language = Language.valueOf(document.getString("language"));
-            // TODO scheduled giveaways
+            String language = document.getString("language");
             return new Server(this.bot, id, activeGiveaways, scheduledGiveaways, presets, managerRoles, bannedUsers, premium, language);
         };
     }

@@ -6,9 +6,8 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import pink.zak.giveawaybot.GiveawayBot;
-import pink.zak.giveawaybot.lang.LanguageRegistry;
-import pink.zak.giveawaybot.lang.enums.Language;
 import pink.zak.giveawaybot.lang.enums.Text;
+import pink.zak.giveawaybot.lang.model.Language;
 import pink.zak.giveawaybot.models.Server;
 import pink.zak.giveawaybot.service.colour.Palette;
 import pink.zak.giveawaybot.service.command.command.SimpleCommand;
@@ -17,14 +16,14 @@ import java.util.List;
 import java.util.Map;
 
 public class HelpCommand extends SimpleCommand {
-    private final Map<Language, MessageEmbed> limitedMessageEmbed = Maps.newHashMap();
-    private final Map<Language, MessageEmbed> fullMessageEmbed = Maps.newHashMap();
+    private final Map<String, MessageEmbed> limitedMessageEmbed = Maps.newHashMap();
+    private final Map<String, MessageEmbed> fullMessageEmbed = Maps.newHashMap();
 
     public HelpCommand(GiveawayBot bot) {
         super(bot, "ghelp", false, false);
         this.setAliases("gh");
 
-        this.buildMessages(bot.getLanguageRegistry(), bot.getDefaults().getPalette());
+        this.buildMessages(bot.getDefaults().getPalette());
     }
 
     @Override
@@ -32,18 +31,18 @@ public class HelpCommand extends SimpleCommand {
         event.getChannel().sendMessage(server.canMemberManage(sender) ? this.fullMessageEmbed.get(server.getLanguage()) : this.limitedMessageEmbed.get(server.getLanguage())).queue();
     }
 
-    private void buildMessages(LanguageRegistry languageRegistry, Palette palette) {
-        for (Language language : Language.values()) {
+    private void buildMessages(Palette palette) {
+        for (Language language : this.languageRegistry.languageMap().values()) {
             EmbedBuilder embedBuilder = new EmbedBuilder()
-                    .setTitle(languageRegistry.get(language, Text.HELP_EMBED_TITLE).get())
-                    .setFooter(languageRegistry.get(language, Text.HELP_EMBED_FOOTER).get())
+                    .setTitle(language.getValue(Text.HELP_EMBED_TITLE).get())
+                    .setFooter(language.getValue(Text.HELP_EMBED_FOOTER).get())
                     .setColor(palette.primary())
-                    .setDescription(languageRegistry.get(language, Text.GENERIC_COMMAND_USAGE_EXAMPLE, replacer -> replacer.set("command", "command")).get())
-                    .addField("General Commands", languageRegistry.get(language, Text.HELP_LIMITED_SECTION).get(), false);
-            this.limitedMessageEmbed.put(language, embedBuilder.build());
+                    .setDescription(language.getValue(Text.GENERIC_COMMAND_USAGE_EXAMPLE).replace(replacer -> replacer.set("command", "command")).get())
+                    .addField("General Commands", language.getValue(Text.HELP_LIMITED_SECTION).get(), false);
+            this.limitedMessageEmbed.put(language.getIdentifier(), embedBuilder.build());
             embedBuilder.addField("Admin Commands",
-                    languageRegistry.get(language, Text.HELP_ADMIN_SECTION).get(), false);
-            this.fullMessageEmbed.put(language, embedBuilder.build());
+                    language.getValue(Text.HELP_ADMIN_SECTION).get(), false);
+            this.fullMessageEmbed.put(language.getIdentifier(), embedBuilder.build());
         }
     }
 }

@@ -7,7 +7,6 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.cache.UserCache;
-import pink.zak.giveawaybot.lang.enums.Language;
 import pink.zak.giveawaybot.models.giveaway.CurrentGiveaway;
 import pink.zak.giveawaybot.storage.UserStorage;
 
@@ -27,11 +26,11 @@ public class Server {
     private final List<Long> bannedUsers;
     private Map<String, Preset> presets;
     private long premiumExpiry;
-    private Language language;
+    private String language;
 
     public Server(GiveawayBot bot, long id, Set<Long> activeGiveaways, Set<UUID> scheduledGiveaways,
                   Map<String, Preset> presets, Set<Long> managerRoles, List<Long> bannedUsers, long premiumExpiry,
-                  Language language) {
+                  String language) {
         this.id = id;
         this.presets = presets;
         this.userStorage = new UserStorage(bot, this.id);
@@ -49,7 +48,7 @@ public class Server {
     public Server(GiveawayBot bot, long id) {
         this(bot, id, Sets.newConcurrentHashSet(), Sets.newConcurrentHashSet(),
                 new ConcurrentSkipListMap<>(), Sets.newHashSet(), Lists.newCopyOnWriteArrayList(), -1,
-                Language.ENGLISH_UK);
+                "en-uk");
     }
 
     public long getId() {
@@ -137,15 +136,19 @@ public class Server {
         return this.premiumExpiry;
     }
 
+    public long getTimeToExpiry() {
+        return this.premiumExpiry - System.currentTimeMillis();
+    }
+
     public void setPremiumExpiry(long premiumExpiry) {
         this.premiumExpiry = premiumExpiry;
     }
 
-    public Language getLanguage() {
+    public String getLanguage() {
         return this.language;
     }
 
-    public void setLanguage(Language language) {
+    public void setLanguage(String language) {
         this.language = language;
     }
 }

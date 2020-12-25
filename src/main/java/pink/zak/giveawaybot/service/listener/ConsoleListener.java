@@ -58,8 +58,9 @@ public class ConsoleListener implements Runnable {
                         this.logger.info("The server {} is not cached", serverId);
                         return;
                     }
-                    this.logger.info("Invalidating {} async", serverId);
+                    this.logger.info("Invalidating {}", serverId);
                     serverCache.invalidate(serverId);
+                    break;
                 default:
                     break;
             }

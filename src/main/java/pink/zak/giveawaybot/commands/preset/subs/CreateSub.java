@@ -37,10 +37,6 @@ public class CreateSub extends SubCommand {
             this.langFor(server, Text.PRESET_CREATE_NAME_TOO_LONG).to(event.getChannel());
             return;
         }
-        if (name.length() < 4) {
-            this.langFor(server, Text.PRESET_CREATE_NAME_TOO_SHORT).to(event.getChannel());
-            return;
-        }
         this.langFor(server, Text.PRESET_CREATED).to(event.getChannel());
         server.addPreset(new Preset(name));
     }

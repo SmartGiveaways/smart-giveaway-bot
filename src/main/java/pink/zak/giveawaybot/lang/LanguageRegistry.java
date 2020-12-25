@@ -8,35 +8,32 @@ import lombok.SneakyThrows;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import pink.zak.giveawaybot.GiveawayBot;
-import pink.zak.giveawaybot.lang.enums.Language;
 import pink.zak.giveawaybot.lang.enums.Text;
+import pink.zak.giveawaybot.lang.model.Language;
 import pink.zak.giveawaybot.models.Server;
 import pink.zak.giveawaybot.service.bot.SimpleBot;
 import pink.zak.giveawaybot.service.text.Replace;
 import pink.zak.giveawaybot.service.text.Replacer;
-import pink.zak.giveawaybot.service.types.NumberUtils;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.EnumMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class LanguageRegistry {
-    private final EnumMap<Language, LanguageContainer> languageMap = Maps.newEnumMap(Language.class);
+    private final Map<String, Language> languageMap = Maps.newHashMap();
     private Language defaultLanguage;
 
     public void startLang(SimpleBot bot) {
-        this.defaultLanguage = Language.match(bot.getConfig("settings").string("default-language"));
+        String defaultLanguageId = bot.getConfig("settings").string("default-language");
         this.loadLanguages(bot);
-        if (this.defaultLanguage == null || !this.languageMap.containsKey(this.defaultLanguage)) {
+        this.defaultLanguage = this.languageMap.get(defaultLanguageId);
+        if (this.defaultLanguage == null || !this.languageMap.containsKey(defaultLanguageId)) {
             GiveawayBot.getLogger().error("The default language could not be found.");
             System.exit(3);
         }
-        Set<Text> presentTexts = this.languageMap.get(this.defaultLanguage).getValues().keySet();
+        Set<Text> presentTexts = this.defaultLanguage.getValues().keySet();
         if (presentTexts.size() < Text.values().length) {
             GiveawayBot.getLogger().error("The default language does not meet the 100% coverage requirement. These values are missing: {}",
                     Arrays.stream(Text.values()).filter(text -> !presentTexts.contains(text)).collect(Collectors.toSet()));
@@ -52,32 +49,56 @@ public class LanguageRegistry {
                 .filter(file -> file.getName().endsWith(".yml") || file.getName().endsWith(".yaml"))
                 .map(YamlConfiguration::loadFromFile)
                 .forEach(config -> {
-                    Language language = Language.match(config.getString("identifier"));
-                    if (language == null) {
-                        GiveawayBot.getLogger().error("Could not find identifier for language file {}", config.getName());
-                        return;
+                    Language language = this.loadLanguage(config);
+                    if (this.isLanguageUsable(language)) {
+                        updatedLanguages.add(language);
+                        this.languageMap.put(language.getIdentifier(), language);
                     }
-                    updatedLanguages.add(language);
-                    this.languageMap.put(language, new LanguageContainer(language, config));
                 });
         return updatedLanguages;
+    }
+
+    public Language loadLanguage(YamlConfiguration config) {
+        String identifier = config.getString("identifier");
+        String name = config.getString("name");
+        String flag = config.getString("flag");
+        Set<String> aliases = Sets.newHashSet((List<String>) config.getList("aliases"));
+        Map<Text, LangSub> values = Maps.newHashMap();
+        ConfigurationSection section = config.getSection("values");
+        for (String key : section.getKeys()) {
+            Text text = Text.match(key);
+            if (text == null) {
+                GiveawayBot.getLogger().error("Could not match Text value from identifier {} for language {}", key, identifier);
+                continue;
+            }
+            values.put(text, new LangSub(section.getString(key)));
+        }
+        return new Language(identifier, name, flag, aliases, values);
+    }
+
+    public boolean isLanguageUsable(Language language) {
+        if (language.getCoverage() < 60) {
+            GiveawayBot.getLogger().warn("Cannot user language {} as it has a coverage of {}%", language.getIdentifier(), language.getCoverage());
+        }
+        return language.getCoverage() > 60;
     }
 
     @SneakyThrows
     public void reloadLanguages(SimpleBot bot) {
         Set<Language> loadedLanguages = this.loadLanguages(bot);
-        this.languageMap.keySet().stream().filter(existingLang -> !loadedLanguages.contains(existingLang)).forEach(existingLang -> {
+        Set<String> loadedLanguageIds = loadedLanguages.stream().map(Language::getIdentifier).collect(Collectors.toSet());
+        this.languageMap.keySet().stream().filter(existingLang -> !loadedLanguageIds.contains(existingLang)).forEach(existingLang -> {
             this.languageMap.remove(existingLang);
             GiveawayBot.getLogger().warn("Removed {} on language reload.", existingLang);
         });
     }
 
-    public LangSub get(Language language, Text text) {
-        return this.get(language, text, replacer -> replacer);
+    public LangSub get(String language, Text text) {
+        return this.get(language, text, null);
     }
 
-    public LangSub get(Language language, Text text, Replace replace) {
-        LangSub retrieved = this.languageMap.get(language).get(text, replace);
+    public LangSub get(String language, Text text, Replace replace) {
+        LangSub retrieved = replace == null ? this.languageMap.get(language).getValue(text) : this.languageMap.get(language).getValue(text).replace(replace);
         return retrieved == null ? this.fallback(text, replace) : retrieved;
     }
 
@@ -90,60 +111,33 @@ public class LanguageRegistry {
     }
 
     public LangSub fallback(Text text, Replace replace) {
-        return this.get(this.defaultLanguage, text, replace);
+        return replace == null ? this.fallback(text) : this.defaultLanguage.getValue(text).replace(replace);
     }
 
     public LangSub fallback(Text text) {
-        return this.get(this.defaultLanguage, text);
+        return this.defaultLanguage.getValue(text);
     }
 
-    private class LanguageContainer {
-        private final Map<Text, LangSub> values = Maps.newHashMap();
-        private final Language language;
-
-        public LanguageContainer(Language language, YamlConfiguration config) {
-            this.language = language;
-            this.loadValues(config);
+    public Language getLanguage(String input) {
+        String inputLower = input.toLowerCase();
+        Language language = this.languageMap.get(inputLower);
+        if (language != null) {
+            return language;
         }
-
-        public void loadValues(YamlConfiguration config) {
-            ConfigurationSection section = config.getSection("values");
-            for (String key : section.getKeys()) {
-                Text text = Text.match(key);
-                if (text == null) {
-                    GiveawayBot.getLogger().error("Could not match Text value from identifier {}", key);
-                    return;
-                }
-                this.values.put(text, new LangSub(section.getString(key)));
-            }
-            int coverage = NumberUtils.getPercentage(this.values.size(), Text.values().length);
-            if (coverage == 100) {
-                GiveawayBot.getLogger().info("[Language] {} loaded {}/{} messages ({}% coverage)", this.language, this.values.size(), Text.values().length, coverage);
-            } else if (coverage >= 90) {
-                GiveawayBot.getLogger().warn("[Language] {} loaded {}/{} messages ({}% coverage)", this.language, this.values.size(), Text.values().length, coverage);
-            } else {
-                GiveawayBot.getLogger().error("[Language] {} loaded {}/{} messages ({}% coverage)", this.language, this.values.size(), Text.values().length, coverage);
+        for (Language loopLanguage : this.languageMap.values()) {
+            if (loopLanguage.matches(inputLower)) {
+                return loopLanguage;
             }
         }
-
-        public LangSub get(Text text) {
-            return this.values.get(text);
-        }
-
-        public LangSub get(Text text, Replace replace) {
-            return this.values.containsKey(text) ? this.values.get(text).replace(replace) : null;
-        }
-
-        public Map<Text, LangSub> getValues() {
-            return this.values;
-        }
-
-        public Language getLanguage() {
-            return this.language;
-        }
+        return null;
     }
 
-    public class LangSub {
+    public Map<String, Language> languageMap() {
+        return this.languageMap;
+    }
+
+
+    public static class LangSub {
         private final String message;
 
         public LangSub(String message) {

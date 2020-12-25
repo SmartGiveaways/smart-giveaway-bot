@@ -3,8 +3,8 @@ package pink.zak.giveawaybot.commands.admin.subs.language;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import pink.zak.giveawaybot.GiveawayBot;
-import pink.zak.giveawaybot.lang.enums.Language;
 import pink.zak.giveawaybot.lang.enums.Text;
+import pink.zak.giveawaybot.lang.model.Language;
 import pink.zak.giveawaybot.models.Server;
 import pink.zak.giveawaybot.service.command.command.SubCommand;
 
@@ -25,7 +25,7 @@ public class SetLanguageSub extends SubCommand {
             this.langFor(server, Text.ADMIN_LANGUAGE_NOT_FOUND).to(event.getChannel());
             return;
         }
-        server.setLanguage(language);
+        server.setLanguage(language.getIdentifier());
         this.langFor(server, Text.ADMIN_SET_LANGUAGE).to(event.getChannel());
     }
 }

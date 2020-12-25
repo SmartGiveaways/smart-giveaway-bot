@@ -116,7 +116,7 @@ public class GiveawayCmdUtils {
             this.lang.get(server, Text.COULDNT_FIND_CHANNEL).to(responseChannel);
             return true;
         }
-        if (giveawayItem.isEmpty() || giveawayItem.equals(" ") || giveawayItem.length() > 20) {
+        if (giveawayItem.isEmpty() || giveawayItem.equals(" ") || giveawayItem.length() > 20) { // TODO add separate message for item too long and increase max length
             this.lang.get(server, Text.PARSING_REWARD_FAILED).to(responseChannel);
             return true;
         }

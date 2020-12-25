@@ -10,8 +10,8 @@ import net.dv8tion.jda.api.requests.ErrorResponse;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.cache.ServerCache;
 import pink.zak.giveawaybot.lang.LanguageRegistry;
-import pink.zak.giveawaybot.lang.enums.Language;
 import pink.zak.giveawaybot.lang.enums.Text;
+import pink.zak.giveawaybot.lang.model.Language;
 import pink.zak.giveawaybot.listener.message.GiveawayMessageListener;
 import pink.zak.giveawaybot.models.Preset;
 import pink.zak.giveawaybot.models.Server;
@@ -226,7 +226,7 @@ public class CommandBase implements GiveawayMessageListener {
                     }
                     return guild.getRoleById(roleId);
                 })
-                .registerArgumentType(Language.class, (string, guild) -> Language.match(string))
+                .registerArgumentType(Language.class, (string, guild) -> this.languageRegistry.getLanguage(string))
                 .registerArgumentType(Preset.class, (string, guild) -> this.serverCache.getSync(guild.getIdLong()).getPreset(string.toLowerCase()))
                 .registerArgumentType(Integer.class, (string, guild) -> NumberUtils.parseInt(string, -1))
                 .registerArgumentType(Long.class, (string, guild) -> NumberUtils.parseLong(string, -1))

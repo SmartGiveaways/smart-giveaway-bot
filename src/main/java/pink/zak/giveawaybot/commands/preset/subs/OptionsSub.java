@@ -7,8 +7,8 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.enums.Setting;
-import pink.zak.giveawaybot.lang.enums.Language;
 import pink.zak.giveawaybot.lang.enums.Text;
+import pink.zak.giveawaybot.lang.model.Language;
 import pink.zak.giveawaybot.models.Server;
 import pink.zak.giveawaybot.service.colour.Palette;
 import pink.zak.giveawaybot.service.command.command.SubCommand;
@@ -18,7 +18,7 @@ import java.util.Map;
 
 public class OptionsSub extends SubCommand {
     private final Palette palette;
-    private final Map<Language, MessageEmbed> optionsList;
+    private final Map<String, MessageEmbed> optionsList;
 
     public OptionsSub(GiveawayBot bot) {
         super(bot, true, false, false);
@@ -33,19 +33,19 @@ public class OptionsSub extends SubCommand {
         event.getChannel().sendMessage(this.optionsList.get(server.getLanguage())).queue();
     }
 
-    private Map<Language, MessageEmbed> setupOptionsList() {
-        Map<Language, MessageEmbed> messageEmbeds = Maps.newHashMap();
+    private Map<String, MessageEmbed> setupOptionsList() {
+        Map<String, MessageEmbed> messageEmbeds = Maps.newHashMap();
         StringBuilder builder = new StringBuilder();
-        for (Language language : Language.values()) {
+        for (Language language : this.languageRegistry.languageMap().values()) {
             for (Setting setting : Setting.values()) {
                 builder.append(setting.getPrimaryConfigName())
                         .append(" - ")
-                        .append(this.languageRegistry.get(language, setting.getDescription()).get())
+                        .append(language.getValue(setting.getDescription()).get())
                         .append("\n");
             }
-            messageEmbeds.put(language, new EmbedBuilder()
+            messageEmbeds.put(language.getIdentifier(), new EmbedBuilder()
                     .setColor(this.palette.primary())
-                    .setTitle(this.languageRegistry.get(language, Text.PRESET_OPTIONS_LIST_OPTIONS_EMBED_TITLE).get())
+                    .setTitle(language.getValue(Text.PRESET_OPTIONS_LIST_OPTIONS_EMBED_TITLE).get())
                     .setDescription(builder.toString())
                     .build());
         }

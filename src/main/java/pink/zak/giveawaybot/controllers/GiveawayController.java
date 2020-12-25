@@ -13,7 +13,6 @@ import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import net.dv8tion.jda.api.exceptions.RateLimitedException;
 import net.dv8tion.jda.api.requests.ErrorResponse;
 import pink.zak.giveawaybot.GiveawayBot;
-import pink.zak.giveawaybot.cache.FinishedGiveawayCache;
 import pink.zak.giveawaybot.cache.GiveawayCache;
 import pink.zak.giveawaybot.cache.ScheduledGiveawayCache;
 import pink.zak.giveawaybot.cache.ServerCache;
@@ -53,7 +52,6 @@ public class GiveawayController {
     private final LanguageRegistry languageRegistry;
     private final GiveawayCache giveawayCache;
     private final GiveawayStorage giveawayStorage;
-    private final FinishedGiveawayCache finishedGiveawayCache;
     private final ScheduledGiveawayCache scheduledGiveawayCache;
     private final ServerCache serverCache;
     private final Preset defaultPreset;
@@ -69,7 +67,6 @@ public class GiveawayController {
         this.languageRegistry = bot.getLanguageRegistry();
         this.giveawayCache = bot.getGiveawayCache();
         this.giveawayStorage = bot.getGiveawayStorage();
-        this.finishedGiveawayCache = bot.getFinishedGiveawayCache();
         this.scheduledGiveawayCache = bot.getScheduledGiveawayCache();
         this.serverCache = bot.getServerCache();
         this.defaultPreset = bot.getDefaults().getDefaultPreset();
@@ -224,7 +221,7 @@ public class GiveawayController {
                         return;
                     }
                     Preset preset = giveaway.presetName().equals("default") ? this.defaultPreset : server.getPreset(giveaway.presetName());
-                    boolean reactToEnter = preset != null && preset.hasSetting(Setting.ENABLE_REACT_TO_ENTER) && (boolean) preset.getSetting(Setting.ENABLE_REACT_TO_ENTER);
+                    boolean reactToEnter = (boolean) preset.getSetting(Setting.ENABLE_REACT_TO_ENTER);
                     message.editMessage(new EmbedBuilder()
                             .setTitle(this.languageRegistry.get(server, Text.GIVEAWAY_EMBED_TITLE, replacer -> replacer.set("item", giveaway.giveawayItem())).get())
                             .setDescription(this.languageRegistry.get(server, reactToEnter ? Text.GIVEAWAY_EMBED_DESCRIPTION_REACTION : Text.GIVEAWAY_EMBED_DESCRIPTION_ALL).get())
