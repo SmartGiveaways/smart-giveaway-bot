@@ -1,7 +1,7 @@
 package pink.zak.giveawaybot.lang.model;
 
 import pink.zak.giveawaybot.lang.LanguageRegistry;
-import pink.zak.giveawaybot.lang.LanguageVerifier;
+import pink.zak.giveawaybot.lang.LanguageVerifierUtils;
 import pink.zak.giveawaybot.lang.enums.Text;
 
 import java.util.Map;
@@ -21,7 +21,7 @@ public class Language {
         this.flag = flag;
         this.aliases = aliases;
         this.values = values;
-        this.coverage = LanguageVerifier.getAndWarnCoverage(this);
+        this.coverage = LanguageVerifierUtils.getAndWarnCoverage(this);
     }
 
     public String getIdentifier() {
