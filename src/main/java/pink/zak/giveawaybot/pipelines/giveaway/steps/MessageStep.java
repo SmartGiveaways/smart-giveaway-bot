@@ -2,10 +2,8 @@ package pink.zak.giveawaybot.pipelines.giveaway.steps;
 
 import com.google.common.collect.Lists;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.sharding.ShardManager;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.controllers.GiveawayController;
 import pink.zak.giveawaybot.enums.Setting;
@@ -16,6 +14,7 @@ import pink.zak.giveawaybot.models.Server;
 import pink.zak.giveawaybot.models.giveaway.CurrentGiveaway;
 import pink.zak.giveawaybot.models.giveaway.RichGiveaway;
 import pink.zak.giveawaybot.service.colour.Palette;
+import pink.zak.giveawaybot.service.text.Replace;
 import pink.zak.giveawaybot.service.types.UserUtils;
 
 import java.math.BigInteger;
@@ -27,6 +26,7 @@ public class MessageStep {
     private final Palette palette;
     private final Preset defaultPreset;
     private final LanguageRegistry languageRegistry;
+    private final ShardManager shardManager;
 
     private final DeletionStep deletionStep;
 
@@ -34,6 +34,7 @@ public class MessageStep {
         this.palette = bot.getDefaults().getPalette();
         this.defaultPreset = bot.getDefaults().getDefaultPreset();
         this.languageRegistry = bot.getLanguageRegistry();
+        this.shardManager = bot.getShardManager();
 
         this.deletionStep = new DeletionStep(bot, giveawayController);
     }
@@ -79,32 +80,53 @@ public class MessageStep {
         // Handle the pinging of winners
         Preset preset = giveaway.presetName().equals("default") ? this.defaultPreset : server.getPreset(giveaway.presetName());
 
-        this.handleNewMessages(server, message.getTextChannel(), winners, preset, description);
+        this.handleNewMessages(server, giveaway, message.getTextChannel(), winners, preset, description);
+        this.handleDm(server, giveaway, winners, preset);
     }
 
-    private void handleNewMessages(Server server, TextChannel channel, Set<Long> winners, Preset preset, String description) {
+    private void handleDm(Server server, RichGiveaway giveaway, Set<Long> winners, Preset preset) {
+        if (preset.getSetting(Setting.DM_WINNERS)) {
+            Guild guild = this.shardManager.getGuildById(server.getId());
+            if (guild == null) {
+                GiveawayBot.getLogger().warn("handleDm server should never be null but is null {} {}", giveaway.serverId(), giveaway.messageId());
+                return;
+            }
+            for (long winnerId : winners) {
+                User user = this.shardManager.getUserById(winnerId);
+                if (user == null) {
+                    GiveawayBot.getLogger().warn("handleDm user should never be null but is null {} {} {}", giveaway.serverId(), giveaway.messageId(), winnerId);
+                    continue;
+                }
+                user.openPrivateChannel().queue(privateChannel -> {
+                    this.languageRegistry.get(server, Text.GIVEAWAY_FINISHED_WINNER_DM, replacer -> replacer.set("item", giveaway.giveawayItem()).set("server-name", guild.getName())).to(privateChannel);
+                }, ex -> {});
+            }
+        }
+    }
+
+    private void handleNewMessages(Server server, RichGiveaway giveaway, TextChannel channel, Set<Long> winners, Preset preset, String description) {
         if (preset.getSetting(Setting.PING_WINNERS)) {
             if (preset.getSetting(Setting.WINNERS_MESSAGE)) {
-                this.sendEndWithPing(server, channel, winners);
+                this.sendEndWithPing(server, giveaway, channel, winners);
             } else {
                 this.sendGhostPing(channel, description);
             }
         } else {
             if (preset.getSetting(Setting.WINNERS_MESSAGE)) {
-                this.sendEndWithoutPing(server, channel, winners);
+                this.sendEndWithoutPing(server, giveaway, channel, winners);
             }
         }
     }
 
-    private void sendEndWithPing(Server server, TextChannel channel, Set<Long> winners) {
+    private void sendEndWithPing(Server server, RichGiveaway giveaway, TextChannel channel, Set<Long> winners) {
         List<String> winnerEntries = Lists.newArrayList();
         for (long winnerId : winners) {
             winnerEntries.add("<@" + winnerId + ">");
         }
-        this.sendEnd(server, channel, winnerEntries);
+        this.sendEnd(server, giveaway, channel, winnerEntries);
     }
 
-    private void sendEndWithoutPing(Server server, TextChannel channel, Set<Long> winners) {
+    private void sendEndWithoutPing(Server server, RichGiveaway giveaway, TextChannel channel, Set<Long> winners) {
         Guild guild = channel.getGuild();
         List<String> winnerEntries = Lists.newArrayList();
         for (long winnerId : winners) {
@@ -114,23 +136,23 @@ public class MessageStep {
             }
             winnerEntries.add(UserUtils.getNameDiscrim(member));
         }
-        this.sendEnd(server, channel, winnerEntries);
+        this.sendEnd(server, giveaway, channel, winnerEntries);
     }
 
-    private void sendEnd(Server server, TextChannel channel, List<String> winnerEntries) {
+    private void sendEnd(Server server, RichGiveaway giveaway, TextChannel channel, List<String> winnerEntries) {
+        Replace baseReplace = replacer -> replacer.set("item", giveaway.giveawayItem()).set("message-link", giveaway.messageLink());
         String message;
         if (winnerEntries.size() == 1) {
-            //message = this.languageRegistry.get(server, Text).replace(replacer -> replacer.set("winner", winnerEntries.get(0)));
+            message = this.languageRegistry.get(server, Text.GIVEAWAY_FINISHED_WINNER_MESSAGE).replace(replacer -> replacer.set("winner", winnerEntries.get(0)).addReplaces(baseReplace)).get();
         } else {
             int lastIndex = winnerEntries.size() - 1;
             String endEntry = winnerEntries.get(lastIndex);
             winnerEntries.remove(lastIndex);
 
             String winnerSection = String.join(", ", winnerEntries);
-
-           // message = this.languageRegistry.get(server, Text).replace(replacer -> replacer.set("winners", winnerSection).set("last-winner", endEntry));
+            message = this.languageRegistry.get(server, Text.GIVEAWAY_FINISHED_WINNERS_MESSAGE).replace(replacer -> replacer.set("winners", winnerSection).set("last-winner", endEntry).addReplaces(baseReplace)).get();
         }
-        //channel.sendMessage(message).queue();
+        channel.sendMessage(message).queue();
     }
 
     private void sendGhostPing(TextChannel channel, String description) {

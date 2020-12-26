@@ -5,7 +5,7 @@ import com.google.common.collect.Maps;
 import java.util.Map;
 
 public class ArgumentHandler {
-    private final static Map<Class<?>, ArgumentType<?>> argumentTypes = Maps.newHashMap();
+    private static final Map<Class<?>, ArgumentType<?>> argumentTypes = Maps.newHashMap();
 
     private ArgumentHandler() {
         throw new IllegalStateException("Registry class cannot be instantiated.");

@@ -33,4 +33,11 @@ public class Replacer {
         }
         return result;
     }
+
+    public Replacer addReplaces(Replace... replaces) {
+        for (Replace replace : replaces) {
+            replace.apply(this);
+        }
+        return this;
+    }
 }

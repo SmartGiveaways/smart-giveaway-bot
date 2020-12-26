@@ -31,6 +31,8 @@ public class Defaults {
         defaultPreset.setSetting(Setting.ENTRIES_PER_MESSAGE, 1);
         defaultPreset.setSetting(Setting.MAX_ENTRIES, 1000);
         defaultPreset.setSetting(Setting.PING_WINNERS, true);
+        defaultPreset.setSetting(Setting.WINNERS_MESSAGE, true);
+        defaultPreset.setSetting(Setting.DM_WINNERS, false);
     }
 
     private void setupRequiredPermissions() {

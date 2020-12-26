@@ -5,6 +5,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import pink.zak.giveawaybot.BotConstants;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.lang.enums.Text;
 import pink.zak.giveawaybot.lang.model.Language;
@@ -57,7 +58,7 @@ public abstract class SimpleHelpCommand extends SimpleCommand implements Reloada
         for (Language language : this.languageRegistry.languageMap().values()) {
             EmbedBuilder embedBuilder = new EmbedBuilder()
                     .setTitle(language.getValue(this.title).get())
-                    .setFooter(language.getValue(this.footer).get())
+                    .setFooter(language.getValue(this.footer).replace(BotConstants.getBaseReplace()).get())
                     .setColor(this.palette.primary())
                     .setDescription(language.getValue(Text.GENERIC_COMMAND_USAGE_EXAMPLE).replace(replacer -> replacer.set("command", this.getCommand())).toString().concat(
                             language.getValue(this.description).replace(this.replace.apply(language)).get()));

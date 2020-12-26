@@ -6,7 +6,8 @@ import com.timvisee.yamlwrapper.ConfigurationSection;
 import com.timvisee.yamlwrapper.YamlConfiguration;
 import lombok.SneakyThrows;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.MessageChannel;
+import pink.zak.giveawaybot.BotConstants;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.lang.enums.Text;
 import pink.zak.giveawaybot.lang.model.Language;
@@ -17,7 +18,10 @@ import pink.zak.giveawaybot.service.text.Replacer;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -71,7 +75,7 @@ public class LanguageRegistry {
                 GiveawayBot.getLogger().error("Could not match Text value from identifier {} for language {}", key, identifier);
                 continue;
             }
-            values.put(text, new LangSub(section.getString(key)));
+            values.put(text, new LangSub(section.getString(key), BotConstants.getBaseReplace()));
         }
         return new Language(identifier, name, flag, aliases, values);
     }
@@ -148,11 +152,11 @@ public class LanguageRegistry {
             this.message = replace.apply(new Replacer()).applyTo(message);
         }
 
-        public void to(TextChannel channel) {
+        public void to(MessageChannel channel) {
             channel.sendMessage(this.message).queue();
         }
 
-        public void to(TextChannel channel, Consumer<Message> messageConsumer) {
+        public void to(MessageChannel channel, Consumer<Message> messageConsumer) {
             channel.sendMessage(this.message).queue(messageConsumer);
         }
 

@@ -22,7 +22,7 @@ values:
   fatal-error-loading-server: ":warning: There was a fatal error loading your server. Please join the support discord and scream at Zak."
   generic-command-usage-example: "`>%command% <required> [optional]`\n\n"
   generic-failure: ":x: Something went wrong. Please try again in a few minutes."
-  generic-embed-footer: "SmartGiveaways v1.0.0 - https://docs.sgs.pink/"
+  generic-embed-footer: "SmartGiveaways v%version% - https://docs.sgs.pink/"
   command-requires-premium: "This command requires premium. Donate here https://sgs.pink/premium."
 
   # giveaway messages
@@ -40,6 +40,10 @@ values:
 
   giveaway-finished-embed-footer-singular: "Ended with %winner-count% winner and %entries% entries."
   giveaway-finished-embed-footer-plural: "Ended with %winner-count% winners and %entries% entries."
+
+  giveaway-finished-winner-message: "Congratulations %winner% for winning **%item%**!\n%message-link%"
+  giveaway-finished-winners-message: "Congratulations to %winners% and %last-winner% for winning **%item%**\n%message-link%"
+  giveaway-finished-winner-dm: "Congratulations! You won the giveaway for **%item%** in **%server-name%**"
 
   # >gabout command messages
   about-embed-title: "About SmartGiveaways"
@@ -120,7 +124,8 @@ values:
                             <a:loading1:788070036635779072> >g schedule <preset> <delay> <length> [channel] <winner amount> <item/topic>\n
                             <a:tada1:788070725755600957> >g create <preset> <length> [channel] <winner amount> <item/topic>\n
                             :wastebasket: >g delete <message id>\n
-                            :game_die: >g reroll <message id> [user] (WIP not done)"
+                            :game_die: >g reroll <message id> [user] (WIP not done)\n
+                            :information_source: **>ghelp to see all commands**\n"
   giveaway-list-embed-title: "Current Giveaways"
   giveaway-limit-failure: ":x: Your guild has reached the maximum number of 5 giveaways."
   giveaway-limit-failure-premium: ":x: Your guild has reached the maximum number of 10 premium giveaways."
