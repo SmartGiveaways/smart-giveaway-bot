@@ -92,7 +92,7 @@ public class GiveawayController {
         if (preset == null) {
             return ImmutablePair.of(null, ReturnCode.NO_PRESET);
         }
-        boolean reactToEnter = (boolean) preset.getSetting(Setting.ENABLE_REACT_TO_ENTER);
+        boolean reactToEnter = preset.getSetting(Setting.ENABLE_REACT_TO_ENTER);
         try {
             Message message = giveawayChannel.sendMessage(new EmbedBuilder()
                     .setTitle(this.languageRegistry.get(server, Text.GIVEAWAY_EMBED_TITLE, replacer -> replacer.set("item", giveawayItem)).get())
@@ -221,7 +221,7 @@ public class GiveawayController {
                         return;
                     }
                     Preset preset = giveaway.presetName().equals("default") ? this.defaultPreset : server.getPreset(giveaway.presetName());
-                    boolean reactToEnter = (boolean) preset.getSetting(Setting.ENABLE_REACT_TO_ENTER);
+                    boolean reactToEnter = preset.getSetting(Setting.ENABLE_REACT_TO_ENTER);
                     message.editMessage(new EmbedBuilder()
                             .setTitle(this.languageRegistry.get(server, Text.GIVEAWAY_EMBED_TITLE, replacer -> replacer.set("item", giveaway.giveawayItem())).get())
                             .setDescription(this.languageRegistry.get(server, reactToEnter ? Text.GIVEAWAY_EMBED_DESCRIPTION_REACTION : Text.GIVEAWAY_EMBED_DESCRIPTION_ALL).get())

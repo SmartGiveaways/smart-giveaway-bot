@@ -71,7 +71,7 @@ public class MessageStep {
         }); // Here so only if the message is sent is the giveaway deleted
         // Handle the pinging of winners
         Preset preset = giveaway.presetName().equals("default") ? this.defaultPreset : server.getPreset(giveaway.presetName());
-        if ((boolean) preset.getSetting(Setting.PING_WINNERS)) {
+        if (preset.getSetting(Setting.PING_WINNERS)) {
             message.getTextChannel().sendMessage(descriptionBuilder.toString()).queue(sentMessage -> sentMessage.delete().queue());
         }
     }

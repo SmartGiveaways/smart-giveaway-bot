@@ -31,7 +31,8 @@ public class EligibilityCheckStep {
         if (!user.entries().containsKey(giveaway.messageId())) {
             user.entries().put(giveaway.messageId(), Maps.newEnumMap(EntryType.class));
         }
-        if (user.hasEntries(giveaway.messageId()) && user.entries(giveaway.messageId()).compareTo(new BigInteger(String.valueOf(preset.getSetting(Setting.MAX_ENTRIES)))) > -1) {
+        // no, the int is NOT a redundant cast. Please go away i know i should recode a lot of settings.
+        if (user.hasEntries(giveaway.messageId()) && user.entries(giveaway.messageId()).compareTo(BigInteger.valueOf((int) preset.getSetting(Setting.MAX_ENTRIES))) > -1) {
             return;
         }
         this.rewardStep.process(entryType, user, giveaway, preset);

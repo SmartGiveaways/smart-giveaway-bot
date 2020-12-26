@@ -30,10 +30,10 @@ public class EntryCounterStep {
     }
 
     public void countEntries(CurrentGiveaway giveaway, Message message) {
-        Server server = this.serverCache.getSync(giveaway.serverId());
+        Server server = this.serverCache.get(giveaway.serverId()).join();
         BigInteger totalEntries = BigInteger.ZERO;
         Map<Long, BigInteger> userEntriesMap = Maps.newHashMap();
-        List<Long> enteredUsers = Lists.newArrayList(giveaway.enteredUsers().toArray(new Long[]{}));
+        List<Long> enteredUsers = Lists.newArrayList(giveaway.enteredUsers());
         Collections.shuffle(enteredUsers);
 
         for (long enteredUserId : giveaway.enteredUsers()) {

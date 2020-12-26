@@ -23,13 +23,13 @@ import pink.zak.giveawaybot.commands.preset.PresetCommand;
 import pink.zak.giveawaybot.controllers.GiveawayController;
 import pink.zak.giveawaybot.controllers.ScheduledGiveawayController;
 import pink.zak.giveawaybot.defaults.Defaults;
-import pink.zak.giveawaybot.pipelines.entries.EntryPipeline;
 import pink.zak.giveawaybot.lang.LanguageRegistry;
 import pink.zak.giveawaybot.listener.GiveawayDeletionListener;
 import pink.zak.giveawaybot.listener.ReactionAddListener;
 import pink.zak.giveawaybot.listener.message.MessageSendListener;
 import pink.zak.giveawaybot.metrics.MetricsLogger;
 import pink.zak.giveawaybot.metrics.helpers.LatencyMonitor;
+import pink.zak.giveawaybot.pipelines.entries.EntryPipeline;
 import pink.zak.giveawaybot.service.bot.JdaBot;
 import pink.zak.giveawaybot.service.command.command.Command;
 import pink.zak.giveawaybot.service.config.Config;
@@ -205,11 +205,9 @@ public class GiveawayBot extends JdaBot {
         Config settings = this.getConfigStore().getConfig("settings");
         this.storageSettings.setAddress(settings.string("mongo-ip") + ":" + settings.string("mongo-port"));
         this.storageSettings.setDatabase(settings.string("mongo-storage-database"));
-        if (settings.has("mongo-username")) {
-            this.storageSettings.setAuthDatabase(settings.string("mongo-auth-database"));
-            this.storageSettings.setUsername(settings.string("mongo-username"));
-            this.storageSettings.setPassword(settings.string("mongo-password"));
-        }
+        this.storageSettings.setAuthDatabase(settings.string("mongo-auth-database"));
+        this.storageSettings.setUsername(settings.string("mongo-username"));
+        this.storageSettings.setPassword(settings.string("mongo-password"));
         this.mongoConnectionFactory = new MongoConnectionFactory(this.getStorageSettings());
     }
 
