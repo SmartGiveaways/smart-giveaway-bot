@@ -88,7 +88,6 @@ public class GiveawayBot extends JdaBot {
 
         super.buildJdaEarly(settings.string("token"), this.getGatewayIntents(), shard -> shard
                 .setMemberCachePolicy(MemberCachePolicy.ALL)
-                .setThreadFactory(ThreadManager.getThreadFactory("jda"))
                 .disableCache(CacheFlag.VOICE_STATE, CacheFlag.CLIENT_STATUS, CacheFlag.ACTIVITY)
                 .enableCache(CacheFlag.EMOTE, CacheFlag.MEMBER_OVERRIDES));
 

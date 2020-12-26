@@ -18,9 +18,9 @@ public class ThreadManager {
     }
 
     private void initiatePools() {
-        this.threadPools.put(ThreadFunction.STORAGE, Executors.newFixedThreadPool(2, getThreadFactory("storage")));
-        this.threadPools.put(ThreadFunction.GENERAL, Executors.newFixedThreadPool(2, getThreadFactory("commands")));
-        this.threadPools.put(ThreadFunction.SCHEDULERS, Executors.newScheduledThreadPool(2, getThreadFactory("scheduling")));
+        this.threadPools.put(ThreadFunction.STORAGE, Executors.newFixedThreadPool(2, this.getThreadFactory("storage")));
+        this.threadPools.put(ThreadFunction.GENERAL, Executors.newFixedThreadPool(2, this.getThreadFactory("commands")));
+        this.threadPools.put(ThreadFunction.SCHEDULERS, Executors.newScheduledThreadPool(2, this.getThreadFactory("scheduling")));
     }
 
     public void shutdownPools() {
@@ -37,7 +37,7 @@ public class ThreadManager {
         return (ScheduledExecutorService) this.threadPools.get(ThreadFunction.SCHEDULERS);
     }
 
-    public static ThreadFactory getThreadFactory(String name) {
+    private ThreadFactory getThreadFactory(String name) {
         return new ThreadFactoryBuilder().setNameFormat(name.concat("-%d")).build();
     }
 }
