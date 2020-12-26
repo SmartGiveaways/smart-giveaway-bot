@@ -7,8 +7,8 @@ aliases: ["english", "en", "uk", "en-uk"]
 values:
   # General messages
   bot-missing-permissions: ":x: The bot doesn't have the correct permissions. Please reinvite the bot from <https://sgs.pink/invite>."
-  bot-missing-permissions-specific-singular: ":x: The bot is missing the %permission% permission."
-  bot-missing-permissions-specific-plural: ":x: The bot is missing the following permissions: %permission%"
+  bot-missing-permission-specific: ":x: The bot is missing the %permission% permission."
+  bot-missing-permissions-specific: ":x: The bot is missing the following permissions: %permission%"
   no-permission: ":x: No permission. You must have admin or one of your roles must be a manager (`>gadmin role add @Role`)"
   couldnt-find-member: ":x: Couldn't find that member :worried:"
   couldnt-find-role: ":x: Could not find that role ;("

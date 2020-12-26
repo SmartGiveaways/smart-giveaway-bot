@@ -86,14 +86,10 @@ public class CommandBase implements GiveawayMessageListener {
         String commandName = rawMessage.substring(1).split(" ")[0];
         TextChannel channel = event.getChannel();
         if (!selfMember.hasPermission(channel, this.requiredPermissions)) {
-            System.out.println("A " + this.requiredPermissions);
-            System.out.println("AA " + selfMember.getPermissions());
             Set<Permission> missingPerms = Sets.newHashSet(this.requiredPermissions);
             missingPerms.removeAll(selfMember.getPermissions(channel));
-            System.out.println("B " + missingPerms);
             String missingPermsString = missingPerms.stream().map(Permission::getName).map(str -> "`" + str + "`").collect(Collectors.joining(", "));
-            System.out.println("C " + missingPermsString);
-            this.languageRegistry.get(server, missingPerms.size() > 1 ? Text.BOT_MISSING_PERMISSIONS_SPECIFIC_PLURAL : Text.BOT_MISSING_PERMISSIONS_SPECIFIC_SINGULAR,
+            this.languageRegistry.get(server, missingPerms.size() > 1 ? Text.BOT_MISSING_PERMISSIONS_SPECIFIC : Text.BOT_MISSING_PERMISSION_SPECIFIC,
                     replacer -> replacer.set("permission", missingPermsString)).to(channel);
             return;
         }

@@ -36,7 +36,7 @@ public class ExportSub extends SubCommand {
             return;
         }
         if (!event.getGuild().getSelfMember().hasPermission(Permission.MESSAGE_ATTACH_FILES)) {
-            this.langFor(server, Text.BOT_MISSING_PERMISSIONS_SPECIFIC_SINGULAR, replacer -> replacer.set("permission", "`MESSAGE_ATTACH_FILES`")).to(channel);
+            this.langFor(server, Text.BOT_MISSING_PERMISSION_SPECIFIC, replacer -> replacer.set("permission", "`MESSAGE_ATTACH_FILES`")).to(channel);
             return;
         }
         this.export(server, preset, channel);
