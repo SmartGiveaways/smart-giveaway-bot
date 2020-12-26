@@ -40,7 +40,7 @@ dependencies {
     implementation("com.github.ZakShearman:influx-metrics:1.0.1")
     implementation("com.influxdb:influxdb-client-java:1.14.0")
 
-    testImplementation("org.junit.jupiter:junit-jupiter:5.4.2")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.7.0")
 }
 
 tasks.withType(JavaCompile).all {
