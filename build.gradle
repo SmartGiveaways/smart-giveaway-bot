@@ -32,7 +32,7 @@ dependencies {
     implementation("com.timvisee:yamlwrapper:1.1.1")
     implementation("com.vdurmont:emoji-java:5.1.1")
     implementation("org.mongodb:mongo-java-driver:3.12.7")
-    compileOnly("org.projectlombok:lombok:1.18.12")
+    compileOnly("org.projectlombok:lombok:1.18.16")
     annotationProcessor("org.projectlombok:lombok:1.18.12")
 
     // Technically non essentials
