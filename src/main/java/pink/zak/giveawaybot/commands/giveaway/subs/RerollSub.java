@@ -54,7 +54,7 @@ public class RerollSub extends SubCommand {
             Message message = this.giveawayController.getGiveawayMessage(giveaway);
             giveaway.setWinners(newWinners);
             if (message != null) {
-                this.messageStep.sendFinishedMessage(server, giveaway, message, newWinners, giveaway.totalEntries());
+                this.messageStep.handleFinishedMessages(server, giveaway, message, newWinners, giveaway.totalEntries());
             }
             Long[] winnersArray = newWinners.toArray(new Long[]{});
             if (winnersArray.length == 1) {

@@ -5,6 +5,7 @@ import lombok.SneakyThrows;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.slf4j.Logger;
 import pink.zak.giveawaybot.cache.FinishedGiveawayCache;
@@ -86,7 +87,11 @@ public class GiveawayBot extends JdaBot {
         Config settings = this.getConfigStore().getConfig("settings");
 
         super.buildJdaEarly(settings.string("token"), this.getGatewayIntents(), shard -> shard
-                .disableCache(CacheFlag.VOICE_STATE));
+                .setMemberCachePolicy(MemberCachePolicy.ALL)
+                .setThreadFactory(ThreadManager.getThreadFactory("jda"))
+                .disableCache(CacheFlag.VOICE_STATE, CacheFlag.CLIENT_STATUS, CacheFlag.ACTIVITY)
+                .enableCache(CacheFlag.EMOTE, CacheFlag.MEMBER_OVERRIDES));
+
         if (settings.bool("enable-metrics")) {
             this.metrics = new Metrics(new Metrics.Config(settings.string("influx-url"),
                     settings.string("influx-token").toCharArray(),
