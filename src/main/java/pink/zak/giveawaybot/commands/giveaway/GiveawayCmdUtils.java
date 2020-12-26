@@ -49,7 +49,7 @@ public class GiveawayCmdUtils {
                 this.lang.get(server, Text.NO_PRESET_FOUND_ON_CREATION).to(responseChannel);
                 break;
             case PERMISSIONS_FAILURE:
-                this.lang.get(server, Text.BOT_DOESNT_HAVE_PERMISSIONS).to(responseChannel);
+                this.lang.get(server, Text.BOT_MISSING_PERMISSIONS).to(responseChannel);
                 break;
             case SUCCESS:
                 this.lang.get(server, Text.GIVEAWAY_SCHEDULED, replacer -> replacer
@@ -76,7 +76,7 @@ public class GiveawayCmdUtils {
                 this.lang.get(server, Text.NO_PRESET_FOUND_ON_CREATION).to(responseChannel);
                 break;
             case PERMISSIONS_FAILURE:
-                this.lang.get(server, Text.BOT_DOESNT_HAVE_PERMISSIONS).to(responseChannel);
+                this.lang.get(server, Text.BOT_MISSING_PERMISSIONS).to(responseChannel);
                 break;
             case GENERIC_FAILURE:
             case RATE_LIMIT_FAILURE:

@@ -2,7 +2,9 @@ package pink.zak.giveawaybot.lang.enums;
 
 public enum Text {
     // Applies everywhere
-    BOT_DOESNT_HAVE_PERMISSIONS,
+    BOT_MISSING_PERMISSIONS,
+    BOT_MISSING_PERMISSIONS_SPECIFIC_SINGULAR,
+    BOT_MISSING_PERMISSIONS_SPECIFIC_PLURAL,
     NO_PERMISSION,
     COULDNT_FIND_MEMBER,
     COULDNT_FIND_ROLE,

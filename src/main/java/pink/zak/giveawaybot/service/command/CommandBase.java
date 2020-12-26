@@ -33,6 +33,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 public class CommandBase implements GiveawayMessageListener {
     private final GiveawayBot bot;
@@ -41,7 +42,7 @@ public class CommandBase implements GiveawayMessageListener {
     private final Set<SimpleCommand> commands = Sets.newHashSet();
     private final Cache<Long, Long> commandCooldowns;
     private final LanguageRegistry languageRegistry;
-    private final Permission[] requiredPermissions;
+    private final Set<Permission> requiredPermissions;
     private final AtomicInteger executions = new AtomicInteger();
     private boolean lockdown;
 
@@ -51,13 +52,11 @@ public class CommandBase implements GiveawayMessageListener {
         this.executor = bot.getThreadManager().getAsyncExecutor(ThreadFunction.GENERAL);
         this.commandCooldowns = new CacheBuilder<Long, Long>().expireAfterAccess(1, TimeUnit.SECONDS).setControlling(bot).build();
         this.languageRegistry = bot.getLanguageRegistry();
-        this.requiredPermissions = new Permission[]{Permission.MESSAGE_READ,
-                Permission.MESSAGE_EMBED_LINKS,
-                Permission.MESSAGE_HISTORY,
+        this.requiredPermissions = Sets.newHashSet(Permission.MESSAGE_READ,
                 Permission.MESSAGE_EXT_EMOJI,
                 Permission.MESSAGE_ADD_REACTION,
                 Permission.VIEW_CHANNEL,
-                Permission.MESSAGE_MANAGE};
+                Permission.MESSAGE_MANAGE);
         this.registerArgumentTypes();
     }
 
@@ -86,8 +85,16 @@ public class CommandBase implements GiveawayMessageListener {
         }
         String commandName = rawMessage.substring(1).split(" ")[0];
         TextChannel channel = event.getChannel();
-        if (!event.getGuild().getSelfMember().hasPermission(channel, this.requiredPermissions)) {
-            this.languageRegistry.get(server, Text.BOT_DOESNT_HAVE_PERMISSIONS).to(channel);
+        if (!selfMember.hasPermission(channel, this.requiredPermissions)) {
+            System.out.println("A " + this.requiredPermissions);
+            System.out.println("AA " + selfMember.getPermissions());
+            Set<Permission> missingPerms = Sets.newHashSet(this.requiredPermissions);
+            missingPerms.removeAll(selfMember.getPermissions(channel));
+            System.out.println("B " + missingPerms);
+            String missingPermsString = missingPerms.stream().map(Permission::getName).map(str -> "`" + str + "`").collect(Collectors.joining(", "));
+            System.out.println("C " + missingPermsString);
+            this.languageRegistry.get(server, missingPerms.size() > 1 ? Text.BOT_MISSING_PERMISSIONS_SPECIFIC_PLURAL : Text.BOT_MISSING_PERMISSIONS_SPECIFIC_SINGULAR,
+                    replacer -> replacer.set("permission", missingPermsString)).to(channel);
             return;
         }
         if (server == null) {

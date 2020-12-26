@@ -21,6 +21,7 @@ redis-port: 6379
 use-redis-ssl: true
 redis-password: "some-pass"
 
+prefix: ">"
 default-language: "english-uk"
 
 latency-tester:

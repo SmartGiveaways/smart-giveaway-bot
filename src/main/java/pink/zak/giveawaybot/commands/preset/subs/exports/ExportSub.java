@@ -1,6 +1,7 @@
 package pink.zak.giveawaybot.commands.preset.subs.exports;
 
 import com.google.gson.Gson;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
@@ -32,6 +33,10 @@ public class ExportSub extends SubCommand {
         Preset preset = this.parseArgument(args, event.getGuild(), 1);
         if (preset == null) {
             this.langFor(server, Text.COULDNT_FIND_PRESET).to(channel);
+            return;
+        }
+        if (!event.getGuild().getSelfMember().hasPermission(Permission.MESSAGE_ATTACH_FILES)) {
+            this.langFor(server, Text.BOT_MISSING_PERMISSIONS_SPECIFIC_SINGULAR, replacer -> replacer.set("permission", "`MESSAGE_ATTACH_FILES`")).to(channel);
             return;
         }
         this.export(server, preset, channel);
