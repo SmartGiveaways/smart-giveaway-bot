@@ -29,7 +29,7 @@ public class Time {
         if (seconds >= 60) {
             return formatMinutesSeconds(seconds);
         }
-        if (seconds > 1) {
+        if (seconds != 1) {
             return seconds + " seconds";
         }
         return seconds + " second";
@@ -40,14 +40,14 @@ public class Time {
         int remainderSeconds = seconds - months * 2592000;
         int weeks = getWeeks(remainderSeconds);
         StringBuilder builder = new StringBuilder(months + " month");
-        if (months > 1) {
+        if (months != 1) {
             builder.append("s");
         }
         if (weeks == 0) {
             return builder.toString();
         }
         builder.append(" ").append(weeks).append(" week");
-        if (weeks > 1) {
+        if (weeks != 1) {
             builder.append("s");
         }
         return builder.toString();
@@ -58,14 +58,14 @@ public class Time {
         int remainderSeconds = seconds - weeks * 604800;
         int days = getDays(remainderSeconds);
         StringBuilder builder = new StringBuilder(weeks + " week");
-        if (weeks > 1) {
+        if (weeks != 1) {
             builder.append("s");
         }
         if (days == 0) {
             return builder.toString();
         }
         builder.append(" ").append(days).append(" day");
-        if (days > 1) {
+        if (days != 1) {
             builder.append("s");
         }
         return builder.toString();
@@ -76,14 +76,14 @@ public class Time {
         int remainderSeconds = seconds - days * 86400;
         int hours = getHours(remainderSeconds);
         StringBuilder builder = new StringBuilder(days + " day");
-        if (days > 1) {
+        if (days != 1) {
             builder.append("s");
         }
         if (hours == 0) {
             return builder.toString();
         }
         builder.append(" ").append(hours).append(" hour");
-        if (hours > 1) {
+        if (hours != 1) {
             builder.append("s");
         }
         return builder.toString();
@@ -94,14 +94,14 @@ public class Time {
         int remainderSeconds = seconds - hours * 3600;
         int minutes = getMinutes(remainderSeconds);
         StringBuilder builder = new StringBuilder(hours + " hour");
-        if (hours > 1) {
+        if (hours != 1) {
             builder.append("s");
         }
         if (minutes == 0) {
             return builder.toString();
         }
         builder.append(" ").append(minutes).append(" minute");
-        if (minutes > 1) {
+        if (minutes != 1) {
             builder.append("s");
         }
         return builder.toString();
@@ -111,14 +111,14 @@ public class Time {
         int minutes = getMinutes(seconds);
         int remainderSeconds = seconds - minutes * 60;
         StringBuilder builder = new StringBuilder(minutes + " minute");
-        if (minutes > 1) {
+        if (minutes != 1) {
             builder.append("s");
         }
         if (remainderSeconds == 0) {
             return builder.toString();
         }
         builder.append(" ").append(remainderSeconds).append(" second");
-        if (remainderSeconds > 1) {
+        if (remainderSeconds != 1) {
             builder.append("s");
         }
         return builder.toString();
