@@ -32,7 +32,7 @@ import pink.zak.giveawaybot.metrics.MetricsLogger;
 import pink.zak.giveawaybot.metrics.helpers.LatencyMonitor;
 import pink.zak.giveawaybot.pipelines.entries.EntryPipeline;
 import pink.zak.giveawaybot.service.bot.JdaBot;
-import pink.zak.giveawaybot.service.command.command.Command;
+import pink.zak.giveawaybot.service.command.discord.command.Command;
 import pink.zak.giveawaybot.service.config.Config;
 import pink.zak.giveawaybot.service.config.Reloadable;
 import pink.zak.giveawaybot.service.storage.mongo.MongoConnectionFactory;

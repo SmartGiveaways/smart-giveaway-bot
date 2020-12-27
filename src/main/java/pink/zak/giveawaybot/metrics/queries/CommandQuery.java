@@ -1,28 +1,28 @@
 package pink.zak.giveawaybot.metrics.queries;
 
 import com.influxdb.client.write.Point;
-import pink.zak.giveawaybot.service.command.CommandBase;
+import pink.zak.giveawaybot.service.command.discord.DiscordCommandBase;
 import pink.zak.metrics.queries.QueryInterface;
 
 import java.util.function.BiFunction;
 
-public enum CommandQuery implements QueryInterface<CommandBase> {
+public enum CommandQuery implements QueryInterface<DiscordCommandBase> {
 
     COMMAND_EXECUTIONS((commandBase, point) -> point.addField("command-executions", commandBase.retrieveExecutions()));
 
-    private final BiFunction<CommandBase, Point, Point> computation;
+    private final BiFunction<DiscordCommandBase, Point, Point> computation;
 
-    CommandQuery(BiFunction<CommandBase, Point, Point> computation) {
+    CommandQuery(BiFunction<DiscordCommandBase, Point, Point> computation) {
         this.computation = computation;
     }
 
     @Override
-    public BiFunction<CommandBase, Point, Point> tag() {
+    public BiFunction<DiscordCommandBase, Point, Point> tag() {
         return (giveawayCache, point) -> point;
     }
 
     @Override
-    public BiFunction<CommandBase, Point, Point> get() {
+    public BiFunction<DiscordCommandBase, Point, Point> get() {
         return this.computation;
     }
 

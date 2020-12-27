@@ -9,7 +9,7 @@ import pink.zak.giveawaybot.metrics.helpers.GenericBotMetrics;
 import pink.zak.giveawaybot.models.Server;
 import pink.zak.giveawaybot.service.cache.singular.CachedValue;
 import pink.zak.giveawaybot.service.colour.Palette;
-import pink.zak.giveawaybot.service.command.command.SubCommand;
+import pink.zak.giveawaybot.service.command.discord.command.SubCommand;
 import pink.zak.giveawaybot.service.time.Time;
 
 import java.util.List;

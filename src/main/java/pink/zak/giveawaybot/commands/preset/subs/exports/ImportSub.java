@@ -5,7 +5,7 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.commands.preset.subs.exports.utils.ImportCmdUtils;
 import pink.zak.giveawaybot.models.Server;
-import pink.zak.giveawaybot.service.command.command.SubCommand;
+import pink.zak.giveawaybot.service.command.discord.command.SubCommand;
 
 import java.util.List;
 

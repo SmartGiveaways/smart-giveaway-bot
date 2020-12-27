@@ -10,7 +10,7 @@ import pink.zak.giveawaybot.lang.enums.Text;
 import pink.zak.giveawaybot.lang.model.Language;
 import pink.zak.giveawaybot.models.Server;
 import pink.zak.giveawaybot.service.colour.Palette;
-import pink.zak.giveawaybot.service.command.command.SimpleCommand;
+import pink.zak.giveawaybot.service.command.discord.command.SimpleCommand;
 
 import java.util.List;
 import java.util.Map;

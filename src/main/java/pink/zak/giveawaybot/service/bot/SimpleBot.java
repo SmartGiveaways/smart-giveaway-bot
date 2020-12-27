@@ -6,8 +6,8 @@ import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.jetbrains.annotations.NotNull;
 import pink.zak.giveawaybot.GiveawayBot;
-import pink.zak.giveawaybot.service.command.CommandBase;
-import pink.zak.giveawaybot.service.command.command.SimpleCommand;
+import pink.zak.giveawaybot.service.command.discord.DiscordCommandBase;
+import pink.zak.giveawaybot.service.command.discord.command.SimpleCommand;
 import pink.zak.giveawaybot.service.config.Config;
 import pink.zak.giveawaybot.service.config.ConfigStore;
 import pink.zak.giveawaybot.service.registry.Registry;
@@ -50,7 +50,7 @@ public interface SimpleBot {
 
     String getPrefix();
 
-    CommandBase getCommandBase();
+    DiscordCommandBase getCommandBase();
 
     ConfigStore getConfigStore();
 

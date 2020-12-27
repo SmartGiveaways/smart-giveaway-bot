@@ -6,7 +6,7 @@ import pink.zak.giveawaybot.cache.ServerCache;
 import pink.zak.giveawaybot.metrics.helpers.GenericBotMetrics;
 import pink.zak.giveawaybot.metrics.queries.*;
 import pink.zak.giveawaybot.models.Server;
-import pink.zak.giveawaybot.service.command.CommandBase;
+import pink.zak.giveawaybot.service.command.discord.DiscordCommandBase;
 import pink.zak.metrics.Metrics;
 import pink.zak.metrics.queries.stock.SystemQuery;
 import pink.zak.metrics.queries.stock.backends.ProcessStats;
@@ -31,7 +31,7 @@ public class MetricsLogger {
 
         ProcessStats processStats = new ProcessStats();
         GiveawayCache giveawayCache = bot.getGiveawayCache();
-        CommandBase commandBase = bot.getCommandBase();
+        DiscordCommandBase commandBase = bot.getCommandBase();
         ServerCache serverCache = bot.getServerCache();
 
         scheduler.scheduleAtFixedRate(() -> {
@@ -46,7 +46,7 @@ public class MetricsLogger {
                     .primary(serverCache)
                     .push(ServerCacheQuery.ALL)
             );
-            metrics.<CommandBase>log(query -> query
+            metrics.<DiscordCommandBase>log(query -> query
                     .primary(commandBase)
                     .push(CommandQuery.COMMAND_EXECUTIONS));
             metrics.<GenericBotMetrics>log(query -> query

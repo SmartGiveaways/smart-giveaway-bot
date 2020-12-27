@@ -11,7 +11,7 @@ import pink.zak.giveawaybot.lang.enums.Text;
 import pink.zak.giveawaybot.models.Server;
 import pink.zak.giveawaybot.pipelines.giveaway.steps.MessageStep;
 import pink.zak.giveawaybot.pipelines.giveaway.steps.WinnerStep;
-import pink.zak.giveawaybot.service.command.command.SubCommand;
+import pink.zak.giveawaybot.service.command.discord.command.SubCommand;
 
 import java.util.List;
 import java.util.Set;

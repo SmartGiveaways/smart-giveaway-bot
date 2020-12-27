@@ -10,11 +10,11 @@ import org.slf4j.Logger;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.listener.message.GiveawayMessageListener;
 import pink.zak.giveawaybot.listener.message.MessageEventRegistry;
-import pink.zak.giveawaybot.service.command.CommandBase;
-import pink.zak.giveawaybot.service.command.command.SimpleCommand;
+import pink.zak.giveawaybot.service.command.discord.DiscordCommandBase;
+import pink.zak.giveawaybot.service.command.discord.command.SimpleCommand;
 import pink.zak.giveawaybot.service.config.Config;
 import pink.zak.giveawaybot.service.config.ConfigStore;
-import pink.zak.giveawaybot.service.listener.ConsoleListener;
+import pink.zak.giveawaybot.console.ConsoleListener;
 import pink.zak.giveawaybot.service.listener.ReadyListener;
 import pink.zak.giveawaybot.service.registry.Registry;
 import pink.zak.giveawaybot.service.storage.BackendFactory;
@@ -37,7 +37,7 @@ public abstract class JdaBot implements SimpleBot {
     private final Path basePath;
     private boolean connected;
     private boolean initialized;
-    private CommandBase commandBase;
+    private DiscordCommandBase commandBase;
     private String prefix;
     private ShardManager shardManager;
 
@@ -84,8 +84,8 @@ public abstract class JdaBot implements SimpleBot {
     }
 
     public void buildVariables(GiveawayBot bot, String prefix) {
-        this.commandBase = new CommandBase(bot);
         this.prefix = prefix;
+        this.commandBase = new DiscordCommandBase(bot);
         this.shardManager.addEventListener(this.messageEventRegistry);
         this.messageEventRegistry.addListener(this.commandBase);
         new Thread(new ConsoleListener(bot)).start();
@@ -157,7 +157,7 @@ public abstract class JdaBot implements SimpleBot {
     }
 
     @Override
-    public CommandBase getCommandBase() {
+    public DiscordCommandBase getCommandBase() {
         return this.commandBase;
     }
 

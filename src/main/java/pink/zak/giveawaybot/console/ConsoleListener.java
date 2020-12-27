@@ -1,4 +1,4 @@
-package pink.zak.giveawaybot.service.listener;
+package pink.zak.giveawaybot.console;
 
 import com.sun.management.HotSpotDiagnosticMXBean;
 import lombok.SneakyThrows;

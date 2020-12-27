@@ -6,7 +6,8 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.commands.giveaway.GiveawayCmdUtils;
 import pink.zak.giveawaybot.models.Server;
-import pink.zak.giveawaybot.service.command.command.SubCommand;
+import pink.zak.giveawaybot.service.command.discord.command.SubCommand;
+import pink.zak.giveawaybot.service.command.global.SubCommandUtils;
 import pink.zak.giveawaybot.service.time.Time;
 import pink.zak.giveawaybot.service.types.NumberUtils;
 
@@ -34,7 +35,7 @@ public class CreateWithChannelSub extends SubCommand {
         TextChannel responseChannel = event.getChannel();
         TextChannel giveawayChannel = this.parseArgument(args, event.getGuild(), 3);
         int winnerAmount = this.parseArgument(args, event.getGuild(), 4);
-        String giveawayItem = String.join(" ", this.getEnd(args));
+        String giveawayItem = String.join(" ", SubCommandUtils.getEnd(this.argsSize(), args));
 
         this.cmdUtils.create(server, lengthMillis, winnerAmount, presetName, giveawayItem, giveawayChannel, responseChannel);
     }

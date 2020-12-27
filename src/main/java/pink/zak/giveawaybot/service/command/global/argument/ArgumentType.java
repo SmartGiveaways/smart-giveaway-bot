@@ -1,4 +1,4 @@
-package pink.zak.giveawaybot.service.command.argument;
+package pink.zak.giveawaybot.service.command.global.argument;
 
 import net.dv8tion.jda.api.entities.Guild;
 

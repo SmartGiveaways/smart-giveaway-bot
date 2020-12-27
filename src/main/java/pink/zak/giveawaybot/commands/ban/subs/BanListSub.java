@@ -17,7 +17,7 @@ import pink.zak.giveawaybot.models.Server;
 import pink.zak.giveawaybot.service.cache.CacheBuilder;
 import pink.zak.giveawaybot.service.cache.caches.Cache;
 import pink.zak.giveawaybot.service.colour.Palette;
-import pink.zak.giveawaybot.service.command.command.SubCommand;
+import pink.zak.giveawaybot.service.command.discord.command.SubCommand;
 import pink.zak.giveawaybot.service.tuple.MutablePair;
 
 import java.util.List;

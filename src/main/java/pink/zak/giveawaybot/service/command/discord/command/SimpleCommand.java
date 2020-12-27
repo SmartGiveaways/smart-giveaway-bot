@@ -1,4 +1,4 @@
-package pink.zak.giveawaybot.service.command.command;
+package pink.zak.giveawaybot.service.command.discord.command;
 
 import com.google.common.collect.Sets;
 import pink.zak.giveawaybot.GiveawayBot;

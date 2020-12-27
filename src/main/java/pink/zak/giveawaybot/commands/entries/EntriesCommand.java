@@ -10,8 +10,8 @@ import pink.zak.giveawaybot.lang.enums.Text;
 import pink.zak.giveawaybot.models.Server;
 import pink.zak.giveawaybot.models.giveaway.CurrentGiveaway;
 import pink.zak.giveawaybot.service.colour.Palette;
-import pink.zak.giveawaybot.service.command.command.SimpleCommand;
-import pink.zak.giveawaybot.service.command.command.SubCommand;
+import pink.zak.giveawaybot.service.command.discord.command.SimpleCommand;
+import pink.zak.giveawaybot.service.command.discord.command.SubCommand;
 import pink.zak.giveawaybot.service.types.UserUtils;
 
 import java.math.BigInteger;

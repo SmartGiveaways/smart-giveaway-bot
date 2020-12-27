@@ -1,30 +1,23 @@
-package pink.zak.giveawaybot.service.command;
+package pink.zak.giveawaybot.service.command.discord;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
-import net.dv8tion.jda.api.exceptions.ErrorResponseException;
-import net.dv8tion.jda.api.requests.ErrorResponse;
 import pink.zak.giveawaybot.GiveawayBot;
-import pink.zak.giveawaybot.cache.ServerCache;
 import pink.zak.giveawaybot.lang.LanguageRegistry;
 import pink.zak.giveawaybot.lang.enums.Text;
-import pink.zak.giveawaybot.lang.model.Language;
 import pink.zak.giveawaybot.listener.message.GiveawayMessageListener;
-import pink.zak.giveawaybot.models.Preset;
 import pink.zak.giveawaybot.models.Server;
 import pink.zak.giveawaybot.service.cache.CacheBuilder;
 import pink.zak.giveawaybot.service.cache.caches.Cache;
-import pink.zak.giveawaybot.service.command.argument.ArgumentHandler;
-import pink.zak.giveawaybot.service.command.argument.ArgumentType;
-import pink.zak.giveawaybot.service.command.command.Command;
-import pink.zak.giveawaybot.service.command.command.SimpleCommand;
-import pink.zak.giveawaybot.service.command.command.SubCommand;
-import pink.zak.giveawaybot.service.types.BooleanUtils;
-import pink.zak.giveawaybot.service.types.NumberUtils;
-import pink.zak.giveawaybot.service.types.UserUtils;
+import pink.zak.giveawaybot.service.command.discord.command.Command;
+import pink.zak.giveawaybot.service.command.discord.command.SimpleCommand;
+import pink.zak.giveawaybot.service.command.discord.command.SubCommand;
+import pink.zak.giveawaybot.service.command.global.CommandBackend;
 import pink.zak.giveawaybot.threads.ThreadFunction;
 
 import java.util.List;
@@ -35,9 +28,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
-public class CommandBase implements GiveawayMessageListener {
-    private final GiveawayBot bot;
-    private final ServerCache serverCache;
+public class DiscordCommandBase extends CommandBackend implements GiveawayMessageListener{
+    private final String prefix;
     private final ExecutorService executor;
     private final Set<SimpleCommand> commands = Sets.newHashSet();
     private final Cache<Long, Long> commandCooldowns;
@@ -46,9 +38,9 @@ public class CommandBase implements GiveawayMessageListener {
     private final AtomicInteger executions = new AtomicInteger();
     private boolean lockdown;
 
-    public CommandBase(GiveawayBot bot) {
-        this.bot = bot;
-        this.serverCache = bot.getServerCache();
+    public DiscordCommandBase(GiveawayBot bot) {
+        super(bot);
+        this.prefix = bot.getPrefix();
         this.executor = bot.getThreadManager().getAsyncExecutor(ThreadFunction.GENERAL);
         this.commandCooldowns = new CacheBuilder<Long, Long>().expireAfterAccess(1, TimeUnit.SECONDS).setControlling(bot).build();
         this.languageRegistry = bot.getLanguageRegistry();
@@ -57,16 +49,10 @@ public class CommandBase implements GiveawayMessageListener {
                 Permission.MESSAGE_ADD_REACTION,
                 Permission.VIEW_CHANNEL,
                 Permission.MESSAGE_MANAGE);
-        this.registerArgumentTypes();
     }
 
     public void registerCommand(SimpleCommand command) {
         this.commands.add(command);
-    }
-
-    public CommandBase registerArgumentType(Class<?> clazz, ArgumentType<?> argumentType) {
-        ArgumentHandler.register(clazz, argumentType);
-        return this;
     }
 
     public void onExecute(Server server, GuildMessageReceivedEvent event) {
@@ -75,8 +61,7 @@ public class CommandBase implements GiveawayMessageListener {
             return;
         }
         String rawMessage = event.getMessage().getContentRaw();
-        String prefix = this.bot.getPrefix();
-        if (!rawMessage.startsWith(prefix)) {
+        if (!rawMessage.startsWith(this.prefix)) {
             return;
         }
         Member sender = event.getMember();
@@ -121,13 +106,13 @@ public class CommandBase implements GiveawayMessageListener {
                     this.executeCommand(simpleCommand, sender, server, event, Lists.newArrayList());
                     return;
                 }
-                String message = rawMessage.split(prefix + commandName + " ")[1];
+                String message = rawMessage.split(this.prefix + commandName + " ")[1];
                 List<String> args = Lists.newArrayList(message.split(" "));
                 args.removeIf(String::isEmpty);
 
                 SubCommand subResult = null;
                 for (SubCommand subCommand : simpleCommand.getSubCommands()) {
-                    if ((args.size() > subCommand.getArgumentsSize() && subCommand.isEndless() && subCommand.isEndlessMatch(args)) || (subCommand.getArgumentsSize() == args.size() && subCommand.isMatch(args))) {
+                    if ((args.size() > subCommand.argsSize() && subCommand.isEndless() && subCommand.isEndlessMatch(args)) || (subCommand.argsSize() == args.size() && subCommand.isMatch(args))) {
                         subResult = subCommand;
                         break;
                     }
@@ -183,58 +168,6 @@ public class CommandBase implements GiveawayMessageListener {
 
     public int retrieveExecutions() {
         return this.executions.getAndUpdate(previous -> 0);
-    }
-
-    private void registerArgumentTypes() {
-        this.registerArgumentType(String.class, (string, guild) -> string)
-                .registerArgumentType(Member.class, (string, guild) -> {
-                    long userId = UserUtils.parseIdInput(string);
-                    if (userId == -1) {
-                        return null;
-                    }
-                    try {
-                        return guild.retrieveMemberById(userId).complete();
-                    } catch (ErrorResponseException ex) {
-                        if (ex.getErrorResponse() != ErrorResponse.UNKNOWN_USER && ex.getErrorResponse() != ErrorResponse.UNKNOWN_MEMBER) {
-                            GiveawayBot.getLogger().error("Error parsing MEMBER type from command. Input {}", userId, ex);
-                        }
-                        return null;
-                    }
-                })
-                .registerArgumentType(User.class, (string, guild) -> {
-                    long userId = UserUtils.parseIdInput(string);
-                    if (userId == -1) {
-                        return null;
-                    }
-                    try {
-                        return this.bot.getShardManager().retrieveUserById(userId).complete();
-                    } catch (ErrorResponseException ex) {
-                        if (ex.getErrorResponse() != ErrorResponse.UNKNOWN_USER) {
-                            GiveawayBot.getLogger().error("Error parsing MEMBER type from command. Input {}", userId, ex);
-                        }
-                        return null;
-                    }
-                })
-                .registerArgumentType(TextChannel.class, (string, guild) -> {
-                    long channelId = UserUtils.parseIdInput(string);
-                    if (channelId == -1) {
-                        return null;
-                    }
-                    return guild.getTextChannelById(channelId);
-                })
-                .registerArgumentType(Role.class, (string, guild) -> {
-                    long roleId = UserUtils.parseIdInput(string);
-                    if (roleId == -1) {
-                        return null;
-                    }
-                    return guild.getRoleById(roleId);
-                })
-                .registerArgumentType(Language.class, (string, guild) -> this.languageRegistry.getLanguage(string))
-                .registerArgumentType(Preset.class, (string, guild) -> this.serverCache.getSync(guild.getIdLong()).getPreset(string.toLowerCase()))
-                .registerArgumentType(Integer.class, (string, guild) -> NumberUtils.parseInt(string, -1))
-                .registerArgumentType(Long.class, (string, guild) -> NumberUtils.parseLong(string, -1))
-                .registerArgumentType(Double.class, (string, guild) -> NumberUtils.parseDouble(string, -1))
-                .registerArgumentType(Boolean.class, (string, guild) -> BooleanUtils.parseBoolean(string));
     }
 
     public boolean isLockedDown() {
