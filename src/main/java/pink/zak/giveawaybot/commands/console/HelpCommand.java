@@ -14,7 +14,9 @@ public class HelpCommand extends ConsoleBaseCommand {
     @Override
     public void onExecute(List<String> args) {
         GiveawayBot.getLogger().info("help -> Prints this command.");
-        GiveawayBot.getLogger().info("reload -> Reloads language values (built embeds require restart).");
+        GiveawayBot.getLogger().info("premium -> Premium commands.");
+        GiveawayBot.getLogger().info("unload -> Data unloading commands.");
+        GiveawayBot.getLogger().info("reload -> Reloads language values.");
         GiveawayBot.getLogger().info("stop -> Stops the bot and saves data.");
         GiveawayBot.getLogger().info("dump -> Creates a debug dump.");
     }

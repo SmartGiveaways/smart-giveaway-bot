@@ -2,13 +2,14 @@ package pink.zak.giveawaybot.service.time;
 
 public enum TimeIdentifier {
 
-    SECOND(1000, 9223372036854775L, "second", "seconds", "sec", "secs", "s"),
-    MINUTE(60000, 153722867000000L, "minute", "minutes", "min", "mins", "m"),
-    HOUR(3600000, 2562047780000L, "hour", "hours", "h", "hr", "hrs"),
-    DAY(86400000, 106751991000L, "day", "days", "d", "ds"),
-    WEEK(604800000, 15250284400L, "week", "weeks", "w", "ws"),
-    MONTH(2630016000L, 476571388, "month", "months", "mo", "mos"),
-    YEAR(31536000000L, 1305675, "year", "years", "yr", "yrs", "y");
+    MILLISECOND(1, 9223372036854775000L, "millisecond", "milliseconds", "ms"),
+    SECOND(MILLISECOND.milliseconds * 1000, 9223372036854775L, "second", "seconds", "sec", "secs", "s"),
+    MINUTE(SECOND.milliseconds * 60, 153722867000000L, "minute", "minutes", "min", "mins", "m"),
+    HOUR(MINUTE.milliseconds * 60, 2562047780000L, "hour", "hours", "h", "hr", "hrs"),
+    DAY(HOUR.milliseconds * 24, 106751991000L, "day", "days", "d", "ds"),
+    WEEK(DAY.milliseconds * 7, 15250284400L, "week", "weeks", "w", "ws"),
+    MONTH(Math.round(WEEK.milliseconds * 4.345), 476571388, "month", "months", "mo", "mos"),
+    YEAR(MONTH.milliseconds * 12, 1305675, "year", "years", "yr", "yrs", "y");
 
     private final long milliseconds;
     private final long maxAmountOf;

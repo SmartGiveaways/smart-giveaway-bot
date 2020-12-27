@@ -29,7 +29,7 @@ public class SetOptionSub extends SubCommand {
             this.langFor(server, Text.PRESET_CANNOT_MODIFY_DEFAULT).to(event.getChannel());
             return;
         }
-        Preset preset = server.getPreset(presetName);
+        Preset preset = server.preset(presetName);
         if (preset == null) {
             this.langFor(server, Text.COULDNT_FIND_PRESET).to(event.getChannel());
             return;

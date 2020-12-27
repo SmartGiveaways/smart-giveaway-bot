@@ -27,12 +27,12 @@ public class ListSub extends SubCommand {
 
     @Override
     public void onExecute(Member sender, Server server, GuildMessageReceivedEvent event, List<String> args) {
-        if (server.getActiveGiveaways().isEmpty()) {
+        if (server.activeGiveaways().isEmpty()) {
             this.langFor(server, Text.NO_ACTIVE_GIVEAWAYS).to(event.getChannel());
             return;
         }
         StringBuilder descriptionBuilder = new StringBuilder();
-        for (long giveawayId : server.getActiveGiveaways()) {
+        for (long giveawayId : server.activeGiveaways()) {
             CurrentGiveaway giveaway = this.giveawayCache.getSync(giveawayId);
             descriptionBuilder.append("[**")
                     .append(giveaway.giveawayItem())

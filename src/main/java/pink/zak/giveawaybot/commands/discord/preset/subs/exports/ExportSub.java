@@ -43,7 +43,7 @@ public class ExportSub extends SubCommand {
     }
 
     private void export(Server server, Preset preset, TextChannel channel) {
-        String fileName = "presets-" + preset.name() + "-" + server.getId() + ".json";
+        String fileName = "presets-" + preset.name() + "-" + server.id() + ".json";
         String json = this.gson.toJson(preset.serialized());
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("singular", true);

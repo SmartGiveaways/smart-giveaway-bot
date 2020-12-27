@@ -21,7 +21,7 @@ public class ManagerAddSub extends SubCommand {
 
     @Override
     public void onExecute(Member sender, Server server, GuildMessageReceivedEvent event, List<String> args) {
-        if (server.getManagerRoles().size() >= 5) {
+        if (server.managerRoles().size() >= 5) {
             this.langFor(server, Text.ADMIN_MANAGER_LIMIT_REACHED).to(event.getChannel());
             return;
         }
@@ -30,11 +30,11 @@ public class ManagerAddSub extends SubCommand {
             this.langFor(server, Text.COULDNT_FIND_ROLE).to(event.getChannel());
             return;
         }
-        if (server.getManagerRoles().contains(role.getIdLong())) {
+        if (server.managerRoles().contains(role.getIdLong())) {
             this.langFor(server, Text.ADMIN_MANAGER_ALREADY_CONTAINS).to(event.getChannel());
             return;
         }
-        server.getManagerRoles().add(role.getIdLong());
+        server.managerRoles().add(role.getIdLong());
         this.langFor(server, Text.ADMIN_MANAGER_ROLE_ADDED, replacer -> replacer.set("name", role.getName())).to(event.getChannel());
     }
 }

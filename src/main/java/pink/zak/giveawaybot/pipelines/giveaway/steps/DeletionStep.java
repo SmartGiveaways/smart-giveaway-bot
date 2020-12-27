@@ -42,9 +42,9 @@ public class DeletionStep {
             if (this.scheduledFutures.containsKey(giveaway) && !this.scheduledFutures.get(giveaway).isDone()) {
                 this.scheduledFutures.get(giveaway).cancel(false);
             }
-            server.getActiveGiveaways().remove(giveaway.messageId());
+            server.activeGiveaways().remove(giveaway.messageId());
             GiveawayBot.getLogger().debug("Removing giveaway from server {}  :  {}", giveaway.serverId(), giveaway.messageId());
-            UserCache userCache = server.getUserCache();
+            UserCache userCache = server.userCache();
             for (long enteredId : giveaway.enteredUsers()) {
                 userCache.get(enteredId).thenAccept(user -> user.entries().remove(giveaway.messageId()));
             }

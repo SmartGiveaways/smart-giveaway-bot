@@ -51,27 +51,27 @@ public class Server {
                 "en-uk");
     }
 
-    public long getId() {
+    public long id() {
         return this.id;
     }
 
-    public String getStringId() {
+    public String stringId() {
         return String.valueOf(this.id);
     }
 
-    public UserStorage getUserStorage() {
+    public UserStorage userStorage() {
         return this.userStorage;
     }
 
-    public UserCache getUserCache() {
+    public UserCache userCache() {
         return this.userCache;
     }
 
-    public Set<Long> getActiveGiveaways() {
+    public Set<Long> activeGiveaways() {
         return this.activeGiveaways;
     }
 
-    public Set<Long> getActiveGiveaways(User user) {
+    public Set<Long> activeGiveaways(User user) {
         Set<Long> enteredGiveaways = Sets.newHashSet();
         for (long giveawayId : this.activeGiveaways) {
             if (user.entries().containsKey(giveawayId) && user.hasEntries(giveawayId)) {
@@ -85,15 +85,15 @@ public class Server {
         this.activeGiveaways.add(giveaway.messageId());
     }
 
-    public Set<UUID> getScheduledGiveaways() {
+    public Set<UUID> scheduledGiveaways() {
         return this.scheduledGiveaways;
     }
 
-    public Preset getPreset(String name) {
+    public Preset preset(String name) {
         return this.presets.get(name.toLowerCase());
     }
 
-    public Map<String, Preset> getPresets() {
+    public Map<String, Preset> presets() {
         return this.presets;
     }
 
@@ -105,7 +105,7 @@ public class Server {
         this.presets.put(preset.name().toLowerCase(), preset);
     }
 
-    public Set<Long> getManagerRoles() {
+    public Set<Long> managerRoles() {
         return this.managerRoles;
     }
 
@@ -124,7 +124,7 @@ public class Server {
         return false;
     }
 
-    public List<Long> getBannedUsers() {
+    public List<Long> bannedUsers() {
         return this.bannedUsers;
     }
 
@@ -132,11 +132,11 @@ public class Server {
         return this.premiumExpiry > System.currentTimeMillis();
     }
 
-    public long getPremiumExpiry() {
+    public long premiumExpiry() {
         return this.premiumExpiry;
     }
 
-    public long getTimeToExpiry() {
+    public long timeToPremiumExpiry() {
         return this.premiumExpiry - System.currentTimeMillis();
     }
 
@@ -144,7 +144,7 @@ public class Server {
         this.premiumExpiry = premiumExpiry;
     }
 
-    public String getLanguage() {
+    public String language() {
         return this.language;
     }
 

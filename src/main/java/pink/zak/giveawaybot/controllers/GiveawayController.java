@@ -82,13 +82,13 @@ public class GiveawayController {
     }
 
     public ImmutablePair<CurrentGiveaway, ReturnCode> createGiveaway(Server server, long length, long endTime, int winnerAmount, TextChannel giveawayChannel, String presetName, String giveawayItem) {
-        if (server.getActiveGiveaways().size() >= (server.isPremium() ? 10 : 5)) {
+        if (server.activeGiveaways().size() >= (server.isPremium() ? 10 : 5)) {
             return ImmutablePair.of(null, ReturnCode.GIVEAWAY_LIMIT_FAILURE);
         }
         if (!giveawayChannel.getGuild().getSelfMember().hasPermission(giveawayChannel, this.defaults.getRequiredPermissions())) {
             return ImmutablePair.of(null, ReturnCode.PERMISSIONS_FAILURE);
         }
-        Preset preset = presetName.equalsIgnoreCase("default") ? this.defaultPreset : server.getPreset(presetName);
+        Preset preset = presetName.equalsIgnoreCase("default") ? this.defaultPreset : server.preset(presetName);
         if (preset == null) {
             return ImmutablePair.of(null, ReturnCode.NO_PRESET);
         }
@@ -135,10 +135,10 @@ public class GiveawayController {
 
     public Set<Giveaway> getCurrentAndScheduledGiveaways(Server server) {
         Set<Giveaway> giveaways = Sets.newHashSet();
-        for (long id : server.getActiveGiveaways()) {
+        for (long id : server.activeGiveaways()) {
             giveaways.add(this.giveawayCache.getSync(id));
         }
-        for (UUID id : server.getScheduledGiveaways()) {
+        for (UUID id : server.scheduledGiveaways()) {
             giveaways.add(this.scheduledGiveawayCache.getSync(id));
         }
         return giveaways;
@@ -220,7 +220,7 @@ public class GiveawayController {
                         GiveawayBot.getLogger().warn("Giveaway did not delete correctly or the discord api is dying ({} in server {}).", giveaway.messageId(), giveaway.serverId());
                         return;
                     }
-                    Preset preset = giveaway.presetName().equals("default") ? this.defaultPreset : server.getPreset(giveaway.presetName());
+                    Preset preset = giveaway.presetName().equals("default") ? this.defaultPreset : server.preset(giveaway.presetName());
                     boolean reactToEnter = preset.getSetting(Setting.ENABLE_REACT_TO_ENTER);
                     message.editMessage(new EmbedBuilder()
                             .setTitle(this.languageRegistry.get(server, Text.GIVEAWAY_EMBED_TITLE, replacer -> replacer.set("item", giveaway.giveawayItem())).get())

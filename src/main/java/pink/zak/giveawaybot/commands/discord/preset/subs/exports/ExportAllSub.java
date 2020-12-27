@@ -35,8 +35,8 @@ public class ExportAllSub extends SubCommand {
     }
 
     private void exportAll(Server server, TextChannel channel) {
-        String fileName = "presets-" + server.getId() + ".json";
-        String json = this.gson.toJson(this.serverStorage.serializePresets(server.getPresets()));
+        String fileName = "presets-" + server.id() + ".json";
+        String json = this.gson.toJson(this.serverStorage.serializePresets(server.presets()));
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("singular", false);
         jsonObject.put("preset-values", json);

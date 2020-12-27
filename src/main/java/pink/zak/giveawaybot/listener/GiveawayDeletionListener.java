@@ -32,7 +32,7 @@ public class GiveawayDeletionListener extends ListenerAdapter {
 
     public void onTextChannelDelete(@NotNull TextChannelDeleteEvent event) {
         this.serverCache.get(event.getGuild().getIdLong()).thenAccept(server -> {
-            if (server.getActiveGiveaways().isEmpty()) {
+            if (server.activeGiveaways().isEmpty()) {
                 return;
             }
             for (CurrentGiveaway giveaway : this.giveawayCache.getMap().values()) {

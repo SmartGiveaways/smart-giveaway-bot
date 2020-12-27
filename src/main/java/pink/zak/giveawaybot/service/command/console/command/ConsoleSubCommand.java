@@ -2,6 +2,7 @@ package pink.zak.giveawaybot.service.command.console.command;
 
 import com.google.common.collect.Lists;
 import pink.zak.giveawaybot.GiveawayBot;
+import pink.zak.giveawaybot.models.Server;
 import pink.zak.giveawaybot.service.command.global.argument.Argument;
 import pink.zak.giveawaybot.service.command.global.argument.ArgumentHandler;
 
@@ -51,8 +52,8 @@ public abstract class ConsoleSubCommand extends ConsoleCommand {
         this.arguments.add(new Argument<>(ArgumentHandler.getArgumentType(clazz), argument));
     }
 
-    protected <S> void addArguments(Class<S>... clazzes) {
-        for (Class<S> clazz : clazzes) {
+    protected void addArguments(Class<?>... clazzes) {
+        for (Class<?> clazz : clazzes) {
             this.addArgument(clazz);
         }
     }
@@ -108,5 +109,18 @@ public abstract class ConsoleSubCommand extends ConsoleCommand {
             }
             return argument.getArgumentName() != null && arguments.get(index).equalsIgnoreCase(argument.getArgumentName());
         } else return argument.getTester() == null || argument.getTester().test(matchTo);
+    }
+
+    protected Server parseServerInput(List<String> args, int index) {
+        long serverId = this.parseArgument(args, index);
+        if (serverId == -1) {
+            GiveawayBot.getLogger().error("Input is not a long ({})", args.get(1));
+            return null;
+        }
+        Server server = this.bot.getServerCache().getSync(serverId);
+        if (server == null) {
+            GiveawayBot.getLogger().error("Could not find a server with the ID {}", serverId);
+        }
+        return server;
     }
 }

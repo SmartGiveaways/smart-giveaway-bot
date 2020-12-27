@@ -34,7 +34,7 @@ public class ShadowBanSub extends SubCommand {
         if (!this.cmdUtils.handleAndIsEligible(server, sender, target, textChannel)) {
             return;
         }
-        server.getUserCache().get(target.getIdLong()).thenAccept(user -> {
+        server.userCache().get(target.getIdLong()).thenAccept(user -> {
             String userPlaceholder = UserUtils.getNameDiscrim(target);
             if (user.isShadowBanned()) {
                 this.langFor(server, Text.TARGET_ALREADY_SHADOW_BANNED, replacer -> replacer.set("target", userPlaceholder)).to(textChannel);
@@ -45,7 +45,7 @@ public class ShadowBanSub extends SubCommand {
                 return;
             }
             user.shadowBan();
-            server.getBannedUsers().add(user.id());
+            server.bannedUsers().add(user.id());
             this.langFor(server, Text.SHADOW_BANNED_SUCCESSFULLY, replacer -> replacer.set("target", userPlaceholder)).to(textChannel);
         });
     }

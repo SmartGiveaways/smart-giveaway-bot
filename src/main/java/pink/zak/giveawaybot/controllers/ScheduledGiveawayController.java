@@ -41,21 +41,21 @@ public class ScheduledGiveawayController {
     }
 
     public ImmutablePair<ScheduledGiveaway, ReturnCode> schedule(Server server, String presetName, long startTime, long endTime, TextChannel giveawayChannel, int winnerAmount, String giveawayItem) {
-        if (server.getScheduledGiveaways().size() >= 10) {
+        if (server.scheduledGiveaways().size() >= 10) {
             return ImmutablePair.of(null, ReturnCode.GIVEAWAY_LIMIT_FAILURE);
         }
         if (!giveawayChannel.getGuild().getSelfMember().hasPermission(giveawayChannel, this.defaults.getRequiredPermissions())) {
             return ImmutablePair.of(null, ReturnCode.PERMISSIONS_FAILURE);
         }
-        if (!presetName.equalsIgnoreCase("default") && server.getPreset(presetName) == null) {
+        if (!presetName.equalsIgnoreCase("default") && server.preset(presetName) == null) {
             return ImmutablePair.of(null, ReturnCode.NO_PRESET);
         }
         if (this.giveawayController.getGiveawayCountAt(server, startTime, endTime) >= 10) {
             return ImmutablePair.of(null, ReturnCode.FUTURE_GIVEAWAY_LIMIT_FAILURE);
         }
-        ScheduledGiveaway giveaway = new ScheduledGiveaway(giveawayChannel.getIdLong(), server.getId(), startTime, endTime, winnerAmount, presetName, giveawayItem);
+        ScheduledGiveaway giveaway = new ScheduledGiveaway(giveawayChannel.getIdLong(), server.id(), startTime, endTime, winnerAmount, presetName, giveawayItem);
         this.scheduledGiveawayCache.set(giveaway.uuid(), giveaway);
-        server.getScheduledGiveaways().add(giveaway.uuid());
+        server.scheduledGiveaways().add(giveaway.uuid());
         this.schedule(giveaway);
         return ImmutablePair.of(giveaway, ReturnCode.SUCCESS);
     }
@@ -72,7 +72,7 @@ public class ScheduledGiveawayController {
 
     private void create(ScheduledGiveaway giveaway) {
         this.serverCache.get(giveaway.serverId()).thenAccept(server -> {
-            Guild guild = this.shardManager.getGuildById(server.getId());
+            Guild guild = this.shardManager.getGuildById(server.id());
             if (guild == null) {
                 return;
             }
@@ -81,7 +81,7 @@ public class ScheduledGiveawayController {
                 return;
             }
             this.scheduledGiveawayCache.invalidateAsync(giveaway.uuid(), false);
-            server.getScheduledGiveaways().remove(giveaway.uuid());
+            server.scheduledGiveaways().remove(giveaway.uuid());
             this.giveawayController.createGiveaway(
                     server, giveaway.endTime() - giveaway.startTime(), giveaway.endTime(), giveaway.winnerAmount(), giveawayChannel, giveaway.presetName(), giveaway.giveawayItem()
             );
@@ -91,7 +91,7 @@ public class ScheduledGiveawayController {
     public void deleteGiveaway(Server server, ScheduledGiveaway giveaway) {
         this.scheduledGiveawayCache.invalidate(giveaway.uuid(), false);
         this.scheduledGiveawayStorage.delete(giveaway.uuid());
-        server.getScheduledGiveaways().remove(giveaway.uuid());
+        server.scheduledGiveaways().remove(giveaway.uuid());
     }
 
     private void load() {

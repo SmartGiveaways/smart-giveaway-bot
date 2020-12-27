@@ -48,7 +48,7 @@ public class BanListSub extends SubCommand implements EventListener {
 
     @Override
     public void onExecute(Member sender, Server server, GuildMessageReceivedEvent event, List<String> args) {
-        int pages = (int) Math.ceil(server.getBannedUsers().size() / 10.0);
+        int pages = (int) Math.ceil(server.bannedUsers().size() / 10.0);
         event.getChannel().sendMessage(this.buildEmbed(server, pages, 1)).queue(embed -> {
             if (pages > 1) {
                 this.activeLists.set(embed.getIdLong(), MutablePair.of(embed, 1));
@@ -72,7 +72,7 @@ public class BanListSub extends SubCommand implements EventListener {
             if (!emoji.equals("\u2B05") && !emoji.equals("\u27A1") || !server.canMemberManage(event.getMember())) {
                 return;
             }
-            int totalPages = (int) Math.ceil(server.getBannedUsers().size() / 10.0);
+            int totalPages = (int) Math.ceil(server.bannedUsers().size() / 10.0);
             MutablePair<Message, Integer> messageAndPage = this.activeLists.getSync(messageId);
             if (messageAndPage == null) {
                 return;
@@ -99,18 +99,18 @@ public class BanListSub extends SubCommand implements EventListener {
 
     private MessageEmbed buildEmbed(Server server, int totalPages, int page) {
         StringBuilder descriptionBuilder = new StringBuilder();
-        for (int i = (page - 1) * 10; i < server.getBannedUsers().size() && i < page * 10; i++) {
-            long id = server.getBannedUsers().get(i);
+        for (int i = (page - 1) * 10; i < server.bannedUsers().size() && i < page * 10; i++) {
+            long id = server.bannedUsers().get(i);
             descriptionBuilder.append("<@")
                     .append(id)
                     .append("> -> ")
-                    .append(this.langFor(server, server.getUserCache().getSync(id).isBanned() ? Text.BAN_LIST_BANNED : Text.BAN_LIST_SHADOW_BANNED))
+                    .append(this.langFor(server, server.userCache().getSync(id).isBanned() ? Text.BAN_LIST_BANNED : Text.BAN_LIST_SHADOW_BANNED))
                     .append("\n");
         }
         return new EmbedBuilder()
                 .setTitle(this.langFor(server, Text.BAN_LIST_EMBED_TITLE).get())
                 .setFooter(this.langFor(server, totalPages > 1 ? Text.BAN_LIST_PAGE_FOOTER : Text.BAN_LIST_FOOTER, replacer -> replacer
-                        .set("amount", server.getBannedUsers().size())
+                        .set("amount", server.bannedUsers().size())
                         .set("page", page)
                         .set("maxPage", totalPages)).get())
                 .setDescription(descriptionBuilder.toString())

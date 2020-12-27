@@ -44,7 +44,7 @@ public class MessageStep {
     }
 
     public void sendEmptyMessage(CurrentGiveaway giveaway, Server server, Message message) {
-        server.getActiveGiveaways().remove(giveaway.channelId());
+        server.activeGiveaways().remove(giveaway.channelId());
         message.editMessage(new EmbedBuilder()
                 .setColor(this.palette.success())
                 .setTitle(this.languageRegistry.get(server, Text.GIVEAWAY_EMBED_TITLE, replacer -> replacer.set("item", giveaway.giveawayItem())).get())
@@ -78,7 +78,7 @@ public class MessageStep {
                     }
         }); // Here so only if the message is sent is the giveaway deleted
         // Handle the pinging of winners
-        Preset preset = giveaway.presetName().equals("default") ? this.defaultPreset : server.getPreset(giveaway.presetName());
+        Preset preset = giveaway.presetName().equals("default") ? this.defaultPreset : server.preset(giveaway.presetName());
 
         this.handleNewMessages(server, giveaway, message.getTextChannel(), winners, preset, description);
         this.handleDm(server, giveaway, winners, preset);
@@ -86,7 +86,7 @@ public class MessageStep {
 
     private void handleDm(Server server, RichGiveaway giveaway, Set<Long> winners, Preset preset) {
         if (preset.getSetting(Setting.DM_WINNERS)) {
-            Guild guild = this.shardManager.getGuildById(server.getId());
+            Guild guild = this.shardManager.getGuildById(server.id());
             if (guild == null) {
                 GiveawayBot.getLogger().warn("handleDm server should never be null but is null {} {}", giveaway.serverId(), giveaway.messageId());
                 return;

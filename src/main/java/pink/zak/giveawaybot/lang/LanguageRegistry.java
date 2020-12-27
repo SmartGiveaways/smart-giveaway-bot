@@ -107,11 +107,11 @@ public class LanguageRegistry {
     }
 
     public LangSub get(Server server, Text text) {
-        return this.get(server.getLanguage(), text);
+        return this.get(server.language(), text);
     }
 
     public LangSub get(Server server, Text text, Replace replace) {
-        return this.get(server.getLanguage(), text, replace);
+        return this.get(server.language(), text, replace);
     }
 
     public LangSub fallback(Text text, Replace replace) {

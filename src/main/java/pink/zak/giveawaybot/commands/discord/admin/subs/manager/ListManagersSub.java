@@ -23,12 +23,12 @@ public class ListManagersSub extends SubCommand {
 
     @Override
     public void onExecute(Member sender, Server server, GuildMessageReceivedEvent event, List<String> args) {
-        if (server.getManagerRoles().isEmpty()) {
+        if (server.managerRoles().isEmpty()) {
             this.langFor(server, Text.ADMIN_NO_MANAGERS).to(event.getChannel());
             return;
         }
         StringBuilder descriptionBuilder = new StringBuilder();
-        for (long roleId : server.getManagerRoles()) {
+        for (long roleId : server.managerRoles()) {
             descriptionBuilder.append("<@&").append(roleId).append(">\n");
         }
         event.getChannel().sendMessage(new EmbedBuilder()

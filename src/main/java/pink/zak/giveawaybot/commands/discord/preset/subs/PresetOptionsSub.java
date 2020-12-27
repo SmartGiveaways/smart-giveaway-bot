@@ -30,7 +30,7 @@ public class PresetOptionsSub extends SubCommand {
     @Override
     public void onExecute(Member sender, Server server, GuildMessageReceivedEvent event, List<String> args) {
         String presetName = this.parseArgument(args, event.getGuild(), 1);
-        Preset preset = presetName.equalsIgnoreCase("default") ? this.defaultPreset : server.getPreset(presetName);
+        Preset preset = presetName.equalsIgnoreCase("default") ? this.defaultPreset : server.preset(presetName);
         if (preset == null) {
             this.langFor(server, Text.COULDNT_FIND_PRESET).to(event.getChannel());
             return;

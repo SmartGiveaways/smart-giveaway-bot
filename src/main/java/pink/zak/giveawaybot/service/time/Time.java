@@ -136,6 +136,9 @@ public class Time {
     }
 
     public static long parseSingle(String input) {
+        if (input.startsWith("-")) {
+            return -parseSingle(input.substring(1));
+        }
         StringBuilder identifierBuilder = new StringBuilder();
         StringBuilder amountBuilder = new StringBuilder();
         for (int i = 0; i < input.length(); i++) {

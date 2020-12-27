@@ -37,7 +37,7 @@ public class EntryCounterStep {
         Collections.shuffle(enteredUsers);
 
         for (long enteredUserId : giveaway.enteredUsers()) {
-            User user = server.getUserCache().getSync(enteredUserId);
+            User user = server.userCache().getSync(enteredUserId);
             if (user == null || user.isBanned() || user.isShadowBanned()) {
                 continue;
             }

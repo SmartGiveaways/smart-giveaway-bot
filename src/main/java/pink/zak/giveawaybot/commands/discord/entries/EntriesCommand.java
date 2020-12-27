@@ -39,16 +39,16 @@ public class EntriesCommand extends SimpleCommand {
 
     private void runLogic(Member target, Server server, TextChannel channel, boolean self) {
         String targetName = UserUtils.getNameDiscrim(target);
-        if (server.getActiveGiveaways().isEmpty()) {
+        if (server.activeGiveaways().isEmpty()) {
             this.langFor(server, Text.NO_ACTIVE_GIVEAWAYS).to(channel);
             return;
         }
-        server.getUserCache().get(target.getIdLong()).thenAccept(user -> {
+        server.userCache().get(target.getIdLong()).thenAccept(user -> {
             if (user.isBanned()) {
                 this.langFor(server, self ? Text.SELF_BANNED_FROM_GIVEAWAYS : Text.TARGET_BANNED_FROM_GIVEAWAYS, replacer -> replacer.set("target", target)).to(channel);
                 return;
             }
-            Set<Long> presentGiveaways = server.getActiveGiveaways(user);
+            Set<Long> presentGiveaways = server.activeGiveaways(user);
             if (presentGiveaways.isEmpty()) {
                 this.langFor(server, self ? Text.SELF_NOT_ENTERED : Text.TARGET_NOT_ENTERED, replacer -> replacer.set("target", target)).to(channel);
                 return;

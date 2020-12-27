@@ -146,6 +146,7 @@ public class GiveawayBot extends JdaBot {
                 new PresetCommand(this)
         );
         this.registerConsoleCommands(
+                new pink.zak.giveawaybot.commands.console.premium.PremiumCommand(this),
                 new UnloadCommand(this),
                 new HeapDumpCommand(this),
                 new pink.zak.giveawaybot.commands.console.HelpCommand(this),
