@@ -6,15 +6,18 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import net.dv8tion.jda.internal.utils.JDALogger;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.listener.message.GiveawayMessageListener;
 import pink.zak.giveawaybot.listener.message.MessageEventRegistry;
+import pink.zak.giveawaybot.service.command.console.ConsoleCommandBase;
+import pink.zak.giveawaybot.service.command.console.command.ConsoleBaseCommand;
 import pink.zak.giveawaybot.service.command.discord.DiscordCommandBase;
 import pink.zak.giveawaybot.service.command.discord.command.SimpleCommand;
 import pink.zak.giveawaybot.service.config.Config;
 import pink.zak.giveawaybot.service.config.ConfigStore;
-import pink.zak.giveawaybot.console.ConsoleListener;
+import pink.zak.giveawaybot.service.listener.ConsoleListener;
 import pink.zak.giveawaybot.service.listener.ReadyListener;
 import pink.zak.giveawaybot.service.registry.Registry;
 import pink.zak.giveawaybot.service.storage.BackendFactory;
@@ -37,7 +40,8 @@ public abstract class JdaBot implements SimpleBot {
     private final Path basePath;
     private boolean connected;
     private boolean initialized;
-    private DiscordCommandBase commandBase;
+    private DiscordCommandBase discordCommandBase;
+    private ConsoleCommandBase consoleCommandBase;
     private String prefix;
     private ShardManager shardManager;
 
@@ -85,9 +89,10 @@ public abstract class JdaBot implements SimpleBot {
 
     public void buildVariables(GiveawayBot bot, String prefix) {
         this.prefix = prefix;
-        this.commandBase = new DiscordCommandBase(bot);
+        this.consoleCommandBase = new ConsoleCommandBase(bot);
+        this.discordCommandBase = new DiscordCommandBase(bot);
         this.shardManager.addEventListener(this.messageEventRegistry);
-        this.messageEventRegistry.addListener(this.commandBase);
+        this.messageEventRegistry.addListener(this.discordCommandBase);
         new Thread(new ConsoleListener(bot)).start();
         this.initialized = true;
         this.readyListener.readyIfReady();
@@ -108,8 +113,13 @@ public abstract class JdaBot implements SimpleBot {
     @Override
     public void registerCommands(SimpleCommand... commands) {
         for (SimpleCommand command : commands) {
-            this.commandBase.registerCommand(command);
+            this.discordCommandBase.registerCommand(command);
         }
+    }
+
+    @Override
+    public void registerConsoleCommands(@NotNull ConsoleBaseCommand... commands) {
+        this.consoleCommandBase.registerCommands(commands);
     }
 
     @Override
@@ -157,8 +167,13 @@ public abstract class JdaBot implements SimpleBot {
     }
 
     @Override
-    public DiscordCommandBase getCommandBase() {
-        return this.commandBase;
+    public DiscordCommandBase getDiscordCommandBase() {
+        return this.discordCommandBase;
+    }
+
+    @Override
+    public ConsoleCommandBase getConsoleCommandBase() {
+        return this.consoleCommandBase;
     }
 
     @Override

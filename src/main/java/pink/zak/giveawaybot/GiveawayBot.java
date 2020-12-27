@@ -12,15 +12,19 @@ import pink.zak.giveawaybot.cache.FinishedGiveawayCache;
 import pink.zak.giveawaybot.cache.GiveawayCache;
 import pink.zak.giveawaybot.cache.ScheduledGiveawayCache;
 import pink.zak.giveawaybot.cache.ServerCache;
-import pink.zak.giveawaybot.commands.about.BotAboutCommand;
-import pink.zak.giveawaybot.commands.admin.AdminCommand;
-import pink.zak.giveawaybot.commands.ban.BanCommand;
-import pink.zak.giveawaybot.commands.ban.UnbanCommand;
-import pink.zak.giveawaybot.commands.entries.EntriesCommand;
-import pink.zak.giveawaybot.commands.giveaway.GiveawayCommand;
-import pink.zak.giveawaybot.commands.help.HelpCommand;
-import pink.zak.giveawaybot.commands.premium.PremiumCommand;
-import pink.zak.giveawaybot.commands.preset.PresetCommand;
+import pink.zak.giveawaybot.commands.console.HeapDumpCommand;
+import pink.zak.giveawaybot.commands.console.ReloadCommand;
+import pink.zak.giveawaybot.commands.console.StopCommand;
+import pink.zak.giveawaybot.commands.console.unload.UnloadCommand;
+import pink.zak.giveawaybot.commands.discord.about.BotAboutCommand;
+import pink.zak.giveawaybot.commands.discord.admin.AdminCommand;
+import pink.zak.giveawaybot.commands.discord.ban.BanCommand;
+import pink.zak.giveawaybot.commands.discord.ban.UnbanCommand;
+import pink.zak.giveawaybot.commands.discord.entries.EntriesCommand;
+import pink.zak.giveawaybot.commands.discord.giveaway.GiveawayCommand;
+import pink.zak.giveawaybot.commands.discord.help.HelpCommand;
+import pink.zak.giveawaybot.commands.discord.premium.PremiumCommand;
+import pink.zak.giveawaybot.commands.discord.preset.PresetCommand;
 import pink.zak.giveawaybot.controllers.GiveawayController;
 import pink.zak.giveawaybot.controllers.ScheduledGiveawayController;
 import pink.zak.giveawaybot.defaults.Defaults;
@@ -141,6 +145,14 @@ public class GiveawayBot extends JdaBot {
                 new PremiumCommand(this),
                 new PresetCommand(this)
         );
+        this.registerConsoleCommands(
+                new UnloadCommand(this),
+                new HeapDumpCommand(this),
+                new pink.zak.giveawaybot.commands.console.HelpCommand(this),
+                new ReloadCommand(this),
+                new StopCommand(this)
+        );
+
 
         this.messageEventRegistry.setServerCache(this.serverCache);
         this.registerListeners(
@@ -154,7 +166,7 @@ public class GiveawayBot extends JdaBot {
 
     public void reload() {
         this.languageRegistry.reloadLanguages(this);
-        for (Command command : this.getCommandBase().getCommands()) {
+        for (Command command : this.getDiscordCommandBase().getCommands()) {
             if (command instanceof Reloadable reloadableCommand) {
                 reloadableCommand.reload(this);
             }
@@ -216,7 +228,7 @@ public class GiveawayBot extends JdaBot {
     }
 
     private void lockdown() {
-        this.getCommandBase().setLockdown(true);
+        this.getDiscordCommandBase().setLockdown(true);
     }
 
     public Defaults getDefaults() {

@@ -26,6 +26,8 @@ public abstract class CommandBackend {
         this.bot = bot;
         this.serverCache = bot.getServerCache();
         this.languageRegistry = bot.getLanguageRegistry();
+
+        this.registerArgumentTypes();
     }
 
     public CommandBackend registerArgumentType(Class<?> clazz, ArgumentType<?> argumentType) {

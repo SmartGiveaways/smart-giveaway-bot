@@ -94,7 +94,10 @@ public class MessageStep {
             for (long winnerId : winners) {
                 User user = this.shardManager.getUserById(winnerId);
                 if (user == null) {
-                    GiveawayBot.getLogger().warn("handleDm user should never be null but is null {} {} {}", giveaway.serverId(), giveaway.messageId(), winnerId);
+                    user = this.shardManager.retrieveUserById(winnerId).complete();
+                    if (user == null) {
+                        GiveawayBot.getLogger().warn("handleDm user should never be null but is null {} {} {}", giveaway.serverId(), giveaway.messageId(), winnerId);
+                    }
                     continue;
                 }
                 user.openPrivateChannel().queue(privateChannel -> {

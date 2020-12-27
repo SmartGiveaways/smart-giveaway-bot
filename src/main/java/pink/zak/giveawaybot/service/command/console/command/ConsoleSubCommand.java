@@ -1,7 +1,6 @@
 package pink.zak.giveawaybot.service.command.console.command;
 
 import com.google.common.collect.Lists;
-import net.dv8tion.jda.api.entities.Guild;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.service.command.global.argument.Argument;
 import pink.zak.giveawaybot.service.command.global.argument.ArgumentHandler;
@@ -63,8 +62,8 @@ public abstract class ConsoleSubCommand extends ConsoleCommand {
     }
 
     @SuppressWarnings("unchecked")
-    public <U> U parseArgument(List<String> args, Guild guild, int index) {
-        return ((Argument<U>) this.arguments.get(index)).getType().parse(args.get(index), guild);
+    public <U> U parseArgument(List<String> args, int index) {
+        return ((Argument<U>) this.arguments.get(index)).getType().parse(args.get(index), null);
     }
 
     public boolean isMatch(List<String> arguments) {

@@ -31,7 +31,7 @@ public class MetricsLogger {
 
         ProcessStats processStats = new ProcessStats();
         GiveawayCache giveawayCache = bot.getGiveawayCache();
-        DiscordCommandBase commandBase = bot.getCommandBase();
+        DiscordCommandBase commandBase = bot.getDiscordCommandBase();
         ServerCache serverCache = bot.getServerCache();
 
         scheduler.scheduleAtFixedRate(() -> {
