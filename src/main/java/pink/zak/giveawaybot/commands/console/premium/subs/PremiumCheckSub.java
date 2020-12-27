@@ -22,14 +22,14 @@ public class PremiumCheckSub extends ConsoleSubCommand {
         if (server == null) {
             return;
         }
-        GiveawayBot.getLogger().info("-- [ Premium Info For {} ] --", server.id());
+        GiveawayBot.logger().info("-- [ Premium Info For {} ] --", server.id());
         if (server.isPremium()) {
-            GiveawayBot.getLogger().info("Has Premium: Yes");
-            GiveawayBot.getLogger().info("Expires In: {}", Time.format(server.timeToPremiumExpiry()));
+            GiveawayBot.logger().info("Has Premium: Yes");
+            GiveawayBot.logger().info("Expires In: {}", Time.format(server.timeToPremiumExpiry()));
         } else {
-            GiveawayBot.getLogger().info("Has Premium: No");
-            GiveawayBot.getLogger().info("Expired: {}", server.premiumExpiry() == -1 ? "has never had premium" : -server.timeToPremiumExpiry() + " ago");
+            GiveawayBot.logger().info("Has Premium: No");
+            GiveawayBot.logger().info("Expired: {}", server.premiumExpiry() == -1 ? "has never had premium" : -server.timeToPremiumExpiry() + " ago");
         }
-        GiveawayBot.getLogger().info("---------------------------------------------");
+        GiveawayBot.logger().info("---------------------------------------------");
     }
 }

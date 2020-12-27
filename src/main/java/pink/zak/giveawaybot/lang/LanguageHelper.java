@@ -13,11 +13,11 @@ public class LanguageHelper {
         int size = language.getValues().size();
         int coverage = NumberUtils.getPercentage(size, Text.values().length);
         if (coverage == 100) {
-            GiveawayBot.getLogger().info("[Language] {} loaded {}/{} messages ({}% coverage)", language.getIdentifier(), size, Text.values().length, coverage);
+            GiveawayBot.logger().info("[Language] {} loaded {}/{} messages ({}% coverage)", language.getIdentifier(), size, Text.values().length, coverage);
         } else if (coverage >= 90) {
-            GiveawayBot.getLogger().warn("[Language] {} loaded {}/{} messages ({}% coverage)", language.getIdentifier(), size, Text.values().length, coverage);
+            GiveawayBot.logger().warn("[Language] {} loaded {}/{} messages ({}% coverage)", language.getIdentifier(), size, Text.values().length, coverage);
         } else {
-            GiveawayBot.getLogger().error("[Language] {} loaded {}/{} messages ({}% coverage)", language.getIdentifier(), size, Text.values().length, coverage);
+            GiveawayBot.logger().error("[Language] {} loaded {}/{} messages ({}% coverage)", language.getIdentifier(), size, Text.values().length, coverage);
         }
         return coverage;
     }

@@ -18,6 +18,6 @@ public class UnloadCommand extends ConsoleBaseCommand {
 
     @Override
     public void onExecute(List<String> args) {
-        GiveawayBot.getLogger().info("unload <server> <server-id>");
+        GiveawayBot.logger().info("unload <server> <server-id>");
     }
 }

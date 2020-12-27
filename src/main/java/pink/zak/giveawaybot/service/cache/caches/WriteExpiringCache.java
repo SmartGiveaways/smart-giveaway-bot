@@ -54,7 +54,7 @@ public class WriteExpiringCache<K, V> extends Cache<K, V> {
     public CompletableFuture<V> get(K key) {
         return super.get(key).thenApply(retrieved -> this.getAndCheck(key, retrieved))
                 .exceptionally(ex -> {
-                    GiveawayBot.getLogger().error("", ex);
+                    GiveawayBot.logger().error("", ex);
                     return null;
                 });
     }

@@ -23,7 +23,7 @@ public class MetricsLogger {
 
     public void checkAndStart(GiveawayBot bot) {
         if (!bot.getConfig("settings").bool("enable-metrics")) {
-            GiveawayBot.getLogger().info("Metrics has not been enabled as it is disabled via configuration.");
+            GiveawayBot.logger().info("Metrics has not been enabled as it is disabled via configuration.");
             return;
         }
         ScheduledExecutorService scheduler = bot.getThreadManager().getScheduler();

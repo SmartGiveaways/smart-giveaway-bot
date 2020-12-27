@@ -57,7 +57,7 @@ public class AccessExpiringCache<K, V> extends Cache<K, V> {
             }
             return retrieved;
         }).exceptionally(ex -> {
-            GiveawayBot.getLogger().error("", ex);
+            GiveawayBot.logger().error("", ex);
             return null;
         });
     }

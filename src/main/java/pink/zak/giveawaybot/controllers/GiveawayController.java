@@ -126,7 +126,7 @@ public class GiveawayController {
             this.startGiveawayTimer(giveaway);
             return ImmutablePair.of(giveaway, ReturnCode.SUCCESS);
         } catch (RateLimitedException ex) {
-            GiveawayBot.getLogger().error("", ex);
+            GiveawayBot.logger().error("", ex);
             return ImmutablePair.of(null, ReturnCode.RATE_LIMIT_FAILURE);
         } catch (InsufficientPermissionException ex) {
             return ImmutablePair.of(null, ReturnCode.PERMISSIONS_FAILURE);
@@ -192,9 +192,9 @@ public class GiveawayController {
             return null;
         }).whenComplete((o, ex) -> {
             if (ex != null) {
-                GiveawayBot.getLogger().error("", ex);
+                GiveawayBot.logger().error("", ex);
             }
-            GiveawayBot.getLogger().info("Loaded {} giveaways in {} milliseconds", this.giveawayCache.size(), System.currentTimeMillis() - loadStartTime);
+            GiveawayBot.logger().info("Loaded {} giveaways in {} milliseconds", this.giveawayCache.size(), System.currentTimeMillis() - loadStartTime);
         });
     }
 
@@ -203,7 +203,7 @@ public class GiveawayController {
         LatencyMonitor latencyMonitor = this.bot.getLatencyMonitor();
         this.threadManager.getScheduler().scheduleAtFixedRate(() -> {
             if (!latencyMonitor.isLatencyUsable()) {
-                GiveawayBot.getLogger().warn("Latency was not usable so did not update giveaways ({}ms)", latencyMonitor.getLastTiming());
+                GiveawayBot.logger().warn("Latency was not usable so did not update giveaways ({}ms)", latencyMonitor.getLastTiming());
                 return;
             }
             counter.getAndIncrement();
@@ -217,7 +217,7 @@ public class GiveawayController {
                 this.serverCache.get(giveaway.serverId()).thenAccept(server -> {
                     Message message = this.getGiveawayMessage(giveaway);
                     if (message == null) {
-                        GiveawayBot.getLogger().warn("Giveaway did not delete correctly or the discord api is dying ({} in server {}).", giveaway.messageId(), giveaway.serverId());
+                        GiveawayBot.logger().warn("Giveaway did not delete correctly or the discord api is dying ({} in server {}).", giveaway.messageId(), giveaway.serverId());
                         return;
                     }
                     Preset preset = giveaway.presetName().equals("default") ? this.defaultPreset : server.preset(giveaway.presetName());
@@ -229,7 +229,7 @@ public class GiveawayController {
                             .setFooter(this.getFooter(server, giveaway.timeToExpiry(), giveaway.winnerAmount()))
                             .build()).queue();
                 }).exceptionally(ex -> {
-                    GiveawayBot.getLogger().error("Error in giveaway updater: ", ex);
+                    GiveawayBot.logger().error("Error in giveaway updater: ", ex);
                     return null;
                 });
 
@@ -257,7 +257,7 @@ public class GiveawayController {
 
     private void startGiveawayTimer(CurrentGiveaway giveaway) {
         this.scheduledFutures.put(giveaway, this.threadManager.getScheduler().schedule(() -> {
-            GiveawayBot.getLogger().debug("Giveaway {} expired", giveaway.messageId());
+            GiveawayBot.logger().debug("Giveaway {} expired", giveaway.messageId());
             this.giveawayPipeline.endGiveaway(giveaway);
         }, giveaway.timeToExpiry(), TimeUnit.MILLISECONDS));
     }

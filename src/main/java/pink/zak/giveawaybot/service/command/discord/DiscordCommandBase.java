@@ -131,7 +131,7 @@ public class DiscordCommandBase extends CommandBackend implements GiveawayMessag
                 }
             }
         }, this.executor).exceptionally(ex -> {
-            GiveawayBot.getLogger().error("Error stemmed from CommandBase input {}", rawMessage, ex);
+            GiveawayBot.logger().error("Error stemmed from CommandBase input {}", rawMessage, ex);
             return null;
         });
     }

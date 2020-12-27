@@ -39,7 +39,7 @@ public class GiveawayPipeline {
             if (!this.latencyMonitor.isLatencyUsable()) {
                 this.delayedDeletions.add(giveaway);
                 if (this.delayedDeletions.isEmpty()) {
-                    GiveawayBot.getLogger().warn("Latency was not usable so didnt delete giveaway ({}ms)", this.latencyMonitor.getLastTiming());
+                    GiveawayBot.logger().warn("Latency was not usable so didnt delete giveaway ({}ms)", this.latencyMonitor.getLastTiming());
                 }
                 return;
             }
@@ -53,7 +53,7 @@ public class GiveawayPipeline {
     private void startCheckingDelays(ScheduledExecutorService scheduledExecutor) {
         scheduledExecutor.scheduleAtFixedRate(() -> {
             if (!this.delayedDeletions.isEmpty() && this.latencyMonitor.isLatencyUsable()) {
-                GiveawayBot.getLogger().warn("Still could not end {} giveaways as latency is not usable {{}ms}", this.delayedDeletions.size(), this.latencyMonitor.getLastTiming());
+                GiveawayBot.logger().warn("Still could not end {} giveaways as latency is not usable {{}ms}", this.delayedDeletions.size(), this.latencyMonitor.getLastTiming());
                 return;
             }
             for (CurrentGiveaway giveaway : this.delayedDeletions) {

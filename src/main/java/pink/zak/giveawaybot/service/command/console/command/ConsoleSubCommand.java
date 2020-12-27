@@ -114,12 +114,12 @@ public abstract class ConsoleSubCommand extends ConsoleCommand {
     protected Server parseServerInput(List<String> args, int index) {
         long serverId = this.parseArgument(args, index);
         if (serverId == -1) {
-            GiveawayBot.getLogger().error("Input is not a long ({})", args.get(1));
+            GiveawayBot.logger().error("Input is not a long ({})", args.get(1));
             return null;
         }
         Server server = this.bot.getServerCache().getSync(serverId);
         if (server == null) {
-            GiveawayBot.getLogger().error("Could not find a server with the ID {}", serverId);
+            GiveawayBot.logger().error("Could not find a server with the ID {}", serverId);
         }
         return server;
     }

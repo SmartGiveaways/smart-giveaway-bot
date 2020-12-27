@@ -21,14 +21,14 @@ public class UnloadServerSub extends ConsoleSubCommand {
     public void onExecute(List<String> args) {
         long serverId = this.parseArgument(args, 1);
         if (serverId == -1) {
-            GiveawayBot.getLogger().error("Input is not a long ({})", args.get(1));
+            GiveawayBot.logger().error("Input is not a long ({})", args.get(1));
             return;
         }
         if (!this.serverCache.contains(serverId)) {
-            GiveawayBot.getLogger().error("The server {} is not cached", serverId);
+            GiveawayBot.logger().error("The server {} is not cached", serverId);
             return;
         }
-        GiveawayBot.getLogger().warn("Invalidating {}", serverId);
+        GiveawayBot.logger().warn("Invalidating {}", serverId);
         this.serverCache.invalidate(serverId);
     }
 }

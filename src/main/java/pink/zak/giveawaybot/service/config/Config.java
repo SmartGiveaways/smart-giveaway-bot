@@ -127,8 +127,8 @@ public class Config {
     private void createIfAbsent(String file) {
         if (!this.file.exists()) {
             this.basePath.toFile().mkdirs();
-            GiveawayBot.getLogger().error("The file '{}' did not exist. You must make it.", file);
-            GiveawayBot.getLogger().error("Target path to file: {}", this.file.getAbsolutePath());
+            GiveawayBot.logger().error("The file '{}' did not exist. You must make it.", file);
+            GiveawayBot.logger().error("Target path to file: {}", this.file.getAbsolutePath());
         }
     }
 }

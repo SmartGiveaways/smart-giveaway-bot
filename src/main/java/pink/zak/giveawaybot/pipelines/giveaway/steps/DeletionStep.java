@@ -43,7 +43,7 @@ public class DeletionStep {
                 this.scheduledFutures.get(giveaway).cancel(false);
             }
             server.activeGiveaways().remove(giveaway.messageId());
-            GiveawayBot.getLogger().debug("Removing giveaway from server {}  :  {}", giveaway.serverId(), giveaway.messageId());
+            GiveawayBot.logger().debug("Removing giveaway from server {}  :  {}", giveaway.serverId(), giveaway.messageId());
             UserCache userCache = server.userCache();
             for (long enteredId : giveaway.enteredUsers()) {
                 userCache.get(enteredId).thenAccept(user -> user.entries().remove(giveaway.messageId()));

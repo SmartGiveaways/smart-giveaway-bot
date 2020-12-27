@@ -57,7 +57,7 @@ public class GiveawayCmdUtils {
                         .set("time", returnedInfo.getKey().getStartFormatted())).to(responseChannel);
                 break;
             default:
-                GiveawayBot.getLogger().error("You messed up bad. GiveawayCmdUtils 1");
+                GiveawayBot.logger().error("You messed up bad. GiveawayCmdUtils 1");
                 break;
         }
     }

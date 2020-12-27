@@ -34,12 +34,12 @@ public class LanguageRegistry {
         this.loadLanguages(bot);
         this.defaultLanguage = this.languageMap.get(defaultLanguageId);
         if (this.defaultLanguage == null || !this.languageMap.containsKey(defaultLanguageId)) {
-            GiveawayBot.getLogger().error("The default language could not be found.");
+            GiveawayBot.logger().error("The default language could not be found.");
             System.exit(3);
         }
         Set<Text> presentTexts = this.defaultLanguage.getValues().keySet();
         if (presentTexts.size() < Text.values().length) {
-            GiveawayBot.getLogger().error("The default language does not meet the 100% coverage requirement. These values are missing: {}",
+            GiveawayBot.logger().error("The default language does not meet the 100% coverage requirement. These values are missing: {}",
                     Arrays.stream(Text.values()).filter(text -> !presentTexts.contains(text)).collect(Collectors.toSet()));
             System.exit(3);
         }
@@ -72,7 +72,7 @@ public class LanguageRegistry {
         for (String key : section.getKeys()) {
             Text text = Text.match(key);
             if (text == null) {
-                GiveawayBot.getLogger().error("Could not match Text value from identifier {} for language {}", key, identifier);
+                GiveawayBot.logger().error("Could not match Text value from identifier {} for language {}", key, identifier);
                 continue;
             }
             values.put(text, new LangSub(section.getString(key), BotConstants.getBaseReplace()));
@@ -82,7 +82,7 @@ public class LanguageRegistry {
 
     public boolean isLanguageUsable(Language language) {
         if (language.getCoverage() < 60) {
-            GiveawayBot.getLogger().warn("Cannot user language {} as it has a coverage of {}%", language.getIdentifier(), language.getCoverage());
+            GiveawayBot.logger().warn("Cannot user language {} as it has a coverage of {}%", language.getIdentifier(), language.getCoverage());
         }
         return language.getCoverage() > 60;
     }
@@ -93,7 +93,7 @@ public class LanguageRegistry {
         Set<String> loadedLanguageIds = loadedLanguages.stream().map(Language::getIdentifier).collect(Collectors.toSet());
         this.languageMap.keySet().stream().filter(existingLang -> !loadedLanguageIds.contains(existingLang)).forEach(existingLang -> {
             this.languageMap.remove(existingLang);
-            GiveawayBot.getLogger().warn("Removed {} on language reload.", existingLang);
+            GiveawayBot.logger().warn("Removed {} on language reload.", existingLang);
         });
     }
 

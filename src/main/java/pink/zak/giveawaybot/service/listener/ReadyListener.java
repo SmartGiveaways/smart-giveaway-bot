@@ -18,7 +18,7 @@ public class ReadyListener extends ListenerAdapter {
     }
 
     public void setRequiredShards(int requiredShards) {
-        GiveawayBot.getLogger().info("Set required shards to {}", requiredShards);
+        GiveawayBot.logger().info("Set required shards to {}", requiredShards);
         this.requiredShards = requiredShards;
         if (this.countedShards.get() > this.requiredShards && this.bot.isInitialized()) {
             this.bot.onConnect();
@@ -35,10 +35,10 @@ public class ReadyListener extends ListenerAdapter {
     public void onReady(@NotNull ReadyEvent readyEvent) {
         int shard = this.countedShards.incrementAndGet();
         if (shard < this.requiredShards) {
-            GiveawayBot.getLogger().info("ReadyEvent called. Shard {}/{}", shard, this.requiredShards);
+            GiveawayBot.logger().info("ReadyEvent called. Shard {}/{}", shard, this.requiredShards);
             return;
         }
-        GiveawayBot.getLogger().info("All shards are up! Calling onConnect");
+        GiveawayBot.logger().info("All shards are up! Calling onConnect");
         this.bot.setConnected(true);
         if (this.bot.isInitialized()) {
             this.bot.onConnect();

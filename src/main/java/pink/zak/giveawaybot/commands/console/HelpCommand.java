@@ -13,11 +13,11 @@ public class HelpCommand extends ConsoleBaseCommand {
 
     @Override
     public void onExecute(List<String> args) {
-        GiveawayBot.getLogger().info("help -> Prints this command.");
-        GiveawayBot.getLogger().info("premium -> Premium commands.");
-        GiveawayBot.getLogger().info("unload -> Data unloading commands.");
-        GiveawayBot.getLogger().info("reload -> Reloads language values.");
-        GiveawayBot.getLogger().info("stop -> Stops the bot and saves data.");
-        GiveawayBot.getLogger().info("dump -> Creates a debug dump.");
+        GiveawayBot.logger().info("help -> Prints this command.");
+        GiveawayBot.logger().info("premium -> Premium commands.");
+        GiveawayBot.logger().info("unload -> Data unloading commands.");
+        GiveawayBot.logger().info("reload -> Reloads language values.");
+        GiveawayBot.logger().info("stop -> Stops the bot and saves data.");
+        GiveawayBot.logger().info("dump -> Creates a debug dump.");
     }
 }

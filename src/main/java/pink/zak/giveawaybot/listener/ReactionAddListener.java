@@ -62,11 +62,11 @@ public class ReactionAddListener extends ListenerAdapter {
                     this.entryCount.incrementAndGet();
                 });
             }).exceptionally(ex -> {
-                GiveawayBot.getLogger().error("messageId:userId:serverId  {}:{}:{}", messageId, userId, server.id(), ex);
+                GiveawayBot.logger().error("messageId:userId:serverId  {}:{}:{}", messageId, userId, server.id(), ex);
                 return null;
             });
         }).exceptionally(ex -> {
-            GiveawayBot.getLogger().error("Error in ReactionAddListener point A", ex);
+            GiveawayBot.logger().error("Error in ReactionAddListener point A", ex);
             return null;
         });
     }

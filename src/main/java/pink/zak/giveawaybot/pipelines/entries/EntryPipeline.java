@@ -33,7 +33,7 @@ public class EntryPipeline {
                     }
                     this.checkStep.process(entryType, user, giveaway, giveaway.presetName().equals("default") ? this.defaultPreset : server.preset(giveaway.presetName()));
                 }).exceptionally(ex -> {
-                    GiveawayBot.getLogger().error("Server " + server.id() + " user " + userId + " giveaway id " + giveawayId, ex);
+                    GiveawayBot.logger().error("Server " + server.id() + " user " + userId + " giveaway id " + giveawayId, ex);
                     return null;
                 });
             }

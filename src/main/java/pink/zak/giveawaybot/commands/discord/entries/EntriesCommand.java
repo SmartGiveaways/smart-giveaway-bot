@@ -70,7 +70,7 @@ public class EntriesCommand extends SimpleCommand {
                     .setDescription(descriptionBuilder.toString())
                     .build()).queue();
         }).exceptionally(ex -> {
-            GiveawayBot.getLogger().error("", ex);
+            GiveawayBot.logger().error("", ex);
             return null;
         });
     }

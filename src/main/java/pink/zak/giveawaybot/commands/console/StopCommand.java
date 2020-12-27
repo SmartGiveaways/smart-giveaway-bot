@@ -16,7 +16,7 @@ public class StopCommand extends ConsoleBaseCommand {
         if (this.bot.isInitialized()) {
             System.exit(0);
         } else {
-            GiveawayBot.getLogger().error("The bot is not initialized yet.");
+            GiveawayBot.logger().error("The bot is not initialized yet.");
         }
     }
 }

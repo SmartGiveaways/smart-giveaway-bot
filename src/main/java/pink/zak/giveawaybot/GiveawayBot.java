@@ -80,7 +80,7 @@ public class GiveawayBot extends JdaBot {
         super(basePath -> basePath);
     }
 
-    public static Logger getLogger() {
+    public static Logger logger() {
         return logger;
     }
 

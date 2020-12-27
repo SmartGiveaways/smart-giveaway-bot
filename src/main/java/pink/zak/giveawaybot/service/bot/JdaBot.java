@@ -31,7 +31,7 @@ import java.util.Set;
 import java.util.function.UnaryOperator;
 
 public abstract class JdaBot implements SimpleBot {
-    public static final Logger logger = JDALogger.getLog(GiveawayBot.class);
+    protected static final Logger logger = JDALogger.getLog(GiveawayBot.class);
     private boolean buildEarlyUsed;
     protected final MessageEventRegistry messageEventRegistry = new MessageEventRegistry();
     protected final StorageSettings storageSettings;

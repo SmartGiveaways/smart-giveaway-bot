@@ -48,14 +48,14 @@ public class LatencyMonitor {
 
     public boolean isLatencyDesirable() {
         if (this.lastTiming == Long.MAX_VALUE) {
-            GiveawayBot.getLogger().warn("isLatencyDesirable called when no latency is set yet.");
+            GiveawayBot.logger().warn("isLatencyDesirable called when no latency is set yet.");
         }
         return this.lastTiming < 2000;
     }
 
     public boolean isLatencyUsable() {
         if (this.lastTiming == Long.MAX_VALUE) {
-            GiveawayBot.getLogger().warn("isLatencyUsable called when no latency is set yet.");
+            GiveawayBot.logger().warn("isLatencyUsable called when no latency is set yet.");
         }
         return this.lastTiming < 5000;
     }

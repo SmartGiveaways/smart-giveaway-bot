@@ -91,7 +91,7 @@ public class BanListSub extends SubCommand implements EventListener {
                 messageAndPage.setValue(newPage);
             }
         }).exceptionally(ex -> {
-            GiveawayBot.getLogger().error("BanListSub Page Reaction Listener: ", ex);
+            GiveawayBot.logger().error("BanListSub Page Reaction Listener: ", ex);
             return null;
         });
 

@@ -20,7 +20,7 @@ public class PremiumCommand extends ConsoleBaseCommand {
 
     @Override
     public void onExecute(List<String> args) {
-        GiveawayBot.getLogger().info("premium check <server-id>");
-        GiveawayBot.getLogger().info("premium add <server-id> <time>");
+        GiveawayBot.logger().info("premium check <server-id>");
+        GiveawayBot.logger().info("premium add <server-id> <time>");
     }
 }
