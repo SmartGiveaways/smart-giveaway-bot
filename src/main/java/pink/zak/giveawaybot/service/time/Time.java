@@ -14,19 +14,19 @@ public class Time {
 
     public static String format(long millis) {
         int seconds = (int) Math.floor((double) millis / 1000);
-        if (seconds >= 2592000) {
+        if (millis >= TimeIdentifier.MONTH.getMilliseconds()) {
             return formatMonthsWeeks(seconds);
         }
-        if (seconds >= 604800) {
+        if (millis >= TimeIdentifier.WEEK.getMilliseconds()) {
             return formatWeeksDays(seconds);
         }
-        if (seconds >= 86400) {
+        if (millis >= TimeIdentifier.DAY.getMilliseconds()) {
             return formatDaysHours(seconds);
         }
-        if (seconds >= 3600) {
+        if (millis >= TimeIdentifier.HOUR.getMilliseconds()) {
             return formatHoursMinutes(seconds);
         }
-        if (seconds >= 60) {
+        if (millis >= TimeIdentifier.MINUTE.getMilliseconds()) {
             return formatMinutesSeconds(seconds);
         }
         if (seconds != 1) {
