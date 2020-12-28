@@ -25,6 +25,7 @@ import pink.zak.giveawaybot.service.storage.settings.StorageSettings;
 
 import javax.security.auth.login.LoginException;
 import java.io.File;
+import java.lang.Thread.UncaughtExceptionHandler;
 import java.nio.file.Path;
 import java.util.Optional;
 import java.util.Set;
@@ -93,7 +94,8 @@ public abstract class JdaBot implements SimpleBot {
         this.discordCommandBase = new DiscordCommandBase(bot);
         this.shardManager.addEventListener(this.messageEventRegistry);
         this.messageEventRegistry.addListener(this.discordCommandBase);
-        new Thread(new ConsoleListener(bot)).start();
+        this.startConsoleThread();
+
         this.initialized = true;
         this.readyListener.readyIfReady();
     }
@@ -131,6 +133,19 @@ public abstract class JdaBot implements SimpleBot {
                 this.shardManager.addEventListener(listener);
             }
         }
+    }
+
+    private void startConsoleThread() {
+        Thread thread = new Thread(new ConsoleListener((GiveawayBot) this));
+        thread.setUncaughtExceptionHandler(this.getExceptionHandler());
+        thread.start();
+    }
+
+    public UncaughtExceptionHandler getExceptionHandler() {
+        return (thread, ex) -> {
+            GiveawayBot.logger().error("Console Exception:", ex);
+            this.startConsoleThread();
+        };
     }
 
     public boolean isConnected() {

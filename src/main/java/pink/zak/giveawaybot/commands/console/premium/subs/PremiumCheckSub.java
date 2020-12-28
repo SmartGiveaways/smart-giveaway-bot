@@ -28,7 +28,7 @@ public class PremiumCheckSub extends ConsoleSubCommand {
             GiveawayBot.logger().info("Expires In: {}", Time.format(server.timeToPremiumExpiry()));
         } else {
             GiveawayBot.logger().info("Has Premium: No");
-            GiveawayBot.logger().info("Expired: {}", server.premiumExpiry() == -1 ? "has never had premium" : -server.timeToPremiumExpiry() + " ago");
+            GiveawayBot.logger().info("Expired: {}", server.premiumExpiry() == -1 ? "has never had premium" : Time.format(-server.timeToPremiumExpiry()) + " ago");
         }
         GiveawayBot.logger().info("---------------------------------------------");
     }

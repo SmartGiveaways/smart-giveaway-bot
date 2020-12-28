@@ -8,7 +8,7 @@ public enum TimeIdentifier {
     HOUR(MINUTE.milliseconds * 60, 2562047780000L, "hour", "hours", "h", "hr", "hrs"),
     DAY(HOUR.milliseconds * 24, 106751991000L, "day", "days", "d", "ds"),
     WEEK(DAY.milliseconds * 7, 15250284400L, "week", "weeks", "w", "ws"),
-    MONTH(Math.round(WEEK.milliseconds * 4.345), 476571388, "month", "months", "mo", "mos"),
+    MONTH(Math.round(DAY.milliseconds * 30.42), 476571388, "month", "months", "mo", "mos"),
     YEAR(MONTH.milliseconds * 12, 1305675, "year", "years", "yr", "yrs", "y");
 
     private final long milliseconds;

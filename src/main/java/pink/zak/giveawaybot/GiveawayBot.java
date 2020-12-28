@@ -15,6 +15,7 @@ import pink.zak.giveawaybot.cache.ServerCache;
 import pink.zak.giveawaybot.commands.console.HeapDumpCommand;
 import pink.zak.giveawaybot.commands.console.ReloadCommand;
 import pink.zak.giveawaybot.commands.console.StopCommand;
+import pink.zak.giveawaybot.commands.console.stats.StatsCommand;
 import pink.zak.giveawaybot.commands.console.unload.UnloadCommand;
 import pink.zak.giveawaybot.commands.discord.about.BotAboutCommand;
 import pink.zak.giveawaybot.commands.discord.admin.AdminCommand;
@@ -147,6 +148,7 @@ public class GiveawayBot extends JdaBot {
         );
         this.registerConsoleCommands(
                 new pink.zak.giveawaybot.commands.console.premium.PremiumCommand(this),
+                new StatsCommand(this),
                 new UnloadCommand(this),
                 new HeapDumpCommand(this),
                 new pink.zak.giveawaybot.commands.console.HelpCommand(this),
