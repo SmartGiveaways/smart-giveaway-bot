@@ -2,7 +2,7 @@ identifier: "en-uk"
 name: "English UK"
 flag: ":flag_gb:"
 
-aliases: ["english", "en", "uk", "en-uk"]
+aliases: [ "english", "en", "uk", "en-uk" ]
 
 values:
   # General messages
@@ -149,6 +149,10 @@ values:
   # delete sub
   scheduled-giveaway-deleted: "Deleted the scheduled giveaway for: %item%"
   giveaway-deleted: "Deleted the giveaway for: %item%"
+  # history sub
+  giveaway-history-embed-title: "**Finished Giveaways**"
+  giveaway-history-embed-line: "%item% - ended %time% `(ID %id%)`\n"
+  giveaway-history-embed-footer: "Page %page%/%max_page% | %total% total | >g info <id> for more info"
   # reroll messages
   reroll-over-24-hours: ":x: You can only reroll a giveaway within 24 hours."
   reroll-one-winner: "Your new winner is %winner%"

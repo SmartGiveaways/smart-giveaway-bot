@@ -6,8 +6,10 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
 import pink.zak.giveawaybot.GiveawayBot;
+import pink.zak.giveawaybot.lang.LanguageRegistry;
 import pink.zak.giveawaybot.listener.reaction.pageable.Page;
 import pink.zak.giveawaybot.listener.reaction.pageable.PageableReactionListener;
+import pink.zak.giveawaybot.models.Server;
 import pink.zak.giveawaybot.service.colour.Palette;
 import pink.zak.giveawaybot.service.time.TimeIdentifier;
 
@@ -15,16 +17,23 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public abstract class PageableEmbedMenu extends PageableMenu implements PageableReactionListener {
+    protected final LanguageRegistry languageRegistry;
     protected final Palette palette;
     private final GiveawayBot bot;
 
     private final Map<Integer, MessageEmbed> cachedPages = Maps.newHashMap();
     private long lastInteraction;
     private Message message;
+    private final Server server;
+    private final boolean managerOnly;
 
-    protected PageableEmbedMenu(GiveawayBot bot) {
+    protected PageableEmbedMenu(GiveawayBot bot, Server server, boolean managerOnly) {
+        this.languageRegistry = bot.getLanguageRegistry();
         this.palette = bot.getDefaults().getPalette();
         this.bot = bot;
+
+        this.server = server;
+        this.managerOnly = managerOnly;
 
         bot.registerListeners(this);
     }
@@ -59,6 +68,9 @@ public abstract class PageableEmbedMenu extends PageableMenu implements Pageable
 
     @Override
     public void onReactionAdd(Page page, GuildMessageReactionAddEvent event) {
+        if (this.managerOnly && !this.server.canMemberManage(event.getMember())) {
+            return;
+        }
         this.lastInteraction = System.currentTimeMillis();
         if (page == Page.NEXT) {
             this.nextPage();

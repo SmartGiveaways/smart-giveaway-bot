@@ -37,7 +37,7 @@ public class RerollSub extends SubCommand {
     public void onExecute(Member sender, Server server, GuildMessageReceivedEvent event, List<String> args) {
         long idInput = this.parseArgument(args, event.getGuild(), 1);
         TextChannel textChannel = event.getChannel();
-        if (idInput < 779076362073145394L) { // Just check the ID isn't too old to reduce hits on the database.
+        if (idInput < 786066350882488381L) { // Just check the ID isn't too old to reduce hits on the database.
             this.langFor(server, Text.COULDNT_FIND_GIVEAWAY).to(textChannel);
             return;
         }

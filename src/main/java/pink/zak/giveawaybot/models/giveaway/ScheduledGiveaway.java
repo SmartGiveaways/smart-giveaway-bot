@@ -2,9 +2,6 @@ package pink.zak.giveawaybot.models.giveaway;
 
 import pink.zak.giveawaybot.service.time.Time;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.UUID;
 
 public record ScheduledGiveaway(UUID uuid, long channelId, long serverId, long startTime, long endTime,
@@ -21,7 +18,7 @@ public record ScheduledGiveaway(UUID uuid, long channelId, long serverId, long s
     }
 
     public String getStartFormatted() {
-        return LocalDateTime.ofInstant(Instant.ofEpochMilli(this.startTime), ZoneOffset.UTC).format(Time.getDateFormat()) + " UTC+0";
+        return Time.formatAsDateTime(this.startTime) + " UTC+0";
     }
 
     @Override
