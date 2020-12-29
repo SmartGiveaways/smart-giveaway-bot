@@ -5,4 +5,6 @@ public interface RichGiveaway extends Giveaway {
     long messageId();
 
     String messageLink();
+
+    String linkedGiveawayItem();
 }

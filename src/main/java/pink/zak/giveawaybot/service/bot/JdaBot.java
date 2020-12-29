@@ -11,6 +11,8 @@ import org.slf4j.Logger;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.listener.message.GiveawayMessageListener;
 import pink.zak.giveawaybot.listener.message.MessageEventRegistry;
+import pink.zak.giveawaybot.listener.reaction.pageable.PageableReactionEventRegistry;
+import pink.zak.giveawaybot.listener.reaction.pageable.PageableReactionListener;
 import pink.zak.giveawaybot.service.command.console.ConsoleCommandBase;
 import pink.zak.giveawaybot.service.command.console.command.ConsoleBaseCommand;
 import pink.zak.giveawaybot.service.command.discord.DiscordCommandBase;
@@ -36,6 +38,7 @@ public abstract class JdaBot implements SimpleBot {
     private boolean buildEarlyUsed;
     protected final MessageEventRegistry messageEventRegistry = new MessageEventRegistry();
     protected final StorageSettings storageSettings;
+    private final PageableReactionEventRegistry pageableReactionEventRegistry = new PageableReactionEventRegistry();
     private final BackendFactory backendFactory;
     private final ConfigStore configStore;
     private final Path basePath;
@@ -93,6 +96,7 @@ public abstract class JdaBot implements SimpleBot {
         this.consoleCommandBase = new ConsoleCommandBase(bot);
         this.discordCommandBase = new DiscordCommandBase(bot);
         this.shardManager.addEventListener(this.messageEventRegistry);
+        this.shardManager.addEventListener(this.pageableReactionEventRegistry);
         this.messageEventRegistry.addListener(this.discordCommandBase);
         this.startConsoleThread();
 
@@ -129,8 +133,23 @@ public abstract class JdaBot implements SimpleBot {
         for (Object listener : listeners) {
             if (listener instanceof GiveawayMessageListener messageListener) {
                 this.messageEventRegistry.addListener(messageListener);
+            } else if (listener instanceof PageableReactionListener reactionListener) {
+                this.pageableReactionEventRegistry.addListener(reactionListener);
             } else {
                 this.shardManager.addEventListener(listener);
+            }
+        }
+    }
+
+    @Override
+    public void unRegisterListeners(@NotNull Object... listeners) {
+        for (Object listener : listeners) {
+            if (listener instanceof GiveawayMessageListener messageListener) {
+                this.messageEventRegistry.removeListener(messageListener);
+            } else if (listener instanceof PageableReactionListener reactionListener) {
+                this.pageableReactionEventRegistry.removeListener(reactionListener);
+            } else {
+                this.shardManager.removeEventListener(listener);
             }
         }
     }

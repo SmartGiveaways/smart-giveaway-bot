@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.Set;
 
 public abstract class MongoStorage<K, T> implements CacheStorage<K, T> {
-    private final MongoCollection<Document> collection;
+    protected final MongoCollection<Document> collection;
     private final String idKey;
 
     public MongoStorage(GiveawayBot bot, String collectionName, String idKey) {

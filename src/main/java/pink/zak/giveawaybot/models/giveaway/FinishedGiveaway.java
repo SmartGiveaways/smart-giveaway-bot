@@ -1,10 +1,12 @@
 package pink.zak.giveawaybot.models.giveaway;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.math.BigInteger;
 import java.util.Map;
 import java.util.Set;
 
-public class FinishedGiveaway implements RichGiveaway {
+public class FinishedGiveaway implements RichGiveaway, Comparable<FinishedGiveaway> {
     private final long messageId;
     private final long channelId;
     private final long serverId;
@@ -92,6 +94,11 @@ public class FinishedGiveaway implements RichGiveaway {
         return "https://discord.com/channels/" + this.serverId + "/" + this.channelId + "/" + this.messageId;
     }
 
+    @Override
+    public String linkedGiveawayItem() {
+        return "[" + this.giveawayItem + "](" + this.messageLink() + ")";
+    }
+
     public BigInteger totalEntries() {
         return this.totalEntries;
     }
@@ -106,5 +113,10 @@ public class FinishedGiveaway implements RichGiveaway {
 
     public void setWinners(Set<Long> winners) {
         this.winners = winners;
+    }
+
+    @Override
+    public int compareTo(@NotNull FinishedGiveaway other) {
+        return Long.compare(other.endTime(), this.endTime);
     }
 }

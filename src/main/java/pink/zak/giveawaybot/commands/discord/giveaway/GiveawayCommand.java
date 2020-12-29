@@ -1,10 +1,7 @@
 package pink.zak.giveawaybot.commands.discord.giveaway;
 
 import pink.zak.giveawaybot.GiveawayBot;
-import pink.zak.giveawaybot.commands.discord.giveaway.subs.DeleteSub;
-import pink.zak.giveawaybot.commands.discord.giveaway.subs.ListScheduledSub;
-import pink.zak.giveawaybot.commands.discord.giveaway.subs.ListSub;
-import pink.zak.giveawaybot.commands.discord.giveaway.subs.RerollSub;
+import pink.zak.giveawaybot.commands.discord.giveaway.subs.*;
 import pink.zak.giveawaybot.commands.discord.giveaway.subs.create.CreateSub;
 import pink.zak.giveawaybot.commands.discord.giveaway.subs.create.CreateWithChannelSub;
 import pink.zak.giveawaybot.commands.discord.giveaway.subs.schedule.ScheduleSub;
@@ -25,6 +22,7 @@ public class GiveawayCommand extends SimpleHelpCommand {
                 new ScheduleSub(bot, cmdUtils),
                 new ScheduleWithChannelSub(bot, cmdUtils),
                 new DeleteSub(bot, this),
+                new HistorySub(bot),
                 new ListScheduledSub(bot),
                 new ListSub(bot),
                 new RerollSub(bot)

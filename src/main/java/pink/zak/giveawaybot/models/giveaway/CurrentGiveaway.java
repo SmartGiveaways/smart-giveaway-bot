@@ -33,4 +33,9 @@ public record CurrentGiveaway(long messageId, long channelId, long serverId, lon
     public String messageLink() {
         return "https://discord.com/channels/" + this.serverId + "/" + this.channelId + "/" + this.messageId;
     }
+
+    @Override
+    public String linkedGiveawayItem() {
+        return "[" + this.giveawayItem + "](" + this.messageLink() + ")";
+    }
 }

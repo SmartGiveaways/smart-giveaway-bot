@@ -21,6 +21,7 @@ public class Server {
     private final UserStorage userStorage;
     private final UserCache userCache;
     private final Set<Long> activeGiveaways;
+    private final Set<Long> finishedGiveaways;
     private final Set<UUID> scheduledGiveaways;
     private final Set<Long> managerRoles;
     private final List<Long> bannedUsers;
@@ -28,14 +29,15 @@ public class Server {
     private long premiumExpiry;
     private String language;
 
-    public Server(GiveawayBot bot, long id, Set<Long> activeGiveaways, Set<UUID> scheduledGiveaways,
-                  Map<String, Preset> presets, Set<Long> managerRoles, List<Long> bannedUsers, long premiumExpiry,
-                  String language) {
+    public Server(GiveawayBot bot, long id, Set<Long> activeGiveaways, Set<Long> finishedGiveaways,
+                  Set<UUID> scheduledGiveaways, Map<String, Preset> presets, Set<Long> managerRoles, List<Long> bannedUsers,
+                  long premiumExpiry, String language) {
         this.id = id;
         this.presets = presets;
         this.userStorage = new UserStorage(bot, this.id);
         this.userCache = new UserCache(bot, this.userStorage, this.id);
         this.activeGiveaways = activeGiveaways;
+        this.finishedGiveaways = finishedGiveaways;
         this.scheduledGiveaways = scheduledGiveaways;
         this.managerRoles = managerRoles;
         this.bannedUsers = bannedUsers;
@@ -46,7 +48,7 @@ public class Server {
     }
 
     public Server(GiveawayBot bot, long id) {
-        this(bot, id, Sets.newConcurrentHashSet(), Sets.newConcurrentHashSet(),
+        this(bot, id, Sets.newConcurrentHashSet(), Sets.newHashSet(), Sets.newConcurrentHashSet(),
                 new ConcurrentSkipListMap<>(), Sets.newHashSet(), Lists.newCopyOnWriteArrayList(), -1,
                 "en-uk");
     }
@@ -83,6 +85,10 @@ public class Server {
 
     public void addActiveGiveaway(CurrentGiveaway giveaway) {
         this.activeGiveaways.add(giveaway.messageId());
+    }
+
+    public Set<Long> finishedGiveaways() {
+        return this.finishedGiveaways;
     }
 
     public Set<UUID> scheduledGiveaways() {

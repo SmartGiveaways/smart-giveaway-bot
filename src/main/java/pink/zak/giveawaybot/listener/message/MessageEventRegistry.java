@@ -26,6 +26,10 @@ public class MessageEventRegistry extends ListenerAdapter {
         this.listeners.add(listener);
     }
 
+    public void removeListener(GiveawayMessageListener listener) {
+        this.listeners.remove(listener);
+    }
+
     public void setServerCache(ServerCache serverCache) {
         this.serverCache = serverCache;
     }

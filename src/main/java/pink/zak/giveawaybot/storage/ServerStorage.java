@@ -33,6 +33,7 @@ public class ServerStorage extends MongoStorage<Long, Server> {
             document.put("_id", server.id());
             document.put("presets", this.gson.toJson(this.serializePresets(server.presets())));
             document.put("activeGiveaways", this.gson.toJson(server.activeGiveaways()));
+            document.put("finishedGiveaways", this.gson.toJson(server.finishedGiveaways()));
             document.put("scheduledGiveaways", this.gson.toJson(server.scheduledGiveaways()));
             document.put("managerRoles", this.gson.toJson(server.managerRoles()));
             document.put("bannedUsers", this.gson.toJson(server.bannedUsers()));
@@ -48,12 +49,13 @@ public class ServerStorage extends MongoStorage<Long, Server> {
             long id = document.getLong("_id");
             Map<String, Preset> presets = this.deserializePresets(id, this.gson.fromJson(document.getString("presets"), new TypeToken<ConcurrentHashMap<String, HashMap<Setting, String>>>() {}.getType()));
             Set<Long> activeGiveaways = Sets.newConcurrentHashSet(this.gson.fromJson(document.getString("activeGiveaways"), new TypeToken<HashSet<Long>>() {}.getType()));
+            Set<Long> finishedGiveaways = Sets.newConcurrentHashSet(this.gson.fromJson(document.getString("finishedGiveaways"), new TypeToken<HashSet<Long>>() {}.getType()));
             Set<UUID> scheduledGiveaways = Sets.newConcurrentHashSet(this.gson.fromJson(document.getString("scheduledGiveaways"), new TypeToken<HashSet<UUID>>() {}.getType()));
             Set<Long> managerRoles = this.gson.fromJson(document.getString("managerRoles"), new TypeToken<HashSet<Long>>() {}.getType());
             List<Long> bannedUsers = this.gson.fromJson(document.getString("bannedUsers"), new TypeToken<CopyOnWriteArrayList<Long>>() {}.getType());
             long premium = document.getLong("premium");
             String language = document.getString("language");
-            return new Server(this.bot, id, activeGiveaways, scheduledGiveaways, presets, managerRoles, bannedUsers, premium, language);
+            return new Server(this.bot, id, activeGiveaways, finishedGiveaways, scheduledGiveaways, presets, managerRoles, bannedUsers, premium, language);
         };
     }
 

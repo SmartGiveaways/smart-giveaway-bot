@@ -73,7 +73,7 @@ public class MessageStep {
                     if (giveaway instanceof CurrentGiveaway currentGiveaway) {
                         this.deletionStep.delete(currentGiveaway);
                         if (addToFinished) {
-                            this.deletionStep.addToFinished((CurrentGiveaway) giveaway, totalEntries, userEntries,winners);
+                            this.deletionStep.addToFinished(server, (CurrentGiveaway) giveaway, totalEntries, userEntries,winners);
                         }
                     }
         }); // Here so only if the message is sent is the giveaway deleted

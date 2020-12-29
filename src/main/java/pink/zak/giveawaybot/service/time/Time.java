@@ -2,6 +2,9 @@ package pink.zak.giveawaybot.service.time;
 
 import lombok.experimental.UtilityClass;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 
 @UtilityClass
@@ -10,6 +13,10 @@ public class Time {
 
     public static DateTimeFormatter getDateFormat() {
         return dateFormat;
+    }
+
+    public static String formatAsDateTime(long time) {
+        return LocalDateTime.ofInstant(Instant.ofEpochMilli(time), ZoneOffset.UTC).format(Time.getDateFormat());
     }
 
     public static String format(long millis) {
