@@ -120,9 +120,10 @@ values:
   # >giveaway command messages
   giveaway-help-embed-title: "Giveaway Command Help"
   giveaway-help-embed-footer: "Want all commands? See >ghelp or go to https://docs.sgs.pink/commands"
-  giveaway-help-embed-content: ":newspaper: >g list [scheduled]\n
-                            <a:loading1:788070036635779072> >g schedule <preset> <delay> <length> [channel] <winner amount> <item/topic>\n
+  giveaway-help-embed-content: "<a:loading1:788070036635779072> >g schedule <preset> <delay> <length> [channel] <winner amount> <item/topic>\n
                             <a:tada1:788070725755600957> >g create <preset> <length> [channel] <winner amount> <item/topic>\n
+                            :newspaper: >g list [scheduled]\n
+                            :notepad_spiral: >g info <id/uuid>\n
                             :wastebasket: >g delete <message id>\n
                             :game_die: >g reroll <message id> [user] (WIP not done)\n
                             :information_source: **>ghelp to see all commands**\n"
@@ -210,8 +211,7 @@ values:
                                             <:plus:790378046623842314> Increased preset, giveaway, etc.. limits\n
                                             <a:loading1:788070036635779072> Scheduled Giveaways\n
 
-                                            For more information click [here](https://smartgiveaways.xyz/premium)
-  "
+                                            For more information click [here](https://smartgiveaways.xyz/premium)"
 
   # >preset command messages
   preset-embed-title: "Preset Command Help"
