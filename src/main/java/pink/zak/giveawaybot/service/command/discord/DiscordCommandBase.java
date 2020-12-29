@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import pink.zak.giveawaybot.GiveawayBot;
@@ -28,7 +27,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
-public class DiscordCommandBase extends CommandBackend implements GiveawayMessageListener{
+public class DiscordCommandBase extends CommandBackend implements GiveawayMessageListener {
     private final String prefix;
     private final ExecutorService executor;
     private final Set<SimpleCommand> commands = Sets.newHashSet();
@@ -70,12 +69,7 @@ public class DiscordCommandBase extends CommandBackend implements GiveawayMessag
         }
         String commandName = rawMessage.substring(1).split(" ")[0];
         TextChannel channel = event.getChannel();
-        if (!selfMember.hasPermission(channel, this.requiredPermissions)) {
-            Set<Permission> missingPerms = Sets.newHashSet(this.requiredPermissions);
-            missingPerms.removeAll(selfMember.getPermissions(channel));
-            String missingPermsString = missingPerms.stream().map(Permission::getName).map(str -> "`" + str + "`").collect(Collectors.joining(", "));
-            this.languageRegistry.get(server, missingPerms.size() > 1 ? Text.BOT_MISSING_PERMISSIONS_SPECIFIC : Text.BOT_MISSING_PERMISSION_SPECIFIC,
-                    replacer -> replacer.set("permission", missingPermsString)).to(channel);
+        if (!this.handleBotPermsCheck(server, channel, selfMember)) {
             return;
         }
         if (server == null) {
@@ -90,7 +84,7 @@ public class DiscordCommandBase extends CommandBackend implements GiveawayMessag
                 if (!simpleCommand.doesCommandMatch(commandName)) {
                     continue;
                 }
-                if (!this.hasAccess(server, simpleCommand, event.getMessage(), sender)) {
+                if (!this.memberHasAccess(server, simpleCommand, channel, sender)) {
                     return;
                 }
                 if (!server.isPremium() && simpleCommand.requiresPremium()) {
@@ -126,14 +120,29 @@ public class DiscordCommandBase extends CommandBackend implements GiveawayMessag
                     this.languageRegistry.get(server, Text.COMMAND_REQUIRES_PREMIUM).to(channel);
                     return;
                 }
-                if (this.hasAccess(server, subResult, event.getMessage(), sender)) {
+                if (this.memberHasAccess(server, subResult, channel, sender)) {
                     this.executeCommand(subResult, sender, server, event, args);
                 }
             }
         }, this.executor).exceptionally(ex -> {
-            GiveawayBot.logger().error("Error stemmed from CommandBase input {}", rawMessage, ex);
+            GiveawayBot.logger().error("Error from CommandBase input {}", rawMessage, ex);
             return null;
         });
+    }
+
+    /**
+     * @return whether the bot has perms and can proceed
+     */
+    private boolean handleBotPermsCheck(Server server, TextChannel channel, Member selfMember) {
+        if (!selfMember.hasPermission(channel, this.requiredPermissions)) {
+            Set<Permission> missingPerms = Sets.newHashSet(this.requiredPermissions);
+            missingPerms.removeAll(selfMember.getPermissions(channel));
+            String missingPermsString = missingPerms.stream().map(Permission::getName).map(str -> "`" + str + "`").collect(Collectors.joining(", "));
+            this.languageRegistry.get(server, missingPerms.size() > 1 ? Text.BOT_MISSING_PERMISSIONS_SPECIFIC : Text.BOT_MISSING_PERMISSION_SPECIFIC,
+                    replacer -> replacer.set("permission", missingPermsString)).to(channel);
+            return false;
+        }
+        return true;
     }
 
     private void executeCommand(Command command, Member sender, Server server, GuildMessageReceivedEvent event, List<String> args) {
@@ -142,9 +151,9 @@ public class DiscordCommandBase extends CommandBackend implements GiveawayMessag
         command.middleMan(sender, server, event, args);
     }
 
-    private boolean hasAccess(Server server, Command simpleCommand, Message message, Member member) {
+    private boolean memberHasAccess(Server server, Command simpleCommand, TextChannel channel, Member member) {
         if (simpleCommand.requiresManager() && !server.canMemberManage(member)) {
-            this.languageRegistry.get(server, Text.NO_PERMISSION).to(message.getTextChannel());
+            this.languageRegistry.get(server, Text.NO_PERMISSION).to(channel);
             return false;
         }
         return true;

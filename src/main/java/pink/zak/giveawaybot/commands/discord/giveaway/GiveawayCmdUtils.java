@@ -117,7 +117,7 @@ public class GiveawayCmdUtils {
             return true;
         }
         if (giveawayItem.isEmpty() || giveawayItem.equals(" ") || giveawayItem.length() > 20) { // TODO add separate message for item too long and increase max length
-            this.lang.get(server, Text.PARSING_REWARD_FAILED).to(responseChannel);
+            this.lang.get(server, Text.GIVEAWAY_ITEM_TOO_LONG).to(responseChannel);
             return true;
         }
         if (!server.scheduledGiveaways().isEmpty() && this.giveawayController.getGiveawayCountAt(server, startTime, endTime) >= 10) {

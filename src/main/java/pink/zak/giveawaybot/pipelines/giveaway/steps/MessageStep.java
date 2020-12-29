@@ -104,6 +104,7 @@ public class MessageStep {
                 user.openPrivateChannel().queue(privateChannel -> {
                     this.languageRegistry.get(server, Text.GIVEAWAY_FINISHED_WINNER_DM, replacer -> replacer.set("item", giveaway.giveawayItem()).set("server-name", guild.getName())).to(privateChannel);
                 }, ex -> {
+                    // ignored
                 });
             }
         }
