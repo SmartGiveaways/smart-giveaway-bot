@@ -4,14 +4,14 @@ buildscript {
     }
 
     dependencies {
-        classpath "com.github.jengelman.gradle.plugins:shadow:6.0.0"
+        classpath "com.github.jengelman.gradle.plugins:shadow:6.1.0"
     }
 }
 
 plugins {
     id "org.sonarqube" version "3.0"
     id "java"
-    id "com.github.johnrengelman.shadow" version "6.0.0"
+    id "com.github.johnrengelman.shadow" version "6.1.0"
 }
 
 group "pink.zak"
