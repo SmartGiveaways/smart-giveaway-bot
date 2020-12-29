@@ -2,7 +2,6 @@ package pink.zak.giveawaybot.menus;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.entities.TextChannel;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.models.Server;
 import pink.zak.giveawaybot.models.giveaway.FinishedGiveaway;
@@ -14,7 +13,7 @@ import java.util.List;
 public class GiveawayHistoryMenu extends PageableEmbedMenu {
     private final List<FinishedGiveaway> finishedGiveaways;
 
-    public GiveawayHistoryMenu(GiveawayBot bot, Server server, TextChannel channel) {
+    public GiveawayHistoryMenu(GiveawayBot bot, Server server) {
         super(bot);
         super.cooldown = 500;
         this.finishedGiveaways = bot.getFinishedGiveawayCache().getAll(server, true);
@@ -23,6 +22,7 @@ public class GiveawayHistoryMenu extends PageableEmbedMenu {
 
     @Override
     public MessageEmbed createPage(int page) {
+        System.out.println("Asked to create page " + page);
         StringBuilder description = new StringBuilder();
         for (int i = (page - 1) * 10; i < this.finishedGiveaways.size() && i < page * 10; i++) {
             FinishedGiveaway giveaway = this.finishedGiveaways.get(i);

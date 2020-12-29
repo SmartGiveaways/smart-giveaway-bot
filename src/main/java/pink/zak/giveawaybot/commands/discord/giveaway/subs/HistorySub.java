@@ -21,6 +21,6 @@ public class HistorySub extends SubCommand {
 
     @Override
     public void onExecute(Member sender, Server server, GuildMessageReceivedEvent event, List<String> args) {
-        new GiveawayHistoryMenu(this.bot, server, event.getChannel()).sendInitialMessage(event.getChannel());
+        new GiveawayHistoryMenu(this.bot, server).sendInitialMessage(event.getChannel());
     }
 }

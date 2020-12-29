@@ -9,19 +9,22 @@ import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.listener.reaction.pageable.Page;
 import pink.zak.giveawaybot.listener.reaction.pageable.PageableReactionListener;
 import pink.zak.giveawaybot.service.colour.Palette;
+import pink.zak.giveawaybot.service.time.TimeIdentifier;
 
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public abstract class PageableEmbedMenu extends PageableMenu implements PageableReactionListener {
     protected final Palette palette;
+    private final GiveawayBot bot;
 
     private final Map<Integer, MessageEmbed> cachedPages = Maps.newHashMap();
+    private long lastInteraction;
     private Message message;
 
     protected PageableEmbedMenu(GiveawayBot bot) {
         this.palette = bot.getDefaults().getPalette();
-        bot.getThreadManager().getScheduler().schedule(() -> this.delete(bot), 60, TimeUnit.SECONDS);
+        this.bot = bot;
 
         bot.registerListeners(this);
     }
@@ -31,6 +34,8 @@ public abstract class PageableEmbedMenu extends PageableMenu implements Pageable
         this.cachedPages.put(super.currentPage.get(), embed);
         channel.sendMessage(embed).queue(message -> {
             this.message = message;
+            this.lastInteraction = System.currentTimeMillis();
+            this.deleteOrReschedule();
             message.addReaction("\u2B05").queue();
             message.addReaction("\u27A1").queue();
         });
@@ -54,6 +59,7 @@ public abstract class PageableEmbedMenu extends PageableMenu implements Pageable
 
     @Override
     public void onReactionAdd(Page page, GuildMessageReactionAddEvent event) {
+        this.lastInteraction = System.currentTimeMillis();
         if (page == Page.NEXT) {
             this.nextPage();
         } else {
@@ -61,7 +67,12 @@ public abstract class PageableEmbedMenu extends PageableMenu implements Pageable
         }
     }
 
-    public void delete(GiveawayBot bot) {
-        bot.unRegisterListeners(this);
+    public void deleteOrReschedule() {
+        long timeToDelete = this.lastInteraction + TimeIdentifier.MINUTE.getMilliseconds();
+        if (timeToDelete <= System.currentTimeMillis()) {
+            this.bot.unRegisterListeners(this);
+        } else {
+            bot.getThreadManager().getScheduler().schedule(this::deleteOrReschedule, timeToDelete, TimeUnit.MILLISECONDS);
+        }
     }
 }

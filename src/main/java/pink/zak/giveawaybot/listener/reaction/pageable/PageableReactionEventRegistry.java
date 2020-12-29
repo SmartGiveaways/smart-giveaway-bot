@@ -18,8 +18,8 @@ public class PageableReactionEventRegistry extends ListenerAdapter {
             if (messageId == listener.getMessageId()) {
                 String emoji = event.getReactionEmote().getEmoji();
                 switch (emoji) {
-                    case "\u2B05" -> listener.onReactionAdd(Page.NEXT, event);
-                    case "\u27A1" -> listener.onReactionAdd(Page.PREVIOUS, event);
+                    case "\u27A1" -> listener.onReactionAdd(Page.NEXT, event);
+                    case "\u2B05" -> listener.onReactionAdd(Page.PREVIOUS, event);
                     default -> {}
                 }
             }

@@ -62,7 +62,7 @@ public class FinishedGiveawayStorage extends MongoStorage<Long, FinishedGiveaway
         Set<FinishedGiveaway> giveaways = Sets.newHashSet();
         for (Document document : super.collection.find(Filters.eq("serverId", server.id()))) {
             long id = document.getLong("_id");
-            if (targeted.contains(id)) {
+            if (!targeted.contains(id)) {
                 continue;
             }
             giveaways.add(this.deserializer().apply(document));
