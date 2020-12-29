@@ -20,7 +20,7 @@ Invite SmartGiveaways to your server in one click -> [here](https://smartgiveawa
 If you have a bug or suggestion please make a new issue right [here](https://github.com/SmartGiveaways/smart-giveaway-bot/issues) on GitHub and don't be sad if your suggestion is denied, there are lots of reasons and we'll try to explain why.
 
 ## Development
-SmartGiveaway is actively maintained, has new features added and bugs fixed at the moment. We welcome pull requests and direct fixes from the community here on GitHub but please,  don't make low quality or spammy pull requests. Make them at least a bit contentful.
+SmartGiveaway is actively maintained, has new features added and bugs fixed. We welcome pull requests and direct fixes from the community here on GitHub but please,  don't make low quality or spammy pull requests. Make them at least a bit contentful.
 
 ## Da license bro
 Pwease abide by the LGPL-2.1 license for this project and bear in mind that this still applies if you're self hosting the bot. If you're on GitHub, click [here](https://github.com/SmartGiveaways/smart-giveaway-bot/blob/main/LICENSE) and GitHub will display some important points of the license. This is not legal advice.
@@ -32,7 +32,7 @@ No support is officially provided for self hosting but if you have issues direct
 - Some basic experience in how a discord bot works, hopefully some basic java experience as well.
 - A decent processor, 1 core will do for nearly everyone.
 - At least 50MB RAM (we'd hope a bit more, varies on what JDK you use)
-- Java 14 / Control over JVM arguments (--enable-preview on)
+- Java 14 (or 15) / Control over JVM arguments (--enable-preview on)
 - MongoDB
 - InfluxDB (Optional, used for [metrics](https://zak.pink/2020/11/Narrow-Minded-Lacewing-9912.png))
-- Us telling you that you **must** manually copy the resource files (including lang) and make a file for ping testing messages.
+- Us telling you that you **must** manually copy **all** the resource files (including lang) and make a file for ping testing messages.
