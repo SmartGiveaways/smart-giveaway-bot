@@ -44,7 +44,7 @@ public class MessageStep {
     }
 
     public void sendEmptyMessage(CurrentGiveaway giveaway, Server server, Message message) {
-        server.activeGiveaways().remove(giveaway.channelId());
+        server.activeGiveaways().remove(giveaway.messageId());
         message.editMessage(new EmbedBuilder()
                 .setColor(this.palette.success())
                 .setTitle(this.languageRegistry.get(server, Text.GIVEAWAY_EMBED_TITLE, replacer -> replacer.set("item", giveaway.giveawayItem())).get())
@@ -70,13 +70,14 @@ public class MessageStep {
                 .setFooter(this.languageRegistry.get(server, winners.size() > 1 ? Text.GIVEAWAY_FINISHED_EMBED_FOOTER_PLURAL : Text.GIVEAWAY_FINISHED_EMBED_FOOTER_SINGULAR,
                         replacer -> replacer.set("winner-count", giveaway.winnerAmount()).set("entries", totalEntries)).get())
                 .build()).queue(sentMessage -> {
-                    if (giveaway instanceof CurrentGiveaway currentGiveaway) {
-                        this.deletionStep.delete(currentGiveaway);
-                        if (addToFinished) {
-                            this.deletionStep.addToFinished(server, (CurrentGiveaway) giveaway, totalEntries, userEntries,winners);
-                        }
-                    }
-        }); // Here so only if the message is sent is the giveaway deleted
+            // Here so only if the message is sent is the giveaway deleted
+            if (giveaway instanceof CurrentGiveaway currentGiveaway) {
+                this.deletionStep.delete(currentGiveaway);
+                if (addToFinished) {
+                    this.deletionStep.addToFinished(server, (CurrentGiveaway) giveaway, totalEntries, userEntries, winners);
+                }
+            }
+        });
         // Handle the pinging of winners
         Preset preset = giveaway.presetName().equals("default") ? this.defaultPreset : server.preset(giveaway.presetName());
 
@@ -102,7 +103,8 @@ public class MessageStep {
                 }
                 user.openPrivateChannel().queue(privateChannel -> {
                     this.languageRegistry.get(server, Text.GIVEAWAY_FINISHED_WINNER_DM, replacer -> replacer.set("item", giveaway.giveawayItem()).set("server-name", guild.getName())).to(privateChannel);
-                }, ex -> {});
+                }, ex -> {
+                });
             }
         }
     }

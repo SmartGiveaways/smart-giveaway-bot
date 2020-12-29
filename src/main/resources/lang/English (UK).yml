@@ -146,6 +146,34 @@ values:
   scheduled-time-too-far-away: "The scheduled time must be less than 2 months."
   scheduled-giveaway-limit-failure: ":x: Your guild has reached the maximum of 10 scheduled giveaways."
   scheduled-giveaway-limit-failure-future: ":x: At the time specified, your guild would have more than 10 giveaways running."
+  # info sub
+  scheduled-giveaway-info-embed-title: "**Scheduled Giveaway Info**"
+  scheduled-giveaway-info-embed-description: "UUID: %uuid%\n
+                                             Item: %item%\n
+                                             Preset: %preset_name%\n
+                                             Winners: %winner_amount%\n
+                                             \n
+                                             Start Time: %start_time%\n
+                                             End Time: %end_time%"
+  current-giveaway-info-embed-title: "**Current Giveaway Info**"
+  current-giveaway-info-embed-description: "ID: %id%\n
+                                             Link: [Click Here](%message_link%)\n
+                                             Item: %item%\n
+                                             \n
+                                             Start Time: %start_time%\n
+                                             End Time: %end_time%\n
+                                             \n
+                                             Entered Users: %entered_users%"
+  finished-giveaway-info-embed-title: "**Finished Giveaway Info**"
+  finished-giveaway-info-embed-description: "ID: %id%\n
+                                              Link: [Click Here](%message_link%)\n
+                                              Item: %item%\n
+                                              \n
+                                              Start Time: %start_time%\n
+                                              End Time: %end_time%\n
+                                              \n
+                                              Winners: %winners%\n
+                                              Total Entries: %total_entries%"
   # delete sub
   scheduled-giveaway-deleted: "Deleted the scheduled giveaway for: %item%"
   giveaway-deleted: "Deleted the giveaway for: %item%"

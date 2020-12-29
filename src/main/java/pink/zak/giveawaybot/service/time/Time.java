@@ -42,7 +42,7 @@ public class Time {
         return seconds + " second";
     }
 
-    public static String formatMonthsWeeks(int seconds) {
+    private static String formatMonthsWeeks(int seconds) {
         int months = getMonths(seconds);
         int remainderSeconds = seconds - months * 2592000;
         int weeks = getWeeks(remainderSeconds);
@@ -60,7 +60,7 @@ public class Time {
         return builder.toString();
     }
 
-    public static String formatWeeksDays(int seconds) {
+    private static String formatWeeksDays(int seconds) {
         int weeks = getWeeks(seconds);
         int remainderSeconds = seconds - weeks * 604800;
         int days = getDays(remainderSeconds);
@@ -78,7 +78,7 @@ public class Time {
         return builder.toString();
     }
 
-    public static String formatDaysHours(int seconds) {
+    private static String formatDaysHours(int seconds) {
         int days = getDays(seconds);
         int remainderSeconds = seconds - days * 86400;
         int hours = getHours(remainderSeconds);
@@ -96,7 +96,7 @@ public class Time {
         return builder.toString();
     }
 
-    public static String formatHoursMinutes(int seconds) {
+    private static String formatHoursMinutes(int seconds) {
         int hours = getHours(seconds);
         int remainderSeconds = seconds - hours * 3600;
         int minutes = getMinutes(remainderSeconds);
@@ -114,7 +114,7 @@ public class Time {
         return builder.toString();
     }
 
-    public static String formatMinutesSeconds(int seconds) {
+    private static String formatMinutesSeconds(int seconds) {
         int minutes = getMinutes(seconds);
         int remainderSeconds = seconds - minutes * 60;
         StringBuilder builder = new StringBuilder(minutes + " minute");

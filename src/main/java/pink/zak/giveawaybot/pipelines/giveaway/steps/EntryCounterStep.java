@@ -53,6 +53,7 @@ public class EntryCounterStep {
         }
         if (totalEntries.equals(BigInteger.ZERO)) {
             this.messageStep.sendEmptyMessage(giveaway, server, message);
+            server.activeGiveaways().remove(giveaway.messageId());
         } else {
             this.winnerStep.actOnWinners(server, giveaway, message, enteredUsers, totalEntries, userEntriesMap);
         }

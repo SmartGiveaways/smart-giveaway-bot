@@ -86,14 +86,6 @@ public class Cache<K, V> {
         return this.cacheMap.remove(key);
     }
 
-    public CompletableFuture<V> invalidateAsync(K key) {
-        return this.invalidateAsync(key, true);
-    }
-
-    public CompletableFuture<V> invalidateAsync(K key, boolean save) {
-        return CompletableFuture.supplyAsync(() -> this.invalidate(key, save), this.executor);
-    }
-
     public void invalidateAll() {
         if (this.storage == null) {
             this.cacheMap.clear();

@@ -80,7 +80,7 @@ public class ScheduledGiveawayController {
             if (giveawayChannel == null) {
                 return;
             }
-            this.scheduledGiveawayCache.invalidateAsync(giveaway.uuid(), false);
+            this.scheduledGiveawayCache.invalidate(giveaway.uuid(), false);
             server.scheduledGiveaways().remove(giveaway.uuid());
             this.giveawayController.createGiveaway(
                     server, giveaway.endTime() - giveaway.startTime(), giveaway.endTime(), giveaway.winnerAmount(), giveawayChannel, giveaway.presetName(), giveaway.giveawayItem()

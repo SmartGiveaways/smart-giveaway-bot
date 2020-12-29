@@ -38,10 +38,11 @@ public class DeletionStep {
 
 
     public void delete(CurrentGiveaway giveaway) {
-        this.giveawayCache.invalidateAsync(giveaway.messageId(), false);
+        this.giveawayCache.invalidate(giveaway.messageId(), false);
         this.serverCache.get(giveaway.serverId()).thenAccept(server -> {
             if (this.scheduledFutures.containsKey(giveaway) && !this.scheduledFutures.get(giveaway).isDone()) {
                 this.scheduledFutures.get(giveaway).cancel(false);
+                this.scheduledFutures.remove(giveaway);
             }
             server.activeGiveaways().remove(giveaway.messageId());
             GiveawayBot.logger().debug("Removing giveaway from server {}  :  {}", giveaway.serverId(), giveaway.messageId());

@@ -4,6 +4,8 @@ import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.commands.discord.giveaway.subs.*;
 import pink.zak.giveawaybot.commands.discord.giveaway.subs.create.CreateSub;
 import pink.zak.giveawaybot.commands.discord.giveaway.subs.create.CreateWithChannelSub;
+import pink.zak.giveawaybot.commands.discord.giveaway.subs.info.InfoSubLong;
+import pink.zak.giveawaybot.commands.discord.giveaway.subs.info.InfoSubUuid;
 import pink.zak.giveawaybot.commands.discord.giveaway.subs.schedule.ScheduleSub;
 import pink.zak.giveawaybot.commands.discord.giveaway.subs.schedule.ScheduleWithChannelSub;
 import pink.zak.giveawaybot.lang.enums.Text;
@@ -19,6 +21,8 @@ public class GiveawayCommand extends SimpleHelpCommand {
         this.setSubCommands(
                 new CreateSub(bot, cmdUtils),
                 new CreateWithChannelSub(bot, cmdUtils),
+                new InfoSubLong(bot),
+                new InfoSubUuid(bot),
                 new ScheduleSub(bot, cmdUtils),
                 new ScheduleWithChannelSub(bot, cmdUtils),
                 new DeleteSub(bot, this),
