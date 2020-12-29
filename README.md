@@ -10,7 +10,8 @@
 - Take control over your giveaways with the ability to ban & shadow ban users.
 - (WIP) Control your giveaways via an easy web interface
   
-![Example One](https://zak.pink/2020/11/Impolite-Pooch-9913.png) ![Example Two](https://zak.pink/2020/11/Foolhardy-Africancivet-9917.png)
+![Example One](https://zak.pink/2020/12/Selfish-Ichthyostega-10753.png)<br/>
+![Example Two](https://zak.pink/2020/11/Foolhardy-Africancivet-9917.png)
   
 ## Welcome us in
 Invite SmartGiveaways to your server in one click -> [here](https://smartgiveaways.xyz/invite)
