@@ -21,7 +21,7 @@ public abstract class PageableEmbedMenu extends PageableMenu implements Pageable
     protected final Palette palette;
     private final GiveawayBot bot;
 
-    private final Map<Integer, MessageEmbed> cachedPages = Maps.newHashMap();
+    private final Map<Integer, MessageEmbed> cachedPages = Maps.newConcurrentMap();
     private long lastInteraction;
     private Message message;
     private final Server server;

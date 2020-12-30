@@ -101,6 +101,12 @@ public class WriteExpiringCache<K, V> extends Cache<K, V> {
     }
 
     @Override
+    public CompletableFuture<Void> invalidateEachAsync() {
+        this.expiryTimes.clear();
+        return super.invalidateEachAsync();
+    }
+
+    @Override
     public boolean contains(K key) {
         return super.contains(key) && this.expiryTimes.containsKey(key) && System.currentTimeMillis() < this.expiryTimes.get(key);
     }

@@ -54,6 +54,7 @@ public class ScheduledGiveawayController {
             return ImmutablePair.of(null, ReturnCode.FUTURE_GIVEAWAY_LIMIT_FAILURE);
         }
         ScheduledGiveaway giveaway = new ScheduledGiveaway(giveawayChannel.getIdLong(), server.id(), startTime, endTime, winnerAmount, presetName, giveawayItem);
+        this.scheduledGiveawayStorage.save(giveaway);
         this.scheduledGiveawayCache.set(giveaway.uuid(), giveaway);
         server.scheduledGiveaways().add(giveaway.uuid());
         this.schedule(giveaway);

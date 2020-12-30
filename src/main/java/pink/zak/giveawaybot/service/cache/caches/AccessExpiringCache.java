@@ -92,6 +92,12 @@ public class AccessExpiringCache<K, V> extends Cache<K, V> {
         return super.invalidateAllAsync();
     }
 
+    @Override
+    public CompletableFuture<Void> invalidateEachAsync() {
+        this.accessTimes.clear();
+        return super.invalidateEachAsync();
+    }
+
     private void startScheduledCleanup() {
         this.scheduler.scheduleAtFixedRate(() -> {
             long currentTime = System.currentTimeMillis();

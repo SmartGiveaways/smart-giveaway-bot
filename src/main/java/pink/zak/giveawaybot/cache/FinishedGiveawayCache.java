@@ -21,8 +21,14 @@ public class FinishedGiveawayCache extends AccessExpiringCache<Long, FinishedGiv
 
     @Override
     public FinishedGiveaway set(Long key, FinishedGiveaway value) {
+        return this.set(key, value, true);
+    }
+
+    public FinishedGiveaway set(Long key, FinishedGiveaway value, boolean save) {
         super.set(key, value);
-        this.storage.save(value);
+        if (save) {
+            this.storage.save(value);
+        }
         return value;
     }
 
@@ -38,9 +44,16 @@ public class FinishedGiveawayCache extends AccessExpiringCache<Long, FinishedGiv
             }
         }
         if (remainingIds.isEmpty()) {
+            if (order) {
+                Collections.sort(giveaways);
+            }
             return giveaways;
         }
-        giveaways.addAll(((FinishedGiveawayStorage) this.storage).loadAll(server, remainingIds));
+        Set<FinishedGiveaway> loadedGiveaways = ((FinishedGiveawayStorage) this.storage).loadAll(server, remainingIds);
+        for (FinishedGiveaway giveaway : loadedGiveaways) {
+            this.set(giveaway.messageId(), giveaway, false);
+        }
+        giveaways.addAll(loadedGiveaways);
         if (order) {
             Collections.sort(giveaways);
         }
@@ -48,6 +61,6 @@ public class FinishedGiveawayCache extends AccessExpiringCache<Long, FinishedGiv
     }
 
     public void shutdown() {
-        this.invalidateAll();
+        this.invalidateEachAsync().join();
     }
 }

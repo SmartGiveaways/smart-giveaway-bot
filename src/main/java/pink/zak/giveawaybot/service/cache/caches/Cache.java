@@ -7,6 +7,7 @@ import pink.zak.giveawaybot.threads.ThreadFunction;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public class Cache<K, V> {
     protected final ConcurrentHashMap<K, V> cacheMap = new ConcurrentHashMap<>();
@@ -101,6 +102,13 @@ public class Cache<K, V> {
             this.invalidateAll();
             return null;
         }, this.executor);
+    }
+
+    public CompletableFuture<Void> invalidateEachAsync() {
+        ExecutorService executorService = Executors.newFixedThreadPool(Math.min(500, this.size()));
+        CompletableFuture[] futures = this.cacheMap.values().stream().map(v -> CompletableFuture.runAsync(() -> this.storage.save(v), executorService)).collect(Collectors.toSet()).toArray(new CompletableFuture[]{});
+        this.cacheMap.clear();
+        return CompletableFuture.allOf(futures);
     }
 
     public int size() {

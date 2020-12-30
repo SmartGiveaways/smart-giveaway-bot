@@ -1,13 +1,16 @@
 package pink.zak.giveawaybot.service.storage.mongo;
 
-import com.mongodb.MongoClient;
-import com.mongodb.MongoClientOptions;
+import com.mongodb.MongoClientSettings;
 import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
 import pink.zak.giveawaybot.service.storage.settings.StorageSettings;
+
+import java.util.Collections;
 
 public class MongoConnectionFactory {
     private final MongoClient mongoClient;
@@ -15,12 +18,12 @@ public class MongoConnectionFactory {
 
     public MongoConnectionFactory(StorageSettings storageSettings) {
         ServerAddress address = new ServerAddress(storageSettings.getHost(), Integer.parseInt(storageSettings.getPort()));
-        if (storageSettings.getPassword().isEmpty()) {
-            this.mongoClient = new MongoClient(address);
-        } else {
-            MongoCredential credential = MongoCredential.createCredential(storageSettings.getUsername(), storageSettings.getAuthDatabase(), storageSettings.getPassword().toCharArray());
-            this.mongoClient = new MongoClient(address, credential, new MongoClientOptions.Builder().build());
-        }
+        MongoCredential credential = MongoCredential.createCredential(storageSettings.getUsername(), storageSettings.getAuthDatabase(), storageSettings.getPassword().toCharArray());
+
+        this.mongoClient = MongoClients.create(MongoClientSettings.builder()
+                .applyToClusterSettings(builder -> builder.hosts(Collections.singletonList(address)))
+                .credential(credential)
+                .build());
         this.mongoDatabase = this.mongoClient.getDatabase(storageSettings.getDatabase());
     }
 

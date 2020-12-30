@@ -122,6 +122,7 @@ public class GiveawayController {
                 }
             }
             this.giveawayCache.addGiveaway(giveaway);
+            this.giveawayStorage.save(giveaway);
             server.addActiveGiveaway(giveaway);
             this.startGiveawayTimer(giveaway);
             return ImmutablePair.of(giveaway, ReturnCode.SUCCESS);

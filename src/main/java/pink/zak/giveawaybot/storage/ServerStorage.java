@@ -61,7 +61,9 @@ public class ServerStorage extends MongoStorage<Long, Server> {
 
     @Override
     public Server create(Long id) {
-        return new Server(this.bot, id);
+        Server server = new Server(this.bot, id);
+        this.save(server);
+        return server;
     }
 
     public Map<String, EnumMap<Setting, String>> serializePresets(Map<String, Preset> unserialized) {

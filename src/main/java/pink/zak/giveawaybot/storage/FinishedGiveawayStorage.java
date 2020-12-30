@@ -7,13 +7,17 @@ import com.mongodb.client.model.Filters;
 import org.bson.Document;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.models.Server;
+import pink.zak.giveawaybot.models.giveaway.CurrentGiveaway;
 import pink.zak.giveawaybot.models.giveaway.FinishedGiveaway;
 import pink.zak.giveawaybot.service.storage.mongo.MongoDeserializer;
 import pink.zak.giveawaybot.service.storage.mongo.MongoSerializer;
 import pink.zak.giveawaybot.service.storage.mongo.MongoStorage;
 
 import java.math.BigInteger;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class FinishedGiveawayStorage extends MongoStorage<Long, FinishedGiveaway> {
     private final Gson gson = new Gson();
@@ -25,6 +29,7 @@ public class FinishedGiveawayStorage extends MongoStorage<Long, FinishedGiveaway
     @Override
     public MongoSerializer<FinishedGiveaway> serializer() {
         return (giveaway, document) -> {
+            System.out.println("Saving " + giveaway.messageId());
             document.put("_id", giveaway.messageId());
             document.put("channelId", giveaway.channelId());
             document.put("serverId", giveaway.serverId());
@@ -36,6 +41,7 @@ public class FinishedGiveawayStorage extends MongoStorage<Long, FinishedGiveaway
             document.put("totalEntries", giveaway.totalEntries().toString());
             document.put("userEntries", gson.toJson(giveaway.userEntries()));
             document.put("winners", gson.toJson(giveaway.winners()));
+            System.out.println("Saved " + giveaway.messageId());
             return document;
         };
     }
@@ -73,5 +79,11 @@ public class FinishedGiveawayStorage extends MongoStorage<Long, FinishedGiveaway
     @Override
     public FinishedGiveaway create(Long id) {
         return null;
+    }
+
+    public FinishedGiveaway create(CurrentGiveaway giveaway, BigInteger totalEntries, Map<Long, BigInteger> userEntries, Set<Long> winners) {
+        FinishedGiveaway finishedGiveaway = new FinishedGiveaway(giveaway, totalEntries, userEntries, winners);
+        this.save(finishedGiveaway);
+        return finishedGiveaway;
     }
 }

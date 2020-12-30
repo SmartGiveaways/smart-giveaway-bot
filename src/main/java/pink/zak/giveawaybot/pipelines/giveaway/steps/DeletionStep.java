@@ -9,6 +9,7 @@ import pink.zak.giveawaybot.controllers.GiveawayController;
 import pink.zak.giveawaybot.models.Server;
 import pink.zak.giveawaybot.models.giveaway.CurrentGiveaway;
 import pink.zak.giveawaybot.models.giveaway.FinishedGiveaway;
+import pink.zak.giveawaybot.storage.FinishedGiveawayStorage;
 import pink.zak.giveawaybot.storage.GiveawayStorage;
 
 import java.math.BigInteger;
@@ -18,6 +19,7 @@ import java.util.concurrent.ScheduledFuture;
 
 public class DeletionStep {
     private final FinishedGiveawayCache finishedGiveawayCache;
+    private final FinishedGiveawayStorage finishedGiveawayStorage;
     private final GiveawayCache giveawayCache;
     private final GiveawayStorage giveawayStorage;
     private final ServerCache serverCache;
@@ -26,6 +28,7 @@ public class DeletionStep {
 
     public DeletionStep(GiveawayBot bot, GiveawayController giveawayController) {
         this.finishedGiveawayCache = bot.getFinishedGiveawayCache();
+        this.finishedGiveawayStorage = bot.getFinishedGiveawayStorage();
         this.giveawayCache = bot.getGiveawayCache();
         this.scheduledFutures = giveawayController.getScheduledFutures();
         this.giveawayStorage = bot.getGiveawayStorage();
@@ -55,9 +58,8 @@ public class DeletionStep {
     }
 
     public void addToFinished(Server server, CurrentGiveaway giveaway, BigInteger totalEntries, Map<Long, BigInteger> userEntries, Set<Long> winners) {
-        FinishedGiveaway finishedGiveaway = new FinishedGiveaway(giveaway, totalEntries, userEntries, winners);
+        FinishedGiveaway finishedGiveaway = this.finishedGiveawayStorage.create(giveaway, totalEntries, userEntries, winners);
         server.finishedGiveaways().add(giveaway.messageId());
         this.finishedGiveawayCache.set(giveaway.messageId(), finishedGiveaway);
-        this.finishedGiveawayCache.getStorage().save(finishedGiveaway);
     }
 }

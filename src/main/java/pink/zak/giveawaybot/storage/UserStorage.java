@@ -53,7 +53,9 @@ public class UserStorage extends MongoStorage<Long, User> {
 
     @Override
     public User create(Long id) {
-        return new User(id, this.serverId);
+        User user = new User(id, this.serverId);
+        this.save(user);
+        return user;
     }
 
     public long getServerId() {
