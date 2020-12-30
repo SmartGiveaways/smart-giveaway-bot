@@ -22,11 +22,13 @@ public class EntryCounterStep {
 
     private final MessageStep messageStep;
     private final WinnerStep winnerStep;
+    private final DeletionStep deletionStep;
 
     public EntryCounterStep(GiveawayBot bot, GiveawayController controller) {
         this.serverCache = bot.getServerCache();
         this.messageStep = new MessageStep(bot, controller);
         this.winnerStep = new WinnerStep(this.messageStep);
+        this.deletionStep = new DeletionStep(bot, controller);
     }
 
     public void countEntries(CurrentGiveaway giveaway, Message message) {
@@ -53,7 +55,7 @@ public class EntryCounterStep {
         }
         if (totalEntries.equals(BigInteger.ZERO)) {
             this.messageStep.sendEmptyMessage(giveaway, server, message);
-            server.activeGiveaways().remove(giveaway.messageId());
+            this.deletionStep.delete(giveaway);
         } else {
             this.winnerStep.actOnWinners(server, giveaway, message, enteredUsers, totalEntries, userEntriesMap);
         }
