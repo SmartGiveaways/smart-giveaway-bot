@@ -29,7 +29,6 @@ public class FinishedGiveawayStorage extends MongoStorage<Long, FinishedGiveaway
     @Override
     public MongoSerializer<FinishedGiveaway> serializer() {
         return (giveaway, document) -> {
-            System.out.println("Saving " + giveaway.messageId());
             document.put("_id", giveaway.messageId());
             document.put("channelId", giveaway.channelId());
             document.put("serverId", giveaway.serverId());
@@ -41,7 +40,6 @@ public class FinishedGiveawayStorage extends MongoStorage<Long, FinishedGiveaway
             document.put("totalEntries", giveaway.totalEntries().toString());
             document.put("userEntries", gson.toJson(giveaway.userEntries()));
             document.put("winners", gson.toJson(giveaway.winners()));
-            System.out.println("Saved " + giveaway.messageId());
             return document;
         };
     }

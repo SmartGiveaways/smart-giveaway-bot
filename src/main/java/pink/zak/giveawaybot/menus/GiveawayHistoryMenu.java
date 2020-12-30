@@ -25,7 +25,6 @@ public class GiveawayHistoryMenu extends PageableEmbedMenu {
 
     @Override
     public MessageEmbed createPage(int page) {
-        System.out.println("Asked to create page " + page);
         StringBuilder description = new StringBuilder();
         for (int i = (page - 1) * 10; i < this.finishedGiveaways.size() && i < page * 10; i++) {
             FinishedGiveaway giveaway = this.finishedGiveaways.get(i);
