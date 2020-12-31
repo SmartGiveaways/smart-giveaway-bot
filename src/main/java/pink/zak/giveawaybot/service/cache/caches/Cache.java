@@ -105,7 +105,7 @@ public class Cache<K, V> {
     }
 
     public CompletableFuture<Void> invalidateEachAsync() {
-        ExecutorService executorService = Executors.newFixedThreadPool(Math.min(500, this.size()));
+        ExecutorService executorService = Executors.newFixedThreadPool(Math.min(500, Math.max(this.size(), 1)));
         CompletableFuture[] futures = this.cacheMap.values().stream().map(v -> CompletableFuture.runAsync(() -> this.storage.save(v), executorService)).collect(Collectors.toSet()).toArray(new CompletableFuture[]{});
         this.cacheMap.clear();
         return CompletableFuture.allOf(futures);

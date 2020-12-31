@@ -37,13 +37,20 @@ public class EntryCounterStep {
         Map<Long, BigInteger> userEntriesMap = Maps.newHashMap();
         List<Long> enteredUsers = Lists.newArrayList(giveaway.enteredUsers());
         Collections.shuffle(enteredUsers);
+        long giveawayId = giveaway.messageId();
 
         for (long enteredUserId : giveaway.enteredUsers()) {
             User user = server.userCache().getSync(enteredUserId);
-            if (user == null || user.isBanned() || user.isShadowBanned()) {
+            if (user == null) {
+                giveaway.enteredUsers().remove(enteredUserId);
                 continue;
             }
-            Map<EntryType, AtomicInteger> entries = user.entries().get(giveaway.messageId());
+            if (user.isBanned() || user.isShadowBanned()) {
+                giveaway.enteredUsers().remove(enteredUserId);
+                user.entries().remove(giveawayId);
+                continue;
+            }
+            Map<EntryType, AtomicInteger> entries = user.entries().get(giveawayId);
             if (entries != null) {
                 BigInteger totalUserEntries = BigInteger.ZERO;
                 for (AtomicInteger entryTypeAmount : entries.values()) {
