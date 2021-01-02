@@ -12,39 +12,39 @@ plugins {
     id "org.sonarqube" version "3.0"
     id "java"
     id "com.github.johnrengelman.shadow" version "6.1.0"
-    // Spring
-    id "org.springframework.boot" version "2.4.1"
-    id "io.spring.dependency-management" version "1.0.10.RELEASE"
 }
 
 group "pink.zak"
 version "0.1.0"
 
-sourceCompatibility = 15
-targetCompatibility = 15
-
-allprojects {
-    repositories {
-        mavenCentral()
-        mavenLocal()
-        jcenter()
-        maven { url("https://repo.codemc.org/repository/maven-public/") }
-        maven { url("https://oss.sonatype.org/content/repositories/snapshots/") }
-        maven { url("https://jitpack.io") }
-    }
-
-    tasks.withType(JavaCompile).all {
-        options.compilerArgs += ["--enable-preview"]
-    }
-}
-
 repositories {
     mavenCentral()
+    mavenLocal()
+    jcenter()
+    maven { url("https://repo.codemc.org/repository/maven-public/") }
+    maven { url("https://oss.sonatype.org/content/repositories/snapshots/") }
+    maven { url("https://jitpack.io") }
 }
 
 dependencies {
-    implementation project(":discord")
-    implementation project(":api")
+    implementation("net.dv8tion:JDA:4.2.0_224") { exclude module: "opus-java" }
+    implementation("com.google.guava:guava:30.1-jre")
+    implementation("com.timvisee:yamlwrapper:1.2.0")
+    implementation("com.vdurmont:emoji-java:5.1.1")
+    implementation("org.mongodb:mongo-java-driver:3.12.7")
+
+    // Technically non essentials
+    compileOnly("org.projectlombok:lombok:1.18.16")
+    annotationProcessor("org.projectlombok:lombok:1.18.16")
+    implementation("ch.qos.logback:logback-classic:1.2.3")
+    implementation("com.github.ZakShearman:influx-metrics:1.0.1")
+    implementation("com.influxdb:influxdb-client-java:1.14.0")
+
+    testImplementation("org.junit.jupiter:junit-jupiter:5.7.0")
+}
+
+tasks.withType(JavaCompile).all {
+    options.compilerArgs += ["--enable-preview"]
 }
 
 shadowJar {
