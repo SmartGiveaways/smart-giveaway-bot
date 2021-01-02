@@ -1,6 +1,0 @@
-pink/zak/giveawaybot/api/Main.java
- pink.zak.giveawaybot.api.Main
-pink/zak/giveawaybot/api/ApiApplication.java
- pink.zak.giveawaybot.api.ApiApplication
-pink/zak/giveawaybot/api/HelloWorldController.java
- pink.zak.giveawaybot.api.HelloWorldController

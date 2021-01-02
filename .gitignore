@@ -1,5 +1,7 @@
 # Created by .ignore support plugin (hsz.mobi)
 /build
+/api/build
+/discord/build
 /lib
 *.idea
 .idea
@@ -9,3 +11,5 @@
 .gradle
 
 *.iml
+*.class
+*.jar

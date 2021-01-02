@@ -1,2 +1,0 @@
-pink/zak/test/giveawaybot/TimeTests.java
- pink.zak.test.giveawaybot.TimeTests
