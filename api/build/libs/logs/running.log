@@ -1,0 +1,187 @@
+20:58:43 [main        ] INFO   >> Base path set to: file:/C:/Users/shear/Documents/Projects/SmartGiveaways/smart-giveaway-bot/discord/build/libs/discord-0.1.0.jar
+20:58:44 [main        ] INFO   >> Login Successful!
+20:58:44 [main        ] INFO   >> Set required shards to 1
+20:58:44 [JDA [0 / 1] ] INFO   >> Connected to WebSocket
+20:58:44 [main        ] INFO   >> [Language] en-uk loaded 158/158 messages (100% coverage)
+20:58:44 [restartedMai] INFO   >> Base path set to: file:/C:/Users/shear/Documents/Projects/SmartGiveaways/smart-giveaway-bot/discord/build/libs/discord-0.1.0.jar
+20:58:44 [JDA [0 / 1] ] INFO   >> Finished Loading!
+20:58:44 [JDA [0 / 1] ] INFO   >> All shards are up! Calling onConnect
+20:58:45 [restartedMai] INFO   >> Login Successful!
+20:58:45 [JDA [0 / 1] ] INFO   >> Successfully tested latency on attempt no. 1
+20:58:45 [restartedMai] INFO   >> Set required shards to 1
+20:58:45 [restartedMai] INFO   >> [Language] en-uk loaded 158/158 messages (100% coverage)
+20:58:45 [background-p] WARN   >> For Jackson Kotlin classes support please add "com.fasterxml.jackson.module:jackson-module-kotlin" to the classpath
+20:58:45 [restartedMai] INFO   >> Starting Main using Java 15.0.1 on DESKTOP-BIURFUP with PID 12160 (C:\Users\shear\Documents\Projects\SmartGiveaways\smart-giveaway-bot\api\build\classes\java\main started by shear in C:\Users\shear\Documents\Projects\SmartGiveaways\smart-giveaway-bot\api\build\libs)
+20:58:45 [restartedMai] INFO   >> No active profile set, falling back to default profiles: default
+20:58:45 [restartedMai] INFO   >> Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+20:58:45 [restartedMai] INFO   >> For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+20:58:45 [restartedMai] WARN   >> Exception encountered during context initialization - cancelling refresh attempt: org.springframework.context.ApplicationContextException: Unable to start web server; nested exception is org.springframework.context.ApplicationContextException: Unable to start ServletWebServerApplicationContext due to missing ServletWebServerFactory bean.
+20:58:45 [restartedMai] ERROR  >> Application run failed
+org.springframework.context.ApplicationContextException: Unable to start web server; nested exception is org.springframework.context.ApplicationContextException: Unable to start ServletWebServerApplicationContext due to missing ServletWebServerFactory bean.
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.onRefresh(ServletWebServerApplicationContext.java:162)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:582)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:144)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:767)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:759)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:426)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:326)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1309)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1298)
+	at pink.zak.giveawaybot.api.ApiApplication.run(ApiApplication.java:13)
+	at pink.zak.giveawaybot.api.Main.main(Main.java:9)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:64)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:564)
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:49)
+Caused by: org.springframework.context.ApplicationContextException: Unable to start ServletWebServerApplicationContext due to missing ServletWebServerFactory bean.
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.getWebServerFactory(ServletWebServerApplicationContext.java:209)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.createWebServer(ServletWebServerApplicationContext.java:179)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.onRefresh(ServletWebServerApplicationContext.java:159)
+	... 15 common frames omitted
+20:58:45 [storage-0   ] INFO   >> Loaded 0 giveaways in 698 milliseconds
+20:58:46 [JDA [0 / 1] ] INFO   >> Finished startup. The bot is now fully registered.
+20:58:49 [JDA [0 / 1] ] ERROR  >> Encountered IDENTIFY Rate Limit!
+20:58:49 [JDA [0 / 1] ] WARN   >> Got disconnected from WebSocket (Code 1000). Appending to reconnect queue
+20:58:57 [JDA [0 / 1] ] INFO   >> Connected to WebSocket
+20:58:57 [JDA [0 / 1] ] INFO   >> Finished Loading!
+20:58:57 [JDA [0 / 1] ] INFO   >> All shards are up! Calling onConnect
+20:58:57 [JDA [0 / 1] ] INFO   >> Successfully tested latency on attempt no. 1
+20:58:58 [storage-0   ] INFO   >> Loaded 0 giveaways in 651 milliseconds
+20:58:58 [JDA [0 / 1] ] INFO   >> Finished startup. The bot is now fully registered.
+21:32:24 [main        ] INFO   >> Base path set to: file:/C:/Users/shear/Documents/Projects/SmartGiveaways/smart-giveaway-bot/discord/build/libs/discord-0.1.0.jar
+21:32:25 [main        ] INFO   >> Login Successful!
+21:32:25 [main        ] INFO   >> Set required shards to 1
+21:32:25 [JDA [0 / 1] ] INFO   >> Connected to WebSocket
+21:32:25 [main        ] INFO   >> [Language] en-uk loaded 158/158 messages (100% coverage)
+21:32:26 [JDA [0 / 1] ] INFO   >> Finished Loading!
+21:32:26 [JDA [0 / 1] ] INFO   >> All shards are up! Calling onConnect
+21:32:26 [restartedMai] INFO   >> Base path set to: file:/C:/Users/shear/Documents/Projects/SmartGiveaways/smart-giveaway-bot/discord/build/libs/discord-0.1.0.jar
+21:32:26 [JDA [0 / 1] ] INFO   >> Successfully tested latency on attempt no. 1
+21:32:26 [restartedMai] INFO   >> Login Successful!
+21:32:26 [restartedMai] INFO   >> Set required shards to 1
+21:32:26 [restartedMai] INFO   >> [Language] en-uk loaded 158/158 messages (100% coverage)
+21:32:26 [background-p] WARN   >> For Jackson Kotlin classes support please add "com.fasterxml.jackson.module:jackson-module-kotlin" to the classpath
+21:32:26 [restartedMai] INFO   >> Starting Main using Java 15.0.1 on DESKTOP-BIURFUP with PID 14172 (C:\Users\shear\Documents\Projects\SmartGiveaways\smart-giveaway-bot\api\build\classes\java\main started by shear in C:\Users\shear\Documents\Projects\SmartGiveaways\smart-giveaway-bot\api\build\libs)
+21:32:26 [restartedMai] INFO   >> No active profile set, falling back to default profiles: default
+21:32:26 [restartedMai] INFO   >> Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+21:32:26 [restartedMai] INFO   >> For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+21:32:26 [storage-0   ] INFO   >> Loaded 0 giveaways in 704 milliseconds
+21:32:27 [JDA [0 / 1] ] INFO   >> Finished startup. The bot is now fully registered.
+21:32:27 [restartedMai] INFO   >> Tomcat initialized with port(s): 8080 (http)
+21:32:27 [restartedMai] INFO   >> Initializing ProtocolHandler ["http-nio-8080"]
+21:32:27 [restartedMai] INFO   >> Starting service [Tomcat]
+21:32:27 [restartedMai] INFO   >> Starting Servlet engine: [Apache Tomcat/9.0.41]
+21:32:27 [restartedMai] INFO   >> Initializing Spring embedded WebApplicationContext
+21:32:27 [restartedMai] INFO   >> Root WebApplicationContext: initialization completed in 880 ms
+21:32:27 [restartedMai] INFO   >> Initializing ExecutorService 'applicationTaskExecutor'
+21:32:28 [restartedMai] INFO   >> 
+
+Using generated security password: 037e86ed-cff3-4b76-8aa2-5b7d1274fd0f
+
+21:32:28 [restartedMai] INFO   >> Will secure any request with [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@342ccbf2, org.springframework.security.web.context.SecurityContextPersistenceFilter@45a9732b, org.springframework.security.web.header.HeaderWriterFilter@113fbd29, org.springframework.security.web.csrf.CsrfFilter@2f2118f9, org.springframework.security.web.authentication.logout.LogoutFilter@560ee347, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@6ad07746, org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter@4123d931, org.springframework.security.web.authentication.ui.DefaultLogoutPageGeneratingFilter@420587c9, org.springframework.security.web.authentication.www.BasicAuthenticationFilter@60401b90, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@290fa199, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@5632420c, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@22f99882, org.springframework.security.web.session.SessionManagementFilter@42a04611, org.springframework.security.web.access.ExceptionTranslationFilter@7370ecfd, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@5963a430]
+21:32:28 [restartedMai] INFO   >> LiveReload server is running on port 35729
+21:32:28 [restartedMai] INFO   >> Starting ProtocolHandler ["http-nio-8080"]
+21:32:28 [restartedMai] INFO   >> Tomcat started on port(s): 8080 (http) with context path ''
+21:32:28 [restartedMai] INFO   >> Started Main in 1.796 seconds (JVM running for 4.175)
+21:32:31 [JDA [0 / 1] ] ERROR  >> Encountered IDENTIFY Rate Limit!
+21:32:31 [JDA [0 / 1] ] WARN   >> Got disconnected from WebSocket (Code 1000). Appending to reconnect queue
+21:32:38 [JDA [0 / 1] ] INFO   >> Connected to WebSocket
+21:32:38 [JDA [0 / 1] ] INFO   >> Finished Loading!
+21:32:38 [JDA [0 / 1] ] INFO   >> All shards are up! Calling onConnect
+21:32:38 [JDA [0 / 1] ] INFO   >> Successfully tested latency on attempt no. 1
+21:32:39 [storage-0   ] INFO   >> Loaded 0 giveaways in 625 milliseconds
+21:32:39 [JDA [0 / 1] ] INFO   >> Finished startup. The bot is now fully registered.
+21:33:47 [restartedMai] INFO   >> Starting Main using Java 15.0.1 on DESKTOP-BIURFUP with PID 19480 (C:\Users\shear\Documents\Projects\SmartGiveaways\smart-giveaway-bot\api\build\classes\java\main started by shear in C:\Users\shear\Documents\Projects\SmartGiveaways\smart-giveaway-bot\api\build\libs)
+21:33:47 [restartedMai] INFO   >> No active profile set, falling back to default profiles: default
+21:33:47 [restartedMai] INFO   >> Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+21:33:47 [restartedMai] INFO   >> For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+21:33:47 [background-p] WARN   >> For Jackson Kotlin classes support please add "com.fasterxml.jackson.module:jackson-module-kotlin" to the classpath
+21:33:48 [restartedMai] INFO   >> Tomcat initialized with port(s): 8080 (http)
+21:33:48 [restartedMai] INFO   >> Initializing ProtocolHandler ["http-nio-8080"]
+21:33:48 [restartedMai] INFO   >> Starting service [Tomcat]
+21:33:48 [restartedMai] INFO   >> Starting Servlet engine: [Apache Tomcat/9.0.41]
+21:33:48 [restartedMai] INFO   >> Initializing Spring embedded WebApplicationContext
+21:33:48 [restartedMai] INFO   >> Root WebApplicationContext: initialization completed in 1015 ms
+21:33:49 [restartedMai] INFO   >> Initializing ExecutorService 'applicationTaskExecutor'
+21:33:49 [restartedMai] INFO   >> 
+
+Using generated security password: 182c570a-3723-44a7-a00d-817be886ab29
+
+21:33:49 [restartedMai] INFO   >> Will secure any request with [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@3b9b5532, org.springframework.security.web.context.SecurityContextPersistenceFilter@683178b1, org.springframework.security.web.header.HeaderWriterFilter@7d5e267, org.springframework.security.web.csrf.CsrfFilter@1f2da65b, org.springframework.security.web.authentication.logout.LogoutFilter@7cdfc458, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@2cf378f7, org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter@287551a8, org.springframework.security.web.authentication.ui.DefaultLogoutPageGeneratingFilter@a4f03bb, org.springframework.security.web.authentication.www.BasicAuthenticationFilter@c393ec5, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@129735d6, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@2ed0626b, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@4fc5db21, org.springframework.security.web.session.SessionManagementFilter@100f9447, org.springframework.security.web.access.ExceptionTranslationFilter@65a6b67f, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@2418e7ef]
+21:33:49 [restartedMai] INFO   >> LiveReload server is running on port 35729
+21:33:49 [restartedMai] INFO   >> Starting ProtocolHandler ["http-nio-8080"]
+21:33:49 [restartedMai] INFO   >> Tomcat started on port(s): 8080 (http) with context path ''
+21:33:49 [restartedMai] INFO   >> Started Main in 2.092 seconds (JVM running for 2.605)
+21:34:39 [main        ] INFO   >> Base path set to: file:/C:/Users/shear/Documents/Projects/SmartGiveaways/smart-giveaway-bot/discord/build/libs/discord-0.1.0.jar
+21:34:40 [main        ] INFO   >> Login Successful!
+21:34:40 [main        ] INFO   >> Set required shards to 1
+21:34:41 [JDA [0 / 1] ] INFO   >> Connected to WebSocket
+21:34:41 [main        ] INFO   >> [Language] en-uk loaded 158/158 messages (100% coverage)
+21:34:41 [restartedMai] INFO   >> Base path set to: file:/C:/Users/shear/Documents/Projects/SmartGiveaways/smart-giveaway-bot/discord/build/libs/discord-0.1.0.jar
+21:34:41 [JDA [0 / 1] ] INFO   >> Finished Loading!
+21:34:41 [JDA [0 / 1] ] INFO   >> All shards are up! Calling onConnect
+21:34:41 [restartedMai] INFO   >> Login Successful!
+21:34:41 [JDA [0 / 1] ] INFO   >> Successfully tested latency on attempt no. 1
+21:34:41 [restartedMai] INFO   >> Set required shards to 1
+21:34:41 [restartedMai] INFO   >> [Language] en-uk loaded 158/158 messages (100% coverage)
+21:34:41 [background-p] WARN   >> For Jackson Kotlin classes support please add "com.fasterxml.jackson.module:jackson-module-kotlin" to the classpath
+21:34:41 [restartedMai] INFO   >> Starting Main using Java 15.0.1 on DESKTOP-BIURFUP with PID 10372 (C:\Users\shear\Documents\Projects\SmartGiveaways\smart-giveaway-bot\api\build\classes\java\main started by shear in C:\Users\shear\Documents\Projects\SmartGiveaways\smart-giveaway-bot\api\build\libs)
+21:34:41 [restartedMai] INFO   >> No active profile set, falling back to default profiles: default
+21:34:41 [restartedMai] INFO   >> Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+21:34:41 [restartedMai] INFO   >> For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+21:34:42 [storage-0   ] INFO   >> Loaded 0 giveaways in 707 milliseconds
+21:34:42 [JDA [0 / 1] ] INFO   >> Finished startup. The bot is now fully registered.
+21:34:42 [restartedMai] INFO   >> Tomcat initialized with port(s): 8080 (http)
+21:34:42 [restartedMai] INFO   >> Initializing ProtocolHandler ["http-nio-8080"]
+21:34:42 [restartedMai] INFO   >> Starting service [Tomcat]
+21:34:42 [restartedMai] INFO   >> Starting Servlet engine: [Apache Tomcat/9.0.41]
+21:34:42 [restartedMai] INFO   >> Initializing Spring embedded WebApplicationContext
+21:34:42 [restartedMai] INFO   >> Root WebApplicationContext: initialization completed in 878 ms
+21:34:42 [restartedMai] INFO   >> Initializing ExecutorService 'applicationTaskExecutor'
+21:34:43 [restartedMai] INFO   >> 
+
+Using generated security password: cf5b96e6-6c79-4822-b50d-1ee85d932b33
+
+21:34:43 [restartedMai] INFO   >> Will secure any request with [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@408ab06b, org.springframework.security.web.context.SecurityContextPersistenceFilter@69654b8, org.springframework.security.web.header.HeaderWriterFilter@c160a22, org.springframework.security.web.csrf.CsrfFilter@6c1c6455, org.springframework.security.web.authentication.logout.LogoutFilter@332de256, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@359d034e, org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter@556afef1, org.springframework.security.web.authentication.ui.DefaultLogoutPageGeneratingFilter@1c6110cb, org.springframework.security.web.authentication.www.BasicAuthenticationFilter@545ee8e8, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@4fe4e191, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@172c41d9, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@3f5bb207, org.springframework.security.web.session.SessionManagementFilter@2efaf568, org.springframework.security.web.access.ExceptionTranslationFilter@5ef833b1, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@68e6778c]
+21:34:43 [restartedMai] INFO   >> LiveReload server is running on port 35729
+21:34:43 [restartedMai] INFO   >> Starting ProtocolHandler ["http-nio-8080"]
+21:34:43 [restartedMai] INFO   >> Tomcat started on port(s): 8080 (http) with context path ''
+21:34:43 [restartedMai] INFO   >> Started Main in 1.721 seconds (JVM running for 3.936)
+21:34:46 [JDA [0 / 1] ] ERROR  >> Encountered IDENTIFY Rate Limit!
+21:34:46 [JDA [0 / 1] ] WARN   >> Got disconnected from WebSocket (Code 1000). Appending to reconnect queue
+21:34:53 [JDA [0 / 1] ] INFO   >> Connected to WebSocket
+21:34:53 [JDA [0 / 1] ] INFO   >> Finished Loading!
+21:34:53 [JDA [0 / 1] ] INFO   >> All shards are up! Calling onConnect
+21:34:53 [JDA [0 / 1] ] INFO   >> Successfully tested latency on attempt no. 1
+21:34:54 [storage-0   ] INFO   >> Loaded 0 giveaways in 658 milliseconds
+21:34:54 [JDA [0 / 1] ] INFO   >> Finished startup. The bot is now fully registered.
+21:36:06 [main        ] INFO   >> Base path set to: file:/C:/Users/shear/Documents/Projects/SmartGiveaways/smart-giveaway-bot/discord/build/libs/discord-0.1.0.jar
+21:36:07 [main        ] INFO   >> Login Successful!
+21:36:07 [main        ] INFO   >> Set required shards to 1
+21:36:08 [JDA [0 / 1] ] INFO   >> Connected to WebSocket
+21:36:08 [main        ] INFO   >> [Language] en-uk loaded 158/158 messages (100% coverage)
+21:36:08 [background-p] WARN   >> For Jackson Kotlin classes support please add "com.fasterxml.jackson.module:jackson-module-kotlin" to the classpath
+21:36:08 [main        ] INFO   >> Starting Main using Java 15.0.1 on DESKTOP-BIURFUP with PID 18468 (C:\Users\shear\Documents\Projects\SmartGiveaways\smart-giveaway-bot\api\build\classes\java\main started by shear in C:\Users\shear\Documents\Projects\SmartGiveaways\smart-giveaway-bot\api\build\libs)
+21:36:08 [main        ] INFO   >> No active profile set, falling back to default profiles: default
+21:36:08 [JDA [0 / 1] ] INFO   >> Successfully tested latency on attempt no. 1
+21:36:09 [storage-0   ] INFO   >> Loaded 0 giveaways in 756 milliseconds
+21:36:09 [main        ] INFO   >> Tomcat initialized with port(s): 8080 (http)
+21:36:09 [JDA [0 / 1] ] INFO   >> Finished startup. The bot is now fully registered.
+21:36:09 [main        ] INFO   >> Initializing ProtocolHandler ["http-nio-8080"]
+21:36:09 [main        ] INFO   >> Starting service [Tomcat]
+21:36:09 [main        ] INFO   >> Starting Servlet engine: [Apache Tomcat/9.0.41]
+21:36:09 [main        ] INFO   >> Initializing Spring embedded WebApplicationContext
+21:36:09 [main        ] INFO   >> Root WebApplicationContext: initialization completed in 953 ms
+21:36:09 [main        ] INFO   >> Initializing ExecutorService 'applicationTaskExecutor'
+21:36:09 [main        ] INFO   >> 
+
+Using generated security password: ee178973-4877-4f1d-b0ec-fea81c63dccd
+
+21:36:10 [main        ] INFO   >> Will secure any request with [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@5896cb9c, org.springframework.security.web.context.SecurityContextPersistenceFilter@2342f1ff, org.springframework.security.web.header.HeaderWriterFilter@2a19a0fe, org.springframework.security.web.csrf.CsrfFilter@598657cd, org.springframework.security.web.authentication.logout.LogoutFilter@3df77dfa, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@47eaf55c, org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter@721fc2e3, org.springframework.security.web.authentication.ui.DefaultLogoutPageGeneratingFilter@44b9c7c4, org.springframework.security.web.authentication.www.BasicAuthenticationFilter@d49e8c6, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@cec590c, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@63a84bb6, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@674184d, org.springframework.security.web.session.SessionManagementFilter@7d284f15, org.springframework.security.web.access.ExceptionTranslationFilter@5d717f19, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@26994c6a]
+21:36:10 [main        ] INFO   >> Starting ProtocolHandler ["http-nio-8080"]
+21:36:10 [main        ] INFO   >> Tomcat started on port(s): 8080 (http) with context path ''
+21:36:10 [main        ] INFO   >> Started Main in 1.88 seconds (JVM running for 3.876)
+21:36:40 [http-nio-808] INFO   >> Initializing Spring DispatcherServlet 'dispatcherServlet'
+21:36:40 [http-nio-808] INFO   >> Initializing Servlet 'dispatcherServlet'
+21:36:40 [http-nio-808] INFO   >> Completed initialization in 1 ms

@@ -1,2 +1,3 @@
 rootProject.name = 'smart-giveaway-bot'
+include 'api', 'discord'
 
