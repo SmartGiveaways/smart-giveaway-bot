@@ -1,6 +1,6 @@
 package pink.zak.giveawaybot.models.giveaway;
 
-public abstract class   Giveaway {
+public abstract class Giveaway {
     protected final long channelId;
     protected final long serverId;
     protected final long startTime;
@@ -50,5 +50,5 @@ public abstract class   Giveaway {
 
     public abstract long getTimeToExpiry();
 
-    public abstract  boolean isActive();
+    public abstract boolean isActive();
 }

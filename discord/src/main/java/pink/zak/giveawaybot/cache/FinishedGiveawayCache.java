@@ -14,11 +14,9 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 public class FinishedGiveawayCache extends AccessExpiringCache<Long, FinishedGiveaway> {
-    public static FinishedGiveawayCache apiInstance;
 
     public FinishedGiveawayCache(GiveawayBot bot) {
         super(bot, bot.getFinishedGiveawayStorage(), TimeUnit.MINUTES, 10);
-        apiInstance = this;
     }
 
     @Override

@@ -1,6 +1,8 @@
 package pink.zak.giveawaybot.api.controllers;
 
 import org.springframework.stereotype.Component;
+import pink.zak.giveawaybot.GiveawayBot;
+import pink.zak.giveawaybot.api.model.giveaway.ScheduledGiveawayCreation;
 import pink.zak.giveawaybot.cache.FinishedGiveawayCache;
 import pink.zak.giveawaybot.cache.GiveawayCache;
 import pink.zak.giveawaybot.cache.ScheduledGiveawayCache;
@@ -12,9 +14,9 @@ import java.util.UUID;
 
 @Component
 public class GiveawayControllerImpl implements GiveawayController {
-    private final ScheduledGiveawayCache scheduledCache = ScheduledGiveawayCache.apiInstance;
-    private final FinishedGiveawayCache finishedCache = FinishedGiveawayCache.apiInstance;
-    private final GiveawayCache currentCache = GiveawayCache.apiInstance;
+    private final ScheduledGiveawayCache scheduledCache = GiveawayBot.apiInstance.getScheduledGiveawayCache();
+    private final FinishedGiveawayCache finishedCache = GiveawayBot.apiInstance.getFinishedGiveawayCache();
+    private final GiveawayCache currentCache = GiveawayBot.apiInstance.getGiveawayCache();
 
     @Override
     public ScheduledGiveaway getScheduledGiveaway(UUID uuid) {
@@ -22,7 +24,7 @@ public class GiveawayControllerImpl implements GiveawayController {
     }
 
     @Override
-    public ScheduledGiveaway createScheduledGiveaway() {
+    public ScheduledGiveaway createScheduledGiveaway(ScheduledGiveawayCreation payload) {
         return null;
     }
 

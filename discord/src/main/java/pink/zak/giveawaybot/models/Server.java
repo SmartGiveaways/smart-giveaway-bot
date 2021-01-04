@@ -152,6 +152,12 @@ public class Server {
         this.premiumExpiry = premiumExpiry;
     }
 
+    public long addPremiumTime(long toAdd) {
+        this.premiumExpiry = (this.isPremium() ? this.premiumExpiry : System.currentTimeMillis()) + toAdd;
+        this.setPremiumExpiry(premiumExpiry);
+        return this.premiumExpiry;
+    }
+
     public String getLanguage() {
         return this.language;
     }

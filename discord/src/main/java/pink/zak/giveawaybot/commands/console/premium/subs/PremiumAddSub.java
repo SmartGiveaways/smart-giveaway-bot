@@ -29,8 +29,6 @@ public class PremiumAddSub extends ConsoleSubCommand {
             return;
         }
         long premiumExpiry = server.getPremiumExpiry();
-        premiumExpiry = (server.isPremium() ? premiumExpiry : System.currentTimeMillis()) + milliseconds;
-        server.setPremiumExpiry(premiumExpiry);
         GiveawayBot.logger().info("{} {}ms to server's expiry", milliseconds > 0 ? "Adding" : "Removing", milliseconds);
         GiveawayBot.logger().info("The server {}'s premium will now expire in {}", server.getId(), Time.format(server.getTimeToPremiumExpiry()));
     }

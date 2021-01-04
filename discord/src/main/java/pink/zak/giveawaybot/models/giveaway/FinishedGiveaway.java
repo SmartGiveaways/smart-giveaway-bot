@@ -1,5 +1,6 @@
 package pink.zak.giveawaybot.models.giveaway;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.jetbrains.annotations.NotNull;
 
 import java.math.BigInteger;
@@ -27,10 +28,12 @@ public class FinishedGiveaway extends RichGiveaway implements Comparable<Finishe
     }
 
     @Override
+    @JsonIgnore
     public long getTimeToExpiry() {
         return this.endTime - System.currentTimeMillis();
     }
 
+    @JsonIgnore
     public boolean isActive() {
         return this.getTimeToExpiry() > 0;
     }

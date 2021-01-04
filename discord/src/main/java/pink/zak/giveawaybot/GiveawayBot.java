@@ -77,8 +77,11 @@ public class GiveawayBot extends JdaBot {
     private Defaults defaults;
     private EntryPipeline entryPipeline;
 
+    public static GiveawayBot apiInstance;
+
     public GiveawayBot(UnaryOperator<Path> path) {
         super(path);
+        apiInstance = this;
     }
 
     public void load() {
