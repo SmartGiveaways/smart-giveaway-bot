@@ -2,7 +2,6 @@ package pink.zak.giveawaybot.cache;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import org.springframework.stereotype.Service;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.models.Server;
 import pink.zak.giveawaybot.models.giveaway.FinishedGiveaway;
@@ -14,11 +13,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-@Service
 public class FinishedGiveawayCache extends AccessExpiringCache<Long, FinishedGiveaway> {
+    public static FinishedGiveawayCache apiInstance;
 
     public FinishedGiveawayCache(GiveawayBot bot) {
         super(bot, bot.getFinishedGiveawayStorage(), TimeUnit.MINUTES, 10);
+        apiInstance = this;
     }
 
     @Override
@@ -38,7 +38,7 @@ public class FinishedGiveawayCache extends AccessExpiringCache<Long, FinishedGiv
         Set<Long> remainingIds = Sets.newHashSet();
         List<FinishedGiveaway> giveaways = Lists.newArrayList();
 
-        for (long giveawayId : server.finishedGiveaways()) {
+        for (long giveawayId : server.getFinishedGiveaways()) {
             if (this.contains(giveawayId)) {
                 giveaways.add(this.getSync(giveawayId));
             } else {
@@ -53,7 +53,7 @@ public class FinishedGiveawayCache extends AccessExpiringCache<Long, FinishedGiv
         }
         Set<FinishedGiveaway> loadedGiveaways = ((FinishedGiveawayStorage) this.storage).loadAll(server, remainingIds);
         for (FinishedGiveaway giveaway : loadedGiveaways) {
-            this.set(giveaway.messageId(), giveaway, false);
+            this.set(giveaway.getMessageId(), giveaway, false);
         }
         giveaways.addAll(loadedGiveaways);
         if (order) {

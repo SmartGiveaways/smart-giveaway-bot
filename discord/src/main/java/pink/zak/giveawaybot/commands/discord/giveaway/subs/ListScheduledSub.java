@@ -29,20 +29,20 @@ public class ListScheduledSub extends SubCommand {
 
     @Override
     public void onExecute(Member sender, Server server, GuildMessageReceivedEvent event, List<String> args) {
-        if (server.scheduledGiveaways().isEmpty()) {
+        if (server.getScheduledGiveaways().isEmpty()) {
             this.langFor(server, Text.NO_SCHEDULED_GIVEAWAYS).to(event.getChannel());
             return;
         }
         StringBuilder descriptionBuilder = new StringBuilder();
-        for (UUID giveawayId : server.scheduledGiveaways()) {
+        for (UUID giveawayId : server.getScheduledGiveaways()) {
             ScheduledGiveaway giveaway = this.giveawayCache.getSync(giveawayId);
             descriptionBuilder.append("**")
-                    .append(giveaway.giveawayItem())
+                    .append(giveaway.getGiveawayItem())
                     .append("** [")
                     .append(giveaway.getStartFormatted())
                     .append("]")
                     .append(" -> (ID: ")
-                    .append(giveaway.uuid())
+                    .append(giveaway.getUuid())
                     .append(")\n");
         }
         event.getChannel().sendMessage(new EmbedBuilder()

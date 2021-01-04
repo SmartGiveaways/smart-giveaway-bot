@@ -30,5 +30,6 @@
         <appender-ref ref="FILE-ROLLING"/>
     </root>
 
+    <logger name="org.springframework" level="INFO"/>
     <logger name="org.mongodb.driver" level="WARN"/>
 </configuration>

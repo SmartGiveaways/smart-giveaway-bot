@@ -41,14 +41,14 @@ public class ReactionAddListener extends ListenerAdapter {
         long messageId = event.getMessageIdLong();
         long userId = event.getUserIdLong();
         this.serverCache.get(event.getGuild().getIdLong()).thenAccept(server -> {
-            if (!server.activeGiveaways().contains(messageId)) {
+            if (!server.getActiveGiveaways().contains(messageId)) {
                 return;
             }
             this.giveawayCache.get(messageId).thenAccept(giveaway -> {
-                if (giveaway.enteredUsers().contains(userId)) {
+                if (giveaway.getEnteredUsers().contains(userId)) {
                     return;
                 }
-                Preset preset = giveaway.presetName().equals("default") ? this.defaultPreset : server.preset(giveaway.presetName());
+                Preset preset = giveaway.getPresetName().equals("default") ? this.defaultPreset : server.getPreset(giveaway.getPresetName());
                 MessageReaction.ReactionEmote messageReaction = event.getReactionEmote();
                 MessageReaction.ReactionEmote setReaction = ((ReactionContainer) preset.getSetting(Setting.REACT_TO_ENTER_EMOJI)).getReactionEmote();
                 if (messageReaction.isEmoji() != setReaction.isEmoji()
@@ -56,13 +56,13 @@ public class ReactionAddListener extends ListenerAdapter {
                         || (messageReaction.isEmote() && !messageReaction.getAsReactionCode().equals(setReaction.getAsReactionCode()))) {
                     return;
                 }
-                server.userCache().get(userId).thenAccept(user -> {
-                    giveaway.enteredUsers().add(userId);
-                    user.entries().put(giveaway.messageId(), this.baseMap.clone());
+                server.getUserCache().get(userId).thenAccept(user -> {
+                    giveaway.getEnteredUsers().add(userId);
+                    user.getEntries().put(giveaway.getMessageId(), this.baseMap.clone());
                     this.entryCount.incrementAndGet();
                 });
             }).exceptionally(ex -> {
-                GiveawayBot.logger().error("messageId:userId:serverId  {}:{}:{}", messageId, userId, server.id(), ex);
+                GiveawayBot.logger().error("messageId:userId:serverId  {}:{}:{}", messageId, userId, server.getId(), ex);
                 return null;
             });
         }).exceptionally(ex -> {

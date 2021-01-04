@@ -25,13 +25,13 @@ public class ListSub extends SubCommand {
     @Override
     public void onExecute(Member sender, Server server, GuildMessageReceivedEvent event, List<String> args) {
         StringBuilder listBuilder = new StringBuilder(this.langFor(server, Text.PRESET_LIST_DEFAULT_ENTRY).get());
-        for (Preset preset : server.presets().values()) {
+        for (Preset preset : server.getPresets().values()) {
             listBuilder.append("\n")
-                    .append(preset.name());
+                    .append(preset.getName());
         }
         event.getChannel().sendMessage(new EmbedBuilder()
                 .setColor(this.palette.primary())
-                .setTitle(this.langFor(server, Text.PRESET_LIST_EMBED_TITLE, replacer -> replacer.set("preset-count", server.presets().size() + 1)).get())
+                .setTitle(this.langFor(server, Text.PRESET_LIST_EMBED_TITLE, replacer -> replacer.set("preset-count", server.getPresets().size() + 1)).get())
                 .setDescription(listBuilder.toString())
                 .build()).queue();
     }

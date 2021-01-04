@@ -41,25 +41,26 @@ public class DeletionStep {
 
 
     public void delete(CurrentGiveaway giveaway) {
-        this.giveawayCache.invalidate(giveaway.messageId(), false);
-        this.serverCache.get(giveaway.serverId()).thenAccept(server -> {
+        long messageId = giveaway.getMessageId();
+        this.giveawayCache.invalidate(messageId, false);
+        this.serverCache.get(giveaway.getServerId()).thenAccept(server -> {
             if (this.scheduledFutures.containsKey(giveaway) && !this.scheduledFutures.get(giveaway).isDone()) {
                 this.scheduledFutures.get(giveaway).cancel(false);
                 this.scheduledFutures.remove(giveaway);
             }
-            server.activeGiveaways().remove(giveaway.messageId());
-            GiveawayBot.logger().debug("Removing giveaway from server {}  :  {}", giveaway.serverId(), giveaway.messageId());
-            UserCache userCache = server.userCache();
-            for (long enteredId : giveaway.enteredUsers()) {
-                userCache.get(enteredId).thenAccept(user -> user.entries().remove(giveaway.messageId()));
+            server.getActiveGiveaways().remove(messageId);
+            GiveawayBot.logger().debug("Removing giveaway from server {}  :  {}", giveaway.getServerId(), messageId);
+            UserCache userCache = server.getUserCache();
+            for (long enteredId : giveaway.getEnteredUsers()) {
+                userCache.get(enteredId).thenAccept(user -> user.getEntries().remove(messageId));
             }
         });
-        this.giveawayStorage.delete(giveaway.messageId());
+        this.giveawayStorage.delete(messageId);
     }
 
     public void addToFinished(Server server, CurrentGiveaway giveaway, BigInteger totalEntries, Map<Long, BigInteger> userEntries, Set<Long> winners) {
         FinishedGiveaway finishedGiveaway = this.finishedGiveawayStorage.create(giveaway, totalEntries, userEntries, winners);
-        server.finishedGiveaways().add(giveaway.messageId());
-        this.finishedGiveawayCache.set(giveaway.messageId(), finishedGiveaway);
+        server.getFinishedGiveaways().add(giveaway.getMessageId());
+        this.finishedGiveawayCache.set(giveaway.getMessageId(), finishedGiveaway);
     }
 }

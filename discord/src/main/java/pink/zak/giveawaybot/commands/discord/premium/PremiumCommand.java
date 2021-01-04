@@ -28,7 +28,7 @@ public class PremiumCommand extends SimpleCommand {
                 .setFooter(this.langFor(server, Text.PREMIUM_EMBED_FOOTER).get())
                 .setColor(this.palette.primary())
                 .setDescription(this.langFor(server, server.isPremium() ? Text.PREMIUM_EMBED_DESCRIPTION_PURCHASED : Text.PREMIUM_EMBED_DESCRIPTION_NOT_PURCHASED,
-                        replacer -> server.isPremium() ? replacer.set("expiry", Time.format(server.timeToPremiumExpiry())) : replacer).get())
+                        replacer -> server.isPremium() ? replacer.set("expiry", Time.format(server.getTimeToPremiumExpiry())) : replacer).get())
                 .build()).queue();
     }
 }

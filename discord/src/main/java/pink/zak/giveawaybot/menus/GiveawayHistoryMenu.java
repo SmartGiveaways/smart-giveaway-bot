@@ -30,9 +30,9 @@ public class GiveawayHistoryMenu extends PageableEmbedMenu {
             FinishedGiveaway giveaway = this.finishedGiveaways.get(i);
             description.append(
                     super.languageRegistry.get(this.server, Text.GIVEAWAY_HISTORY_EMBED_LINE, replacer -> replacer
-                            .set("item", giveaway.linkedGiveawayItem())
-                            .set("time", Time.formatAsDateTime(giveaway.endTime()) + " UTC")
-                            .set("id", giveaway.messageId())).toString()
+                            .set("item", giveaway.getLinkedGiveawayItem())
+                            .set("time", Time.formatAsDateTime(giveaway.getEndTime()) + " UTC")
+                            .set("id", giveaway.getMessageId())).toString()
             );
         }
         return new EmbedBuilder()

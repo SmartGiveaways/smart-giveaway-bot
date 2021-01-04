@@ -1,5 +1,6 @@
 package pink.zak.giveawaybot.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import net.dv8tion.jda.api.Permission;
@@ -43,8 +44,6 @@ public class Server {
         this.bannedUsers = bannedUsers;
         this.premiumExpiry = premiumExpiry;
         this.language = language;
-
-
     }
 
     public Server(GiveawayBot bot, long id) {
@@ -53,30 +52,33 @@ public class Server {
                 "en-uk");
     }
 
-    public long id() {
+    public long getId() {
         return this.id;
     }
 
-    public String stringId() {
+    @JsonIgnore
+    public String getStringId() {
         return String.valueOf(this.id);
     }
 
-    public UserStorage userStorage() {
+    @JsonIgnore
+    public UserStorage getUserStorage() {
         return this.userStorage;
     }
 
-    public UserCache userCache() {
+    @JsonIgnore
+    public UserCache getUserCache() {
         return this.userCache;
     }
 
-    public Set<Long> activeGiveaways() {
+    public Set<Long> getActiveGiveaways() {
         return this.activeGiveaways;
     }
 
-    public Set<Long> activeGiveaways(User user) {
+    public Set<Long> getActiveGiveaways(User user) {
         Set<Long> enteredGiveaways = Sets.newHashSet();
         for (long giveawayId : this.activeGiveaways) {
-            if (user.entries().containsKey(giveawayId) && user.hasEntries(giveawayId)) {
+            if (user.getEntries().containsKey(giveawayId) && user.hasEntries(giveawayId)) {
                 enteredGiveaways.add(giveawayId);
             }
         }
@@ -84,22 +86,22 @@ public class Server {
     }
 
     public void addActiveGiveaway(CurrentGiveaway giveaway) {
-        this.activeGiveaways.add(giveaway.messageId());
+        this.activeGiveaways.add(giveaway.getMessageId());
     }
 
-    public Set<Long> finishedGiveaways() {
+    public Set<Long> getFinishedGiveaways() {
         return this.finishedGiveaways;
     }
 
-    public Set<UUID> scheduledGiveaways() {
+    public Set<UUID> getScheduledGiveaways() {
         return this.scheduledGiveaways;
     }
 
-    public Preset preset(String name) {
+    public Preset getPreset(String name) {
         return this.presets.get(name.toLowerCase());
     }
 
-    public Map<String, Preset> presets() {
+    public Map<String, Preset> getPresets() {
         return this.presets;
     }
 
@@ -108,10 +110,10 @@ public class Server {
     }
 
     public void addPreset(Preset preset) {
-        this.presets.put(preset.name().toLowerCase(), preset);
+        this.presets.put(preset.getName().toLowerCase(), preset);
     }
 
-    public Set<Long> managerRoles() {
+    public Set<Long> getManagerRoles() {
         return this.managerRoles;
     }
 
@@ -130,7 +132,7 @@ public class Server {
         return false;
     }
 
-    public List<Long> bannedUsers() {
+    public List<Long> getBannedUsers() {
         return this.bannedUsers;
     }
 
@@ -138,11 +140,11 @@ public class Server {
         return this.premiumExpiry > System.currentTimeMillis();
     }
 
-    public long premiumExpiry() {
+    public long getPremiumExpiry() {
         return this.premiumExpiry;
     }
 
-    public long timeToPremiumExpiry() {
+    public long getTimeToPremiumExpiry() {
         return this.premiumExpiry - System.currentTimeMillis();
     }
 
@@ -150,7 +152,7 @@ public class Server {
         this.premiumExpiry = premiumExpiry;
     }
 
-    public String language() {
+    public String getLanguage() {
         return this.language;
     }
 

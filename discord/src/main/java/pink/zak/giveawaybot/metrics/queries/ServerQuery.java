@@ -9,19 +9,19 @@ import java.util.function.BiFunction;
 public enum ServerQuery implements QueryInterface<Server> {
 
     GIVEAWAYS((server, point) -> {
-        return point.addField("giveaway-count", server.activeGiveaways().size());
+        return point.addField("giveaway-count", server.getActiveGiveaways().size());
     }),
     PRESETS((server, point) -> {
-        return point.addField("presets", server.presets().size());
+        return point.addField("presets", server.getPresets().size());
     }),
     USER_CACHE_LOADS((server, point) -> {
-        point.addField("user-cache-loads", server.userCache().getLoads());
-        server.userCache().resetLoads();
+        point.addField("user-cache-loads", server.getUserCache().getLoads());
+        server.getUserCache().resetLoads();
         return point;
     }),
     USER_CACHE_HITS((server, point) -> {
-        point.addField("user-cache-hits", server.userCache().getHits());
-        server.userCache().resetHits();
+        point.addField("user-cache-hits", server.getUserCache().getHits());
+        server.getUserCache().resetHits();
         return point;
     }),
     ALL((server, point) -> {
@@ -41,7 +41,7 @@ public enum ServerQuery implements QueryInterface<Server> {
 
     @Override
     public BiFunction<Server, Point, Point> tag() {
-        return (server, point) -> point.addTag("server-id", server.stringId());
+        return (server, point) -> point.addTag("server-id", server.getStringId());
         // return (process, point) -> point.addTag("identifier", process.getIdentifier()); This should be made to the shard ID when that's a thing
     }
 

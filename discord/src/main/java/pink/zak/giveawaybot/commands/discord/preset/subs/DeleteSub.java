@@ -29,10 +29,10 @@ public class DeleteSub extends SubCommand {
     @Override
     public void onExecute(Member sender, Server server, GuildMessageReceivedEvent event, List<String> args) {
         String presetName = this.parseArgument(args, event.getGuild(), 1);
-        if (!server.presets().containsKey(presetName)) {
+        if (!server.getPresets().containsKey(presetName)) {
             String message = this.langFor(server, Text.COULDNT_FIND_PRESET).get();
-            if (server.presets().size() > 0) {
-                message = message + this.langFor(server, Text.PRESET_DELETE_SHOW_PRESETS_ADDON, replacer -> replacer.set("preset-list", String.join(", ", server.presets().keySet())));
+            if (server.getPresets().size() > 0) {
+                message = message + this.langFor(server, Text.PRESET_DELETE_SHOW_PRESETS_ADDON, replacer -> replacer.set("preset-list", String.join(", ", server.getPresets().keySet())));
             }
             event.getChannel().sendMessage(message).queue();
             return;
@@ -42,19 +42,19 @@ public class DeleteSub extends SubCommand {
             this.langFor(server, Text.PRESET_DELETE_IN_USE).to(event.getChannel());
             return;
         }
-        server.presets().remove(lowerPresetName);
+        server.getPresets().remove(lowerPresetName);
         this.langFor(server, Text.PRESET_DELETED, replacer -> replacer.set("preset", presetName)).to(event.getChannel());
     }
 
     @SneakyThrows
     private boolean canBeDeleted(Server server, String presetName) {
-        for (long id : server.activeGiveaways()) {
-            if (this.giveawayCache.getSync(id).presetName().equals(presetName)) {
+        for (long id : server.getActiveGiveaways()) {
+            if (this.giveawayCache.getSync(id).getPresetName().equals(presetName)) {
                 return false;
             }
         }
-        for (UUID uuid : server.scheduledGiveaways()) {
-            if (this.scheduledGiveawayCache.getSync(uuid).presetName().equals(presetName)) {
+        for (UUID uuid : server.getScheduledGiveaways()) {
+            if (this.scheduledGiveawayCache.getSync(uuid).getPresetName().equals(presetName)) {
                 return false;
             }
         }

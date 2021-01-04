@@ -19,21 +19,21 @@ public class EntryPipeline {
     }
 
     public void process(EntryType entryType, Server server, long userId) {
-        if (server.activeGiveaways().isEmpty()) {
+        if (server.getActiveGiveaways().isEmpty()) {
             return;
         }
-        server.userCache().get(userId).thenAccept(user -> {
+        server.getUserCache().get(userId).thenAccept(user -> {
             if (user.isBanned()) {
                 return;
             }
-            for (long giveawayId : server.activeGiveaways()) {
+            for (long giveawayId : server.getActiveGiveaways()) {
                 this.giveawayCache.get(giveawayId).thenAccept(giveaway -> {
                     if (giveaway == null) {
                         return;
                     }
-                    this.checkStep.process(entryType, user, giveaway, giveaway.presetName().equals("default") ? this.defaultPreset : server.preset(giveaway.presetName()));
+                    this.checkStep.process(entryType, user, giveaway, giveaway.getPresetName().equals("default") ? this.defaultPreset : server.getPreset(giveaway.getPresetName()));
                 }).exceptionally(ex -> {
-                    GiveawayBot.logger().error("Server " + server.id() + " user " + userId + " giveaway id " + giveawayId, ex);
+                    GiveawayBot.logger().error("Server " + server.getId() + " user " + userId + " giveaway id " + giveawayId, ex);
                     return null;
                 });
             }

@@ -18,14 +18,14 @@ public class ScheduledGiveawayStorage extends MongoStorage<UUID, ScheduledGiveaw
     @Override
     public MongoSerializer<ScheduledGiveaway> serializer() {
         return (giveaway, document) -> {
-            document.put("_id", giveaway.uuid().toString());
-            document.put("channelId", giveaway.channelId());
-            document.put("serverId", giveaway.serverId());
-            document.put("startTime", giveaway.startTime());
-            document.put("endTime", giveaway.endTime());
-            document.put("winnerAmount", giveaway.winnerAmount());
-            document.put("presetName", giveaway.presetName());
-            document.put("giveawayItem", giveaway.giveawayItem());
+            document.put("_id", giveaway.getUuid().toString());
+            document.put("channelId", giveaway.getChannelId());
+            document.put("serverId", giveaway.getServerId());
+            document.put("startTime", giveaway.getStartTime());
+            document.put("endTime", giveaway.getEndTime());
+            document.put("winnerAmount", giveaway.getWinnerAmount());
+            document.put("presetName", giveaway.getPresetName());
+            document.put("giveawayItem", giveaway.getGiveawayItem());
             return document;
         };
     }

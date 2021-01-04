@@ -1,5 +1,6 @@
 package pink.zak.giveawaybot.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Maps;
 import pink.zak.giveawaybot.defaults.Defaults;
 import pink.zak.giveawaybot.enums.Setting;
@@ -7,7 +8,14 @@ import pink.zak.giveawaybot.enums.Setting;
 import java.util.EnumMap;
 import java.util.Map;
 
-public record Preset(String name, EnumMap<Setting, Object> settings) {
+public class Preset {
+    private final String name;
+    private final EnumMap<Setting, Object> settings;
+
+    public Preset(String name, EnumMap<Setting, Object> settings) {
+        this.name = name;
+        this.settings = settings;
+    }
 
     public Preset(String name) {
         this(name, Maps.newEnumMap(Setting.class));
@@ -25,7 +33,16 @@ public record Preset(String name, EnumMap<Setting, Object> settings) {
         this.settings.put(setting, value);
     }
 
-    public EnumMap<Setting, String> serialized() {
+    public String getName() {
+        return this.name;
+    }
+
+    @JsonIgnore
+    public EnumMap<Setting, Object> getSettings() {
+        return this.settings;
+    }
+
+    public EnumMap<Setting, String> getSerializedSettings() {
         EnumMap<Setting, String> serializedMap = Maps.newEnumMap(Setting.class);
         for (Map.Entry<Setting, Object> entry : this.settings.entrySet()) {
             serializedMap.put(entry.getKey(), String.valueOf(entry.getValue()));

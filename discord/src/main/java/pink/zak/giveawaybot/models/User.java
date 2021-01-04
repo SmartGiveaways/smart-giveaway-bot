@@ -28,7 +28,7 @@ public class User {
         this(id, serverId, false, false, new ConcurrentHashMap<>());
     }
 
-    public BigInteger entries(long id) {
+    public BigInteger getEntries(long id) {
         BigInteger total = BigInteger.ZERO;
         if (!this.entries.containsKey(id)) {
             return total;
@@ -40,42 +40,34 @@ public class User {
     }
 
     public boolean hasEntries(long id) {
-        return this.entries(id).compareTo(BigInteger.ZERO) > 0;
+        return this.getEntries(id).compareTo(BigInteger.ZERO) > 0;
     }
 
-    public long id() {
+    public long getId() {
         return this.id;
     }
 
-    public long serverId() {
+    public long getServerId() {
         return this.serverId;
     }
 
-    public void ban() {
-        this.banned = true;
-    }
-
-    public void unBan() {
-        this.banned = false;
+    public void setBanned(boolean banned) {
+        this.banned = banned;
     }
 
     public boolean isBanned() {
         return this.banned;
     }
 
-    public void shadowBan() {
-        this.shadowBanned = true;
-    }
-
-    public void unShadowBan() {
-        this.shadowBanned = false;
+    public void setShadowBanned(boolean shadowBanned) {
+        this.shadowBanned = shadowBanned;
     }
 
     public boolean isShadowBanned() {
         return this.shadowBanned;
     }
 
-    public ConcurrentMap<Long, EnumMap<EntryType, AtomicInteger>> entries() {
+    public ConcurrentMap<Long, EnumMap<EntryType, AtomicInteger>> getEntries() {
         return this.entries;
     }
 }

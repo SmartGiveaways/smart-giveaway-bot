@@ -27,7 +27,7 @@ public class ListLanguagesSub extends SubCommand {
 
     @Override
     public void onExecute(Member sender, Server server, GuildMessageReceivedEvent event, List<String> args) {
-        event.getChannel().sendMessage(this.messageEmbeds.get(server.language())).queue();
+        event.getChannel().sendMessage(this.messageEmbeds.get(server.getLanguage())).queue();
     }
 
     private void buildMessages(Palette palette) {

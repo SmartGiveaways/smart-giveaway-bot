@@ -24,7 +24,7 @@ public class GiveawayDeletionListener extends ListenerAdapter {
     public void onGuildMessageDelete(GuildMessageDeleteEvent event) {
         this.giveawayCache.get(event.getMessageIdLong()).thenAccept(giveaway -> {
             if (giveaway != null) {
-                GiveawayBot.logger().info("Giveaway {} in server {} was deleted", giveaway.messageId(), giveaway.serverId());
+                GiveawayBot.logger().info("Giveaway {} in server {} was deleted", giveaway.getMessageId(), giveaway.getServerId());
                 this.deletionStep.delete(giveaway);
             }
         });
@@ -32,11 +32,11 @@ public class GiveawayDeletionListener extends ListenerAdapter {
 
     public void onTextChannelDelete(@NotNull TextChannelDeleteEvent event) {
         this.serverCache.get(event.getGuild().getIdLong()).thenAccept(server -> {
-            if (server.activeGiveaways().isEmpty()) {
+            if (server.getActiveGiveaways().isEmpty()) {
                 return;
             }
             for (CurrentGiveaway giveaway : this.giveawayCache.getMap().values()) {
-                if (giveaway.channelId() == event.getChannel().getIdLong()) {
+                if (giveaway.getChannelId() == event.getChannel().getIdLong()) {
                     this.deletionStep.delete(giveaway);
                 }
             }

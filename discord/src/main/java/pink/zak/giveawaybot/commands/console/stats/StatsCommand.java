@@ -33,7 +33,7 @@ public class StatsCommand extends ConsoleBaseCommand {
         int currentGiveaways = this.giveawayCache.size();
         int loadedFinishedGiveaways = this.finishedGiveawayCache.size();
         for (Server server : this.serverCache.getMap().values()) {
-            loadedUsers += server.userCache().size();
+            loadedUsers += server.getUserCache().size();
         }
         GiveawayBot.logger().info("stats <server-id>\n");
         GiveawayBot.logger().info("Loaded Users: {}", loadedUsers);

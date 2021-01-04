@@ -44,10 +44,10 @@ public class MessageStep {
     }
 
     public void sendEmptyMessage(CurrentGiveaway giveaway, Server server, Message message) {
-        server.activeGiveaways().remove(giveaway.messageId());
+        server.getActiveGiveaways().remove(giveaway.getMessageId());
         message.editMessage(new EmbedBuilder()
                 .setColor(this.palette.success())
-                .setTitle(this.languageRegistry.get(server, Text.GIVEAWAY_EMBED_TITLE, replacer -> replacer.set("item", giveaway.giveawayItem())).get())
+                .setTitle(this.languageRegistry.get(server, Text.GIVEAWAY_EMBED_TITLE, replacer -> replacer.set("item", giveaway.getGiveawayItem())).get())
                 .setDescription(this.languageRegistry.get(server, Text.GIVEAWAY_FINISHED_EMBED_DESCRIPTION_NO_WINNERS).get())
                 .setFooter(this.languageRegistry.get(server, Text.GIVEAWAY_FINISHED_EMBED_FOOTER_NO_WINNERS).get()).build()).queue();
     }
@@ -64,11 +64,11 @@ public class MessageStep {
         String description = descriptionBuilder.toString();
         message.editMessage(new EmbedBuilder()
                 .setColor(this.palette.success())
-                .setTitle(this.languageRegistry.get(server, Text.GIVEAWAY_EMBED_TITLE, replacer -> replacer.set("item", giveaway.giveawayItem())).get())
+                .setTitle(this.languageRegistry.get(server, Text.GIVEAWAY_EMBED_TITLE, replacer -> replacer.set("item", giveaway.getGiveawayItem())).get())
                 .setDescription(this.languageRegistry.get(server, winners.size() > 1 ? Text.GIVEAWAY_FINISHED_EMBED_DESCRIPTION_PLURAL : Text.GIVEAWAY_FINISHED_EMBED_DESCRIPTION_SINGULAR,
                         replacer -> replacer.set("winners", description)).get())
                 .setFooter(this.languageRegistry.get(server, winners.size() > 1 ? Text.GIVEAWAY_FINISHED_EMBED_FOOTER_PLURAL : Text.GIVEAWAY_FINISHED_EMBED_FOOTER_SINGULAR,
-                        replacer -> replacer.set("winner-count", giveaway.winnerAmount()).set("entries", totalEntries)).get())
+                        replacer -> replacer.set("winner-count", giveaway.getWinnerAmount()).set("entries", totalEntries)).get())
                 .build()).queue(sentMessage -> {
             // Here so only if the message is sent is the giveaway deleted
             if (giveaway instanceof CurrentGiveaway currentGiveaway) {
@@ -79,7 +79,7 @@ public class MessageStep {
             }
         });
         // Handle the pinging of winners
-        Preset preset = giveaway.presetName().equals("default") ? this.defaultPreset : server.preset(giveaway.presetName());
+        Preset preset = giveaway.getPresetName().equals("default") ? this.defaultPreset : server.getPreset(giveaway.getPresetName());
 
         this.handleNewMessages(server, giveaway, message.getTextChannel(), winners, preset, description);
         this.handleDm(server, giveaway, winners, preset);
@@ -87,9 +87,9 @@ public class MessageStep {
 
     private void handleDm(Server server, RichGiveaway giveaway, Set<Long> winners, Preset preset) {
         if (preset.getSetting(Setting.DM_WINNERS)) {
-            Guild guild = this.shardManager.getGuildById(server.id());
+            Guild guild = this.shardManager.getGuildById(server.getId());
             if (guild == null) {
-                GiveawayBot.logger().warn("handleDm server should never be null but is null {} {}", giveaway.serverId(), giveaway.messageId());
+                GiveawayBot.logger().warn("handleDm server should never be null but is null {} {}", giveaway.getServerId(), giveaway.getMessageId());
                 return;
             }
             for (long winnerId : winners) {
@@ -97,12 +97,12 @@ public class MessageStep {
                 if (user == null) {
                     user = this.shardManager.retrieveUserById(winnerId).complete();
                     if (user == null) {
-                        GiveawayBot.logger().warn("handleDm user should never be null but is null {} {} {}", giveaway.serverId(), giveaway.messageId(), winnerId);
+                        GiveawayBot.logger().warn("handleDm user should never be null but is null {} {} {}", giveaway.getServerId(), giveaway.getMessageId(), winnerId);
                     }
                     continue;
                 }
                 user.openPrivateChannel().queue(privateChannel -> {
-                    this.languageRegistry.get(server, Text.GIVEAWAY_FINISHED_WINNER_DM, replacer -> replacer.set("item", giveaway.giveawayItem()).set("server-name", guild.getName())).to(privateChannel);
+                    this.languageRegistry.get(server, Text.GIVEAWAY_FINISHED_WINNER_DM, replacer -> replacer.set("item", giveaway.getGiveawayItem()).set("server-name", guild.getName())).to(privateChannel);
                 }, ex -> {
                     // ignored
                 });
@@ -146,7 +146,7 @@ public class MessageStep {
     }
 
     private void sendEnd(Server server, RichGiveaway giveaway, TextChannel channel, List<String> winnerEntries) {
-        Replace baseReplace = replacer -> replacer.set("item", giveaway.giveawayItem()).set("message-link", giveaway.messageLink());
+        Replace baseReplace = replacer -> replacer.set("item", giveaway.getGiveawayItem()).set("message-link", giveaway.getMessageLink());
         String message;
         if (winnerEntries.size() == 1) {
             message = this.languageRegistry.get(server, Text.GIVEAWAY_FINISHED_WINNER_MESSAGE).replace(replacer -> replacer.set("winner", winnerEntries.get(0)).addReplaces(baseReplace)).get();

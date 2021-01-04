@@ -26,11 +26,11 @@ public class ManagerRemoveSub extends SubCommand {
             this.langFor(server, Text.COULDNT_FIND_ROLE).to(event.getChannel());
             return;
         }
-        if (!server.managerRoles().contains(role.getIdLong())) {
+        if (!server.getManagerRoles().contains(role.getIdLong())) {
             this.langFor(server, Text.ADMIN_MANAGER_DOESNT_CONTAIN).to(event.getChannel());
             return;
         }
-        server.managerRoles().remove(role.getIdLong());
+        server.getManagerRoles().remove(role.getIdLong());
         this.langFor(server, Text.ADMIN_MANAGER_ROLE_REMOVED, replacer -> replacer.set("name", role.getName())).to(event.getChannel());
     }
 }

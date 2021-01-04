@@ -28,7 +28,7 @@ public class HelpCommand extends SimpleCommand {
 
     @Override
     public void onExecute(Member sender, Server server, GuildMessageReceivedEvent event, List<String> args) {
-        event.getChannel().sendMessage(server.canMemberManage(sender) ? this.fullMessageEmbed.get(server.language()) : this.limitedMessageEmbed.get(server.language())).queue();
+        event.getChannel().sendMessage(server.canMemberManage(sender) ? this.fullMessageEmbed.get(server.getLanguage()) : this.limitedMessageEmbed.get(server.getLanguage())).queue();
     }
 
     private void buildMessages(Palette palette) {

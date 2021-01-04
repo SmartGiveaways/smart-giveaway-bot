@@ -32,10 +32,10 @@ public class UserStorage extends MongoStorage<Long, User> {
     public MongoSerializer<User> serializer() {
         return (user, document) -> {
             document.put("serverId", this.serverId);
-            document.put("userId", user.id());
+            document.put("userId", user.getId());
             document.put("banned", user.isBanned());
             document.put("shadowBanned", user.isShadowBanned());
-            document.put("entries", this.gson.toJson(user.entries()));
+            document.put("entries", this.gson.toJson(user.getEntries()));
             return document;
         };
     }

@@ -59,7 +59,7 @@ public class DeleteSub extends SubCommand {
                     return;
                 }
                 this.scheduledGiveawayController.deleteGiveaway(server, giveaway);
-                this.langFor(server, Text.SCHEDULED_GIVEAWAY_DELETED, replacer -> replacer.set("item", giveaway.giveawayItem())).to(channel);
+                this.langFor(server, Text.SCHEDULED_GIVEAWAY_DELETED, replacer -> replacer.set("item", giveaway.getGiveawayItem())).to(channel);
             });
         } catch (IllegalArgumentException ex) {
             return true;
@@ -83,7 +83,7 @@ public class DeleteSub extends SubCommand {
                     return;
                 }
                 this.deletionStep.delete(giveaway);
-                this.langFor(server, Text.GIVEAWAY_DELETED, replacer -> replacer.set("item", giveaway.giveawayItem())).to(channel);
+                this.langFor(server, Text.GIVEAWAY_DELETED, replacer -> replacer.set("item", giveaway.getGiveawayItem())).to(channel);
             });
         } catch (IllegalArgumentException ex) {
             return true;

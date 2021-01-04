@@ -43,16 +43,16 @@ public class ExportSub extends SubCommand {
     }
 
     private void export(Server server, Preset preset, TextChannel channel) {
-        String fileName = "presets-" + preset.name() + "-" + server.id() + ".json";
-        String json = this.gson.toJson(preset.serialized());
+        String fileName = "presets-" + preset.getName() + "-" + server.getId() + ".json";
+        String json = this.gson.toJson(preset.getSerializedSettings());
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("singular", true);
-        jsonObject.put("preset-name", preset.name());
+        jsonObject.put("preset-name", preset.getName());
         jsonObject.put("preset-values", json);
 
         try (InputStream inputStream = new ByteArrayInputStream(jsonObject.toString().getBytes(StandardCharsets.UTF_8))) {
             channel.sendMessage(this.langFor(server, Text.PRESET_EXPORTED_SINGLE, replacer -> replacer
-                    .set("preset", preset.name())).get()).addFile(inputStream, fileName).queue(message -> {}, Throwable::printStackTrace);
+                    .set("preset", preset.getName())).get()).addFile(inputStream, fileName).queue(message -> {}, Throwable::printStackTrace);
         } catch (IOException ex) {
             ex.printStackTrace();
         }

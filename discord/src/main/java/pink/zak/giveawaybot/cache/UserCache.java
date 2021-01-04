@@ -11,10 +11,13 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
 public class UserCache extends AccessExpiringCache<Long, User> {
+    public static UserCache apiInstance;
+
     private final Map<String, Long> baseValueMap = Maps.newHashMap();
 
     public UserCache(GiveawayBot bot, CacheStorage<Long, User> storage, long serverId) {
         super(bot, storage, TimeUnit.MINUTES, 10, TimeUnit.MINUTES, 5);
+        apiInstance = this;
 
         this.baseValueMap.put("serverId", serverId);
     }

@@ -25,11 +25,11 @@ public class CreateSub extends SubCommand {
             this.langFor(server, Text.PRESET_CREATE_RESTRICTED_NAME, replacer -> replacer.set("name", "default")).to(event.getChannel());
             return;
         }
-        if (server.presets().size() >= (server.isPremium() ? 10 : 5)) {
+        if (server.getPresets().size() >= (server.isPremium() ? 10 : 5)) {
             this.langFor(server, server.isPremium() ? Text.PRESET_CREATE_LIMIT_REACHED_PREMIUM : Text.PRESET_CREATE_LIMIT_REACHED).to(event.getChannel());
             return;
         }
-        if (server.preset(name) != null) {
+        if (server.getPreset(name) != null) {
             this.langFor(server, Text.PRESET_CREATE_ALREADY_CALLED, replacer -> replacer.set("name", name)).to(event.getChannel());
             return;
         }

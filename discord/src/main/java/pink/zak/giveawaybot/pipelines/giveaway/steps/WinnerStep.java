@@ -23,7 +23,7 @@ public class WinnerStep {
     }
 
     public void actOnWinners(Server server, CurrentGiveaway giveaway, Message message, List<Long> enteredUsers, BigInteger totalEntries, Map<Long, BigInteger> userEntries) {
-        int winnerAmount = giveaway.winnerAmount();
+        int winnerAmount = giveaway.getWinnerAmount();
         if (userEntries.size() <= winnerAmount) {
             this.messageStep.handleFinishedMessages(server, giveaway, message, userEntries.keySet(), totalEntries, userEntries, true);
             return;
@@ -55,8 +55,8 @@ public class WinnerStep {
 
     public Set<Long> regenerateWinners(FinishedGiveaway giveaway) {
         List<Long> enteredUsers = Lists.newArrayList();
-        enteredUsers.addAll(giveaway.userEntries().keySet());
+        enteredUsers.addAll(giveaway.getUserEntries().keySet());
         Collections.shuffle(enteredUsers, ThreadLocalRandom.current());
-        return this.generateWinners(giveaway.winnerAmount(), enteredUsers, giveaway.totalEntries(), giveaway.userEntries());
+        return this.generateWinners(giveaway.getWinnerAmount(), enteredUsers, giveaway.getTotalEntries(), giveaway.getUserEntries());
     }
 }

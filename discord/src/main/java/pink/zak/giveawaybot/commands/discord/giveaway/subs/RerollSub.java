@@ -46,7 +46,7 @@ public class RerollSub extends SubCommand {
                 this.langFor(server, Text.COULDNT_FIND_GIVEAWAY).to(textChannel);
                 return;
             }
-            if (System.currentTimeMillis() - giveaway.endTime() > 86400000) {
+            if (System.currentTimeMillis() - giveaway.getEndTime() > 86400000) {
                 this.langFor(server, Text.REROLL_OVER_24_HOURS).to(textChannel);
                 return;
             }
@@ -54,7 +54,7 @@ public class RerollSub extends SubCommand {
             Message message = this.giveawayController.getGiveawayMessage(giveaway);
             giveaway.setWinners(newWinners);
             if (message != null) {
-                this.messageStep.handleFinishedMessages(server, giveaway, message, newWinners, giveaway.totalEntries());
+                this.messageStep.handleFinishedMessages(server, giveaway, message, newWinners, giveaway.getTotalEntries());
             }
             Long[] winnersArray = newWinners.toArray(new Long[]{});
             if (winnersArray.length == 1) {

@@ -18,6 +18,14 @@ plugins {
 group "pink.zak.giveawaybot"
 version "0.1.0"
 
+bootJar {
+    enabled = false
+}
+
+jar {
+    enabled = true
+}
+
 dependencies {
     implementation("net.dv8tion:JDA:4.2.0_224") { exclude module: "opus-java" }
     implementation("com.google.guava:guava:30.1-jre")

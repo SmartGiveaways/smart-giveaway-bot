@@ -30,24 +30,24 @@ public class PresetOptionsSub extends SubCommand {
     @Override
     public void onExecute(Member sender, Server server, GuildMessageReceivedEvent event, List<String> args) {
         String presetName = this.parseArgument(args, event.getGuild(), 1);
-        Preset preset = presetName.equalsIgnoreCase("default") ? this.defaultPreset : server.preset(presetName);
+        Preset preset = presetName.equalsIgnoreCase("default") ? this.defaultPreset : server.getPreset(presetName);
         if (preset == null) {
             this.langFor(server, Text.COULDNT_FIND_PRESET).to(event.getChannel());
             return;
         }
-        if (preset.settings().isEmpty()) {
-            this.langFor(server, Text.PRESET_HAS_NO_SETTINGS, replacer -> replacer.set("preset", preset.name())).to(event.getChannel());
+        if (preset.getSettings().isEmpty()) {
+            this.langFor(server, Text.PRESET_HAS_NO_SETTINGS, replacer -> replacer.set("preset", preset.getName())).to(event.getChannel());
             return;
         }
         StringBuilder builder = new StringBuilder();
-        for (Map.Entry<Setting, Object> entry : preset.settings().entrySet()) {
+        for (Map.Entry<Setting, Object> entry : preset.getSettings().entrySet()) {
             builder.append(entry.getKey().getPrimaryConfigName())
                     .append(" - ")
                     .append(entry.getValue())
                     .append("\n");
         }
         event.getChannel().sendMessage(new EmbedBuilder()
-                .setTitle(this.langFor(server, Text.PRESET_OPTIONS_LIST_EMBED_TITLE, replacer -> replacer.set("preset", preset.name())).get())
+                .setTitle(this.langFor(server, Text.PRESET_OPTIONS_LIST_EMBED_TITLE, replacer -> replacer.set("preset", preset.getName())).get())
                 .setFooter(this.langFor(server, Text.GENERIC_EMBED_FOOTER).get())
                 .setColor(this.palette.primary())
                 .setDescription(builder.toString())

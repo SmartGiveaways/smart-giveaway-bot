@@ -42,14 +42,14 @@ public class InfoSubLong extends SubCommand {
             this.langFor(server, Text.COULDNT_FIND_GIVEAWAY).to(channel);
             return;
         }
-        if (server.finishedGiveaways().contains(giveawayId)) {
+        if (server.getFinishedGiveaways().contains(giveawayId)) {
             FinishedGiveaway giveaway = this.finishedGiveawayCache.getSync(giveawayId);
             if (giveaway == null) {
                 this.langFor(server, Text.COULDNT_FIND_GIVEAWAY).to(channel);
                 return;
             }
             this.finishedGiveawayMessage(channel, server, giveaway);
-        } else if (server.activeGiveaways().contains(giveawayId)) {
+        } else if (server.getActiveGiveaways().contains(giveawayId)) {
             CurrentGiveaway giveaway = this.currentGiveawayCache.getSync(giveawayId);
             if (giveaway == null) {
                 this.langFor(server, Text.COULDNT_FIND_GIVEAWAY).to(channel);
@@ -66,13 +66,13 @@ public class InfoSubLong extends SubCommand {
                 new EmbedBuilder()
                         .setTitle(this.langFor(server, Text.FINISHED_GIVEAWAY_INFO_EMBED_TITLE).get())
                         .setDescription(this.langFor(server, Text.FINISHED_GIVEAWAY_INFO_EMBED_DESCRIPTION, replacer -> replacer
-                                .set("id", giveaway.messageId())
-                                .set("item", giveaway.giveawayItem())
-                                .set("message_link", giveaway.messageLink())
-                                .set("start_time", Time.formatAsDateTime(giveaway.startTime()) + " UTC")
-                                .set("end_time", Time.formatAsDateTime(giveaway.endTime()) + " UTC")
-                                .set("winners", giveaway.winners().stream().map(winnerId -> "<@" + winnerId + ">").collect(Collectors.joining(", ")))
-                                .set("total_entries", giveaway.totalEntries().toString())).get())
+                                .set("id", giveaway.getMessageId())
+                                .set("item", giveaway.getGiveawayItem())
+                                .set("message_link", giveaway.getMessageLink())
+                                .set("start_time", Time.formatAsDateTime(giveaway.getStartTime()) + " UTC")
+                                .set("end_time", Time.formatAsDateTime(giveaway.getEndTime()) + " UTC")
+                                .set("winners", giveaway.getWinners().stream().map(winnerId -> "<@" + winnerId + ">").collect(Collectors.joining(", ")))
+                                .set("total_entries", giveaway.getTotalEntries().toString())).get())
                         .setFooter(this.langFor(server, Text.GENERIC_EMBED_FOOTER).get())
                         .setColor(this.palette.primary())
                         .build()
@@ -84,12 +84,12 @@ public class InfoSubLong extends SubCommand {
                 new EmbedBuilder()
                         .setTitle(this.langFor(server, Text.CURRENT_GIVEAWAY_INFO_EMBED_TITLE).get())
                         .setDescription(this.langFor(server, Text.CURRENT_GIVEAWAY_INFO_EMBED_DESCRIPTION, replacer -> replacer
-                                .set("id", giveaway.messageId())
-                                .set("item", giveaway.giveawayItem())
-                                .set("message_link", giveaway.messageLink())
-                                .set("start_time", Time.formatAsDateTime(giveaway.startTime()) + " UTC")
-                                .set("end_time", Time.formatAsDateTime(giveaway.endTime()) + " UTC")
-                                .set("entered_users", giveaway.enteredUsers().size())).get())
+                                .set("id", giveaway.getMessageId())
+                                .set("item", giveaway.getGiveawayItem())
+                                .set("message_link", giveaway.getMessageLink())
+                                .set("start_time", Time.formatAsDateTime(giveaway.getStartTime()) + " UTC")
+                                .set("end_time", Time.formatAsDateTime(giveaway.getEndTime()) + " UTC")
+                                .set("entered_users", giveaway.getEnteredUsers().size())).get())
                         .setFooter(this.langFor(server, Text.GENERIC_EMBED_FOOTER).get())
                         .setColor(this.palette.primary())
                         .build()

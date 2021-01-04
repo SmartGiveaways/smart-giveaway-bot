@@ -3,6 +3,7 @@
 /api/build
 /discord/build
 /lib
+/logs
 *.idea
 .idea
 

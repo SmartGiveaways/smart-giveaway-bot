@@ -21,18 +21,19 @@ public class EligibilityCheckStep {
         if (!this.isEntryEnabled(entryType, preset)) { // No point doing any processing if the entry type is not enabled.
             return;
         }
-        if (!giveaway.enteredUsers().contains(user.id())) {
+        long messageId = giveaway.getMessageId();
+        if (!giveaway.getEnteredUsers().contains(user.getId())) {
             if (this.isEntryEnabled(EntryType.REACTION, preset)) {
                 return;
             }
-            user.entries().put(giveaway.messageId(), Maps.newEnumMap(EntryType.class));
-            giveaway.enteredUsers().add(user.id());
+            user.getEntries().put(messageId, Maps.newEnumMap(EntryType.class));
+            giveaway.getEnteredUsers().add(user.getId());
         }
-        if (!user.entries().containsKey(giveaway.messageId())) {
-            user.entries().put(giveaway.messageId(), Maps.newEnumMap(EntryType.class));
+        if (!user.getEntries().containsKey(messageId)) {
+            user.getEntries().put(messageId, Maps.newEnumMap(EntryType.class));
         }
         // no, the int is NOT a redundant cast. Please go away i know i should recode a lot of settings.
-        if (user.hasEntries(giveaway.messageId()) && user.entries(giveaway.messageId()).compareTo(BigInteger.valueOf((int) preset.getSetting(Setting.MAX_ENTRIES))) > -1) {
+        if (user.hasEntries(messageId) && user.getEntries(messageId).compareTo(BigInteger.valueOf((int) preset.getSetting(Setting.MAX_ENTRIES))) > -1) {
             return;
         }
         this.rewardStep.process(entryType, user, giveaway, preset);

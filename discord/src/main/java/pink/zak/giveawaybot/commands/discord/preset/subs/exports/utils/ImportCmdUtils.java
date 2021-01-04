@@ -108,13 +108,13 @@ public class ImportCmdUtils extends ListenerAdapter {
         }
         if (jsonObject.get("singular").getAsBoolean()) {
             String presetName = jsonObject.get("preset-name").getAsString();
-            if (server.presets().containsKey(presetName)) {
+            if (server.getPresets().containsKey(presetName)) {
                 return ImmutablePair.of(Sets.newHashSet(presetName), null);
             }
             return ImmutablePair.of(Sets.newHashSet(), null);
         }
         try {
-            Map<String, Preset> serialized = this.serverStorage.deserializePresets(server.id(), this.gson.fromJson(jsonObject.get("preset-values").getAsString(), new TypeToken<HashMap<String, HashMap<Setting, String>>>() {}.getType()));
+            Map<String, Preset> serialized = this.serverStorage.deserializePresets(server.getId(), this.gson.fromJson(jsonObject.get("preset-values").getAsString(), new TypeToken<HashMap<String, HashMap<Setting, String>>>() {}.getType()));
             return ImmutablePair.of(this.getClashingPresetsMessage(server, serialized), serialized);
         } catch (Exception ex) {
             this.languageRegistry.get(server, Text.PRESET_IMPORT_INVALID_FILE, replacer -> replacer.set("exception", ex.getClass().getSimpleName())).to(message.getTextChannel());
@@ -124,7 +124,7 @@ public class ImportCmdUtils extends ListenerAdapter {
 
     public Set<String> getClashingPresetsMessage(Server server, Map<String, Preset> serialized) {
         Set<String> clashing = Sets.newHashSet();
-        for (Map.Entry<String, Preset> entry : server.presets().entrySet()) {
+        for (Map.Entry<String, Preset> entry : server.getPresets().entrySet()) {
             if (serialized.containsKey(entry.getKey())) {
                 clashing.add("`" + entry.getKey() + "`");
             }
@@ -146,7 +146,7 @@ public class ImportCmdUtils extends ListenerAdapter {
             if (toAdd != null) {
                 this.serializedCache.invalidate(messageId, false);
                 this.confirmations.invalidate(messageId, false);
-                Map<String, Preset> updatedPresets = server.presets();
+                Map<String, Preset> updatedPresets = server.getPresets();
                 updatedPresets.putAll(toAdd);
                 if (updatedPresets.size() > 10) {
                     this.languageRegistry.get(server, Text.PRESET_IMPORT_TOO_MANY).to(channel);
@@ -164,7 +164,7 @@ public class ImportCmdUtils extends ListenerAdapter {
             JsonObject json = this.confirmations.getSync(messageId);
             if (json != null) {
                 this.confirmations.invalidate(messageId, false);
-                if (server.presets().size() == 10) {
+                if (server.getPresets().size() == 10) {
                     this.languageRegistry.get(server, Text.PRESET_IMPORT_TOO_MANY).to(channel);
                     return;
                 }
@@ -178,7 +178,7 @@ public class ImportCmdUtils extends ListenerAdapter {
                     } else {
                         Preset preset = new Preset(name, presetValues);
                         server.addPreset(preset);
-                        this.languageRegistry.get(server, Text.PRESET_IMPORTED_SINGULAR, replacer -> replacer.set("preset", preset.name())).to(channel);
+                        this.languageRegistry.get(server, Text.PRESET_IMPORTED_SINGULAR, replacer -> replacer.set("preset", preset.getName())).to(channel);
                     }
                 } catch (Exception ex) {
                     this.languageRegistry.get(server, Text.PRESET_IMPORT_INVALID_FILE, replacer -> replacer.set("exception", ex.getClass().getSimpleName())).to(channel);

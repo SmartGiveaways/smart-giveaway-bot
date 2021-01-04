@@ -21,14 +21,14 @@ public class StatsServerSub extends ConsoleSubCommand {
         if (server == null) {
             return;
         }
-        GiveawayBot.logger().info("-- [ Stats Info For {} ] --", server.id());
-        GiveawayBot.logger().info("Premium: {}", server.isPremium() ? "expires in ".concat(Time.format(server.timeToPremiumExpiry())) :
-                server.premiumExpiry() == -1 ? "has never had" : "expired " + Time.format(-server.timeToPremiumExpiry()) + " ago");
-        GiveawayBot.logger().info("Loaded Users: {}", server.userCache().size());
-        GiveawayBot.logger().info("Giveaway Count: {}", server.activeGiveaways().size());
-        GiveawayBot.logger().info("Scheduled Giveaway Count: {}", server.scheduledGiveaways().size());
-        GiveawayBot.logger().info("Preset Count: {}", server.presets().size());
-        GiveawayBot.logger().info("Ban Count: {}", server.bannedUsers().size());
+        GiveawayBot.logger().info("-- [ Stats Info For {} ] --", server.getId());
+        GiveawayBot.logger().info("Premium: {}", server.isPremium() ? "expires in ".concat(Time.format(server.getTimeToPremiumExpiry())) :
+                server.getPremiumExpiry() == -1 ? "has never had" : "expired " + Time.format(-server.getTimeToPremiumExpiry()) + " ago");
+        GiveawayBot.logger().info("Loaded Users: {}", server.getUserCache().size());
+        GiveawayBot.logger().info("Giveaway Count: {}", server.getActiveGiveaways().size());
+        GiveawayBot.logger().info("Scheduled Giveaway Count: {}", server.getScheduledGiveaways().size());
+        GiveawayBot.logger().info("Preset Count: {}", server.getPresets().size());
+        GiveawayBot.logger().info("Ban Count: {}", server.getBannedUsers().size());
         GiveawayBot.logger().info("-------------------------------------------");
     }
 }

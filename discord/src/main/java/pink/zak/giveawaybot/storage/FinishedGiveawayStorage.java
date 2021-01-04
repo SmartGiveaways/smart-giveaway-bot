@@ -29,17 +29,17 @@ public class FinishedGiveawayStorage extends MongoStorage<Long, FinishedGiveaway
     @Override
     public MongoSerializer<FinishedGiveaway> serializer() {
         return (giveaway, document) -> {
-            document.put("_id", giveaway.messageId());
-            document.put("channelId", giveaway.channelId());
-            document.put("serverId", giveaway.serverId());
-            document.put("startTime", giveaway.startTime());
-            document.put("endTime", giveaway.endTime());
-            document.put("winnerAmount", giveaway.winnerAmount());
-            document.put("presetName", giveaway.presetName());
-            document.put("giveawayItem", giveaway.giveawayItem());
-            document.put("totalEntries", giveaway.totalEntries().toString());
-            document.put("userEntries", gson.toJson(giveaway.userEntries()));
-            document.put("winners", gson.toJson(giveaway.winners()));
+            document.put("_id", giveaway.getMessageId());
+            document.put("channelId", giveaway.getChannelId());
+            document.put("serverId", giveaway.getServerId());
+            document.put("startTime", giveaway.getStartTime());
+            document.put("endTime", giveaway.getEndTime());
+            document.put("winnerAmount", giveaway.getWinnerAmount());
+            document.put("presetName", giveaway.getPresetName());
+            document.put("giveawayItem", giveaway.getGiveawayItem());
+            document.put("totalEntries", giveaway.getTotalEntries().toString());
+            document.put("userEntries", this.gson.toJson(giveaway.getUserEntries()));
+            document.put("winners", this.gson.toJson(giveaway.getWinners()));
             return document;
         };
     }
@@ -64,7 +64,7 @@ public class FinishedGiveawayStorage extends MongoStorage<Long, FinishedGiveaway
 
     public Set<FinishedGiveaway> loadAll(Server server, Set<Long> targeted) {
         Set<FinishedGiveaway> giveaways = Sets.newHashSet();
-        for (Document document : super.collection.find(Filters.eq("serverId", server.id()))) {
+        for (Document document : super.collection.find(Filters.eq("serverId", server.getId()))) {
             long id = document.getLong("_id");
             if (!targeted.contains(id)) {
                 continue;

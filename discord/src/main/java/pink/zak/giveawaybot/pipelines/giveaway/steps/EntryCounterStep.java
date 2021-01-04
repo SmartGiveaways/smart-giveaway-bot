@@ -32,32 +32,32 @@ public class EntryCounterStep {
     }
 
     public void countEntries(CurrentGiveaway giveaway, Message message) {
-        Server server = this.serverCache.get(giveaway.serverId()).join();
+        Server server = this.serverCache.get(giveaway.getServerId()).join();
         BigInteger totalEntries = BigInteger.ZERO;
         Map<Long, BigInteger> userEntriesMap = Maps.newHashMap();
-        List<Long> enteredUsers = Lists.newArrayList(giveaway.enteredUsers());
+        List<Long> enteredUsers = Lists.newArrayList(giveaway.getEnteredUsers());
         Collections.shuffle(enteredUsers);
-        long giveawayId = giveaway.messageId();
+        long giveawayId = giveaway.getMessageId();
 
-        for (long enteredUserId : giveaway.enteredUsers()) {
-            User user = server.userCache().getSync(enteredUserId);
+        for (long enteredUserId : giveaway.getEnteredUsers()) {
+            User user = server.getUserCache().getSync(enteredUserId);
             if (user == null) {
-                giveaway.enteredUsers().remove(enteredUserId);
+                giveaway.getEnteredUsers().remove(enteredUserId);
                 continue;
             }
             if (user.isBanned() || user.isShadowBanned()) {
-                giveaway.enteredUsers().remove(enteredUserId);
-                user.entries().remove(giveawayId);
+                giveaway.getEnteredUsers().remove(enteredUserId);
+                user.getEntries().remove(giveawayId);
                 continue;
             }
-            Map<EntryType, AtomicInteger> entries = user.entries().get(giveawayId);
+            Map<EntryType, AtomicInteger> entries = user.getEntries().get(giveawayId);
             if (entries != null) {
                 BigInteger totalUserEntries = BigInteger.ZERO;
                 for (AtomicInteger entryTypeAmount : entries.values()) {
                     totalEntries = totalEntries.add(BigInteger.valueOf(entryTypeAmount.get()));
                     totalUserEntries = totalUserEntries.add(BigInteger.valueOf(entryTypeAmount.get()));
                 }
-                userEntriesMap.put(user.id(), totalUserEntries);
+                userEntriesMap.put(user.getId(), totalUserEntries);
             }
         }
         if (totalEntries.equals(BigInteger.ZERO)) {

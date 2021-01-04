@@ -22,15 +22,15 @@ public class GiveawayStorage extends MongoStorage<Long, CurrentGiveaway> {
     @Override
     public MongoSerializer<CurrentGiveaway> serializer() {
         return (giveaway, document) -> {
-            document.put("_id", giveaway.messageId());
-            document.put("channelId", giveaway.channelId());
-            document.put("serverId", giveaway.serverId());
-            document.put("startTime", giveaway.startTime());
-            document.put("endTime", giveaway.endTime());
-            document.put("winnerAmount", giveaway.winnerAmount());
-            document.put("presetName", giveaway.presetName());
-            document.put("giveawayItem", giveaway.giveawayItem());
-            document.put("enteredUsers", this.gson.toJson(giveaway.enteredUsers()));
+            document.put("_id", giveaway.getMessageId());
+            document.put("channelId", giveaway.getChannelId());
+            document.put("serverId", giveaway.getServerId());
+            document.put("startTime", giveaway.getStartTime());
+            document.put("endTime", giveaway.getEndTime());
+            document.put("winnerAmount", giveaway.getWinnerAmount());
+            document.put("presetName", giveaway.getPresetName());
+            document.put("giveawayItem", giveaway.getGiveawayItem());
+            document.put("enteredUsers", this.gson.toJson(giveaway.getEnteredUsers()));
             return document;
         };
     }

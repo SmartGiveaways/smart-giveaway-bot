@@ -39,28 +39,28 @@ public class EntriesCommand extends SimpleCommand {
 
     private void runLogic(Member target, Server server, TextChannel channel, boolean self) {
         String targetName = UserUtils.getNameDiscrim(target);
-        if (server.activeGiveaways().isEmpty()) {
+        if (server.getActiveGiveaways().isEmpty()) {
             this.langFor(server, Text.NO_ACTIVE_GIVEAWAYS).to(channel);
             return;
         }
-        server.userCache().get(target.getIdLong()).thenAccept(user -> {
+        server.getUserCache().get(target.getIdLong()).thenAccept(user -> {
             if (user.isBanned()) {
                 this.langFor(server, self ? Text.SELF_BANNED_FROM_GIVEAWAYS : Text.TARGET_BANNED_FROM_GIVEAWAYS, replacer -> replacer.set("target", target)).to(channel);
                 return;
             }
-            Set<Long> presentGiveaways = server.activeGiveaways(user);
+            Set<Long> presentGiveaways = server.getActiveGiveaways(user);
             if (presentGiveaways.isEmpty()) {
                 this.langFor(server, self ? Text.SELF_NOT_ENTERED : Text.TARGET_NOT_ENTERED, replacer -> replacer.set("target", target)).to(channel);
                 return;
             }
             StringBuilder descriptionBuilder = new StringBuilder();
             for (long giveawayId : presentGiveaways) {
-                BigInteger entries = user.entries(giveawayId);
+                BigInteger entries = user.getEntries(giveawayId);
                 CurrentGiveaway giveaway = this.giveawayCache.getSync(giveawayId);
                 if (giveaway != null) {
                     descriptionBuilder.append(this.langFor(server,
                             entries.compareTo(BigInteger.ONE) < 1 ? Text.ENTRIES_EMBED_GIVEAWAY_LINE : Text.ENTRIES_EMBED_GIVEAWAY_LINE_PLURAL, replacer -> replacer
-                                    .set("item", "[" + giveaway.giveawayItem() + "](" + giveaway.messageLink() + ")")
+                                    .set("item", giveaway.getLinkedGiveawayItem())
                                     .set("entries", entries.toString())).get());
                 }
             }

@@ -184,7 +184,7 @@ public class GiveawayBot extends JdaBot {
         this.finishedGiveawayCache.shutdown();
         timings.add(System.currentTimeMillis());
         long seconds = Math.floorDiv(timings.get(2) - timings.get(1), 1000);
-        logger.info("Saved {} finished giveaways in {} seconds ({}/s)", finishedGiveawayCount, seconds, Math.floorDiv(finishedGiveawayCount, seconds));
+        logger.info("Saved {} finished giveaways in {} seconds ({}/s)", finishedGiveawayCount, seconds, Math.floorDiv(finishedGiveawayCount, Math.max(seconds, 1)));
         this.serverCache.shutdown();
         timings.add(System.currentTimeMillis());
         this.mongoConnectionFactory.close();

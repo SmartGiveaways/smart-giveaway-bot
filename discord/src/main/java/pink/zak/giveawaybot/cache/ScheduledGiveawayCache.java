@@ -8,13 +8,15 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 public class ScheduledGiveawayCache extends AccessExpiringCache<UUID, ScheduledGiveaway> {
+    public static ScheduledGiveawayCache apiInstance;
 
     public ScheduledGiveawayCache(GiveawayBot bot) {
         super(bot, bot.getScheduledGiveawayStorage(), TimeUnit.MINUTES, 10);
+        apiInstance = this;
     }
 
     public void addScheduledGiveaway(ScheduledGiveaway giveaway) {
         this.storage.save(giveaway);
-        this.set(giveaway.uuid(), giveaway);
+        this.set(giveaway.getUuid(), giveaway);
     }
 }

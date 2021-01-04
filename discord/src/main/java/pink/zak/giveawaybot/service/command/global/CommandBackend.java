@@ -80,7 +80,7 @@ public abstract class CommandBackend {
                     return guild.getRoleById(roleId);
                 })
                 .registerArgumentType(Language.class, (string, guild) -> this.languageRegistry.getLanguage(string))
-                .registerArgumentType(Preset.class, (string, guild) -> this.serverCache.getSync(guild.getIdLong()).preset(string.toLowerCase()))
+                .registerArgumentType(Preset.class, (string, guild) -> this.serverCache.getSync(guild.getIdLong()).getPreset(string.toLowerCase()))
                 .registerArgumentType(Integer.class, (string, guild) -> NumberUtils.parseInt(string, -1))
                 .registerArgumentType(Long.class, (string, guild) -> NumberUtils.parseLong(string, -1))
                 .registerArgumentType(Double.class, (string, guild) -> NumberUtils.parseDouble(string, -1))

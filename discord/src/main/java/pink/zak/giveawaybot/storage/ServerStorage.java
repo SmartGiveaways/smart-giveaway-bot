@@ -30,15 +30,15 @@ public class ServerStorage extends MongoStorage<Long, Server> {
     @Override
     public MongoSerializer<Server> serializer() {
         return (server, document) -> {
-            document.put("_id", server.id());
-            document.put("presets", this.gson.toJson(this.serializePresets(server.presets())));
-            document.put("activeGiveaways", this.gson.toJson(server.activeGiveaways()));
-            document.put("finishedGiveaways", this.gson.toJson(server.finishedGiveaways()));
-            document.put("scheduledGiveaways", this.gson.toJson(server.scheduledGiveaways()));
-            document.put("managerRoles", this.gson.toJson(server.managerRoles()));
-            document.put("bannedUsers", this.gson.toJson(server.bannedUsers()));
-            document.put("premium", server.premiumExpiry());
-            document.put("language", server.language());
+            document.put("_id", server.getId());
+            document.put("presets", this.gson.toJson(this.serializePresets(server.getPresets())));
+            document.put("activeGiveaways", this.gson.toJson(server.getActiveGiveaways()));
+            document.put("finishedGiveaways", this.gson.toJson(server.getFinishedGiveaways()));
+            document.put("scheduledGiveaways", this.gson.toJson(server.getScheduledGiveaways()));
+            document.put("managerRoles", this.gson.toJson(server.getManagerRoles()));
+            document.put("bannedUsers", this.gson.toJson(server.getBannedUsers()));
+            document.put("premium", server.getPremiumExpiry());
+            document.put("language", server.getLanguage());
             return document;
         };
     }
@@ -69,7 +69,7 @@ public class ServerStorage extends MongoStorage<Long, Server> {
     public Map<String, EnumMap<Setting, String>> serializePresets(Map<String, Preset> unserialized) {
         Map<String, EnumMap<Setting, String>> serialized = Maps.newHashMap();
         for (Map.Entry<String, Preset> preset : unserialized.entrySet()) {
-            serialized.put(preset.getKey(), preset.getValue().serialized());
+            serialized.put(preset.getKey(), preset.getValue().getSerializedSettings());
         }
         return serialized;
     }

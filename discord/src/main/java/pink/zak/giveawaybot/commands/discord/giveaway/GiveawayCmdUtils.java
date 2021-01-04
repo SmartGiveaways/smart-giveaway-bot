@@ -120,7 +120,7 @@ public class GiveawayCmdUtils {
             this.lang.get(server, Text.GIVEAWAY_ITEM_TOO_LONG).to(responseChannel);
             return true;
         }
-        if (!server.scheduledGiveaways().isEmpty() && this.giveawayController.getGiveawayCountAt(server, startTime, endTime) >= 10) {
+        if (!server.getScheduledGiveaways().isEmpty() && this.giveawayController.getGiveawayCountAt(server, startTime, endTime) >= 10) {
             this.lang.get(server, Text.SCHEDULED_GIVEAWAY_LIMIT_FAILURE_FUTURE).to(responseChannel);
             return true;
         }

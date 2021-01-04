@@ -30,7 +30,7 @@ public class OptionsSub extends SubCommand {
 
     @Override
     public void onExecute(Member sender, Server server, GuildMessageReceivedEvent event, List<String> args) {
-        event.getChannel().sendMessage(this.optionsList.get(server.language())).queue();
+        event.getChannel().sendMessage(this.optionsList.get(server.getLanguage())).queue();
     }
 
     private Map<String, MessageEmbed> setupOptionsList() {
