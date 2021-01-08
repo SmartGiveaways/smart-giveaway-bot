@@ -55,7 +55,8 @@ public abstract class SubCommand extends Command {
         this.arguments.add(new Argument<>(ArgumentHandler.getArgumentType(clazz), argument));
     }
 
-    protected <S> void addArguments(Class<S>... clazzes) {
+    @SafeVarargs
+    protected final <S> void addArguments(Class<S>... clazzes) {
         for (Class<S> clazz : clazzes) {
             this.addArgument(clazz);
         }

@@ -14,7 +14,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class ShutdownHelper {
-    private final GiveawayBot bot;
     private final ServerCache serverCache;
     private final GiveawayCache giveawayCache;
     private final FinishedGiveawayCache finishedGiveawayCache;
@@ -23,7 +22,6 @@ public class ShutdownHelper {
     private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
 
     public ShutdownHelper(GiveawayBot bot) {
-        this.bot = bot;
         this.serverCache = bot.getServerCache();
         this.giveawayCache = bot.getGiveawayCache();
         this.finishedGiveawayCache = bot.getFinishedGiveawayCache();

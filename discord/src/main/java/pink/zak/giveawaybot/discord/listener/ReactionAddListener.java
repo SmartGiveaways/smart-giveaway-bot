@@ -28,7 +28,7 @@ public class ReactionAddListener extends ListenerAdapter {
     public ReactionAddListener(GiveawayBot bot) {
         this.serverCache = bot.getServerCache();
         this.giveawayCache = bot.getGiveawayCache();
-        this.defaultPreset = bot.getDefaults().getDefaultPreset();
+        this.defaultPreset = Defaults.defaultPreset;
         this.entryCount = bot.getMetricsLogger().getGenericBotMetrics().getEntryCount();
 
         this.baseMap = Maps.newEnumMap(EntryType.class);

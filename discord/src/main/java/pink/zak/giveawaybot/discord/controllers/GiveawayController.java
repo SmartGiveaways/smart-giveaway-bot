@@ -69,7 +69,7 @@ public class GiveawayController {
         this.giveawayStorage = bot.getGiveawayStorage();
         this.scheduledGiveawayCache = bot.getScheduledGiveawayCache();
         this.serverCache = bot.getServerCache();
-        this.defaultPreset = bot.getDefaults().getDefaultPreset();
+        this.defaultPreset = Defaults.defaultPreset;
         this.palette = bot.getDefaults().getPalette();
         this.defaults = bot.getDefaults();
         this.bot = bot;

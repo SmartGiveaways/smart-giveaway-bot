@@ -13,5 +13,5 @@ public interface CacheStorage<K, T> {
 
     CompletableFuture<Void> save(T type);
 
-    CompletableFuture<Void>  save(Map<String, Object> keyValues, T type);
+    CompletableFuture<Void> save(Map<String, Object> keyValues, T type);
 }

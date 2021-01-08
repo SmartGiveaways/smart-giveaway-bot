@@ -3,7 +3,7 @@ package pink.zak.giveawaybot.discord.service.message;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class PageableMenu {
-    protected AtomicInteger currentPage;
+    protected final AtomicInteger currentPage;
     protected long cooldown;
     private long lastChange = System.currentTimeMillis();
     protected int maxPage = Integer.MAX_VALUE;

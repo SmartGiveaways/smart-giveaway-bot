@@ -21,7 +21,7 @@ public class EntryPipeline {
     public EntryPipeline(GiveawayBot bot) {
         this.checkStep = new EligibilityCheckStep(bot);
         this.giveawayCache = bot.getGiveawayCache();
-        this.defaultPreset = bot.getDefaults().getDefaultPreset();
+        this.defaultPreset = Defaults.defaultPreset;
         this.executor = bot.getAsyncExecutor(ThreadFunction.GENERAL);
     }
 
