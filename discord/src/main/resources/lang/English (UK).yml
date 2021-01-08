@@ -80,7 +80,7 @@ values:
 
   admin-manager-limit-reached: ":x: You can only have 5 manager roles. List them with >gadmin roles"
   admin-manager-already-contains: ":x: That role can already manage this server."
-  admin-manager-doesnt-contain: ":x: That role is not a manager."
+  admin-manager-doesnt-contain: ":x: That role is not a manager role."
   admin-manager-role-added: ":white_check_mark: %name% is now a manager role."
   admin-manager-role-removed: ":white_check_mark: %name% is no longer a manager role."
 
