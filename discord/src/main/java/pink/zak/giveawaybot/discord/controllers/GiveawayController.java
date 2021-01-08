@@ -218,12 +218,14 @@ public class GiveawayController {
                     }
                     Preset preset = giveaway.getPresetName().equals("default") ? this.defaultPreset : server.getPreset(giveaway.getPresetName());
                     boolean reactToEnter = preset.getSetting(Setting.ENABLE_REACT_TO_ENTER);
-                    message.editMessage(new EmbedBuilder()
-                            .setTitle(this.languageRegistry.get(server, Text.GIVEAWAY_EMBED_TITLE, replacer -> replacer.set("item", giveaway.getGiveawayItem())).get())
-                            .setDescription(this.languageRegistry.get(server, reactToEnter ? Text.GIVEAWAY_EMBED_DESCRIPTION_REACTION : Text.GIVEAWAY_EMBED_DESCRIPTION_ALL).get())
-                            .setColor(this.palette.primary())
-                            .setFooter(this.getFooter(server, giveaway.getTimeToExpiry(), giveaway.getWinnerAmount()))
-                            .build()).queue();
+                    if (!GiveawayBot.isLocked()) {
+                        message.editMessage(new EmbedBuilder()
+                                .setTitle(this.languageRegistry.get(server, Text.GIVEAWAY_EMBED_TITLE, replacer -> replacer.set("item", giveaway.getGiveawayItem())).get())
+                                .setDescription(this.languageRegistry.get(server, reactToEnter ? Text.GIVEAWAY_EMBED_DESCRIPTION_REACTION : Text.GIVEAWAY_EMBED_DESCRIPTION_ALL).get())
+                                .setColor(this.palette.primary())
+                                .setFooter(this.getFooter(server, giveaway.getTimeToExpiry(), giveaway.getWinnerAmount()))
+                                .build()).queue();
+                    }
                 }).exceptionally(ex -> {
                     GiveawayBot.logger().error("Error in giveaway updater: ", ex);
                     return null;
@@ -255,10 +257,12 @@ public class GiveawayController {
     }
 
     private void startGiveawayTimer(CurrentGiveaway giveaway) {
-        this.scheduledFutures.put(giveaway, this.threadManager.getScheduler().schedule(() -> {
-            GiveawayBot.logger().debug("Giveaway {} expired", giveaway.getMessageId());
-            this.giveawayPipeline.endGiveaway(giveaway);
-        }, giveaway.getTimeToExpiry(), TimeUnit.MILLISECONDS));
+        if (!GiveawayBot.isLocked()) {
+            this.scheduledFutures.put(giveaway, this.threadManager.getScheduler().schedule(() -> {
+                GiveawayBot.logger().debug("Giveaway {} expired", giveaway.getMessageId());
+                this.giveawayPipeline.endGiveaway(giveaway);
+            }, giveaway.getTimeToExpiry(), TimeUnit.MILLISECONDS));
+        }
     }
 
     @SneakyThrows
