@@ -100,7 +100,7 @@ values:
 
   # >gban -s command messages
   target-already-shadow-banned: ":x: %target% is already shadow banned."
-  cannot-ban-is-banned: ":x: %target% is banned. Unban them first to overwrite with a shadow ban."
+  cannot-ban-is-banned: ":x: %target% is banned. Unban them first to shadow ban them."
   shadow-banned-successfully: ":white_check_mark: shadow banned %target%."
 
   ban-list-embed-title: "Banned Users"
