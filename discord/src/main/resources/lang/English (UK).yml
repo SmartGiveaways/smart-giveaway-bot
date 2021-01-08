@@ -127,7 +127,7 @@ values:
 
   # >giveaway command messages
   giveaway-help-embed-title: "Giveaway Command Help"
-  giveaway-help-embed-footer: "Want all commands? See >ghelp or go to https://docs.sgs.pink/commands"
+  giveaway-help-embed-footer: "Want all commands? See >ghelp or go to <https://docs.sgs.pink/commands>"
   giveaway-help-embed-content: "<a:loading1:788070036635779072> >g schedule <preset> <delay> <length> [channel] <winner amount> <item/topic>\n
                             <a:tada1:788070725755600957> >g create <preset> <length> [channel] <winner amount> <item/topic>\n
                             :newspaper: >g list [scheduled]\n
