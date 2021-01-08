@@ -197,7 +197,7 @@ values:
 
   # >ghelp command messages
   help-embed-title: "SmartGiveaways Help"
-  help-embed-footer: "For more commands visit https://sgs.pink/commands"
+  help-embed-footer: "For more commands visit <https://sgs.pink/commands>"
   help-limited-section: ":tickets: >entries"
   help-admin-section: ":tada: >giveaway - Manage Giveaways\n
                         :level_slider: >preset - Manage Presets\n
@@ -208,7 +208,7 @@ values:
 
   # >premium command messages
   premium-embed-title: "Premium Status"
-  premium-embed-footer: "Purchase or renew premium here: https://sgs.pink/premium" # It will have the default footer if they have purchased.
+  premium-embed-footer: "Purchase or renew premium here: <https://sgs.pink/premium>" # It will have the default footer if they have purchased.
   premium-embed-description-purchased: "Your premium expires in %expiry%\n
                                         Thanks for supporting us!"
   premium-embed-description-not-purchased: "You don't have premium right now. Here's some benefits:\n
