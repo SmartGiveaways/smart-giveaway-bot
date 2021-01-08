@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <conversionRule conversionWord="highlight" converterClass="pink.zak.giveawaybot.service.logback.HighlightingConverter" />
+    <conversionRule conversionWord="highlight" converterClass="pink.zak.giveawaybot.discord.service.logback.HighlightingConverter" />
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>

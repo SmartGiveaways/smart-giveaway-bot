@@ -1,6 +1,6 @@
 package pink.zak.giveawaybot.api.model.giveaway;
 
-import pink.zak.giveawaybot.models.giveaway.ScheduledGiveaway;
+import pink.zak.giveawaybot.discord.models.giveaway.ScheduledGiveaway;
 
 public class ScheduledGiveawayCreation {
     private long channelId;

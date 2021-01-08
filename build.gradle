@@ -17,7 +17,7 @@ plugins {
     id "io.spring.dependency-management" version "1.0.10.RELEASE"
 }
 
-group "pink.zak"
+group "pink.zak.giveawaybot"
 version "0.1.0"
 
 sourceCompatibility = 15
@@ -37,37 +37,36 @@ allprojects {
 
     dependencies {
         implementation("com.google.guava:guava:30.1-jre")
+        implementation("org.mongodb:mongo-java-driver:3.12.7")
+
+        testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
+        testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
     }
 
     tasks.withType(JavaCompile).all {
         options.compilerArgs += ["--enable-preview"]
     }
-}
 
-repositories {
-    mavenCentral()
+    test {
+        useJUnitPlatform()
+        jvmArgs(['--enable-preview'])
+    }
 }
 
 dependencies {
-    implementation project(":discord")
     implementation project(":api")
+    implementation project(":discord")
+    implementation "org.springframework.boot:spring-boot-starter-web"
 }
 
 shadowJar {
     manifest {
         attributes "Class-Path": "pink.zak.giveawaybot",
                 "Main-Class": "pink.zak.giveawaybot.Main",
-                "Specification-Title": "JDA",
-                "Specification-Version": "4.2.0_216",
-                "Specification-Vendor": "DV8FromTheWorld",
                 "Implementation-Title": "SmartGiveaways Bot",
                 "Implementation-Version": this.version,
                 "Implementation-Vendor": "SmartGiveaways"
     }
-}
-
-test {
-    useJUnitPlatform()
 }
 
 task depsize {

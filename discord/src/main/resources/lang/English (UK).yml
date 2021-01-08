@@ -6,7 +6,7 @@ aliases: [ "english", "en", "uk", "en-uk" ]
 
 values:
   # General messages
-  bot-missing-permissions: ":x: The bot doesn't have the correct permissions. Please reinvite the bot from <https://sgs.pink/invite>."
+  bot-missing-permissions: ":x: The bot doesn't have the correct permissions. Please re-invite the bot from <https://sgs.pink/invite>."
   bot-missing-permission-specific: ":x: The bot is missing the %permission% permission."
   bot-missing-permissions-specific: ":x: The bot is missing the following permissions: %permission%"
   no-permission: ":x: No permission. You must have admin or one of your roles must be a manager (`>gadmin role add @Role`)"
@@ -24,6 +24,14 @@ values:
   generic-failure: ":x: Something went wrong. Please try again in a few minutes."
   generic-embed-footer: "SmartGiveaways v%version% - https://docs.sgs.pink/"
   command-requires-premium: "This command requires premium. Donate here https://sgs.pink/premium."
+
+  new-guild-joined: ":tada: Thank you for inviting SmartGiveaways. Below is some useful information:\n
+                      \n
+                      Help command: `>ghelp`\n
+                      Giveaway command help: `>g help`\n
+                      Documentation: https://docs.sgs.pink/\n
+                      \n
+                      *PS we've set your language to %language%*"
 
   # giveaway messages
   giveaway-embed-title: "Giveaway: %item%"

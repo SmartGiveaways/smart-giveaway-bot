@@ -3,9 +3,9 @@ package pink.zak.giveawaybot.api.controllers;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.web.bind.annotation.*;
 import pink.zak.giveawaybot.api.model.giveaway.ScheduledGiveawayCreation;
-import pink.zak.giveawaybot.models.giveaway.CurrentGiveaway;
-import pink.zak.giveawaybot.models.giveaway.FinishedGiveaway;
-import pink.zak.giveawaybot.models.giveaway.ScheduledGiveaway;
+import pink.zak.giveawaybot.discord.models.giveaway.CurrentGiveaway;
+import pink.zak.giveawaybot.discord.models.giveaway.FinishedGiveaway;
+import pink.zak.giveawaybot.discord.models.giveaway.ScheduledGiveaway;
 
 import java.util.UUID;
 

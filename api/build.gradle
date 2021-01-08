@@ -23,14 +23,21 @@ repositories {
     mavenLocal()
 }
 
+bootJar {
+    enabled = false
+}
+
+jar {
+    enabled = true
+}
+
 dependencies {
-    implementation project(":discord")
-    implementation("net.dv8tion:JDA:4.2.0_225") { exclude module: "opus-java" }
+    compileOnly project(":discord")
+    compileOnly("net.dv8tion:JDA:4.2.0_225") { exclude module: "opus-java" }
 
     implementation "org.springframework.boot:spring-boot-starter-oauth2-client"
     implementation "org.springframework.boot:spring-boot-starter-security"
     implementation "io.jsonwebtoken:jjwt:0.9.1"
-    //implementation "org.springframework.boot:spring-boot-devtools:2.4.1"
     implementation "org.springframework.boot:spring-boot-starter-web"
     implementation "org.springdoc:springdoc-openapi-ui:1.5.2"
 
@@ -39,7 +46,3 @@ dependencies {
 }
 
 shadowJar {}
-
-test {
-    useJUnitPlatform()
-}

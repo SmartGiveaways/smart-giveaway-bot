@@ -1,14 +1,14 @@
 package pink.zak.giveawaybot.api.controllers;
 
 import org.springframework.stereotype.Component;
-import pink.zak.giveawaybot.GiveawayBot;
+import pink.zak.giveawaybot.discord.GiveawayBot;
 import pink.zak.giveawaybot.api.model.giveaway.ScheduledGiveawayCreation;
-import pink.zak.giveawaybot.cache.FinishedGiveawayCache;
-import pink.zak.giveawaybot.cache.GiveawayCache;
-import pink.zak.giveawaybot.cache.ScheduledGiveawayCache;
-import pink.zak.giveawaybot.models.giveaway.CurrentGiveaway;
-import pink.zak.giveawaybot.models.giveaway.FinishedGiveaway;
-import pink.zak.giveawaybot.models.giveaway.ScheduledGiveaway;
+import pink.zak.giveawaybot.discord.cache.FinishedGiveawayCache;
+import pink.zak.giveawaybot.discord.cache.GiveawayCache;
+import pink.zak.giveawaybot.discord.cache.ScheduledGiveawayCache;
+import pink.zak.giveawaybot.discord.models.giveaway.CurrentGiveaway;
+import pink.zak.giveawaybot.discord.models.giveaway.FinishedGiveaway;
+import pink.zak.giveawaybot.discord.models.giveaway.ScheduledGiveaway;
 
 import java.util.UUID;
 
@@ -20,7 +20,7 @@ public class GiveawayControllerImpl implements GiveawayController {
 
     @Override
     public ScheduledGiveaway getScheduledGiveaway(UUID uuid) {
-        return this.scheduledCache.getSync(uuid);
+        return this.scheduledCache.get(uuid);
     }
 
     @Override
@@ -30,11 +30,11 @@ public class GiveawayControllerImpl implements GiveawayController {
 
     @Override
     public CurrentGiveaway getCurrentGiveaway(long id) {
-        return this.currentCache.getSync(id);
+        return this.currentCache.get(id);
     }
 
     @Override
     public FinishedGiveaway getFinishedGiveaway(long id) {
-        return this.finishedCache.getSync(id);
+        return this.finishedCache.get(id);
     }
 }
