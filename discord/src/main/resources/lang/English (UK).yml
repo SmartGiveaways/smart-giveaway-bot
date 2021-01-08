@@ -73,7 +73,7 @@ values:
   admin-list-languages-embed-title: "Available Languages"
   admin-list-languages-embed-footer: "Use >gadmin language <language> to set the language"
   admin-language-not-found: "Could not find that language. Use >gadmin languages to list the available languages."
-  admin-set-language: "Your language has been set to English-UK."
+  admin-set-language: "Your language has been set to English UK."
 
   admin-no-managers: ":x: There are not any manager roles right now. Add them with `>gadmin role add <role>"
   admin-manager-list-title: "Manager Roles"
@@ -127,7 +127,7 @@ values:
 
   # >giveaway command messages
   giveaway-help-embed-title: "Giveaway Command Help"
-  giveaway-help-embed-footer: "Want all commands? See >ghelp or go to <https://docs.sgs.pink/commands>"
+  giveaway-help-embed-footer: "Want all commands? See >ghelp or go to https://docs.sgs.pink/commands"
   giveaway-help-embed-content: "<a:loading1:788070036635779072> >g schedule <preset> <delay> <length> [channel] <winner amount> <item/topic>\n
                             <a:tada1:788070725755600957> >g create <preset> <length> [channel] <winner amount> <item/topic>\n
                             :newspaper: >g list [scheduled]\n
@@ -197,7 +197,7 @@ values:
 
   # >ghelp command messages
   help-embed-title: "SmartGiveaways Help"
-  help-embed-footer: "For more commands visit <https://sgs.pink/commands>"
+  help-embed-footer: "For more commands visit https://sgs.pink/commands"
   help-limited-section: ":tickets: >entries"
   help-admin-section: ":tada: >giveaway - Manage Giveaways\n
                         :level_slider: >preset - Manage Presets\n
@@ -208,7 +208,7 @@ values:
 
   # >premium command messages
   premium-embed-title: "Premium Status"
-  premium-embed-footer: "Purchase or renew premium here: <https://sgs.pink/premium>" # It will have the default footer if they have purchased.
+  premium-embed-footer: "Purchase or renew premium here: https://sgs.pink/premium" # It will have the default footer if they have purchased.
   premium-embed-description-purchased: "Your premium expires in %expiry%\n
                                         Thanks for supporting us!"
   premium-embed-description-not-purchased: "You don't have premium right now. Here's some benefits:\n
