@@ -14,7 +14,7 @@ values:
   couldnt-find-role: ":x: Could not find that role ;("
   couldnt-find-channel: ":x: The specified channel could not be found. Make sure the bot can access it."
   couldnt-find-giveaway: ":x: Could not find a giveaway with that ID. Make sure the giveaway is finished and you're using the message ID."
-  couldnt-find-scheduled-giveaway: ":x: Could not find a scheduled giveaway with that UUID. Use `>g list scheduled` to list scheduled giveaways.."
+  couldnt-find-scheduled-giveaway: ":x: Could not find a scheduled giveaway with that UUID. Use `>g list scheduled` to list scheduled giveaways."
   couldnt-find-preset: ":x: Could not find that preset."
   couldnt-find-setting: ":x: Could not find that setting. Use `>preset settings` if you're unsure."
   no-active-giveaways: ":x: There are no active giveaways in this server."
