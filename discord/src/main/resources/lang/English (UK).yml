@@ -19,7 +19,7 @@ values:
   couldnt-find-setting: ":x: Could not find that setting. Use `>preset settings` if you're unsure."
   no-active-giveaways: ":x: There are no active giveaways in this server."
   no-scheduled-giveaways: ":x: There are no scheduled giveaways in this server."
-  fatal-error-loading-server: ":warning: There was a fatal error loading your server. Please join the support discord and scream at Zak."
+  fatal-error-loading-server: ":warning: There was a fatal error loading your server. Please join the support discord at <https://discord.gg/ancjpjEEPX> and scream at Zak."
   generic-command-usage-example: "`>%command% <required> [optional]`\n\n"
   generic-failure: ":x: Something went wrong. Please try again in a few minutes."
   generic-embed-footer: "SmartGiveaways v%version% - https://docs.sgs.pink/"
