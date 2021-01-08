@@ -7,7 +7,7 @@
 # Smart Giveaway Bot
 
 - Create easy and dynamic giveaways with custom reactions, presets and more.
-- Take control over your giveaways with the ability to ban & shadow ban users.
+- Take control over your giveaways with the ability to ban & shadowban users.
 - (WIP) Control your giveaways via an easy web interface
   
 ![Example One](https://zak.pink/2020/12/Selfish-Ichthyostega-10753.png)<br/>

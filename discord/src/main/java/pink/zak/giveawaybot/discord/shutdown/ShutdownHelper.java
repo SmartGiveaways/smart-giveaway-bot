@@ -4,7 +4,11 @@ import com.google.common.collect.Sets;
 import me.tongfei.progressbar.ProgressBar;
 import me.tongfei.progressbar.ProgressBarBuilder;
 import pink.zak.giveawaybot.discord.GiveawayBot;
-import pink.zak.giveawaybot.discord.cache.*;
+import pink.zak.giveawaybot.discord.cache.FinishedGiveawayCache;
+import pink.zak.giveawaybot.discord.cache.GiveawayCache;
+import pink.zak.giveawaybot.discord.cache.ScheduledGiveawayCache;
+import pink.zak.giveawaybot.discord.cache.ServerCache;
+import pink.zak.giveawaybot.discord.cache.UserCache;
 import pink.zak.giveawaybot.discord.models.Server;
 
 import java.util.Set;
@@ -14,7 +18,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class ShutdownHelper {
-    private final GiveawayBot bot;
     private final ServerCache serverCache;
     private final GiveawayCache giveawayCache;
     private final FinishedGiveawayCache finishedGiveawayCache;
@@ -23,7 +26,6 @@ public class ShutdownHelper {
     private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
 
     public ShutdownHelper(GiveawayBot bot) {
-        this.bot = bot;
         this.serverCache = bot.getServerCache();
         this.giveawayCache = bot.getGiveawayCache();
         this.finishedGiveawayCache = bot.getFinishedGiveawayCache();

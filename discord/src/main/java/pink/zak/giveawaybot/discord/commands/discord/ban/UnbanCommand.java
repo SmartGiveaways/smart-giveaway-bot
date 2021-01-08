@@ -27,7 +27,7 @@ public class UnbanCommand extends SimpleCommand {
         this.langFor(server, Text.UNBAN_HELP).to(event.getChannel());
     }
 
-    private class UnbanSub extends SubCommand {
+    private static class UnbanSub extends SubCommand {
 
         public UnbanSub(GiveawayBot bot) {
             super(bot, true, false, false);

@@ -27,7 +27,7 @@ public class BanSub extends SubCommand {
     public void onExecute(Member sender, Server server, GuildMessageReceivedEvent event, List<String> args) {
         Member target = this.parseArgument(args, event.getGuild(), 0);
         TextChannel textChannel = event.getChannel();
-        if (!this.cmdUtils.handleAndIsEligible(server, sender, target, textChannel)) {
+        if (this.cmdUtils.handleAndIsNotEligible(server, sender, target, textChannel)) {
             return;
         }
         User user = server.getUserCache().get(target.getIdLong());

@@ -33,14 +33,14 @@ public class EligibilityCheckStep {
             user.getEntries().put(messageId, Maps.newEnumMap(EntryType.class));
         }
         // no, the int is NOT a redundant cast. Please go away i know i should recode a lot of settings.
-        if (user.hasEntries(messageId) && user.getEntries(messageId).compareTo(BigInteger.valueOf((int) preset.getSetting(Setting.MAX_ENTRIES))) > -1) {
+        if (user.hasEntries(messageId) && user.getEntries(messageId).compareTo(BigInteger.valueOf(preset.getSetting(Setting.MAX_ENTRIES))) > -1) {
             return;
         }
         this.rewardStep.process(entryType, user, giveaway, preset);
     }
 
     private boolean isEntryEnabled(EntryType entryType, Preset preset) {
-        return (boolean) switch (entryType) {
+        return switch (entryType) {
             case MESSAGES -> preset.getSetting(Setting.ENABLE_MESSAGE_ENTRIES);
             case REACTION -> preset.getSetting(Setting.ENABLE_REACT_TO_ENTER);
         };

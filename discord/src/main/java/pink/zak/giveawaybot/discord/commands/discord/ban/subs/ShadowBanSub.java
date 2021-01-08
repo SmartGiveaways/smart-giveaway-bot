@@ -32,7 +32,7 @@ public class ShadowBanSub extends SubCommand {
         }
         Member target = this.parseArgument(args, event.getGuild(), 1);
         TextChannel textChannel = event.getChannel();
-        if (!this.cmdUtils.handleAndIsEligible(server, sender, target, textChannel)) {
+        if (this.cmdUtils.handleAndIsNotEligible(server, sender, target, textChannel)) {
             return;
         }
         User user = server.getUserCache().get(target.getIdLong());

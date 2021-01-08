@@ -2,10 +2,16 @@ package pink.zak.giveawaybot.discord.pipelines.giveaway.steps;
 
 import com.google.common.collect.Lists;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import pink.zak.giveawaybot.discord.GiveawayBot;
 import pink.zak.giveawaybot.discord.controllers.GiveawayController;
+import pink.zak.giveawaybot.discord.defaults.Defaults;
+import pink.zak.giveawaybot.discord.enums.Setting;
 import pink.zak.giveawaybot.discord.lang.LanguageRegistry;
 import pink.zak.giveawaybot.discord.lang.enums.Text;
 import pink.zak.giveawaybot.discord.models.Preset;
@@ -15,7 +21,6 @@ import pink.zak.giveawaybot.discord.models.giveaway.RichGiveaway;
 import pink.zak.giveawaybot.discord.service.colour.Palette;
 import pink.zak.giveawaybot.discord.service.text.Replace;
 import pink.zak.giveawaybot.discord.service.types.UserUtils;
-import pink.zak.giveawaybot.discord.enums.Setting;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -32,7 +37,7 @@ public class MessageStep {
 
     public MessageStep(GiveawayBot bot, GiveawayController giveawayController) {
         this.palette = bot.getDefaults().getPalette();
-        this.defaultPreset = bot.getDefaults().getDefaultPreset();
+        this.defaultPreset = Defaults.defaultPreset;
         this.languageRegistry = bot.getLanguageRegistry();
         this.shardManager = bot.getShardManager();
 

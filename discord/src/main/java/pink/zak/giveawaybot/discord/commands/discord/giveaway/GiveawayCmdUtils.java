@@ -39,26 +39,14 @@ public class GiveawayCmdUtils {
         }
         ImmutablePair<ScheduledGiveaway, ReturnCode> returnedInfo = this.scheduledGiveawayController.schedule(server, presetName, startTime, endTime, giveawayChannel, winnerAmount, giveawayItem);
         switch (returnedInfo.getValue()) {
-            case GIVEAWAY_LIMIT_FAILURE:
-                this.lang.get(server, Text.SCHEDULED_GIVEAWAY_LIMIT_FAILURE).to(responseChannel);
-                break;
-            case FUTURE_GIVEAWAY_LIMIT_FAILURE:
-                this.lang.get(server, Text.SCHEDULED_GIVEAWAY_LIMIT_FAILURE_FUTURE).to(responseChannel);
-                break;
-            case NO_PRESET:
-                this.lang.get(server, Text.NO_PRESET_FOUND_ON_CREATION).to(responseChannel);
-                break;
-            case PERMISSIONS_FAILURE:
-                this.lang.get(server, Text.BOT_MISSING_PERMISSIONS).to(responseChannel);
-                break;
-            case SUCCESS:
-                this.lang.get(server, Text.GIVEAWAY_SCHEDULED, replacer -> replacer
-                        .set("channel", giveawayChannel.getAsMention())
-                        .set("time", returnedInfo.getKey().getStartFormatted())).to(responseChannel);
-                break;
-            default:
-                GiveawayBot.logger().error("You messed up bad. GiveawayCmdUtils 1");
-                break;
+            case GIVEAWAY_LIMIT_FAILURE -> this.lang.get(server, Text.SCHEDULED_GIVEAWAY_LIMIT_FAILURE).to(responseChannel);
+            case FUTURE_GIVEAWAY_LIMIT_FAILURE -> this.lang.get(server, Text.SCHEDULED_GIVEAWAY_LIMIT_FAILURE_FUTURE).to(responseChannel);
+            case NO_PRESET -> this.lang.get(server, Text.NO_PRESET_FOUND_ON_CREATION).to(responseChannel);
+            case PERMISSIONS_FAILURE -> this.lang.get(server, Text.BOT_MISSING_PERMISSIONS).to(responseChannel);
+            case SUCCESS -> this.lang.get(server, Text.GIVEAWAY_SCHEDULED, replacer -> replacer
+                    .set("channel", giveawayChannel.getAsMention())
+                    .set("time", returnedInfo.getKey().getStartFormatted())).to(responseChannel);
+            default -> GiveawayBot.logger().error("You messed up bad. GiveawayCmdUtils 1");
         }
     }
 

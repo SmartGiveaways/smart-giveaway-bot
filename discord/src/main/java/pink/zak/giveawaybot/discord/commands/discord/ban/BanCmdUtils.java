@@ -15,23 +15,23 @@ public class BanCmdUtils {
         this.languageRegistry = bot.getLanguageRegistry();
     }
 
-    public boolean handleAndIsEligible(Server server, Member sender, Member target, TextChannel textChannel) {
+    public boolean handleAndIsNotEligible(Server server, Member sender, Member target, TextChannel textChannel) {
         if (target == null) {
             this.languageRegistry.get(server, Text.COULDNT_FIND_MEMBER).to(textChannel);
-            return false;
+            return true;
         }
         if (target.getUser().isBot() && textChannel.getGuild().getSelfMember().equals(target)) {
             this.languageRegistry.get(server, Text.CANNOT_BAN_THE_BOT).to(textChannel);
-            return false;
+            return true;
         }
         if (target.getIdLong() == sender.getIdLong()) {
             this.languageRegistry.get(server, Text.CANNOT_BAN_SELF).to(textChannel);
-            return false;
+            return true;
         }
         if (server.canMemberManage(target)) {
             this.languageRegistry.get(server, Text.NOT_ENOUGH_PERMISSIONS_BAN, replacer -> replacer.set("target", target.getAsMention())).to(textChannel);
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 }

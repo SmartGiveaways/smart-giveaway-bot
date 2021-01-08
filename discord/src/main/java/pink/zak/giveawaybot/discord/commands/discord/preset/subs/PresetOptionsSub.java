@@ -4,6 +4,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import pink.zak.giveawaybot.discord.GiveawayBot;
+import pink.zak.giveawaybot.discord.defaults.Defaults;
 import pink.zak.giveawaybot.discord.service.colour.Palette;
 import pink.zak.giveawaybot.discord.lang.enums.Text;
 import pink.zak.giveawaybot.discord.enums.Setting;
@@ -20,7 +21,7 @@ public class PresetOptionsSub extends SubCommand {
 
     public PresetOptionsSub(GiveawayBot bot) {
         super(bot, true, false, false);
-        this.defaultPreset = bot.getDefaults().getDefaultPreset();
+        this.defaultPreset = Defaults.defaultPreset;
         this.palette = bot.getDefaults().getPalette();
 
         this.addFlatWithAliases("settings", "setting", "options", "option");
