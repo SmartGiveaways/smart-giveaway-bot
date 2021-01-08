@@ -23,13 +23,13 @@ values:
   generic-command-usage-example: "`>%command% <required> [optional]`\n\n"
   generic-failure: ":x: Something went wrong. Please try again in a few minutes."
   generic-embed-footer: "SmartGiveaways v%version% - https://docs.sgs.pink/"
-  command-requires-premium: "This command requires premium. Donate here https://sgs.pink/premium."
+  command-requires-premium: "This command requires premium. Donate here <https://sgs.pink/premium>."
 
   new-guild-joined: ":tada: Thank you for inviting SmartGiveaways. Below is some useful information:\n
                       \n
                       Help command: `>ghelp`\n
                       Giveaway command help: `>g help`\n
-                      Documentation: https://docs.sgs.pink/\n
+                      Documentation: <https://docs.sgs.pink/>\n
                       \n
                       *PS we've set your language to %language%*"
 
