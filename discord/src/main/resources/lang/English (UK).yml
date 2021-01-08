@@ -85,7 +85,7 @@ values:
   admin-manager-role-removed: ":white_check_mark: %name% is no longer a manager role."
 
   # General ban command messages
-  cannot-ban-self: ":x: You can't ban yourself dummy."
+  cannot-ban-self: ":x: You can't ban yourself, dummy."
   cannot-ban-the-bot: ":cry:"
   not-enough-permissions-ban: ":x: You're not high enough in the god complex to ban %target%"
 
