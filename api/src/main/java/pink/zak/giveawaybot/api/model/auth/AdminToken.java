@@ -1,6 +1,6 @@
 package pink.zak.giveawaybot.api.model.auth;
 
-import pink.zak.giveawaybot.api.service.TokenGenerator;
+import pink.zak.giveawaybot.api.service.TokenUtils;
 
 public class AdminToken {
     private final String token;
@@ -12,7 +12,7 @@ public class AdminToken {
     }
 
     public AdminToken() {
-        this.token = TokenGenerator.generate();
+        this.token = TokenUtils.generate();
         this.issueTime = System.currentTimeMillis();
     }
 
