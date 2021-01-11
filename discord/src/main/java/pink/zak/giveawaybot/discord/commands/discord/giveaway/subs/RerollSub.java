@@ -9,7 +9,7 @@ import pink.zak.giveawaybot.discord.cache.FinishedGiveawayCache;
 import pink.zak.giveawaybot.discord.controllers.GiveawayController;
 import pink.zak.giveawaybot.discord.lang.enums.Text;
 import pink.zak.giveawaybot.discord.models.Server;
-import pink.zak.giveawaybot.discord.models.giveaway.FinishedGiveaway;
+import pink.zak.giveawaybot.discord.models.giveaway.finished.FullFinishedGiveaway;
 import pink.zak.giveawaybot.discord.pipelines.giveaway.steps.MessageStep;
 import pink.zak.giveawaybot.discord.pipelines.giveaway.steps.WinnerStep;
 import pink.zak.giveawaybot.discord.service.command.discord.command.SubCommand;
@@ -42,7 +42,7 @@ public class RerollSub extends SubCommand {
             this.langFor(server, Text.COULDNT_FIND_GIVEAWAY).to(textChannel);
             return;
         }
-        FinishedGiveaway giveaway = this.giveawayCache.get(idInput);
+        FullFinishedGiveaway giveaway = this.giveawayCache.get(idInput);
         if (giveaway == null) {
             this.langFor(server, Text.COULDNT_FIND_GIVEAWAY).to(textChannel);
             return;

@@ -2,7 +2,7 @@ package pink.zak.giveawaybot.discord.service.cache.caches;
 
 import pink.zak.giveawaybot.discord.GiveawayBot;
 import pink.zak.giveawaybot.discord.service.cache.options.CacheExpiryListener;
-import pink.zak.giveawaybot.discord.service.cache.options.CacheStorage;
+import pink.zak.giveawaybot.discord.service.storage.mongo.MongoStorage;
 import pink.zak.giveawaybot.discord.threads.ThreadFunction;
 
 import java.util.Map;
@@ -20,7 +20,7 @@ public class AccessExpiringCache<K, V> extends Cache<K, V> {
     private final TimeUnit timeUnit;
     private final int delay;
 
-    public AccessExpiringCache(GiveawayBot bot, CacheStorage<K, V> storage, CacheExpiryListener<K, V> expiryListener, Consumer<V> removalAction, TimeUnit timeUnit, int delay, TimeUnit autoSaveUnit, int autoSaveInterval) {
+    public AccessExpiringCache(GiveawayBot bot, MongoStorage<K, V> storage, CacheExpiryListener<K, V> expiryListener, Consumer<V> removalAction, TimeUnit timeUnit, int delay, TimeUnit autoSaveUnit, int autoSaveInterval) {
         super(bot, removalAction, storage, autoSaveUnit, autoSaveInterval);
         this.scheduler = bot.getThreadManager().getScheduler();
         this.expiryListener = expiryListener;
@@ -30,15 +30,15 @@ public class AccessExpiringCache<K, V> extends Cache<K, V> {
         this.startScheduledCleanup();
     }
 
-    public AccessExpiringCache(GiveawayBot bot, CacheStorage<K, V> storage, CacheExpiryListener<K, V> expiryListener, Consumer<V> removalAction, TimeUnit timeUnit, int delay) {
+    public AccessExpiringCache(GiveawayBot bot, MongoStorage<K, V> storage, CacheExpiryListener<K, V> expiryListener, Consumer<V> removalAction, TimeUnit timeUnit, int delay) {
         this(bot, storage, expiryListener, removalAction, timeUnit, delay, null, 0);
     }
 
-    public AccessExpiringCache(GiveawayBot bot, CacheStorage<K, V> storage, TimeUnit timeUnit, int delay, TimeUnit autoSaveUnit, int autoSaveInterval) {
+    public AccessExpiringCache(GiveawayBot bot, MongoStorage<K, V> storage, TimeUnit timeUnit, int delay, TimeUnit autoSaveUnit, int autoSaveInterval) {
         this(bot, storage, null, null, timeUnit, delay, autoSaveUnit, autoSaveInterval);
     }
 
-    public AccessExpiringCache(GiveawayBot bot, CacheStorage<K, V> storage, TimeUnit timeUnit, int delay) {
+    public AccessExpiringCache(GiveawayBot bot, MongoStorage<K, V> storage, TimeUnit timeUnit, int delay) {
         this(bot, storage, null, null, timeUnit, delay);
     }
 

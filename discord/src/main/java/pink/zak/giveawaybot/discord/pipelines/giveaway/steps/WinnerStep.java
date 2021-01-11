@@ -5,7 +5,7 @@ import com.google.common.collect.Sets;
 import net.dv8tion.jda.api.entities.Message;
 import pink.zak.giveawaybot.discord.models.Server;
 import pink.zak.giveawaybot.discord.models.giveaway.CurrentGiveaway;
-import pink.zak.giveawaybot.discord.models.giveaway.FinishedGiveaway;
+import pink.zak.giveawaybot.discord.models.giveaway.finished.FullFinishedGiveaway;
 import pink.zak.giveawaybot.discord.service.types.NumberUtils;
 
 import java.math.BigInteger;
@@ -53,7 +53,7 @@ public class WinnerStep {
         return winners;
     }
 
-    public Set<Long> regenerateWinners(FinishedGiveaway giveaway) {
+    public Set<Long> regenerateWinners(FullFinishedGiveaway giveaway) {
         List<Long> enteredUsers = Lists.newArrayList();
         enteredUsers.addAll(giveaway.getUserEntries().keySet());
         Collections.shuffle(enteredUsers, ThreadLocalRandom.current());

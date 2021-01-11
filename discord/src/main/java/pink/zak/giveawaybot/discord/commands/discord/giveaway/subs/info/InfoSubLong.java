@@ -13,7 +13,7 @@ import pink.zak.giveawaybot.discord.service.types.NumberUtils;
 import pink.zak.giveawaybot.discord.lang.enums.Text;
 import pink.zak.giveawaybot.discord.models.Server;
 import pink.zak.giveawaybot.discord.models.giveaway.CurrentGiveaway;
-import pink.zak.giveawaybot.discord.models.giveaway.FinishedGiveaway;
+import pink.zak.giveawaybot.discord.models.giveaway.finished.FullFinishedGiveaway;
 import pink.zak.giveawaybot.discord.service.command.discord.command.SubCommand;
 
 import java.util.List;
@@ -43,7 +43,7 @@ public class InfoSubLong extends SubCommand {
             return;
         }
         if (server.getFinishedGiveaways().contains(giveawayId)) {
-            FinishedGiveaway giveaway = this.finishedGiveawayCache.get(giveawayId);
+            FullFinishedGiveaway giveaway = this.finishedGiveawayCache.get(giveawayId);
             if (giveaway == null) {
                 this.langFor(server, Text.COULDNT_FIND_GIVEAWAY).to(channel);
                 return;
@@ -61,7 +61,7 @@ public class InfoSubLong extends SubCommand {
         }
     }
 
-    private void finishedGiveawayMessage(TextChannel channel, Server server, FinishedGiveaway giveaway) {
+    private void finishedGiveawayMessage(TextChannel channel, Server server, FullFinishedGiveaway giveaway) {
         channel.sendMessage(
                 new EmbedBuilder()
                         .setTitle(this.langFor(server, Text.FINISHED_GIVEAWAY_INFO_EMBED_TITLE).get())

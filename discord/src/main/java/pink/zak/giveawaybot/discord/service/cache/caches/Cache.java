@@ -2,7 +2,7 @@ package pink.zak.giveawaybot.discord.service.cache.caches;
 
 import pink.zak.giveawaybot.discord.GiveawayBot;
 import pink.zak.giveawaybot.discord.service.cache.caches.shutdown.ShutdownData;
-import pink.zak.giveawaybot.discord.service.cache.options.CacheStorage;
+import pink.zak.giveawaybot.discord.service.storage.mongo.MongoStorage;
 import pink.zak.giveawaybot.discord.threads.ThreadFunction;
 import pink.zak.giveawaybot.discord.threads.ThreadManager;
 
@@ -20,7 +20,7 @@ public class Cache<K, V> {
 
     protected final ThreadManager threadManager;
     protected final Consumer<V> removalAction;
-    protected final CacheStorage<K, V> storage;
+    protected final MongoStorage<K, V> storage;
     protected final AtomicInteger hits = new AtomicInteger();
     protected final AtomicInteger loads = new AtomicInteger();
 
@@ -30,11 +30,11 @@ public class Cache<K, V> {
         this(bot, null, null);
     }
 
-    public Cache(GiveawayBot bot, Consumer<V> removalAction, CacheStorage<K, V> storage) {
+    public Cache(GiveawayBot bot, Consumer<V> removalAction, MongoStorage<K, V> storage) {
         this(bot, removalAction, storage, null, 0);
     }
 
-    public Cache(GiveawayBot bot, Consumer<V> removalAction, CacheStorage<K, V> storage, TimeUnit autoSaveTimeUnit, int autoSaveInterval) {
+    public Cache(GiveawayBot bot, Consumer<V> removalAction, MongoStorage<K, V> storage, TimeUnit autoSaveTimeUnit, int autoSaveInterval) {
         this.threadManager = bot.getThreadManager();
         this.removalAction = removalAction;
         this.storage = storage;
@@ -155,7 +155,7 @@ public class Cache<K, V> {
         this.loads.set(0);
     }
 
-    public CacheStorage<K, V> getStorage() {
+    public MongoStorage<K, V> getStorage() {
         return this.storage;
     }
 

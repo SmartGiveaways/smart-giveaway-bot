@@ -13,6 +13,7 @@ import pink.zak.giveawaybot.discord.models.Server;
 
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -40,7 +41,7 @@ public class ShutdownHelper {
 
     private void makeProgressBar() {
         int maxProgress = this.getMaxProgress();
-        if (maxProgress > 5) {
+        if (maxProgress > 0) {
             ProgressBar progressBar = new ProgressBarBuilder()
                     .setTaskName("Saving caches...")
                     .setInitialMax(maxProgress)
@@ -69,6 +70,12 @@ public class ShutdownHelper {
     }
 
     private CompletableFuture<Void> getShutdownCacheFutures() {
+        ExecutorService shutdownExecutor = Executors.newFixedThreadPool(400);
+        this.serverCache.getStorage().setExecutorService(shutdownExecutor);
+        this.giveawayCache.getStorage().setExecutorService(shutdownExecutor);
+        this.finishedGiveawayCache.getStorage().setExecutorService(shutdownExecutor);
+        this.scheduledGiveawayCache.getStorage().setExecutorService(shutdownExecutor);
+
         Set<CompletableFuture<Void>> futuresSet = Sets.newHashSet();
         this.serverCache.getMap().values().stream().map(Server::getUserCache).map(UserCache::shutdown).forEach(futuresSet::addAll);
         futuresSet.addAll(this.serverCache.shutdown());

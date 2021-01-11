@@ -5,7 +5,7 @@ import pink.zak.giveawaybot.discord.service.cache.caches.AccessExpiringCache;
 import pink.zak.giveawaybot.discord.service.cache.caches.Cache;
 import pink.zak.giveawaybot.discord.service.cache.caches.WriteExpiringCache;
 import pink.zak.giveawaybot.discord.service.cache.options.CacheExpiryListener;
-import pink.zak.giveawaybot.discord.service.cache.options.CacheStorage;
+import pink.zak.giveawaybot.discord.service.storage.mongo.MongoStorage;
 
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
@@ -14,12 +14,16 @@ public class CacheBuilder<K, V> {
     private GiveawayBot bot;
     private CacheExpiryListener<K, V> expiryListener;
     private Consumer<V> removalAction;
-    private CacheStorage<K, V> storage;
+    private MongoStorage<K, V> storage;
     private TimeUnit autoSaveTimeUnit;
     private int autoSaveInterval;
     private TimeUnit expiryTimeUnit;
     private int expiryDelay;
     private boolean expireAfterAccess;
+
+    public static CacheBuilder<Object, Object> newBuilder() {
+        return new CacheBuilder<>();
+    }
 
     public Cache<K, V> build() {
         if (this.expiryTimeUnit != null && this.expiryDelay > 0) {
@@ -66,7 +70,7 @@ public class CacheBuilder<K, V> {
         return this;
     }
 
-    public CacheBuilder<K, V> setStorage(CacheStorage<K, V> storage) {
+    public CacheBuilder<K, V> setStorage(MongoStorage<K, V> storage) {
         this.storage = storage;
         return this;
     }

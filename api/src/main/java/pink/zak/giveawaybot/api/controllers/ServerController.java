@@ -12,7 +12,7 @@ import pink.zak.giveawaybot.api.model.server.PremiumTimeAdd;
 import pink.zak.giveawaybot.discord.models.Server;
 import pink.zak.giveawaybot.discord.models.User;
 import pink.zak.giveawaybot.discord.models.giveaway.CurrentGiveaway;
-import pink.zak.giveawaybot.discord.models.giveaway.FinishedGiveaway;
+import pink.zak.giveawaybot.discord.models.giveaway.finished.FullFinishedGiveaway;
 import pink.zak.giveawaybot.discord.models.giveaway.ScheduledGiveaway;
 
 import java.util.List;
@@ -35,7 +35,7 @@ public interface ServerController {
 
     @Operation(summary = "Get the finished giveaways for a server")
     @GetMapping("/finishedGiveaways")
-    List<FinishedGiveaway> getFinishedGiveaways(@PathVariable long serverId);
+    List<FullFinishedGiveaway> getFinishedGiveaways(@PathVariable long serverId);
 
     @Operation(summary = "Get the banned users for a server")
     @GetMapping("/bannedUsers")

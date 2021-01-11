@@ -4,7 +4,7 @@ import com.google.common.collect.Maps;
 import pink.zak.giveawaybot.discord.GiveawayBot;
 import pink.zak.giveawaybot.discord.models.User;
 import pink.zak.giveawaybot.discord.service.cache.caches.AccessExpiringCache;
-import pink.zak.giveawaybot.discord.service.cache.options.CacheStorage;
+import pink.zak.giveawaybot.discord.service.storage.mongo.MongoStorage;
 import pink.zak.giveawaybot.discord.threads.ThreadFunction;
 
 import java.util.Map;
@@ -15,7 +15,7 @@ public class UserCache extends AccessExpiringCache<Long, User> {
 
     private final Map<String, Long> baseValueMap = Maps.newHashMap();
 
-    public UserCache(GiveawayBot bot, CacheStorage<Long, User> storage, long serverId) {
+    public UserCache(GiveawayBot bot, MongoStorage<Long, User> storage, long serverId) {
         super(bot, storage, TimeUnit.MINUTES, 10, TimeUnit.MINUTES, 5);
 
         this.baseValueMap.put("serverId", serverId);

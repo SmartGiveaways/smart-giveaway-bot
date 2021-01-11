@@ -7,7 +7,7 @@ import pink.zak.giveawaybot.discord.cache.FinishedGiveawayCache;
 import pink.zak.giveawaybot.discord.cache.GiveawayCache;
 import pink.zak.giveawaybot.discord.cache.ScheduledGiveawayCache;
 import pink.zak.giveawaybot.discord.models.giveaway.CurrentGiveaway;
-import pink.zak.giveawaybot.discord.models.giveaway.FinishedGiveaway;
+import pink.zak.giveawaybot.discord.models.giveaway.finished.FullFinishedGiveaway;
 import pink.zak.giveawaybot.discord.models.giveaway.ScheduledGiveaway;
 
 import java.util.UUID;
@@ -34,7 +34,7 @@ public class GiveawayControllerImpl implements GiveawayController {
     }
 
     @Override
-    public FinishedGiveaway getFinishedGiveaway(long id) {
+    public FullFinishedGiveaway getFinishedGiveaway(long id) {
         return this.finishedCache.get(id);
     }
 }

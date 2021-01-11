@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pink.zak.giveawaybot.api.model.giveaway.ScheduledGiveawayCreation;
 import pink.zak.giveawaybot.discord.models.giveaway.CurrentGiveaway;
-import pink.zak.giveawaybot.discord.models.giveaway.FinishedGiveaway;
+import pink.zak.giveawaybot.discord.models.giveaway.finished.FullFinishedGiveaway;
 import pink.zak.giveawaybot.discord.models.giveaway.ScheduledGiveaway;
 
 import java.util.UUID;
@@ -32,5 +32,5 @@ public interface GiveawayController {
 
     @Operation(summary = "Get a Finished Giveaway")
     @GetMapping("/finished/{id}")
-    FinishedGiveaway getFinishedGiveaway(@PathVariable long id);
+    FullFinishedGiveaway getFinishedGiveaway(@PathVariable long id);
 }
