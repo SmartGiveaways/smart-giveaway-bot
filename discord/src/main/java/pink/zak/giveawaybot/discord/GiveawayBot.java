@@ -43,7 +43,7 @@ import pink.zak.giveawaybot.discord.service.config.Reloadable;
 import pink.zak.giveawaybot.discord.service.storage.mongo.MongoConnectionFactory;
 import pink.zak.giveawaybot.discord.shutdown.ShutdownHelper;
 import pink.zak.giveawaybot.discord.shutdown.ShutdownHook;
-import pink.zak.giveawaybot.discord.storage.FinishedGiveawayStorage;
+import pink.zak.giveawaybot.discord.storage.finishedgiveaway.FullFinishedGiveawayStorage;
 import pink.zak.giveawaybot.discord.storage.GiveawayStorage;
 import pink.zak.giveawaybot.discord.storage.ScheduledGiveawayStorage;
 import pink.zak.giveawaybot.discord.storage.ServerStorage;
@@ -63,7 +63,7 @@ public class GiveawayBot extends JdaBot {
     private MongoConnectionFactory mongoConnectionFactory;
     private ScheduledGiveawayStorage scheduledGiveawayStorage;
     private ScheduledGiveawayCache scheduledGiveawayCache;
-    private FinishedGiveawayStorage finishedGiveawayStorage;
+    private FullFinishedGiveawayStorage fullFinishedGiveawayStorage;
     private FinishedGiveawayCache finishedGiveawayCache;
     private GiveawayStorage giveawayStorage;
     private GiveawayCache giveawayCache;
@@ -104,7 +104,7 @@ public class GiveawayBot extends JdaBot {
                     settings.string("influx-bucket"), 10));
         }
         this.setupStorage();
-        this.finishedGiveawayStorage = new FinishedGiveawayStorage(this);
+        this.fullFinishedGiveawayStorage = new FullFinishedGiveawayStorage(this);
         this.scheduledGiveawayStorage = new ScheduledGiveawayStorage(this);
         this.giveawayStorage = new GiveawayStorage(this);
         this.serverStorage = new ServerStorage(this);
@@ -179,7 +179,7 @@ public class GiveawayBot extends JdaBot {
 
     @Override
     public void unload() {
-        GiveawayBot.locked = true;
+        locked = true;
         logger.info("Shutting down....");
         new ShutdownHelper(this).shutdown();
         this.mongoConnectionFactory.close();
@@ -242,8 +242,8 @@ public class GiveawayBot extends JdaBot {
         return this.mongoConnectionFactory;
     }
 
-    public FinishedGiveawayStorage getFinishedGiveawayStorage() {
-        return this.finishedGiveawayStorage;
+    public FullFinishedGiveawayStorage getFinishedGiveawayStorage() {
+        return this.fullFinishedGiveawayStorage;
     }
 
     public FinishedGiveawayCache getFinishedGiveawayCache() {

@@ -12,7 +12,7 @@ import pink.zak.giveawaybot.discord.cache.UserCache;
 import pink.zak.giveawaybot.discord.models.Server;
 import pink.zak.giveawaybot.discord.models.User;
 import pink.zak.giveawaybot.discord.models.giveaway.CurrentGiveaway;
-import pink.zak.giveawaybot.discord.models.giveaway.FinishedGiveaway;
+import pink.zak.giveawaybot.discord.models.giveaway.finished.FullFinishedGiveaway;
 import pink.zak.giveawaybot.discord.models.giveaway.ScheduledGiveaway;
 
 import java.util.List;
@@ -57,7 +57,7 @@ public class ServerControllerImpl implements ServerController {
     }
 
     @Override
-    public List<FinishedGiveaway> getFinishedGiveaways(long serverId) {
+    public List<FullFinishedGiveaway> getFinishedGiveaways(long serverId) {
         Server server = this.getServer(serverId);
         return this.finishedGiveawayCache.getAll(server);
     }

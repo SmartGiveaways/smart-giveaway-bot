@@ -1,33 +1,31 @@
-package pink.zak.giveawaybot.discord.storage;
+package pink.zak.giveawaybot.discord.storage.finishedgiveaway;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.mongodb.client.model.Filters;
-import org.bson.Document;
 import pink.zak.giveawaybot.discord.GiveawayBot;
-import pink.zak.giveawaybot.discord.models.Server;
 import pink.zak.giveawaybot.discord.models.giveaway.CurrentGiveaway;
-import pink.zak.giveawaybot.discord.models.giveaway.FinishedGiveaway;
+import pink.zak.giveawaybot.discord.models.giveaway.finished.FullFinishedGiveaway;
 import pink.zak.giveawaybot.discord.service.storage.mongo.MongoDeserializer;
 import pink.zak.giveawaybot.discord.service.storage.mongo.MongoSerializer;
-import pink.zak.giveawaybot.discord.service.storage.mongo.MongoStorage;
 
 import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class FinishedGiveawayStorage extends MongoStorage<Long, FinishedGiveaway> {
+public class FullFinishedGiveawayStorage extends FinishedGiveawayStorage<FullFinishedGiveaway> {
     private final Gson gson = new Gson();
 
-    public FinishedGiveawayStorage(GiveawayBot bot) {
-        super(bot, "finished-giveaways", "_id");
+    public FullFinishedGiveawayStorage(GiveawayBot bot) {
+        super(bot);
     }
 
     @Override
-    public MongoSerializer<FinishedGiveaway> serializer() {
+    public MongoSerializer<FullFinishedGiveaway> serializer() {
         return (giveaway, document) -> {
             document.put("_id", giveaway.getMessageId());
             document.put("channelId", giveaway.getChannelId());
@@ -45,42 +43,46 @@ public class FinishedGiveawayStorage extends MongoStorage<Long, FinishedGiveaway
     }
 
     @Override
-    public MongoDeserializer<FinishedGiveaway> deserializer() {
+    public MongoDeserializer<FullFinishedGiveaway> deserializer() {
+        List<Long> timings = Lists.newArrayList(System.nanoTime());
         return document -> {
             long messageId = document.getLong("_id");
+            timings.add(System.nanoTime());
             long channelId = document.getLong("channelId");
+            timings.add(System.nanoTime());
             long serverId = document.getLong("serverId");
+            timings.add(System.nanoTime());
             long startTime = document.getLong("startTime");
+            timings.add(System.nanoTime());
             long endTime = document.getLong("endTime");
+            timings.add(System.nanoTime());
             int winnerAmount = document.getInteger("winnerAmount");
+            timings.add(System.nanoTime());
             String presetName = document.getString("presetName");
+            timings.add(System.nanoTime());
             String giveawayItem = document.getString("giveawayItem");
+            timings.add(System.nanoTime());
             BigInteger totalEntries = new BigInteger(document.getString("totalEntries"));
-            Map<Long, BigInteger> userEntries = gson.fromJson(document.getString("userEntries"), new TypeToken<HashMap<Long, BigInteger>>() {}.getType());
-            Set<Long> winners = Sets.newConcurrentHashSet(gson.fromJson(document.getString("winners"), new TypeToken<HashSet<Long>>() {}.getType()));
-            return new FinishedGiveaway(messageId, channelId, serverId, startTime, endTime, winnerAmount, presetName, giveawayItem, totalEntries, userEntries, winners);
+            timings.add(System.nanoTime());
+            Map<Long, BigInteger> userEntries = this.gson.fromJson(document.getString("userEntries"), new TypeToken<HashMap<Long, BigInteger>>() {}.getType());
+            timings.add(System.nanoTime());
+            Set<Long> winners = Sets.newConcurrentHashSet(this.gson.fromJson(document.getString("winners"), new TypeToken<HashSet<Long>>() {}.getType()));
+            timings.add(System.nanoTime());
+
+            for (int i = 1; i < timings.size(); i++) {
+                GiveawayBot.logger().info("{}) Took {}ns", i, timings.get(i) - timings.get(i - 1));
+            }
+            return new FullFinishedGiveaway(messageId, channelId, serverId, startTime, endTime, winnerAmount, presetName, giveawayItem, totalEntries, userEntries, winners);
         };
     }
 
-    public Set<FinishedGiveaway> loadAll(Server server, Set<Long> targeted) {
-        Set<FinishedGiveaway> giveaways = Sets.newHashSet();
-        for (Document document : super.collection.find(Filters.eq("serverId", server.getId()))) {
-            long id = document.getLong("_id");
-            if (!targeted.contains(id)) {
-                continue;
-            }
-            giveaways.add(this.deserializer().apply(document));
-        }
-        return giveaways;
-    }
-
     @Override
-    public FinishedGiveaway create(Long id) {
+    public FullFinishedGiveaway create(Long id) {
         return null;
     }
 
-    public FinishedGiveaway create(CurrentGiveaway giveaway, BigInteger totalEntries, Map<Long, BigInteger> userEntries, Set<Long> winners) {
-        FinishedGiveaway finishedGiveaway = new FinishedGiveaway(giveaway, totalEntries, userEntries, winners);
+    public FullFinishedGiveaway create(CurrentGiveaway giveaway, BigInteger totalEntries, Map<Long, BigInteger> userEntries, Set<Long> winners) {
+        FullFinishedGiveaway finishedGiveaway = new FullFinishedGiveaway(giveaway, totalEntries, userEntries, winners);
         this.save(finishedGiveaway);
         return finishedGiveaway;
     }

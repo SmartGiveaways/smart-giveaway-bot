@@ -7,7 +7,6 @@ import com.mongodb.client.model.Filters;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import pink.zak.giveawaybot.discord.GiveawayBot;
-import pink.zak.giveawaybot.discord.service.cache.options.CacheStorage;
 import pink.zak.giveawaybot.discord.threads.ThreadFunction;
 
 import java.util.Map;
@@ -15,10 +14,10 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 
-public abstract class MongoStorage<K, T> implements CacheStorage<K, T> {
+public abstract class MongoStorage<K, T> {
     protected final MongoCollection<Document> collection;
-    private final ExecutorService executorService;
     private final String idKey;
+    private ExecutorService executorService;
 
     public MongoStorage(GiveawayBot bot, String collectionName, String idKey) {
         this.collection = bot.getMongoConnectionFactory().getCollection(collectionName);
@@ -108,5 +107,9 @@ public abstract class MongoStorage<K, T> implements CacheStorage<K, T> {
 
     private Document find(Bson filter) {
         return this.collection.find(filter).first();
+    }
+
+    public void setExecutorService(ExecutorService executorService) {
+        this.executorService = executorService;
     }
 }

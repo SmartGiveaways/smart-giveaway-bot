@@ -9,7 +9,6 @@ import net.dv8tion.jda.internal.utils.JDALogger;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import pink.zak.giveawaybot.discord.GiveawayBot;
-import pink.zak.giveawaybot.discord.service.listener.ConsoleListener;
 import pink.zak.giveawaybot.discord.listener.message.GiveawayMessageListener;
 import pink.zak.giveawaybot.discord.listener.message.MessageEventRegistry;
 import pink.zak.giveawaybot.discord.listener.reaction.pageable.PageableReactionEventRegistry;
@@ -20,6 +19,7 @@ import pink.zak.giveawaybot.discord.service.command.discord.DiscordCommandBase;
 import pink.zak.giveawaybot.discord.service.command.discord.command.SimpleCommand;
 import pink.zak.giveawaybot.discord.service.config.Config;
 import pink.zak.giveawaybot.discord.service.config.ConfigStore;
+import pink.zak.giveawaybot.discord.service.listener.ConsoleListener;
 import pink.zak.giveawaybot.discord.service.listener.ReadyListener;
 import pink.zak.giveawaybot.discord.service.registry.Registry;
 import pink.zak.giveawaybot.discord.service.storage.BackendFactory;
@@ -50,6 +50,7 @@ public abstract class JdaBot implements SimpleBot {
     private ShardManager shardManager;
 
     private ReadyListener readyListener;
+
     public static Logger logger() {
         return logger;
     }
