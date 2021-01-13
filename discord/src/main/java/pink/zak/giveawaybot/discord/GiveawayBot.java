@@ -189,11 +189,11 @@ public class GiveawayBot extends JdaBot {
 
     @SneakyThrows
     private void closeIfPingUnusable() {
-        while (this.latencyMonitor.getLastTiming() == Long.MAX_VALUE) {
+        while (this.latencyMonitor.getShardTimings().size() != this.getShardManager().getShardsTotal()) {
             Thread.sleep(10);
         }
         for (int i = 1; i <= 10; i++) {
-            if (this.latencyMonitor.isLatencyUsable()) {
+            if (this.latencyMonitor.getAverageLatency() < 4000) {
                 logger.info("Successfully tested latency on attempt no. {}", i);
                 return;
             }

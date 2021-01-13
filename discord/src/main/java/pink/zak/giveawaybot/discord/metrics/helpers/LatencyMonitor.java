@@ -4,10 +4,10 @@ import com.google.common.collect.Maps;
 import lombok.SneakyThrows;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.events.ExceptionEvent;
+import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.http.HttpRequestEvent;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.requests.ErrorResponse;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import pink.zak.giveawaybot.discord.GiveawayBot;
 import pink.zak.giveawaybot.discord.metrics.queries.LatencyQuery;
@@ -23,7 +23,6 @@ public class LatencyMonitor extends ListenerAdapter {
     private final Map<JDA, Long> lastShardTestTimes = Maps.newConcurrentMap();
     private final ShardManager shardManager;
     private final Metrics metrics;
-    private long lastTiming = 50L;
 
     @SneakyThrows
     public LatencyMonitor(GiveawayBot bot) {
@@ -33,10 +32,12 @@ public class LatencyMonitor extends ListenerAdapter {
     }
 
     private void testLatency() {
-        if (this.metrics != null) {
-            this.metrics.<LatencyMonitor>log(query -> query
-                    .primary(this)
-                    .push(LatencyQuery.LATENCY));
+        for (JDA jda : this.shardTimings.keySet()) {
+            if (this.metrics != null) {
+                this.metrics.<LatencyMonitor, JDA>logAdvanced(query -> query
+                        .primary(this)
+                        .push(LatencyQuery.LATENCY, jda));
+            }
         }
         this.shardManager.getShards().forEach(jda -> {
             if (this.lastShardTestTimes.containsKey(jda) && System.currentTimeMillis() - this.lastShardTestTimes.get(jda) > 7500) {
@@ -85,25 +86,28 @@ public class LatencyMonitor extends ListenerAdapter {
     public void onHttpException(Throwable ex, JDA jda) {
         if (ex instanceof NoRouteToHostException || ex instanceof UnknownHostException || ex instanceof ErrorResponseException) {
             GiveawayBot.logger().warn("Shard {} had a timeout exception ({})", jda.getShardInfo().getShardId(), ex.getClass().getSimpleName());
-            this.shardTimings.put(jda, 10000L);
+            this.shardTimings.put(jda, Long.MAX_VALUE);
         }
     }
 
-    public boolean isLatencyDesirable() {
-        if (this.lastTiming == Long.MAX_VALUE) {
-            GiveawayBot.logger().warn("isLatencyDesirable called when no latency is set yet.");
-        }
-        return this.lastTiming < 2000;
+    public boolean isLatencyDesirable(JDA jda) {
+        return this.shardTimings.containsKey(jda) && this.shardTimings.get(jda) < 2000;
     }
 
-    public boolean isLatencyUsable() {
-        if (this.lastTiming == Long.MAX_VALUE) {
-            GiveawayBot.logger().warn("isLatencyUsable called when no latency is set yet.");
-        }
-        return this.lastTiming < 5000;
+    public boolean isLatencyUsable(JDA jda) {
+        return this.shardTimings.containsKey(jda) && this.shardTimings.get(jda) < 5000;
     }
 
-    public long getLastTiming() {
-        return this.lastTiming;
+    public long getAverageLatency() {
+        long total = this.shardTimings.values().stream().mapToLong(Long::longValue).sum();
+        return total / this.shardTimings.size();
+    }
+
+    public long getLastTiming(JDA jda) {
+        return this.shardTimings.getOrDefault(jda, Long.MAX_VALUE);
+    }
+
+    public Map<JDA, Long> getShardTimings() {
+        return this.shardTimings;
     }
 }

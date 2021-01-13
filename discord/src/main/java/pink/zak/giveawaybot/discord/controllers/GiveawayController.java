@@ -4,6 +4,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import lombok.SneakyThrows;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageReaction;
@@ -199,44 +200,70 @@ public class GiveawayController {
         AtomicInteger counter = new AtomicInteger();
         LatencyMonitor latencyMonitor = this.bot.getLatencyMonitor();
         this.threadManager.getScheduler().scheduleAtFixedRate(() -> {
-            if (!latencyMonitor.isLatencyUsable()) {
-                GiveawayBot.logger().warn("Latency was not usable so did not update giveaways ({}ms)", latencyMonitor.getLastTiming());
-                return;
-            }
             if (GiveawayBot.isLocked()) {
                 GiveawayBot.logger().warn("Bot was locked so did not update giveaways");
                 return;
             }
             counter.getAndIncrement();
+            Map<JDA, Map<Server, Set<CurrentGiveaway>>> giveawaysToUpdate = Maps.newHashMap();
             for (CurrentGiveaway giveaway : this.giveawayCache.getMap().values()) {
                 if (!giveaway.isActive()
                         || GiveawayBot.isLocked()
-                        || !latencyMonitor.isLatencyUsable()
                         || !this.shouldUpdateMessage(counter, giveaway)
-                ) return;
-                this.serverCache.getAsync(giveaway.getServerId(), ThreadFunction.GENERAL).thenAccept(server -> {
-                    Message message = this.getGiveawayMessage(giveaway);
-                    if (message == null) {
-                        GiveawayBot.logger().warn("Giveaway did not delete correctly or the discord api is dying ({} in server {}).", giveaway.getMessageId(), giveaway.getServerId());
-                        return;
+                ) continue;
+                Guild guild = this.bot.getShardManager().getGuildById(giveaway.getServerId());
+                if (guild == null) {
+                    GiveawayBot.logger().warn("Could not get guild ID {}", giveaway.getServerId());
+                    continue;
+                }
+                JDA jda = guild.getJDA();
+                Server server = this.serverCache.get(giveaway.getServerId());
+                if (giveawaysToUpdate.containsKey(jda)) {
+                    if (giveawaysToUpdate.get(jda).containsKey(server)) {
+                        giveawaysToUpdate.get(jda).get(server).add(giveaway);
+                    } else {
+                        giveawaysToUpdate.get(jda).put(server, Sets.newHashSet(giveaway));
                     }
-                    Preset preset = giveaway.getPresetName().equals("default") ? this.defaultPreset : server.getPreset(giveaway.getPresetName());
-                    boolean reactToEnter = preset.getSetting(Setting.ENABLE_REACT_TO_ENTER);
-                    if (!GiveawayBot.isLocked()) {
-                        message.editMessage(new EmbedBuilder()
-                                .setTitle(this.languageRegistry.get(server, Text.GIVEAWAY_EMBED_TITLE, replacer -> replacer.set("item", giveaway.getGiveawayItem())).get())
-                                .setDescription(this.languageRegistry.get(server, reactToEnter ? Text.GIVEAWAY_EMBED_DESCRIPTION_REACTION : Text.GIVEAWAY_EMBED_DESCRIPTION_ALL).get())
-                                .setColor(this.palette.primary())
-                                .setFooter(this.getFooter(server, giveaway.getTimeToExpiry(), giveaway.getWinnerAmount()))
-                                .build()).queue();
-                    }
-                }).exceptionally(ex -> {
-                    GiveawayBot.logger().error("Error in giveaway updater: ", ex);
-                    return null;
-                });
+                } else {
+                    giveawaysToUpdate.put(jda, Maps.newHashMap(Map.of(server, Sets.newHashSet(giveaway))));
+                }
 
             }
+            this.updateGiveaways(latencyMonitor, giveawaysToUpdate);
         }, 30, 30, TimeUnit.SECONDS);
+    }
+
+    private void updateGiveaways(LatencyMonitor latencyMonitor, Map<JDA, Map<Server, Set<CurrentGiveaway>>> giveaways) {
+        for (Map.Entry<JDA, Map<Server, Set<CurrentGiveaway>>> entry : giveaways.entrySet()) {
+            JDA jda = entry.getKey();
+            if (!latencyMonitor.isLatencyUsable(jda)) {
+                GiveawayBot.logger().warn("Did not update giveaways for shard {} as latency was not usable.", jda.getShardInfo().getShardId());
+                continue;
+            }
+            for (Map.Entry<Server, Set<CurrentGiveaway>> innerEntry : entry.getValue().entrySet()) {
+                this.bot.getAsyncExecutor(ThreadFunction.GENERAL).execute(() -> this.updateGiveaways(innerEntry.getKey(), innerEntry.getValue()));
+            }
+        }
+    }
+
+    private void updateGiveaways(Server server, Set<CurrentGiveaway> giveaways) {
+        for (CurrentGiveaway giveaway : giveaways) {
+            Message message = this.getGiveawayMessage(giveaway);
+            if (message == null) {
+                GiveawayBot.logger().warn("Giveaway did not delete correctly or the discord api is dying ({} in server {}).", giveaway.getMessageId(), giveaway.getServerId());
+                continue;
+            }
+            Preset preset = giveaway.getPresetName().equals("default") ? this.defaultPreset : server.getPreset(giveaway.getPresetName());
+            boolean reactToEnter = preset.getSetting(Setting.ENABLE_REACT_TO_ENTER);
+            if (!GiveawayBot.isLocked()) {
+                message.editMessage(new EmbedBuilder()
+                        .setTitle(this.languageRegistry.get(server, Text.GIVEAWAY_EMBED_TITLE, replacer -> replacer.set("item", giveaway.getGiveawayItem())).get())
+                        .setDescription(this.languageRegistry.get(server, reactToEnter ? Text.GIVEAWAY_EMBED_DESCRIPTION_REACTION : Text.GIVEAWAY_EMBED_DESCRIPTION_ALL).get())
+                        .setColor(this.palette.primary())
+                        .setFooter(this.getFooter(server, giveaway.getTimeToExpiry(), giveaway.getWinnerAmount()))
+                        .build()).queue();
+            }
+        }
     }
 
     private boolean shouldUpdateMessage(AtomicInteger counter, CurrentGiveaway giveaway) {

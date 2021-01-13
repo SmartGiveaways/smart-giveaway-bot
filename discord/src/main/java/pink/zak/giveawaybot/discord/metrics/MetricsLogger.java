@@ -1,5 +1,7 @@
 package pink.zak.giveawaybot.discord.metrics;
 
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.sharding.ShardManager;
 import pink.zak.giveawaybot.discord.GiveawayBot;
 import pink.zak.giveawaybot.discord.cache.GiveawayCache;
 import pink.zak.giveawaybot.discord.cache.ServerCache;
@@ -10,19 +12,23 @@ import pink.zak.giveawaybot.discord.metrics.queries.GiveawayCacheQuery;
 import pink.zak.giveawaybot.discord.metrics.queries.ServerCacheQuery;
 import pink.zak.giveawaybot.discord.metrics.queries.ServerQuery;
 import pink.zak.giveawaybot.discord.models.Server;
+import pink.zak.giveawaybot.discord.service.BotConstants;
 import pink.zak.giveawaybot.discord.service.command.discord.DiscordCommandBase;
 import pink.zak.metrics.Metrics;
 import pink.zak.metrics.queries.stock.SystemQuery;
 import pink.zak.metrics.queries.stock.backends.ProcessStats;
 
+import java.util.Map;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class MetricsLogger {
     private final GenericBotMetrics genericBotMetrics;
+    private final ShardManager shardManager;
 
     public MetricsLogger(GiveawayBot bot) {
         this.genericBotMetrics = new GenericBotMetrics(bot);
+        this.shardManager = bot.getShardManager();
     }
 
     public void checkAndStart(GiveawayBot bot) {
@@ -57,9 +63,10 @@ public class MetricsLogger {
                     .primary(this.genericBotMetrics)
                     .push(GenericQuery.ALL));
             for (Server server : serverCache.getMap().values()) {
+                Guild guild = this.shardManager.getGuildById(server.getId());
                 metrics.<Server>log(query -> query
                         .primary(server)
-                        .push(ServerQuery.ALL)
+                        .push(ServerQuery.ALL, Map.of("shard", guild == null ? "UNKNOWN" : String.valueOf(guild.getJDA().getShardInfo().getShardId())))
                 );
             }
         }, 0, 5, TimeUnit.SECONDS);

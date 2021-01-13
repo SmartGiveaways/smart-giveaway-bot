@@ -2,6 +2,7 @@ package pink.zak.giveawaybot.discord.metrics.queries;
 
 import com.influxdb.client.write.Point;
 import pink.zak.giveawaybot.discord.metrics.helpers.GenericBotMetrics;
+import pink.zak.giveawaybot.discord.service.BotConstants;
 import pink.zak.metrics.queries.QueryInterface;
 
 import java.util.function.BiFunction;
@@ -27,7 +28,7 @@ public enum GenericQuery implements QueryInterface<GenericBotMetrics> {
 
     @Override
     public BiFunction<GenericBotMetrics, Point, Point> tag() {
-        return (giveawayCache, point) -> point;
+        return (giveawayCache, point) -> point.addTag("system", BotConstants.getDeviceName());
     }
 
     @Override

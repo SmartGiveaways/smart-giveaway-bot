@@ -1,6 +1,7 @@
 package pink.zak.giveawaybot.discord.metrics.queries;
 
 import com.influxdb.client.write.Point;
+import pink.zak.giveawaybot.discord.service.BotConstants;
 import pink.zak.giveawaybot.discord.service.command.discord.DiscordCommandBase;
 import pink.zak.metrics.queries.QueryInterface;
 
@@ -18,7 +19,7 @@ public enum CommandQuery implements QueryInterface<DiscordCommandBase> {
 
     @Override
     public BiFunction<DiscordCommandBase, Point, Point> tag() {
-        return (giveawayCache, point) -> point;
+        return (giveawayCache, point) -> point.addTag("system", BotConstants.getDeviceName());
     }
 
     @Override

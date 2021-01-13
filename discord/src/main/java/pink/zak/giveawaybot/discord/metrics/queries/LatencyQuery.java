@@ -1,28 +1,33 @@
 package pink.zak.giveawaybot.discord.metrics.queries;
 
 import com.influxdb.client.write.Point;
+import net.dv8tion.jda.api.JDA;
 import pink.zak.giveawaybot.discord.metrics.helpers.LatencyMonitor;
-import pink.zak.metrics.queries.QueryInterface;
+import pink.zak.giveawaybot.discord.service.BotConstants;
+import pink.zak.metrics.queries.AdvancedQueryInterface;
+import pink.zak.metrics.service.TriFunction;
 
-import java.util.function.BiFunction;
+public enum LatencyQuery implements AdvancedQueryInterface<LatencyMonitor, JDA> {
 
-public enum LatencyQuery implements QueryInterface<LatencyMonitor> {
+    LATENCY(((monitor, shardJda, point) ->
+            point.addField("latency", monitor.getShardTimings().get(shardJda))
+    ));
 
-    LATENCY((monitor, point) -> point.addField("latency", monitor.getLastTiming()));
+    private final TriFunction<LatencyMonitor, JDA, Point, Point> computation;
 
-    private final BiFunction<LatencyMonitor, Point, Point> computation;
-
-    LatencyQuery(BiFunction<LatencyMonitor, Point, Point> computation) {
+    LatencyQuery(TriFunction<LatencyMonitor, JDA, Point, Point> computation) {
         this.computation = computation;
     }
 
     @Override
-    public BiFunction<LatencyMonitor, Point, Point> tag() {
-        return (giveawayCache, point) -> point;
+    public TriFunction<LatencyMonitor, JDA, Point, Point> tag() {
+        return (monitor, shard, point) -> point
+                .addTag("shard", String.valueOf(shard.getShardInfo().getShardId()))
+                .addTag("system", BotConstants.getDeviceName());
     }
 
     @Override
-    public BiFunction<LatencyMonitor, Point, Point> get() {
+    public TriFunction<LatencyMonitor, JDA, Point, Point> get() {
         return this.computation;
     }
 

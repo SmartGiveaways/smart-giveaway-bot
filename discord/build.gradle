@@ -36,7 +36,8 @@ dependencies {
     compileOnly("org.projectlombok:lombok:1.18.16")
     annotationProcessor("org.projectlombok:lombok:1.18.16")
     implementation("ch.qos.logback:logback-classic:1.2.3")
-    implementation("com.github.ZakShearman:influx-metrics:1.0.1")
+    //TODO implementation("com.github.ZakShearman:influx-metrics:1.0.1")
+    implementation("pink.zak:influx-metrics:1.1.0")
     implementation("com.influxdb:influxdb-client-java:1.14.0")
     implementation "me.tongfei:progressbar:0.9.0"
 

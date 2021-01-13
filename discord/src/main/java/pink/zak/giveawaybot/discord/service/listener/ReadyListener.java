@@ -33,9 +33,12 @@ public class ReadyListener extends ListenerAdapter {
 
     @Override
     public void onReady(@NotNull ReadyEvent readyEvent) {
+        if (this.bot.isConnected()) {
+            return;
+        }
         int shard = this.countedShards.incrementAndGet();
+        GiveawayBot.logger().info("ReadyEvent called. Shard {}/{}", shard, this.requiredShards);
         if (shard < this.requiredShards) {
-            GiveawayBot.logger().info("ReadyEvent called. Shard {}/{}", shard, this.requiredShards);
             return;
         }
         GiveawayBot.logger().info("All shards are up! Calling onConnect");

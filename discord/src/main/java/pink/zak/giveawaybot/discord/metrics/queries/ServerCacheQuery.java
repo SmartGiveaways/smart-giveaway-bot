@@ -2,6 +2,7 @@ package pink.zak.giveawaybot.discord.metrics.queries;
 
 import com.influxdb.client.write.Point;
 import pink.zak.giveawaybot.discord.cache.ServerCache;
+import pink.zak.giveawaybot.discord.service.BotConstants;
 import pink.zak.metrics.queries.QueryInterface;
 
 import java.util.function.BiFunction;
@@ -38,8 +39,7 @@ public enum ServerCacheQuery implements QueryInterface<ServerCache> {
 
     @Override
     public BiFunction<ServerCache, Point, Point> tag() {
-        return (serverCache, point) -> point;
-        // return (process, point) -> point.addTag("identifier", process.getIdentifier()); This should be made to the shard ID when that's a thing
+        return (serverCache, point) -> point.addTag("system", BotConstants.getDeviceName());
     }
 
     @Override
