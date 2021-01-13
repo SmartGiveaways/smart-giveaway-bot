@@ -9,11 +9,11 @@ import pink.zak.giveawaybot.discord.GiveawayBot;
 import pink.zak.giveawaybot.discord.listener.reaction.pageable.Page;
 import pink.zak.giveawaybot.discord.listener.reaction.pageable.PageableReactionListener;
 import pink.zak.giveawaybot.discord.service.colour.Palette;
-import pink.zak.giveawaybot.discord.service.time.TimeIdentifier;
 import pink.zak.giveawaybot.discord.lang.LanguageRegistry;
 import pink.zak.giveawaybot.discord.models.Server;
 
 import java.util.Map;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 public abstract class PageableEmbedMenu extends PageableMenu implements PageableReactionListener {
@@ -22,10 +22,11 @@ public abstract class PageableEmbedMenu extends PageableMenu implements Pageable
     private final GiveawayBot bot;
 
     private final Map<Integer, MessageEmbed> cachedPages = Maps.newConcurrentMap();
-    private long lastInteraction;
     private Message message;
     private final Server server;
     private final boolean managerOnly;
+
+    private ScheduledFuture<?> scheduledFuture;
 
     protected PageableEmbedMenu(GiveawayBot bot, Server server, boolean managerOnly) {
         this.languageRegistry = bot.getLanguageRegistry();
@@ -41,10 +42,9 @@ public abstract class PageableEmbedMenu extends PageableMenu implements Pageable
     public void sendInitialMessage(TextChannel channel) {
         MessageEmbed embed = this.createPage(super.currentPage.get());
         this.cachedPages.put(super.currentPage.get(), embed);
-        channel.sendMessage(embed).queue(message -> {
+        channel.sendMessage(embed).queueAfter(5, TimeUnit.SECONDS, message -> { // TODO change back
             this.message = message;
-            this.lastInteraction = System.currentTimeMillis();
-            this.deleteOrReschedule();
+            this.scheduleDeletion();
             message.addReaction("\u2B05").queue();
             message.addReaction("\u27A1").queue();
         });
@@ -71,7 +71,7 @@ public abstract class PageableEmbedMenu extends PageableMenu implements Pageable
         if (this.managerOnly && !this.server.canMemberManage(event.getMember())) {
             return;
         }
-        this.lastInteraction = System.currentTimeMillis();
+        this.scheduleDeletion();
         if (page == Page.NEXT) {
             this.nextPage();
         } else {
@@ -79,12 +79,10 @@ public abstract class PageableEmbedMenu extends PageableMenu implements Pageable
         }
     }
 
-    public void deleteOrReschedule() {
-        long timeToDelete = this.lastInteraction + TimeIdentifier.MINUTE.getMilliseconds();
-        if (timeToDelete <= System.currentTimeMillis()) {
-            this.bot.unRegisterListeners(this);
-        } else {
-            bot.getThreadManager().getScheduler().schedule(this::deleteOrReschedule, timeToDelete, TimeUnit.MILLISECONDS);
+    public void scheduleDeletion() {
+        if (this.scheduledFuture != null) {
+            this.scheduledFuture.cancel(false);
         }
+        this.scheduledFuture = this.bot.getThreadManager().getScheduler().schedule(() -> this.bot.unRegisterListeners(this), 1, TimeUnit.MINUTES);
     }
 }

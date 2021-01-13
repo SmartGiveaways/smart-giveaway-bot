@@ -159,6 +159,7 @@ public class GiveawayBot extends JdaBot {
 
         this.messageEventRegistry.setServerCache(this.serverCache);
         this.registerListeners(
+                this.latencyMonitor,
                 new MessageSendListener(this),
                 new GiveawayDeletionListener(this),
                 new GuildJoinListener(this),

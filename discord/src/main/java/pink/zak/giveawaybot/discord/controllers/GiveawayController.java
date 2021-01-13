@@ -223,7 +223,6 @@ public class GiveawayController {
                     Preset preset = giveaway.getPresetName().equals("default") ? this.defaultPreset : server.getPreset(giveaway.getPresetName());
                     boolean reactToEnter = preset.getSetting(Setting.ENABLE_REACT_TO_ENTER);
                     if (!GiveawayBot.isLocked()) {
-                        System.out.println("Queueing message update " + giveaway.getMessageLink());
                         message.editMessage(new EmbedBuilder()
                                 .setTitle(this.languageRegistry.get(server, Text.GIVEAWAY_EMBED_TITLE, replacer -> replacer.set("item", giveaway.getGiveawayItem())).get())
                                 .setDescription(this.languageRegistry.get(server, reactToEnter ? Text.GIVEAWAY_EMBED_DESCRIPTION_REACTION : Text.GIVEAWAY_EMBED_DESCRIPTION_ALL).get())
