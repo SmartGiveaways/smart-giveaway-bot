@@ -12,7 +12,6 @@ import pink.zak.giveawaybot.discord.metrics.queries.GiveawayCacheQuery;
 import pink.zak.giveawaybot.discord.metrics.queries.ServerCacheQuery;
 import pink.zak.giveawaybot.discord.metrics.queries.ServerQuery;
 import pink.zak.giveawaybot.discord.models.Server;
-import pink.zak.giveawaybot.discord.service.BotConstants;
 import pink.zak.giveawaybot.discord.service.command.discord.DiscordCommandBase;
 import pink.zak.metrics.Metrics;
 import pink.zak.metrics.queries.stock.SystemQuery;

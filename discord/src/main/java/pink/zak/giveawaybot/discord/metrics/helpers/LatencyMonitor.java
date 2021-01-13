@@ -4,7 +4,6 @@ import com.google.common.collect.Maps;
 import lombok.SneakyThrows;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.events.ExceptionEvent;
-import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.http.HttpRequestEvent;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;

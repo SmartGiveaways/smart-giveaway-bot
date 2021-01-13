@@ -11,7 +11,7 @@ import pink.zak.giveawaybot.discord.cache.ServerCache;
 import pink.zak.giveawaybot.discord.lang.LanguageRegistry;
 import pink.zak.giveawaybot.discord.lang.model.Language;
 import pink.zak.giveawaybot.discord.models.Preset;
-import pink.zak.giveawaybot.discord.service.command.global.argument.ArgumentHandler;
+import pink.zak.giveawaybot.discord.service.command.global.argument.ArgumentTypeUtils;
 import pink.zak.giveawaybot.discord.service.command.global.argument.ArgumentType;
 import pink.zak.giveawaybot.discord.service.types.BooleanUtils;
 import pink.zak.giveawaybot.discord.service.types.NumberUtils;
@@ -31,7 +31,7 @@ public abstract class CommandBackend {
     }
 
     public CommandBackend registerArgumentType(Class<?> clazz, ArgumentType<?> argumentType) {
-        ArgumentHandler.register(clazz, argumentType);
+        ArgumentTypeUtils.register(clazz, argumentType);
         return this;
     }
 

@@ -1,6 +1,5 @@
 package pink.zak.giveawaybot.discord.pipelines.giveaway;
 
-import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
@@ -13,12 +12,10 @@ import pink.zak.giveawaybot.discord.models.giveaway.CurrentGiveaway;
 import pink.zak.giveawaybot.discord.pipelines.giveaway.steps.EntryCounterStep;
 import pink.zak.giveawaybot.discord.threads.ThreadFunction;
 
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class GiveawayPipeline {
     private final GiveawayController controller;

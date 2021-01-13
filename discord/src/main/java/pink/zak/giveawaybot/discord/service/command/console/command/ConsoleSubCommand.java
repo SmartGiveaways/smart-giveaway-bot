@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import pink.zak.giveawaybot.discord.GiveawayBot;
 import pink.zak.giveawaybot.discord.models.Server;
 import pink.zak.giveawaybot.discord.service.command.global.argument.Argument;
-import pink.zak.giveawaybot.discord.service.command.global.argument.ArgumentHandler;
+import pink.zak.giveawaybot.discord.service.command.global.argument.ArgumentTypeUtils;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -41,15 +41,15 @@ public abstract class ConsoleSubCommand extends ConsoleCommand {
     }
 
     protected <S> void addArgument(Class<S> clazz) {
-        this.arguments.add(new Argument<>(ArgumentHandler.getArgumentType(clazz)));
+        this.arguments.add(new Argument<>(ArgumentTypeUtils.getArgumentType(clazz)));
     }
 
     protected <S> void addArgument(Class<S> clazz, Predicate<String> tester) {
-        this.arguments.add(new Argument<>(ArgumentHandler.getArgumentType(clazz), tester));
+        this.arguments.add(new Argument<>(ArgumentTypeUtils.getArgumentType(clazz), tester));
     }
 
     protected <S> void addArgument(Class<S> clazz, String argument) {
-        this.arguments.add(new Argument<>(ArgumentHandler.getArgumentType(clazz), argument));
+        this.arguments.add(new Argument<>(ArgumentTypeUtils.getArgumentType(clazz), argument));
     }
 
     protected void addArguments(Class<?>... clazzes) {

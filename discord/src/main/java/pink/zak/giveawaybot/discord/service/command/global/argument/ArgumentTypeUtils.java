@@ -4,10 +4,10 @@ import com.google.common.collect.Maps;
 
 import java.util.Map;
 
-public class ArgumentHandler {
+public class ArgumentTypeUtils {
     private static final Map<Class<?>, ArgumentType<?>> argumentTypes = Maps.newHashMap();
 
-    private ArgumentHandler() {
+    private ArgumentTypeUtils() {
         throw new IllegalStateException("Registry class cannot be instantiated.");
     }
 
