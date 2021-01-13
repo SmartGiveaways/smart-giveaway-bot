@@ -171,6 +171,7 @@ public abstract class JdaBot implements SimpleBot {
         };
     }
 
+    @Override
     public boolean isConnected() {
         return this.connected;
     }
