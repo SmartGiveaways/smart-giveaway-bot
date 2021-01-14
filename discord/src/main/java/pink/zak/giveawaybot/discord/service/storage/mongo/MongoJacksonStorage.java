@@ -2,9 +2,7 @@ package pink.zak.giveawaybot.discord.service.storage.mongo;
 
 import com.google.common.collect.Sets;
 import com.mongodb.BasicDBObject;
-import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
-import org.bson.Document;
 import org.bson.UuidRepresentation;
 import org.bson.conversions.Bson;
 import org.mongojack.JacksonMongoCollection;

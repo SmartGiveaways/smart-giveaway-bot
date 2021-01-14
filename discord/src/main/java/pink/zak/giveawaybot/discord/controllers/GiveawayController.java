@@ -39,8 +39,6 @@ import pink.zak.giveawaybot.discord.storage.GiveawayStorage;
 import pink.zak.giveawaybot.discord.threads.ThreadFunction;
 import pink.zak.giveawaybot.discord.threads.ThreadManager;
 
-import java.net.NoRouteToHostException;
-import java.net.UnknownHostException;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;

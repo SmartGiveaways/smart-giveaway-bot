@@ -4,11 +4,11 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import pink.zak.giveawaybot.discord.GiveawayBot;
-import pink.zak.giveawaybot.discord.service.colour.Palette;
-import pink.zak.giveawaybot.discord.service.time.Time;
 import pink.zak.giveawaybot.discord.lang.enums.Text;
 import pink.zak.giveawaybot.discord.models.Server;
+import pink.zak.giveawaybot.discord.service.colour.Palette;
 import pink.zak.giveawaybot.discord.service.command.discord.command.SimpleCommand;
+import pink.zak.giveawaybot.discord.service.time.Time;
 
 import java.util.List;
 

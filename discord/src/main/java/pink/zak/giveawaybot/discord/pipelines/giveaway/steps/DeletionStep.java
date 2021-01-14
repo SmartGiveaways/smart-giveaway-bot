@@ -9,8 +9,8 @@ import pink.zak.giveawaybot.discord.controllers.GiveawayController;
 import pink.zak.giveawaybot.discord.models.Server;
 import pink.zak.giveawaybot.discord.models.giveaway.CurrentGiveaway;
 import pink.zak.giveawaybot.discord.models.giveaway.finished.FullFinishedGiveaway;
-import pink.zak.giveawaybot.discord.storage.finishedgiveaway.FullFinishedGiveawayStorage;
 import pink.zak.giveawaybot.discord.storage.GiveawayStorage;
+import pink.zak.giveawaybot.discord.storage.finishedgiveaway.FullFinishedGiveawayStorage;
 
 import java.math.BigInteger;
 import java.util.Map;

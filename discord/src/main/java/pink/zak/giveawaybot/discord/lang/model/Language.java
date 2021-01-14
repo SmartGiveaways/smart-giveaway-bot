@@ -1,8 +1,8 @@
 package pink.zak.giveawaybot.discord.lang.model;
 
+import pink.zak.giveawaybot.discord.lang.LanguageHelper;
 import pink.zak.giveawaybot.discord.lang.LanguageRegistry;
 import pink.zak.giveawaybot.discord.lang.enums.Text;
-import pink.zak.giveawaybot.discord.lang.LanguageHelper;
 
 import java.util.Map;
 import java.util.Set;

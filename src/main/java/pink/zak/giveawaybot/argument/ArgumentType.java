@@ -15,7 +15,8 @@ public enum ArgumentType {
         return this.names;
     }
 
-    public static ArgumentType findArg(String input) {
+    public static ArgumentType findArg(String originalInput) {
+        String input = originalInput;
         if (input.startsWith("-")) {
             input = input.substring(1);
         }

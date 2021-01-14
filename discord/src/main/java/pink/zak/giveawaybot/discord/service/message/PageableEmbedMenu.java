@@ -6,11 +6,11 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
 import pink.zak.giveawaybot.discord.GiveawayBot;
+import pink.zak.giveawaybot.discord.lang.LanguageRegistry;
 import pink.zak.giveawaybot.discord.listener.reaction.pageable.Page;
 import pink.zak.giveawaybot.discord.listener.reaction.pageable.PageableReactionListener;
-import pink.zak.giveawaybot.discord.service.colour.Palette;
-import pink.zak.giveawaybot.discord.lang.LanguageRegistry;
 import pink.zak.giveawaybot.discord.models.Server;
+import pink.zak.giveawaybot.discord.service.colour.Palette;
 
 import java.util.Map;
 import java.util.concurrent.ScheduledFuture;

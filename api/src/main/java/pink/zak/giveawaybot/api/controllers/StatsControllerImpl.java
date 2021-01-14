@@ -2,8 +2,8 @@ package pink.zak.giveawaybot.api.controllers;
 
 import org.springframework.stereotype.Component;
 import pink.zak.giveawaybot.discord.GiveawayBot;
-import pink.zak.giveawaybot.discord.service.time.Time;
 import pink.zak.giveawaybot.discord.metrics.helpers.GenericBotMetrics;
+import pink.zak.giveawaybot.discord.service.time.Time;
 
 @Component
 public class StatsControllerImpl implements StatsController {

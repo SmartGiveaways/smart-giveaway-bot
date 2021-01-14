@@ -3,11 +3,11 @@ package pink.zak.giveawaybot.discord.defaults;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
 import pink.zak.giveawaybot.discord.GiveawayBot;
+import pink.zak.giveawaybot.discord.enums.Setting;
+import pink.zak.giveawaybot.discord.models.Preset;
 import pink.zak.giveawaybot.discord.service.colour.Palette;
 import pink.zak.giveawaybot.discord.service.colour.PaletteBuilder;
 import pink.zak.giveawaybot.discord.service.types.ReactionContainer;
-import pink.zak.giveawaybot.discord.enums.Setting;
-import pink.zak.giveawaybot.discord.models.Preset;
 
 import java.awt.Color;
 

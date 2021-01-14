@@ -6,10 +6,10 @@ import net.dv8tion.jda.api.entities.Message;
 import pink.zak.giveawaybot.discord.GiveawayBot;
 import pink.zak.giveawaybot.discord.cache.ServerCache;
 import pink.zak.giveawaybot.discord.controllers.GiveawayController;
+import pink.zak.giveawaybot.discord.enums.EntryType;
 import pink.zak.giveawaybot.discord.models.Server;
 import pink.zak.giveawaybot.discord.models.User;
 import pink.zak.giveawaybot.discord.models.giveaway.CurrentGiveaway;
-import pink.zak.giveawaybot.discord.enums.EntryType;
 
 import java.math.BigInteger;
 import java.util.Collections;

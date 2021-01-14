@@ -6,10 +6,10 @@ import com.google.gson.reflect.TypeToken;
 import pink.zak.giveawaybot.discord.GiveawayBot;
 import pink.zak.giveawaybot.discord.enums.EntryType;
 import pink.zak.giveawaybot.discord.models.User;
-import pink.zak.giveawaybot.discord.service.types.MapCreator;
 import pink.zak.giveawaybot.discord.service.storage.mongo.MongoDeserializer;
 import pink.zak.giveawaybot.discord.service.storage.mongo.MongoSerializer;
 import pink.zak.giveawaybot.discord.service.storage.mongo.MongoStorage;
+import pink.zak.giveawaybot.discord.service.types.MapCreator;
 
 import java.util.EnumMap;
 import java.util.concurrent.ConcurrentHashMap;

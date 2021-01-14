@@ -1,6 +1,5 @@
 package pink.zak.giveawaybot.discord.storage.finishedgiveaway;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -13,7 +12,6 @@ import pink.zak.giveawaybot.discord.service.storage.mongo.MongoSerializer;
 import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 

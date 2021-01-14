@@ -2,9 +2,9 @@ package pink.zak.giveawaybot;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
-import pink.zak.giveawaybot.discord.GiveawayBot;
 import pink.zak.giveawaybot.api.ApiApplication;
 import pink.zak.giveawaybot.argument.ArgumentType;
+import pink.zak.giveawaybot.discord.GiveawayBot;
 
 import java.util.Arrays;
 import java.util.Objects;

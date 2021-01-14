@@ -2,9 +2,9 @@ package pink.zak.giveawaybot.discord.listener.message;
 
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import pink.zak.giveawaybot.discord.GiveawayBot;
+import pink.zak.giveawaybot.discord.enums.EntryType;
 import pink.zak.giveawaybot.discord.models.Server;
 import pink.zak.giveawaybot.discord.pipelines.entries.EntryPipeline;
-import pink.zak.giveawaybot.discord.enums.EntryType;
 
 public class MessageSendListener implements GiveawayMessageListener {
     private final EntryPipeline entryPipeline;

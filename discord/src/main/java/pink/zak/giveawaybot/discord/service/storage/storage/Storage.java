@@ -7,9 +7,9 @@ import com.google.gson.JsonObject;
 import pink.zak.giveawaybot.discord.GiveawayBot;
 import pink.zak.giveawaybot.discord.service.storage.Backend;
 import pink.zak.giveawaybot.discord.service.storage.BackendFactory;
+import pink.zak.giveawaybot.discord.service.storage.adapter.Adapter;
 import pink.zak.giveawaybot.discord.service.storage.storage.serialization.Deserializer;
 import pink.zak.giveawaybot.discord.service.storage.storage.serialization.Serializer;
-import pink.zak.giveawaybot.discord.service.storage.adapter.Adapter;
 
 import java.util.Map;
 import java.util.Set;

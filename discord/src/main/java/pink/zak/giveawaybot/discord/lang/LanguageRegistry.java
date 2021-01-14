@@ -11,10 +11,10 @@ import pink.zak.giveawaybot.discord.GiveawayBot;
 import pink.zak.giveawaybot.discord.lang.enums.Text;
 import pink.zak.giveawaybot.discord.lang.model.Language;
 import pink.zak.giveawaybot.discord.models.Server;
+import pink.zak.giveawaybot.discord.service.BotConstants;
 import pink.zak.giveawaybot.discord.service.bot.SimpleBot;
 import pink.zak.giveawaybot.discord.service.text.Replace;
 import pink.zak.giveawaybot.discord.service.text.Replacer;
-import pink.zak.giveawaybot.discord.service.BotConstants;
 
 import java.nio.file.Files;
 import java.nio.file.Path;

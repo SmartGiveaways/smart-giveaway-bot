@@ -2,8 +2,8 @@ package pink.zak.giveawaybot.discord.commands.console.premium.subs;
 
 import pink.zak.giveawaybot.discord.GiveawayBot;
 import pink.zak.giveawaybot.discord.models.Server;
-import pink.zak.giveawaybot.discord.service.time.Time;
 import pink.zak.giveawaybot.discord.service.command.console.command.ConsoleSubCommand;
+import pink.zak.giveawaybot.discord.service.time.Time;
 
 import java.util.List;
 
