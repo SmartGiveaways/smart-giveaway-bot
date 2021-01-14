@@ -27,6 +27,10 @@ public class MongoConnectionFactory {
         this.mongoDatabase = this.mongoClient.getDatabase(storageSettings.getDatabase());
     }
 
+    public MongoClient getClient() {
+        return this.mongoClient;
+    }
+
     public MongoDatabase getDatabase() {
         return this.mongoDatabase;
     }
