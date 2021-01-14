@@ -39,10 +39,11 @@ import pink.zak.giveawaybot.discord.storage.GiveawayStorage;
 import pink.zak.giveawaybot.discord.threads.ThreadFunction;
 import pink.zak.giveawaybot.discord.threads.ThreadManager;
 
+import java.net.NoRouteToHostException;
+import java.net.UnknownHostException;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.CompletionException;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -248,20 +249,24 @@ public class GiveawayController {
 
     private void updateGiveaways(Server server, Set<CurrentGiveaway> giveaways) {
         for (CurrentGiveaway giveaway : giveaways) {
-            Message message = this.getGiveawayMessage(giveaway);
-            if (message == null) {
-                GiveawayBot.logger().warn("Giveaway did not delete correctly or the discord api is dying ({} in server {}).", giveaway.getMessageId(), giveaway.getServerId());
-                continue;
-            }
-            Preset preset = giveaway.getPresetName().equals("default") ? this.defaultPreset : server.getPreset(giveaway.getPresetName());
-            boolean reactToEnter = preset.getSetting(Setting.ENABLE_REACT_TO_ENTER);
-            if (!GiveawayBot.isLocked()) {
-                message.editMessage(new EmbedBuilder()
-                        .setTitle(this.languageRegistry.get(server, Text.GIVEAWAY_EMBED_TITLE, replacer -> replacer.set("item", giveaway.getGiveawayItem())).get())
-                        .setDescription(this.languageRegistry.get(server, reactToEnter ? Text.GIVEAWAY_EMBED_DESCRIPTION_REACTION : Text.GIVEAWAY_EMBED_DESCRIPTION_ALL).get())
-                        .setColor(this.palette.primary())
-                        .setFooter(this.getFooter(server, giveaway.getTimeToExpiry(), giveaway.getWinnerAmount()))
-                        .build()).queue();
+            try {
+                Message message = this.getGiveawayMessage(giveaway);
+                if (message == null) {
+                    GiveawayBot.logger().warn("Giveaway did not delete correctly or the discord api is dying ({} in server {}).", giveaway.getMessageId(), giveaway.getServerId());
+                    continue;
+                }
+                Preset preset = giveaway.getPresetName().equals("default") ? this.defaultPreset : server.getPreset(giveaway.getPresetName());
+                boolean reactToEnter = preset.getSetting(Setting.ENABLE_REACT_TO_ENTER);
+                if (!GiveawayBot.isLocked()) {
+                    message.editMessage(new EmbedBuilder()
+                            .setTitle(this.languageRegistry.get(server, Text.GIVEAWAY_EMBED_TITLE, replacer -> replacer.set("item", giveaway.getGiveawayItem())).get())
+                            .setDescription(this.languageRegistry.get(server, reactToEnter ? Text.GIVEAWAY_EMBED_DESCRIPTION_REACTION : Text.GIVEAWAY_EMBED_DESCRIPTION_ALL).get())
+                            .setColor(this.palette.primary())
+                            .setFooter(this.getFooter(server, giveaway.getTimeToExpiry(), giveaway.getWinnerAmount()))
+                            .build()).queue();
+                }
+            } catch (Exception ex) {
+                GiveawayBot.logger().error("Error with giveaway message (updateGiveaways)", ex);
             }
         }
     }
@@ -297,7 +302,7 @@ public class GiveawayController {
     }
 
     @SneakyThrows
-    public Message getGiveawayMessage(RichGiveaway giveaway) {
+    public Message getGiveawayMessage(RichGiveaway giveaway) throws ErrorResponseException {
         Guild guild = this.bot.getShardManager().getGuildById(giveaway.getServerId());
         if (guild == null) {
             return null;
@@ -310,11 +315,7 @@ public class GiveawayController {
         if (cachedMessage != null) {
             return cachedMessage;
         }
-        try {
-            return channel.retrieveMessageById(giveaway.getMessageId()).complete(true);
-        } catch (CompletionException | ErrorResponseException ignored) {
-            return null;
-        }
+        return channel.retrieveMessageById(giveaway.getMessageId()).submit().get();
     }
 
     private String getFooter(Server server, long length, int winnerAmount) {

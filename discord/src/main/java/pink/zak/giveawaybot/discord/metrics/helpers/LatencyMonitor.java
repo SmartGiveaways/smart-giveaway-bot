@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 
 public class LatencyMonitor extends ListenerAdapter {
     private final Map<JDA, Long> shardTimings = Maps.newConcurrentMap();
-    private final Map<JDA, Long> lastShardTestTimes = Maps.newConcurrentMap();
+    private final Map<JDA, Long> shardTestTimes = Maps.newConcurrentMap();
     private final ShardManager shardManager;
     private final Metrics metrics;
 
@@ -27,26 +27,24 @@ public class LatencyMonitor extends ListenerAdapter {
     public LatencyMonitor(GiveawayBot bot) {
         this.metrics = bot.getMetrics();
         this.shardManager = bot.getShardManager();
-        bot.getThreadManager().getScheduler().scheduleAtFixedRate(this::testLatency, 0, 30, TimeUnit.SECONDS);
+        bot.getThreadManager().getScheduler().scheduleAtFixedRate(this::testLatency, 0, 10, TimeUnit.SECONDS);
     }
 
     private void testLatency() {
-        for (JDA jda : this.shardTimings.keySet()) {
-            if (this.metrics != null) {
-                this.metrics.<LatencyMonitor, JDA>logAdvanced(query -> query
-                        .primary(this)
-                        .push(LatencyQuery.LATENCY, jda));
-            }
-        }
         this.shardManager.getShards().forEach(jda -> {
-            if (this.lastShardTestTimes.containsKey(jda) && System.currentTimeMillis() - this.lastShardTestTimes.get(jda) > 7500) {
+            if (this.shardTestTimes.containsKey(jda) && System.currentTimeMillis() - this.shardTestTimes.get(jda) < 7500) {
                 return;
             }
             jda.getRestPing().queue(latency -> {
                 this.shardTimings.put(jda, latency);
-                this.lastShardTestTimes.put(jda, System.currentTimeMillis());
+                this.shardTestTimes.put(jda, System.currentTimeMillis());
                 if (latency >= 5000) {
                     GiveawayBot.logger().warn("Tested latency of shard {} was too high ({}ms)", jda.getShardInfo().getShardId(), latency);
+                }
+                if (this.metrics != null) {
+                    this.metrics.<LatencyMonitor, JDA>logAdvanced(query -> query
+                            .primary(this)
+                            .push(LatencyQuery.LATENCY, jda));
                 }
             }, ex -> this.onHttpException(ex, jda));
         });
@@ -60,7 +58,7 @@ public class LatencyMonitor extends ListenerAdapter {
                 GiveawayBot.logger().info("Tested latency of shard {} is now usable ({}ms)", jda.getShardInfo().getShardId(), latency);
             }
             this.shardTimings.put(jda, latency);
-            this.lastShardTestTimes.put(jda, System.currentTimeMillis());
+            this.shardTestTimes.put(jda, System.currentTimeMillis());
         });
     }
 
@@ -71,8 +69,8 @@ public class LatencyMonitor extends ListenerAdapter {
                 this.onHttpException(event.getResponse().getException(), jda);
             } else if (
                     this.shardTimings.containsKey(jda) && this.shardTimings.get(jda) >= 10000 && (
-                            !this.lastShardTestTimes.containsKey(jda) ||
-                                    System.currentTimeMillis() - this.lastShardTestTimes.get(jda) > 7500
+                            !this.shardTestTimes.containsKey(jda) ||
+                                    System.currentTimeMillis() - this.shardTestTimes.get(jda) > 7500
                     )
             ) this.testLatency(jda);
         }
@@ -83,7 +81,7 @@ public class LatencyMonitor extends ListenerAdapter {
     }
 
     public void onHttpException(Throwable ex, JDA jda) {
-        if (ex instanceof NoRouteToHostException || ex instanceof UnknownHostException || ex instanceof ErrorResponseException) {
+            if (ex instanceof NoRouteToHostException || ex instanceof UnknownHostException || ex instanceof ErrorResponseException) {
             GiveawayBot.logger().warn("Shard {} had a timeout exception ({})", jda.getShardInfo().getShardId(), ex.getClass().getSimpleName());
             this.shardTimings.put(jda, Long.MAX_VALUE);
         }
@@ -108,5 +106,9 @@ public class LatencyMonitor extends ListenerAdapter {
 
     public Map<JDA, Long> getShardTimings() {
         return this.shardTimings;
+    }
+
+    public Map<JDA, Long> getShardTestTimes() {
+        return this.shardTestTimes;
     }
 }

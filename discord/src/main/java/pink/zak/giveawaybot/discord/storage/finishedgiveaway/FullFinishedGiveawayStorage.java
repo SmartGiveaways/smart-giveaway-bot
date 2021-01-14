@@ -44,34 +44,18 @@ public class FullFinishedGiveawayStorage extends FinishedGiveawayStorage<FullFin
 
     @Override
     public MongoDeserializer<FullFinishedGiveaway> deserializer() {
-        List<Long> timings = Lists.newArrayList(System.nanoTime());
         return document -> {
             long messageId = document.getLong("_id");
-            timings.add(System.nanoTime());
             long channelId = document.getLong("channelId");
-            timings.add(System.nanoTime());
             long serverId = document.getLong("serverId");
-            timings.add(System.nanoTime());
             long startTime = document.getLong("startTime");
-            timings.add(System.nanoTime());
             long endTime = document.getLong("endTime");
-            timings.add(System.nanoTime());
             int winnerAmount = document.getInteger("winnerAmount");
-            timings.add(System.nanoTime());
             String presetName = document.getString("presetName");
-            timings.add(System.nanoTime());
             String giveawayItem = document.getString("giveawayItem");
-            timings.add(System.nanoTime());
             BigInteger totalEntries = new BigInteger(document.getString("totalEntries"));
-            timings.add(System.nanoTime());
             Map<Long, BigInteger> userEntries = this.gson.fromJson(document.getString("userEntries"), new TypeToken<HashMap<Long, BigInteger>>() {}.getType());
-            timings.add(System.nanoTime());
             Set<Long> winners = Sets.newConcurrentHashSet(this.gson.fromJson(document.getString("winners"), new TypeToken<HashSet<Long>>() {}.getType()));
-            timings.add(System.nanoTime());
-
-            for (int i = 1; i < timings.size(); i++) {
-                GiveawayBot.logger().info("{}) Took {}ns", i, timings.get(i) - timings.get(i - 1));
-            }
             return new FullFinishedGiveaway(messageId, channelId, serverId, startTime, endTime, winnerAmount, presetName, giveawayItem, totalEntries, userEntries, winners);
         };
     }

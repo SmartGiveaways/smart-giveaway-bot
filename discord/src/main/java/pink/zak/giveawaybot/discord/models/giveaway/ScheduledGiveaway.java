@@ -4,9 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import pink.zak.giveawaybot.discord.service.time.Time;
 
 import java.util.UUID;
+import java.util.concurrent.ScheduledFuture;
 
 public class ScheduledGiveaway extends Giveaway {
     private final UUID uuid;
+    private ScheduledFuture<?> scheduledFuture;
 
     public ScheduledGiveaway(UUID uuid, long channelId, long serverId, long startTime, long endTime,
                              int winnerAmount, String presetName, String giveawayItem) {
@@ -41,5 +43,14 @@ public class ScheduledGiveaway extends Giveaway {
     @Override
     public boolean isActive() {
         return this.getMillisToStart() < 0 && this.getTimeToExpiry() > 0;
+    }
+
+    @JsonIgnore
+    public ScheduledFuture<?> getScheduledFuture() {
+        return this.scheduledFuture;
+    }
+
+    public void setScheduledFuture(ScheduledFuture<?> scheduledFuture) {
+        this.scheduledFuture = scheduledFuture;
     }
 }

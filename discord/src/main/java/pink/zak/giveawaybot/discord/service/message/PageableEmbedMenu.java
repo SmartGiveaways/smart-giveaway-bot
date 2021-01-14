@@ -42,7 +42,7 @@ public abstract class PageableEmbedMenu extends PageableMenu implements Pageable
     public void sendInitialMessage(TextChannel channel) {
         MessageEmbed embed = this.createPage(super.currentPage.get());
         this.cachedPages.put(super.currentPage.get(), embed);
-        channel.sendMessage(embed).queueAfter(5, TimeUnit.SECONDS, message -> { // TODO change back
+        channel.sendMessage(embed).queue(message -> { // TODO change back
             this.message = message;
             this.scheduleDeletion();
             message.addReaction("\u2B05").queue();

@@ -60,7 +60,10 @@ values:
                         :globe_with_meridians: [Website (Click)](https://smartgiveaways.xyz/) \n
 
                         :1234: Servers: %servers%\n
-                        :tada: Active Giveaways: %active_giveaways%"
+                        :tada: Active Giveaways: %active_giveaways%\n
+                        :large_blue_diamond: Shard: %shard% of %total_shards%\n
+                        :timer: Shard Ping: %shard_ping% (updated %last_shard_ping_update% ago)
+                        "
 
   # >gadmin command messages
   admin-embed-title: "Admin Command Help"
@@ -200,10 +203,9 @@ values:
   help-embed-footer: "For more commands visit https://sgs.pink/commands"
   help-limited-section: ":tickets: >entries"
   help-admin-section: ":tada: >giveaway - Manage Giveaways\n
-                        :level_slider: >preset - Manage Presets\n
-                        :gear: >gadmin - Manage Manager Roles\n
-                        :hammer: >gban <user> - Visibly bans a user from giveaways.\n
-                        :detective: >gsban <user> - Shadowbans a user from giveaways. Almost impossible to tell.\n
+                        :level_slider: >preset - Manage presets\n
+                        :gear: >gadmin - Manage manager roles + languages\n
+                        :hammer: >gban [-s] <user> - Bans or shadowbans a user from giveaways.\n
                         :angel: >gunban <user> - Removes a user's ban or shadowban."
 
   # >premium command messages

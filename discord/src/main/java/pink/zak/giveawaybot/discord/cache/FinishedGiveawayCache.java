@@ -65,7 +65,6 @@ public class FinishedGiveawayCache extends AccessExpiringCache<Long, FullFinishe
     }
 
     public List<PartialFinishedGiveaway> getAllPartial(Server server) {
-        long startA = System.currentTimeMillis();
         List<Long> remainingIds = Lists.newArrayList();
         List<PartialFinishedGiveaway> giveaways = Lists.newArrayList();
 
@@ -79,17 +78,13 @@ public class FinishedGiveawayCache extends AccessExpiringCache<Long, FullFinishe
             }
         }
         if (remainingIds.isEmpty()) {
-            GiveawayBot.logger().info("Took {}ms to do A", System.currentTimeMillis() - startA);
             return giveaways;
         }
-        long startB = System.currentTimeMillis();
         List<PartialFinishedGiveaway> loadedGiveaways = this.partialStorage.loadAll(server, remainingIds);
-        GiveawayBot.logger().info("Took {}ms to do B", System.currentTimeMillis() - startB);
         for (PartialFinishedGiveaway giveaway : loadedGiveaways) {
             this.partialCache.set(giveaway.getMessageId(), giveaway);
         }
         giveaways.addAll(loadedGiveaways);
-        GiveawayBot.logger().info("Took {}ms to do A", System.currentTimeMillis() - startA);
         return giveaways;
     }
 }

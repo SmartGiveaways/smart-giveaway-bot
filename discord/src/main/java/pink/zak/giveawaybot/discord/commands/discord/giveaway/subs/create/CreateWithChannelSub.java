@@ -37,8 +37,6 @@ public class CreateWithChannelSub extends SubCommand {
         int winnerAmount = this.parseArgument(args, event.getGuild(), 4);
         String giveawayItem = String.join(" ", SubCommandUtils.getEnd(this.argsSize(), args));
 
-        for (int i = 0; i < 100; i++) {
-            this.cmdUtils.create(server, lengthMillis, winnerAmount, presetName, giveawayItem, giveawayChannel, responseChannel);
-        }
+        this.cmdUtils.create(server, lengthMillis, winnerAmount, presetName, giveawayItem, giveawayChannel, responseChannel);
     }
 }

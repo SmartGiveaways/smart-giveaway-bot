@@ -68,7 +68,7 @@ public class ScheduledGiveawayController {
         if (waitTime <= 10000) {
             this.createCurrentGiveaway(giveaway);
         } else {
-            this.scheduler.schedule(() -> this.createCurrentGiveaway(giveaway), waitTime, TimeUnit.MILLISECONDS);
+            giveaway.setScheduledFuture(this.scheduler.schedule(() -> this.createCurrentGiveaway(giveaway), waitTime, TimeUnit.MILLISECONDS));
         }
     }
 
@@ -93,6 +93,7 @@ public class ScheduledGiveawayController {
     public void deleteGiveaway(Server server, ScheduledGiveaway giveaway) {
         this.scheduledGiveawayCache.invalidate(giveaway.getUuid(), false);
         this.scheduledGiveawayStorage.delete(giveaway.getUuid());
+        giveaway.getScheduledFuture().cancel(false);
         server.getScheduledGiveaways().remove(giveaway.getUuid());
     }
 

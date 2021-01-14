@@ -19,20 +19,14 @@ public abstract class FinishedGiveawayStorage<T extends PartialFinishedGiveaway>
 
     public List<T> loadAll(Server server, List<Long> targeted) {
         List<T> giveaways = Lists.newArrayList();
-        long deserializeTime = 0;
         for (Document document : super.collection.find(Filters.eq("serverId", server.getId()))) {
             long id = document.getLong("_id");
             if (!targeted.contains(id)) {
                 continue;
             }
-            long startD = System.currentTimeMillis();
             giveaways.add(this.deserializer().apply(document));
-            deserializeTime += System.currentTimeMillis() - startD;
         }
-        long startC = System.currentTimeMillis();
         Collections.sort(giveaways); // Won't be ordered from MongoDB
-        GiveawayBot.logger().info("Took {}ms to do C", System.currentTimeMillis() - startC);
-        GiveawayBot.logger().info("Took {}ms to do D", deserializeTime);
         return giveaways;
     }
 
