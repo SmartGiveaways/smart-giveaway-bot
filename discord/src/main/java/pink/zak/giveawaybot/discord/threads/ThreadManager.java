@@ -7,21 +7,24 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 public class ThreadManager {
     private final Map<ThreadFunction, ExecutorService> threadPools = Maps.newEnumMap(ThreadFunction.class);
 
     public ThreadManager() {
-        this.initiatePools();
+        this.initializePools();
     }
 
     public void runAsync(ThreadFunction function, Runnable runnable) {
         this.threadPools.get(function).submit(runnable);
     }
 
-    private void initiatePools() {
-        this.threadPools.put(ThreadFunction.STORAGE, Executors.newFixedThreadPool(5, this.getThreadFactory("storage")));
+    private void initializePools() {
+        this.threadPools.put(ThreadFunction.STORAGE, new ThreadPoolExecutor(5, Integer.MAX_VALUE, 2, TimeUnit.MINUTES, new SynchronousQueue<>(), this.getThreadFactory("storage")));
         this.threadPools.put(ThreadFunction.GENERAL, Executors.newFixedThreadPool(5, this.getThreadFactory("commands")));
         this.threadPools.put(ThreadFunction.SCHEDULERS, Executors.newScheduledThreadPool(4, this.getThreadFactory("scheduling")));
     }
