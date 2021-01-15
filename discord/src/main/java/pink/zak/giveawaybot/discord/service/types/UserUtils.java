@@ -15,7 +15,17 @@ public class UserUtils {
             return -1;
         }
         try {
-            return Long.parseLong(input.length() == 18 ? input : input.length() == 21 ? input.substring(2, 20) : input.length() == 22 ? input.substring(3, 21) : "-1");
+            String toParse;
+            if (input.length() == 18) {
+                toParse = input;
+            } else if (input.length() == 21) {
+                toParse = input.substring(2, 20);
+            } else if (input.length() == 22) {
+                toParse = input.substring(3, 21);
+            } else {
+                toParse = "-1";
+            }
+            return Long.parseLong(toParse);
         } catch (NumberFormatException ex) {
             return -1;
         }

@@ -19,7 +19,7 @@ public abstract class MongoStorage<K, T> {
     private final String idKey;
     private ExecutorService executorService;
 
-    public MongoStorage(GiveawayBot bot, String collectionName, String idKey) {
+    protected MongoStorage(GiveawayBot bot, String collectionName, String idKey) {
         this.collection = bot.getMongoConnectionFactory().getCollection(collectionName);
         this.executorService = bot.getAsyncExecutor(ThreadFunction.STORAGE);
         this.idKey = idKey;

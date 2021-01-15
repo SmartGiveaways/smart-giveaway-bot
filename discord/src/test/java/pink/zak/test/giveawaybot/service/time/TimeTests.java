@@ -22,19 +22,19 @@ class TimeTests {
         long hourParseFive = Time.parse("1hours");
         long hourParseSix = Time.parse("2hours");
 
-        assert 1000 == secondParseOne;
-        assert 1000 == secondParseTwo;
-        assert 1000 == secondParseThree;
-        assert 4000 == secondParseFour;
-        assert 60000 == minuteParseOne;
-        assert 60000 == minuteParseTwo;
-        assert 60000 == minuteParseThree;
-        assert 240000 == minuteParseFour;
-        assert 3600000 == hourParseOne;
-        assert 3600000 == hourParseTwo;
-        assert 3600000 == hourParseThree;
-        assert 3600000 == hourParseFour;
-        assert 3600000 == hourParseFive;
-        assert 7200000 == hourParseSix;
+        assert (1000 == secondParseOne);
+        assert (1000 == secondParseTwo);
+        assert (1000 == secondParseThree);
+        assert (4000 == secondParseFour);
+        assert (60000 == minuteParseOne);
+        assert (60000 == minuteParseTwo);
+        assert (60000 == minuteParseThree);
+        assert (240000 == minuteParseFour);
+        assert (3600000 == hourParseOne);
+        assert (3600000 == hourParseTwo);
+        assert (3600000 == hourParseThree);
+        assert (3600000 == hourParseFour);
+        assert (3600000 == hourParseFive);
+        assert (7200000 == hourParseSix);
     }
 }

@@ -8,11 +8,11 @@ public abstract class PageableMenu {
     private long lastChange = System.currentTimeMillis();
     protected int maxPage = Integer.MAX_VALUE;
 
-    public PageableMenu(int startPage) {
+    protected PageableMenu(int startPage) {
         this.currentPage = new AtomicInteger(startPage);
     }
 
-    public PageableMenu() {
+    protected PageableMenu() {
         this.currentPage = new AtomicInteger(1);
         this.cooldown = 0;
     }

@@ -19,7 +19,7 @@ public abstract class MongoJacksonStorage<K, T> {
     private ExecutorService executorService;
     private final String idKey;
 
-    public MongoJacksonStorage(GiveawayBot bot, String collectionName, String idKey, Class<T> clazz) {
+    protected MongoJacksonStorage(GiveawayBot bot, String collectionName, String idKey, Class<T> clazz) {
         this.collection = JacksonMongoCollection.builder().build(
                 bot.getMongoConnectionFactory().getClient(), bot.getStorageSettings().getDatabase(), collectionName, clazz, UuidRepresentation.STANDARD);
         this.executorService = bot.getAsyncExecutor(ThreadFunction.STORAGE);
@@ -51,9 +51,7 @@ public abstract class MongoJacksonStorage<K, T> {
     }
 
     public CompletableFuture<Void> save(T type) {
-        return CompletableFuture.runAsync(() -> {
-            this.collection.save(type);
-        }, this.executorService);
+        return CompletableFuture.runAsync(() -> this.collection.save(type), this.executorService);
     }
 
     public CompletableFuture<Void> save(Map<String, Object> keyValues, T type) {

@@ -9,6 +9,7 @@ import pink.zak.giveawaybot.discord.threads.ThreadManager;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -131,7 +132,7 @@ public class Cache<K, V> {
         return this.cacheMap.size();
     }
 
-    public ConcurrentHashMap<K, V> getMap() {
+    public ConcurrentMap<K, V> getMap() {
         return this.cacheMap;
     }
 

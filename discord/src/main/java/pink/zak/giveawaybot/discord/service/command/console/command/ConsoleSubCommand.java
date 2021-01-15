@@ -14,7 +14,7 @@ public abstract class ConsoleSubCommand extends ConsoleCommand {
     private final boolean endless;
     private List<Argument<?>> arguments = Lists.newArrayList();
 
-    public ConsoleSubCommand(GiveawayBot bot, boolean endless) {
+    protected ConsoleSubCommand(GiveawayBot bot, boolean endless) {
         super(bot);
         this.endless = endless;
     }

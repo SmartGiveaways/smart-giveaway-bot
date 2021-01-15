@@ -22,9 +22,19 @@ public class StatsServerSub extends ConsoleSubCommand {
         if (server == null) {
             return;
         }
+        StringBuilder expiresMessage = new StringBuilder("Premium: {} ");
+        if (server.isPremium()) {
+            expiresMessage.append("expires in ")
+                    .append(Time.format(server.getTimeToPremiumExpiry()));
+        } else if (server.getPremiumExpiry() == -1) {
+            expiresMessage.append("has never had");
+        } else {
+            expiresMessage.append("expired ")
+                    .append(Time.format(-server.getTimeToPremiumExpiry()))
+                    .append(" ago.");
+        }
         JdaBot.logger.info("-- [ Stats Info For {} ] --", server.getId());
-        JdaBot.logger.info("Premium: {}", server.isPremium() ? "expires in ".concat(Time.format(server.getTimeToPremiumExpiry())) :
-                server.getPremiumExpiry() == -1 ? "has never had" : "expired " + Time.format(-server.getTimeToPremiumExpiry()) + " ago");
+        JdaBot.logger.info(expiresMessage.toString(), server.getId());
         JdaBot.logger.info("Loaded Users: {}", server.getUserCache().size());
         JdaBot.logger.info("Giveaway Count: {}", server.getActiveGiveaways().size());
         JdaBot.logger.info("Scheduled Giveaway Count: {}", server.getScheduledGiveaways().size());

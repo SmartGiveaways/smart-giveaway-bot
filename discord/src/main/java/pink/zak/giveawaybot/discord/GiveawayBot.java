@@ -83,7 +83,6 @@ public class GiveawayBot extends JdaBot {
 
     public GiveawayBot(UnaryOperator<Path> path) {
         super(path);
-        apiInstance = this;
     }
 
     public void load() {
@@ -123,6 +122,7 @@ public class GiveawayBot extends JdaBot {
 
         super.buildVariables(this, settings.string("prefix"));
 
+        GiveawayBot.setApiInstance(this);
         Runtime.getRuntime().addShutdownHook(new ShutdownHook(this));
     }
 
@@ -217,6 +217,10 @@ public class GiveawayBot extends JdaBot {
         this.storageSettings.setUsername(settings.string("mongo-username"));
         this.storageSettings.setPassword(settings.string("mongo-password"));
         this.mongoConnectionFactory = new MongoConnectionFactory(this.getStorageSettings());
+    }
+
+    private static void setApiInstance(GiveawayBot apiInstance) {
+        apiInstance = apiInstance;
     }
 
     public Defaults getDefaults() {

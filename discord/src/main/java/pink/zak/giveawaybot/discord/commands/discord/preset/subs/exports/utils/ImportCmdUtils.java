@@ -18,6 +18,8 @@ import pink.zak.giveawaybot.discord.lang.LanguageRegistry;
 import pink.zak.giveawaybot.discord.lang.enums.Text;
 import pink.zak.giveawaybot.discord.models.Preset;
 import pink.zak.giveawaybot.discord.models.Server;
+import pink.zak.giveawaybot.discord.service.BotConstants;
+import pink.zak.giveawaybot.discord.service.bot.JdaBot;
 import pink.zak.giveawaybot.discord.service.cache.CacheBuilder;
 import pink.zak.giveawaybot.discord.service.cache.caches.Cache;
 import pink.zak.giveawaybot.discord.service.tuple.ImmutablePair;
@@ -74,7 +76,7 @@ public class ImportCmdUtils extends ListenerAdapter {
                         if (returnData.getValue() != null) {
                             this.serializedCache.set(sent.getIdLong(), returnData.getValue());
                         }
-                        sent.addReaction("\u2705").queue();
+                        sent.addReaction(BotConstants.getForwardArrow()).queue();
                     };
                     if (affected == null) {
                         return;
@@ -96,7 +98,7 @@ public class ImportCmdUtils extends ListenerAdapter {
                 default -> {}
             }
         }).exceptionally(ex -> {
-            GiveawayBot.logger.error("Error parsing attachment", ex);
+            JdaBot.logger.error("Error parsing attachment", ex);
             return null;
         });
     }

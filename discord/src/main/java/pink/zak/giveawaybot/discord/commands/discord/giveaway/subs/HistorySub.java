@@ -10,17 +10,15 @@ import pink.zak.giveawaybot.discord.service.command.discord.command.SubCommand;
 import java.util.List;
 
 public class HistorySub extends SubCommand {
-    private final GiveawayBot bot;
 
     public HistorySub(GiveawayBot bot) {
         super(bot, true,false,false);
-        this.bot = bot;
 
         this.addFlat("history");
     }
 
     @Override
     public void onExecute(Member sender, Server server, GuildMessageReceivedEvent event, List<String> args) {
-        new GiveawayHistoryMenu(this.bot, server).sendInitialMessage(event.getChannel());
+        new GiveawayHistoryMenu(super.bot, server).sendInitialMessage(event.getChannel());
     }
 }

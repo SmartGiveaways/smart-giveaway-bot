@@ -13,7 +13,7 @@ import java.util.List;
 
 public abstract class FinishedGiveawayStorage<T extends PartialFinishedGiveaway> extends MongoStorage<Long, T> {
 
-    public FinishedGiveawayStorage(GiveawayBot bot) {
+    protected FinishedGiveawayStorage(GiveawayBot bot) {
         super(bot, "finished-giveaways", "_id");
     }
 

@@ -11,7 +11,7 @@ public abstract class ConsoleBaseCommand extends ConsoleCommand {
     private Set<String> aliases = Sets.newHashSet();
     private Set<ConsoleSubCommand> subCommands = Sets.newLinkedHashSet();
 
-    public ConsoleBaseCommand(GiveawayBot bot, String command) {
+    protected ConsoleBaseCommand(GiveawayBot bot, String command) {
         super(bot);
         this.command = command;
     }

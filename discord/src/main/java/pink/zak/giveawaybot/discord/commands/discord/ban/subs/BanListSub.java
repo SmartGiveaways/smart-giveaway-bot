@@ -14,6 +14,7 @@ import pink.zak.giveawaybot.discord.GiveawayBot;
 import pink.zak.giveawaybot.discord.cache.ServerCache;
 import pink.zak.giveawaybot.discord.lang.enums.Text;
 import pink.zak.giveawaybot.discord.models.Server;
+import pink.zak.giveawaybot.discord.service.BotConstants;
 import pink.zak.giveawaybot.discord.service.bot.JdaBot;
 import pink.zak.giveawaybot.discord.service.cache.CacheBuilder;
 import pink.zak.giveawaybot.discord.service.cache.caches.Cache;
@@ -43,6 +44,7 @@ public class BanListSub extends SubCommand implements EventListener {
                     try {
                         value.getKey().clearReactions().queue();
                     } catch (ErrorResponseException ignored) {
+                        // Don't really care about any exceptions here. If the message is deleted, so what.
                     }
                 })
                 .build();
@@ -54,8 +56,8 @@ public class BanListSub extends SubCommand implements EventListener {
         event.getChannel().sendMessage(this.buildEmbed(server, pages, 1)).queue(embed -> {
             if (pages > 1) {
                 this.activeLists.set(embed.getIdLong(), MutablePair.of(embed, 1));
-                embed.addReaction("\u2B05").queue();
-                embed.addReaction("\u27A1").queue();
+                embed.addReaction(BotConstants.getForwardArrow()).queue();
+                embed.addReaction(BotConstants.getBackArrow()).queue();
             }
         });
     }
@@ -71,7 +73,7 @@ public class BanListSub extends SubCommand implements EventListener {
         }
         this.serverCache.getAsync(event.getGuild().getIdLong(), ThreadFunction.GENERAL).thenAccept(server -> {
             String emoji = event.getReactionEmote().getEmoji();
-            if (!emoji.equals("\u2B05") && !emoji.equals("\u27A1") || !server.canMemberManage(event.getMember())) {
+            if (!emoji.equals(BotConstants.getBackArrow()) && !emoji.equals(BotConstants.getForwardArrow()) || !server.canMemberManage(event.getMember())) {
                 return;
             }
             int totalPages = (int) Math.ceil(server.getBannedUsers().size() / 10.0);
@@ -79,7 +81,7 @@ public class BanListSub extends SubCommand implements EventListener {
             if (messageAndPage == null) {
                 return;
             }
-            if (emoji.equals("\u2B05")) { // Go back a page
+            if (emoji.equals(BotConstants.getBackArrow())) { // Go back a page
                 int newPage = messageAndPage.getValue() - 1;
                 if (newPage > 0) {
                     messageAndPage.getKey().editMessage(this.buildEmbed(server, totalPages, messageAndPage.getValue() - 1)).queue();

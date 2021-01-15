@@ -8,7 +8,6 @@ import net.dv8tion.jda.api.sharding.ShardManager;
 import pink.zak.giveawaybot.discord.GiveawayBot;
 import pink.zak.giveawaybot.discord.cache.GiveawayCache;
 import pink.zak.giveawaybot.discord.commands.discord.about.subs.NerdSub;
-import pink.zak.giveawaybot.discord.lang.LanguageRegistry;
 import pink.zak.giveawaybot.discord.lang.enums.Text;
 import pink.zak.giveawaybot.discord.metrics.MetricsLogger;
 import pink.zak.giveawaybot.discord.metrics.helpers.LatencyMonitor;
@@ -25,7 +24,6 @@ public class BotAboutCommand extends SimpleCommand {
     private final LatencyMonitor latencyMonitor;
     private final ShardManager shardManager;
 
-    private final LanguageRegistry languageRegistry;
     private final Palette palette;
 
     public BotAboutCommand(GiveawayBot bot) {
@@ -40,7 +38,6 @@ public class BotAboutCommand extends SimpleCommand {
         this.latencyMonitor = bot.getLatencyMonitor();
         this.shardManager = bot.getShardManager();
 
-        this.languageRegistry = bot.getLanguageRegistry();
         this.palette = bot.getDefaults().getPalette();
     }
 
@@ -48,10 +45,10 @@ public class BotAboutCommand extends SimpleCommand {
     public void onExecute(Member sender, Server server, GuildMessageReceivedEvent event, List<String> args) {
         JDA jda = event.getJDA();
         event.getChannel().sendMessage(new EmbedBuilder()
-                .setTitle(this.languageRegistry.get(server, Text.ABOUT_EMBED_TITLE).get())
-                .setFooter(this.languageRegistry.get(server, Text.GENERIC_EMBED_FOOTER).get())
+                .setTitle(super.languageRegistry.get(server, Text.ABOUT_EMBED_TITLE).get())
+                .setFooter(super.languageRegistry.get(server, Text.GENERIC_EMBED_FOOTER).get())
                 .setColor(this.palette.primary())
-                .setDescription(this.languageRegistry.get(server, Text.ABOUT_EMBED_CONTENT, replacer -> replacer
+                .setDescription(super.languageRegistry.get(server, Text.ABOUT_EMBED_CONTENT, replacer -> replacer
                         .set("servers", this.metricsLogger.getGuildCount())
                         .set("users", this.metricsLogger.getGenericMetrics().getUsers())
                         .set("active_giveaways", this.giveawayCache.size())

@@ -42,9 +42,9 @@ public class ExportAllSub extends SubCommand {
         jsonObject.put("preset-values", json);
 
         try (InputStream inputStream = new ByteArrayInputStream(jsonObject.toString().getBytes(StandardCharsets.UTF_8))) {
-            channel.sendMessage(this.langFor(server, Text.PRESET_EXPORTED_ALL).get()).addFile(inputStream, fileName).queue(message -> {}, ex -> GiveawayBot.logger.error("Error sending exported preset", ex));
+            channel.sendMessage(this.langFor(server, Text.PRESET_EXPORTED_ALL).get()).addFile(inputStream, fileName).queue(message -> {}, ex -> JdaBot.logger.error("Error sending exported preset", ex));
         } catch (IOException ex) {
-            GiveawayBot.logger.error("Error exporting presets", ex);
+            JdaBot.logger.error("Error exporting presets", ex);
         }
     }
 }

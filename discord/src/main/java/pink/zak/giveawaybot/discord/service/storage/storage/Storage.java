@@ -20,13 +20,13 @@ public abstract class Storage<T> {
     protected GsonBuilder gsonBuilder;
     protected Gson gson;
 
-    public Storage(GiveawayBot bot, Function<BackendFactory, Backend> backend) {
+    protected Storage(GiveawayBot bot, Function<BackendFactory, Backend> backend) {
         this.backend = backend.apply(new BackendFactory(bot));
         this.gsonBuilder = new GsonBuilder();
         this.gson = new Gson();
     }
 
-    public Storage(Backend backend) {
+    protected Storage(Backend backend) {
         this.backend = backend;
     }
 

@@ -33,8 +33,8 @@ public class HelpCommand extends SimpleCommand implements Reloadable {
     }
 
     private void buildMessages(Palette palette) {
-        Map<String, MessageEmbed> limitedMessageEmbed = Maps.newHashMap();
-        Map<String, MessageEmbed> fullMessageEmbed = Maps.newHashMap();
+        Map<String, MessageEmbed> limitedMessages = Maps.newHashMap();
+        Map<String, MessageEmbed> fullMessages = Maps.newHashMap();
         for (Language language : this.languageRegistry.languageMap().values()) {
             EmbedBuilder embedBuilder = new EmbedBuilder()
                     .setTitle(language.getValue(Text.HELP_EMBED_TITLE).get())
@@ -42,13 +42,13 @@ public class HelpCommand extends SimpleCommand implements Reloadable {
                     .setColor(palette.primary())
                     .setDescription(language.getValue(Text.GENERIC_COMMAND_USAGE_EXAMPLE).replace(replacer -> replacer.set("command", "command")).get())
                     .addField("General Commands", language.getValue(Text.HELP_LIMITED_SECTION).get(), false);
-            limitedMessageEmbed.put(language.getIdentifier(), embedBuilder.build());
+            limitedMessages.put(language.getIdentifier(), embedBuilder.build());
             embedBuilder.addField("Admin Commands",
                     language.getValue(Text.HELP_ADMIN_SECTION).get(), false);
-            fullMessageEmbed.put(language.getIdentifier(), embedBuilder.build());
+            fullMessages.put(language.getIdentifier(), embedBuilder.build());
         }
-        this.limitedMessageEmbed = limitedMessageEmbed;
-        this.fullMessageEmbed = fullMessageEmbed;
+        this.limitedMessageEmbed = limitedMessages;
+        this.fullMessageEmbed = fullMessages;
     }
 
     @Override

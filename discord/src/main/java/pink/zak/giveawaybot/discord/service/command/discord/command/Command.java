@@ -16,7 +16,7 @@ public abstract class Command {
     private final boolean manager;
     private final boolean requiresPremium;
 
-    public Command(GiveawayBot bot, boolean manager, boolean premium) {
+    protected Command(GiveawayBot bot, boolean manager, boolean premium) {
         this.bot = bot;
         this.languageRegistry = bot.getLanguageRegistry();
         this.manager = manager;

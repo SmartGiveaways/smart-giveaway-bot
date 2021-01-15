@@ -1,9 +1,11 @@
 package pink.zak.giveawaybot.discord.service.command.global;
 
 import com.google.common.collect.Lists;
+import lombok.experimental.UtilityClass;
 
 import java.util.List;
 
+@UtilityClass
 public class SubCommandUtils {
 
     public static String[] getEnd(int argSize, List<String> arguments) {

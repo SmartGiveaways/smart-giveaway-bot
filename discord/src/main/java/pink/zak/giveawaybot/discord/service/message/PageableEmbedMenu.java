@@ -10,6 +10,7 @@ import pink.zak.giveawaybot.discord.lang.LanguageRegistry;
 import pink.zak.giveawaybot.discord.listener.reaction.pageable.Page;
 import pink.zak.giveawaybot.discord.listener.reaction.pageable.PageableReactionListener;
 import pink.zak.giveawaybot.discord.models.Server;
+import pink.zak.giveawaybot.discord.service.BotConstants;
 import pink.zak.giveawaybot.discord.service.colour.Palette;
 
 import java.util.Map;
@@ -42,11 +43,11 @@ public abstract class PageableEmbedMenu extends PageableMenu implements Pageable
     public void sendInitialMessage(TextChannel channel) {
         MessageEmbed embed = this.createPage(super.currentPage.get());
         this.cachedPages.put(super.currentPage.get(), embed);
-        channel.sendMessage(embed).queue(message -> { // TODO change back
-            this.message = message;
+        channel.sendMessage(embed).queue(sentMessage -> {
+            sentMessage.addReaction(BotConstants.getForwardArrow()).queue();
+            sentMessage.addReaction(BotConstants.getBackArrow()).queue();
+            this.message = sentMessage;
             this.scheduleDeletion();
-            message.addReaction("\u2B05").queue();
-            message.addReaction("\u27A1").queue();
         });
     }
 
