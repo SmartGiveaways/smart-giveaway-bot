@@ -3,6 +3,7 @@ package pink.zak.giveawaybot.discord.service.command.console.command;
 import com.google.common.collect.Lists;
 import pink.zak.giveawaybot.discord.GiveawayBot;
 import pink.zak.giveawaybot.discord.models.Server;
+import pink.zak.giveawaybot.discord.service.bot.JdaBot;
 import pink.zak.giveawaybot.discord.service.command.global.argument.Argument;
 import pink.zak.giveawaybot.discord.service.command.global.argument.ArgumentTypeUtils;
 
@@ -114,12 +115,12 @@ public abstract class ConsoleSubCommand extends ConsoleCommand {
     protected Server parseServerInput(List<String> args, int index) {
         long serverId = this.parseArgument(args, index);
         if (serverId == -1) {
-            GiveawayBot.logger().error("Input is not a long ({})", args.get(1));
+            JdaBot.logger.error("Input is not a long ({})", args.get(1));
             return null;
         }
         Server server = this.bot.getServerCache().get(serverId);
         if (server == null) {
-            GiveawayBot.logger().error("Could not find a server with the ID {}", serverId);
+            JdaBot.logger.error("Could not find a server with the ID {}", serverId);
         }
         return server;
     }

@@ -11,6 +11,7 @@ import pink.zak.giveawaybot.discord.lang.LanguageRegistry;
 import pink.zak.giveawaybot.discord.lang.enums.Text;
 import pink.zak.giveawaybot.discord.listener.message.GiveawayMessageListener;
 import pink.zak.giveawaybot.discord.models.Server;
+import pink.zak.giveawaybot.discord.service.bot.JdaBot;
 import pink.zak.giveawaybot.discord.service.cache.CacheBuilder;
 import pink.zak.giveawaybot.discord.service.cache.caches.Cache;
 import pink.zak.giveawaybot.discord.service.command.discord.command.Command;
@@ -124,7 +125,7 @@ public class DiscordCommandBase extends CommandBackend implements GiveawayMessag
                 }
             }
         }, this.executor).exceptionally(ex -> {
-            GiveawayBot.logger().error("Error from CommandBase input {}", rawMessage, ex);
+            JdaBot.logger.error("Error from CommandBase input {}", rawMessage, ex);
             return null;
         });
     }

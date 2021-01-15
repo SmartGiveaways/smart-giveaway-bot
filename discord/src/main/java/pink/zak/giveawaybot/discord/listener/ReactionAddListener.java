@@ -13,6 +13,7 @@ import pink.zak.giveawaybot.discord.enums.Setting;
 import pink.zak.giveawaybot.discord.models.Preset;
 import pink.zak.giveawaybot.discord.models.User;
 import pink.zak.giveawaybot.discord.models.giveaway.CurrentGiveaway;
+import pink.zak.giveawaybot.discord.service.bot.JdaBot;
 import pink.zak.giveawaybot.discord.service.types.ReactionContainer;
 import pink.zak.giveawaybot.discord.threads.ThreadFunction;
 
@@ -65,7 +66,7 @@ public class ReactionAddListener extends ListenerAdapter {
             user.getEntries().put(giveaway.getMessageId(), this.baseMap.clone());
             this.entryCount.incrementAndGet();
         }).exceptionally(ex -> {
-            GiveawayBot.logger().error("Error in ReactionAddListener point A", ex);
+            JdaBot.logger.error("Error in ReactionAddListener point A", ex);
             return null;
         });
     }

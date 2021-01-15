@@ -9,6 +9,7 @@ import pink.zak.giveawaybot.discord.controllers.GiveawayController;
 import pink.zak.giveawaybot.discord.models.Server;
 import pink.zak.giveawaybot.discord.models.giveaway.CurrentGiveaway;
 import pink.zak.giveawaybot.discord.models.giveaway.finished.FullFinishedGiveaway;
+import pink.zak.giveawaybot.discord.service.bot.JdaBot;
 import pink.zak.giveawaybot.discord.storage.GiveawayStorage;
 import pink.zak.giveawaybot.discord.storage.finishedgiveaway.FullFinishedGiveawayStorage;
 
@@ -48,7 +49,7 @@ public class DeletionStep {
             this.scheduledFutures.remove(giveaway);
         }
         server.getActiveGiveaways().remove(messageId);
-        GiveawayBot.logger().debug("Removing giveaway from server {}  :  {}", giveaway.getServerId(), messageId);
+        JdaBot.logger.debug("Removing giveaway from server {}  :  {}", giveaway.getServerId(), messageId);
         UserCache userCache = server.getUserCache();
         for (long enteredId : giveaway.getEnteredUsers()) {
             userCache.get(enteredId).getEntries().remove(messageId);

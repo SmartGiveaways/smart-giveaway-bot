@@ -2,6 +2,7 @@ package pink.zak.giveawaybot.discord.commands.console.unload.subs;
 
 import pink.zak.giveawaybot.discord.GiveawayBot;
 import pink.zak.giveawaybot.discord.cache.ServerCache;
+import pink.zak.giveawaybot.discord.service.bot.JdaBot;
 import pink.zak.giveawaybot.discord.service.command.console.command.ConsoleSubCommand;
 
 import java.util.List;
@@ -21,14 +22,14 @@ public class UnloadServerSub extends ConsoleSubCommand {
     public void onExecute(List<String> args) {
         long serverId = this.parseArgument(args, 1);
         if (serverId == -1) {
-            GiveawayBot.logger().error("Input is not a long ({})", args.get(1));
+            JdaBot.logger.error("Input is not a long ({})", args.get(1));
             return;
         }
         if (!this.serverCache.contains(serverId)) {
-            GiveawayBot.logger().error("The server {} is not cached", serverId);
+            JdaBot.logger.error("The server {} is not cached", serverId);
             return;
         }
-        GiveawayBot.logger().warn("Invalidating {}", serverId);
+        JdaBot.logger.warn("Invalidating {}", serverId);
         this.serverCache.invalidate(serverId);
     }
 }

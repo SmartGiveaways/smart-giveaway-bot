@@ -12,6 +12,7 @@ import pink.zak.giveawaybot.discord.lang.enums.Text;
 import pink.zak.giveawaybot.discord.lang.model.Language;
 import pink.zak.giveawaybot.discord.models.Server;
 import pink.zak.giveawaybot.discord.service.BotConstants;
+import pink.zak.giveawaybot.discord.service.bot.JdaBot;
 import pink.zak.giveawaybot.discord.service.bot.SimpleBot;
 import pink.zak.giveawaybot.discord.service.text.Replace;
 import pink.zak.giveawaybot.discord.service.text.Replacer;
@@ -24,6 +25,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class LanguageRegistry {
     private final Map<String, Language> languageMap = Maps.newHashMap();
@@ -34,12 +36,12 @@ public class LanguageRegistry {
         this.loadLanguages(bot);
         this.defaultLanguage = this.languageMap.get(defaultLanguageId);
         if (this.defaultLanguage == null || !this.languageMap.containsKey(defaultLanguageId)) {
-            GiveawayBot.logger().error("The default language could not be found.");
+            JdaBot.logger.error("The default language could not be found.");
             System.exit(3);
         }
         Set<Text> presentTexts = this.defaultLanguage.getValues().keySet();
         if (presentTexts.size() < Text.values().length) {
-            GiveawayBot.logger().error("The default language does not meet the 100% coverage requirement. These values are missing: {}",
+            JdaBot.logger.error("The default language does not meet the 100% coverage requirement. These values are missing: {}",
                     Arrays.stream(Text.values()).filter(text -> !presentTexts.contains(text)).collect(Collectors.toSet()));
             System.exit(3);
         }
@@ -48,8 +50,8 @@ public class LanguageRegistry {
     @SneakyThrows
     public Set<Language> loadLanguages(SimpleBot bot) {
         Set<Language> updatedLanguages = Sets.newHashSet();
-        Files.walk(bot.getBasePath().resolve("lang"))
-                .map(Path::toFile)
+        Stream<Path> pathStream = Files.walk(bot.getBasePath().resolve("lang"));
+        pathStream.map(Path::toFile)
                 .filter(file -> file.getName().endsWith(".yml") || file.getName().endsWith(".yaml"))
                 .map(YamlConfiguration::loadFromFile)
                 .forEach(config -> {
@@ -59,6 +61,7 @@ public class LanguageRegistry {
                         this.languageMap.put(language.getIdentifier(), language);
                     }
                 });
+        pathStream.close();
         return updatedLanguages;
     }
 
@@ -72,7 +75,7 @@ public class LanguageRegistry {
         for (String key : section.getKeys()) {
             Text text = Text.match(key);
             if (text == null) {
-                GiveawayBot.logger().error("Could not match Text value from identifier {} for language {}", key, identifier);
+                JdaBot.logger.error("Could not match Text value from identifier {} for language {}", key, identifier);
                 continue;
             }
             values.put(text, new LangSub(section.getString(key), BotConstants.getBaseReplace()));
@@ -82,7 +85,7 @@ public class LanguageRegistry {
 
     public boolean isLanguageUsable(Language language) {
         if (language.getCoverage() < 60) {
-            GiveawayBot.logger().warn("Cannot user language {} as it has a coverage of {}%", language.getIdentifier(), language.getCoverage());
+            JdaBot.logger.warn("Cannot user language {} as it has a coverage of {}%", language.getIdentifier(), language.getCoverage());
         }
         return language.getCoverage() > 60;
     }
@@ -93,7 +96,7 @@ public class LanguageRegistry {
         Set<String> loadedLanguageIds = loadedLanguages.stream().map(Language::getIdentifier).collect(Collectors.toSet());
         this.languageMap.keySet().stream().filter(existingLang -> !loadedLanguageIds.contains(existingLang)).forEach(existingLang -> {
             this.languageMap.remove(existingLang);
-            GiveawayBot.logger().warn("Removed {} on language reload.", existingLang);
+            JdaBot.logger.warn("Removed {} on language reload.", existingLang);
         });
     }
 

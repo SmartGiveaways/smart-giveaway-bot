@@ -18,6 +18,7 @@ import pink.zak.giveawaybot.discord.models.Preset;
 import pink.zak.giveawaybot.discord.models.Server;
 import pink.zak.giveawaybot.discord.models.giveaway.CurrentGiveaway;
 import pink.zak.giveawaybot.discord.models.giveaway.RichGiveaway;
+import pink.zak.giveawaybot.discord.service.bot.JdaBot;
 import pink.zak.giveawaybot.discord.service.colour.Palette;
 import pink.zak.giveawaybot.discord.service.text.Replace;
 import pink.zak.giveawaybot.discord.service.types.UserUtils;
@@ -94,7 +95,7 @@ public class MessageStep {
         if (preset.getSetting(Setting.DM_WINNERS)) {
             Guild guild = this.shardManager.getGuildById(server.getId());
             if (guild == null) {
-                GiveawayBot.logger().warn("handleDm server should never be null but is null {} {}", giveaway.getServerId(), giveaway.getMessageId());
+                JdaBot.logger.warn("handleDm server should never be null but is null {} {}", giveaway.getServerId(), giveaway.getMessageId());
                 return;
             }
             for (long winnerId : winners) {
@@ -102,7 +103,7 @@ public class MessageStep {
                 if (user == null) {
                     user = this.shardManager.retrieveUserById(winnerId).complete();
                     if (user == null) {
-                        GiveawayBot.logger().warn("handleDm user should never be null but is null {} {} {}", giveaway.getServerId(), giveaway.getMessageId(), winnerId);
+                        JdaBot.logger.warn("handleDm user should never be null but is null {} {} {}", giveaway.getServerId(), giveaway.getMessageId(), winnerId);
                     }
                     continue;
                 }

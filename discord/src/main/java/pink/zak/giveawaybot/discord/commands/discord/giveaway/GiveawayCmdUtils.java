@@ -9,6 +9,7 @@ import pink.zak.giveawaybot.discord.lang.LanguageRegistry;
 import pink.zak.giveawaybot.discord.lang.enums.Text;
 import pink.zak.giveawaybot.discord.models.Server;
 import pink.zak.giveawaybot.discord.models.giveaway.ScheduledGiveaway;
+import pink.zak.giveawaybot.discord.service.bot.JdaBot;
 import pink.zak.giveawaybot.discord.service.time.TimeIdentifier;
 import pink.zak.giveawaybot.discord.service.tuple.ImmutablePair;
 
@@ -46,7 +47,7 @@ public class GiveawayCmdUtils {
             case SUCCESS -> this.lang.get(server, Text.GIVEAWAY_SCHEDULED, replacer -> replacer
                     .set("channel", giveawayChannel.getAsMention())
                     .set("time", returnedInfo.getKey().getStartFormatted())).to(responseChannel);
-            default -> GiveawayBot.logger().error("You messed up bad. GiveawayCmdUtils 1");
+            default -> JdaBot.logger.error("You messed up bad. GiveawayCmdUtils 1");
         }
     }
 

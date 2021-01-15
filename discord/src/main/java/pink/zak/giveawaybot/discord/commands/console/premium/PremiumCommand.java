@@ -3,6 +3,7 @@ package pink.zak.giveawaybot.discord.commands.console.premium;
 import pink.zak.giveawaybot.discord.GiveawayBot;
 import pink.zak.giveawaybot.discord.commands.console.premium.subs.PremiumAddSub;
 import pink.zak.giveawaybot.discord.commands.console.premium.subs.PremiumCheckSub;
+import pink.zak.giveawaybot.discord.service.bot.JdaBot;
 import pink.zak.giveawaybot.discord.service.command.console.command.ConsoleBaseCommand;
 
 import java.util.List;
@@ -20,7 +21,7 @@ public class PremiumCommand extends ConsoleBaseCommand {
 
     @Override
     public void onExecute(List<String> args) {
-        GiveawayBot.logger().info("premium check <server-id>");
-        GiveawayBot.logger().info("premium add <server-id> <time>");
+        JdaBot.logger.info("premium check <server-id>");
+        JdaBot.logger.info("premium add <server-id> <time>");
     }
 }

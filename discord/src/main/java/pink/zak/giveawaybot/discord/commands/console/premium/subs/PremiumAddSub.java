@@ -2,6 +2,7 @@ package pink.zak.giveawaybot.discord.commands.console.premium.subs;
 
 import pink.zak.giveawaybot.discord.GiveawayBot;
 import pink.zak.giveawaybot.discord.models.Server;
+import pink.zak.giveawaybot.discord.service.bot.JdaBot;
 import pink.zak.giveawaybot.discord.service.command.console.command.ConsoleSubCommand;
 import pink.zak.giveawaybot.discord.service.time.Time;
 
@@ -25,11 +26,11 @@ public class PremiumAddSub extends ConsoleSubCommand {
         String timeInput = this.parseArgument(args, 2);
         long milliseconds = Time.parse(this.parseArgument(args, 2));
         if (milliseconds == -1) {
-            GiveawayBot.logger().error("Could not parse time input ({})", timeInput);
+            JdaBot.logger.error("Could not parse time input ({})", timeInput);
             return;
         }
         server.addPremiumTime(milliseconds);
-        GiveawayBot.logger().info("{} {}ms to server's expiry", milliseconds > 0 ? "Adding" : "Removing", milliseconds);
-        GiveawayBot.logger().info("The server {}'s premium will now expire in {}", server.getId(), Time.format(server.getTimeToPremiumExpiry()));
+        JdaBot.logger.info("{} {}ms to server's expiry", milliseconds > 0 ? "Adding" : "Removing", milliseconds);
+        JdaBot.logger.info("The server {}'s premium will now expire in {}", server.getId(), Time.format(server.getTimeToPremiumExpiry()));
     }
 }

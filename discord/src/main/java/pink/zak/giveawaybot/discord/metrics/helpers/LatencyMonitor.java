@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import pink.zak.giveawaybot.discord.GiveawayBot;
 import pink.zak.giveawaybot.discord.metrics.queries.LatencyQuery;
+import pink.zak.giveawaybot.discord.service.bot.JdaBot;
 import pink.zak.metrics.Metrics;
 
 import java.net.NoRouteToHostException;
@@ -39,7 +40,7 @@ public class LatencyMonitor extends ListenerAdapter {
                 this.shardTimings.put(jda, latency);
                 this.shardTestTimes.put(jda, System.currentTimeMillis());
                 if (latency >= 5000) {
-                    GiveawayBot.logger().warn("Tested latency of shard {} was too high ({}ms)", jda.getShardInfo().getShardId(), latency);
+                    JdaBot.logger.warn("Tested latency of shard {} was too high ({}ms)", jda.getShardInfo().getShardId(), latency);
                 }
                 if (this.metrics != null) {
                     this.metrics.<LatencyMonitor, JDA>logAdvanced(query -> query
@@ -53,9 +54,9 @@ public class LatencyMonitor extends ListenerAdapter {
     private void testLatency(JDA jda) {
         jda.getRestPing().queue(latency -> {
             if (latency >= 5000) {
-                GiveawayBot.logger().warn("Tested latency of shard {} was still too high ({}ms)", jda.getShardInfo().getShardId(), latency);
+                JdaBot.logger.warn("Tested latency of shard {} was still too high ({}ms)", jda.getShardInfo().getShardId(), latency);
             } else {
-                GiveawayBot.logger().info("Tested latency of shard {} is now usable ({}ms)", jda.getShardInfo().getShardId(), latency);
+                JdaBot.logger.info("Tested latency of shard {} is now usable ({}ms)", jda.getShardInfo().getShardId(), latency);
             }
             this.shardTimings.put(jda, latency);
             this.shardTestTimes.put(jda, System.currentTimeMillis());
@@ -82,7 +83,7 @@ public class LatencyMonitor extends ListenerAdapter {
 
     public void onHttpException(Throwable ex, JDA jda) {
             if (ex instanceof NoRouteToHostException || ex instanceof UnknownHostException || ex instanceof ErrorResponseException) {
-            GiveawayBot.logger().warn("Shard {} had a timeout exception ({})", jda.getShardInfo().getShardId(), ex.getClass().getSimpleName());
+            JdaBot.logger.warn("Shard {} had a timeout exception ({})", jda.getShardInfo().getShardId(), ex.getClass().getSimpleName());
             this.shardTimings.put(jda, Long.MAX_VALUE);
         }
     }

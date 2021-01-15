@@ -13,6 +13,7 @@ import pink.zak.giveawaybot.discord.controllers.ScheduledGiveawayController;
 import pink.zak.giveawaybot.discord.models.giveaway.CurrentGiveaway;
 import pink.zak.giveawaybot.discord.models.giveaway.ScheduledGiveaway;
 import pink.zak.giveawaybot.discord.pipelines.giveaway.steps.DeletionStep;
+import pink.zak.giveawaybot.discord.service.bot.JdaBot;
 import pink.zak.giveawaybot.discord.threads.ThreadFunction;
 
 public class GiveawayDeletionListener extends ListenerAdapter {
@@ -33,7 +34,7 @@ public class GiveawayDeletionListener extends ListenerAdapter {
     public void onGuildMessageDelete(GuildMessageDeleteEvent event) {
         this.giveawayCache.getAsync(event.getMessageIdLong(), ThreadFunction.GENERAL).thenAccept(giveaway -> {
             if (giveaway != null) {
-                GiveawayBot.logger().info("Giveaway {} in server {} was deleted", giveaway.getMessageId(), giveaway.getServerId());
+                JdaBot.logger.info("Giveaway {} in server {} was deleted", giveaway.getMessageId(), giveaway.getServerId());
                 this.deletionStep.delete(giveaway);
             }
         });

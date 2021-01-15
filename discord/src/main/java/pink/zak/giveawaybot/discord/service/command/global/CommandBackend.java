@@ -11,6 +11,7 @@ import pink.zak.giveawaybot.discord.cache.ServerCache;
 import pink.zak.giveawaybot.discord.lang.LanguageRegistry;
 import pink.zak.giveawaybot.discord.lang.model.Language;
 import pink.zak.giveawaybot.discord.models.Preset;
+import pink.zak.giveawaybot.discord.service.bot.JdaBot;
 import pink.zak.giveawaybot.discord.service.command.global.argument.ArgumentType;
 import pink.zak.giveawaybot.discord.service.command.global.argument.ArgumentTypeUtils;
 import pink.zak.giveawaybot.discord.service.types.BooleanUtils;
@@ -46,7 +47,7 @@ public abstract class CommandBackend {
                         return guild.retrieveMemberById(userId).complete();
                     } catch (ErrorResponseException ex) {
                         if (ex.getErrorResponse() != ErrorResponse.UNKNOWN_USER && ex.getErrorResponse() != ErrorResponse.UNKNOWN_MEMBER) {
-                            GiveawayBot.logger().error("Error parsing MEMBER type from command. Input {}", userId, ex);
+                            JdaBot.logger.error("Error parsing MEMBER type from command. Input {}", userId, ex);
                         }
                         return null;
                     }
@@ -60,7 +61,7 @@ public abstract class CommandBackend {
                         return this.bot.getShardManager().retrieveUserById(userId).complete();
                     } catch (ErrorResponseException ex) {
                         if (ex.getErrorResponse() != ErrorResponse.UNKNOWN_USER) {
-                            GiveawayBot.logger().error("Error parsing MEMBER type from command. Input {}", userId, ex);
+                            JdaBot.logger.error("Error parsing MEMBER type from command. Input {}", userId, ex);
                         }
                         return null;
                     }

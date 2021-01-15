@@ -1,6 +1,7 @@
 package pink.zak.giveawaybot.discord.service.cache.caches;
 
 import pink.zak.giveawaybot.discord.GiveawayBot;
+import pink.zak.giveawaybot.discord.service.bot.JdaBot;
 import pink.zak.giveawaybot.discord.service.cache.options.CacheExpiryListener;
 import pink.zak.giveawaybot.discord.service.storage.mongo.MongoStorage;
 import pink.zak.giveawaybot.discord.threads.ThreadFunction;
@@ -56,7 +57,7 @@ public class WriteExpiringCache<K, V> extends Cache<K, V> {
     public CompletableFuture<V> getAsync(K key, ThreadFunction threadFunction) {
         return super.getAsync(key, threadFunction).thenApply(retrieved -> this.getAndCheck(key, retrieved))
                 .exceptionally(ex -> {
-                    GiveawayBot.logger().error("", ex);
+                    JdaBot.logger.error("", ex);
                     return null;
                 });
     }

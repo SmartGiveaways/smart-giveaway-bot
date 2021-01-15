@@ -1,8 +1,11 @@
 package pink.zak.giveawaybot.api.service;
 
+import lombok.experimental.UtilityClass;
+
 import java.security.SecureRandom;
 import java.util.Base64;
 
+@UtilityClass
 public class TokenUtils {
     private static final SecureRandom secureRandom = new SecureRandom();
     private static final Base64.Encoder base64Encoder = Base64.getUrlEncoder();

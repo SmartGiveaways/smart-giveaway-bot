@@ -2,6 +2,7 @@ package pink.zak.giveawaybot.discord.commands.console.premium.subs;
 
 import pink.zak.giveawaybot.discord.GiveawayBot;
 import pink.zak.giveawaybot.discord.models.Server;
+import pink.zak.giveawaybot.discord.service.bot.JdaBot;
 import pink.zak.giveawaybot.discord.service.command.console.command.ConsoleSubCommand;
 import pink.zak.giveawaybot.discord.service.time.Time;
 
@@ -22,14 +23,14 @@ public class PremiumCheckSub extends ConsoleSubCommand {
         if (server == null) {
             return;
         }
-        GiveawayBot.logger().info("-- [ Premium Info For {} ] --", server.getId());
+        JdaBot.logger.info("-- [ Premium Info For {} ] --", server.getId());
         if (server.isPremium()) {
-            GiveawayBot.logger().info("Has Premium: Yes");
-            GiveawayBot.logger().info("Expires In: {}", Time.format(server.getTimeToPremiumExpiry()));
+            JdaBot.logger.info("Has Premium: Yes");
+            JdaBot.logger.info("Expires In: {}", Time.format(server.getTimeToPremiumExpiry()));
         } else {
-            GiveawayBot.logger().info("Has Premium: No");
-            GiveawayBot.logger().info("Expired: {}", server.getPremiumExpiry() == -1 ? "has never had premium" : Time.format(-server.getTimeToPremiumExpiry()) + " ago");
+            JdaBot.logger.info("Has Premium: No");
+            JdaBot.logger.info("Expired: {}", server.getPremiumExpiry() == -1 ? "has never had premium" : Time.format(-server.getTimeToPremiumExpiry()) + " ago");
         }
-        GiveawayBot.logger().info("---------------------------------------------");
+        JdaBot.logger.info("---------------------------------------------");
     }
 }

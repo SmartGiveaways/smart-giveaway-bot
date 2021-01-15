@@ -30,6 +30,7 @@ import pink.zak.giveawaybot.discord.models.giveaway.Giveaway;
 import pink.zak.giveawaybot.discord.models.giveaway.RichGiveaway;
 import pink.zak.giveawaybot.discord.pipelines.giveaway.GiveawayPipeline;
 import pink.zak.giveawaybot.discord.pipelines.giveaway.steps.DeletionStep;
+import pink.zak.giveawaybot.discord.service.bot.JdaBot;
 import pink.zak.giveawaybot.discord.service.colour.Palette;
 import pink.zak.giveawaybot.discord.service.time.Time;
 import pink.zak.giveawaybot.discord.service.time.TimeIdentifier;
@@ -127,7 +128,7 @@ public class GiveawayController {
             this.startGiveawayTimer(giveaway);
             return ImmutablePair.of(giveaway, ReturnCode.SUCCESS);
         } catch (RateLimitedException ex) {
-            GiveawayBot.logger().error("", ex);
+            JdaBot.logger.error("", ex);
             return ImmutablePair.of(null, ReturnCode.RATE_LIMIT_FAILURE);
         } catch (InsufficientPermissionException ex) {
             return ImmutablePair.of(null, ReturnCode.PERMISSIONS_FAILURE);
@@ -191,7 +192,7 @@ public class GiveawayController {
                 this.giveawayCache.addGiveaway(giveaway);
                 this.startGiveawayTimer(giveaway);
             }
-            GiveawayBot.logger().info("Loaded {} giveaways in {} milliseconds", this.giveawayCache.size(), System.currentTimeMillis() - loadStartTime);
+            JdaBot.logger.info("Loaded {} giveaways in {} milliseconds", this.giveawayCache.size(), System.currentTimeMillis() - loadStartTime);
         });
     }
 
@@ -200,7 +201,7 @@ public class GiveawayController {
         LatencyMonitor latencyMonitor = this.bot.getLatencyMonitor();
         this.threadManager.getScheduler().scheduleAtFixedRate(() -> {
             if (GiveawayBot.isLocked()) {
-                GiveawayBot.logger().warn("Bot was locked so did not update giveaways");
+                JdaBot.logger.warn("Bot was locked so did not update giveaways");
                 return;
             }
             counter.getAndIncrement();
@@ -212,7 +213,7 @@ public class GiveawayController {
                 ) continue;
                 Guild guild = this.bot.getShardManager().getGuildById(giveaway.getServerId());
                 if (guild == null) {
-                    GiveawayBot.logger().warn("Could not get guild ID {}", giveaway.getServerId());
+                    JdaBot.logger.warn("Could not get guild ID {}", giveaway.getServerId());
                     continue;
                 }
                 JDA jda = guild.getJDA();
@@ -236,7 +237,7 @@ public class GiveawayController {
         for (Map.Entry<JDA, Map<Server, Set<CurrentGiveaway>>> entry : giveaways.entrySet()) {
             JDA jda = entry.getKey();
             if (!latencyMonitor.isLatencyUsable(jda)) {
-                GiveawayBot.logger().warn("Did not update giveaways for shard {} as latency was not usable.", jda.getShardInfo().getShardId());
+                JdaBot.logger.warn("Did not update giveaways for shard {} as latency was not usable.", jda.getShardInfo().getShardId());
                 continue;
             }
             for (Map.Entry<Server, Set<CurrentGiveaway>> innerEntry : entry.getValue().entrySet()) {
@@ -250,7 +251,7 @@ public class GiveawayController {
             try {
                 Message message = this.getGiveawayMessage(giveaway);
                 if (message == null) {
-                    GiveawayBot.logger().warn("Giveaway did not delete correctly or the discord api is dying ({} in server {}).", giveaway.getMessageId(), giveaway.getServerId());
+                    JdaBot.logger.warn("Giveaway did not delete correctly or the discord api is dying ({} in server {}).", giveaway.getMessageId(), giveaway.getServerId());
                     continue;
                 }
                 Preset preset = giveaway.getPresetName().equals("default") ? this.defaultPreset : server.getPreset(giveaway.getPresetName());
@@ -264,7 +265,7 @@ public class GiveawayController {
                             .build()).queue();
                 }
             } catch (Exception ex) {
-                GiveawayBot.logger().error("Error with giveaway message (updateGiveaways)", ex);
+                JdaBot.logger.error("Error with giveaway message (updateGiveaways)", ex);
             }
         }
     }
@@ -293,7 +294,7 @@ public class GiveawayController {
     private void startGiveawayTimer(CurrentGiveaway giveaway) {
         if (!GiveawayBot.isLocked()) {
             this.scheduledFutures.put(giveaway, this.threadManager.getScheduler().schedule(() -> {
-                GiveawayBot.logger().debug("Giveaway {} expired", giveaway.getMessageId());
+                JdaBot.logger.debug("Giveaway {} expired", giveaway.getMessageId());
                 this.giveawayPipeline.endGiveaway(giveaway);
             }, giveaway.getTimeToExpiry(), TimeUnit.MILLISECONDS));
         }

@@ -34,7 +34,7 @@ import java.util.Set;
 import java.util.function.UnaryOperator;
 
 public abstract class JdaBot implements SimpleBot {
-    protected static final Logger logger = JDALogger.getLog(GiveawayBot.class);
+    public static final Logger logger = JDALogger.getLog(GiveawayBot.class);
     private boolean buildEarlyUsed;
     protected final MessageEventRegistry messageEventRegistry = new MessageEventRegistry();
     protected final StorageSettings storageSettings;
@@ -50,10 +50,6 @@ public abstract class JdaBot implements SimpleBot {
     private ShardManager shardManager;
 
     private ReadyListener readyListener;
-
-    public static Logger logger() {
-        return logger;
-    }
 
     @SneakyThrows
     public JdaBot(UnaryOperator<Path> subBasePath) {
@@ -166,7 +162,7 @@ public abstract class JdaBot implements SimpleBot {
 
     public UncaughtExceptionHandler getExceptionHandler() {
         return (thread, ex) -> {
-            GiveawayBot.logger().error("Console Exception:", ex);
+            JdaBot.logger.error("Console Exception:", ex);
             this.startConsoleThread();
         };
     }

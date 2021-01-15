@@ -6,6 +6,7 @@ import com.google.common.collect.Sets;
 import com.timvisee.yamlwrapper.ConfigurationSection;
 import com.timvisee.yamlwrapper.YamlConfiguration;
 import pink.zak.giveawaybot.discord.GiveawayBot;
+import pink.zak.giveawaybot.discord.service.bot.JdaBot;
 import pink.zak.giveawaybot.discord.service.bot.SimpleBot;
 
 import java.io.File;
@@ -127,8 +128,8 @@ public class Config {
     private void createIfAbsent(String file) {
         if (!this.file.exists()) {
             this.basePath.toFile().mkdirs();
-            GiveawayBot.logger().error("The file '{}' did not exist. You must make it.", file);
-            GiveawayBot.logger().error("Target path to file: {}", this.file.getAbsolutePath());
+            JdaBot.logger.error("The file '{}' did not exist. You must make it.", file);
+            JdaBot.logger.error("Target path to file: {}", this.file.getAbsolutePath());
         }
     }
 }

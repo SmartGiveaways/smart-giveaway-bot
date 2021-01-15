@@ -10,6 +10,7 @@ import pink.zak.giveawaybot.discord.controllers.GiveawayController;
 import pink.zak.giveawaybot.discord.metrics.helpers.LatencyMonitor;
 import pink.zak.giveawaybot.discord.models.giveaway.CurrentGiveaway;
 import pink.zak.giveawaybot.discord.pipelines.giveaway.steps.EntryCounterStep;
+import pink.zak.giveawaybot.discord.service.bot.JdaBot;
 import pink.zak.giveawaybot.discord.threads.ThreadFunction;
 
 import java.util.Set;
@@ -43,14 +44,14 @@ public class GiveawayPipeline {
             }
             Guild guild = this.shardManager.getGuildById(giveaway.getServerId());
             if (guild == null) {
-                GiveawayBot.logger().error("A Guild should not be null. ID: {}", giveaway.getServerId());
+                JdaBot.logger.error("A Guild should not be null. ID: {}", giveaway.getServerId());
                 return;
             }
             JDA jda = guild.getJDA();
             if (!this.latencyMonitor.isLatencyUsable(jda)) {
                 this.delayedDeletions.add(giveaway);
                 if (this.delayedDeletions.isEmpty()) {
-                    GiveawayBot.logger().warn("Latency was not usable so didnt delete giveaway ({}ms)", this.latencyMonitor.getLastTiming(jda));
+                    JdaBot.logger.warn("Latency was not usable so didnt delete giveaway ({}ms)", this.latencyMonitor.getLastTiming(jda));
                 }
                 return;
             }
@@ -71,7 +72,7 @@ public class GiveawayPipeline {
                 for (CurrentGiveaway giveaway : this.delayedDeletions) {
                     Guild guild = this.shardManager.getGuildById(giveaway.getServerId());
                     if (guild == null) {
-                        GiveawayBot.logger().error("B Guild should not be null. ID: {}", giveaway.getServerId());
+                        JdaBot.logger.error("B Guild should not be null. ID: {}", giveaway.getServerId());
                         return;
                     }
                     JDA jda = guild.getJDA();
@@ -85,7 +86,7 @@ public class GiveawayPipeline {
                     this.delayedDeletions.remove(giveaway);
                     this.endGiveaway(giveaway);
                 }
-                GiveawayBot.logger().warn("{} giveaways across {} shards recovered. {} giveaways across {} shards still could not be updated!",
+                JdaBot.logger.warn("{} giveaways across {} shards recovered. {} giveaways across {} shards still could not be updated!",
                         recoveredGiveaways, recoveredShards.size(), affectedGiveaways, affectedShards.size());
             }
         }, 30, 30, TimeUnit.SECONDS);

@@ -40,6 +40,9 @@ allprojects {
         implementation("org.mongodb:mongo-java-driver:3.12.7")
         implementation("org.mongojack:mongojack:4.0.2")
 
+        compileOnly("org.projectlombok:lombok:1.18.16")
+        annotationProcessor("org.projectlombok:lombok:1.18.16")
+
         testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.0")
         testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.0")
         testCompile("org.mockito:mockito-core:3.7.0")

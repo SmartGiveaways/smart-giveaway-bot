@@ -14,6 +14,7 @@ import pink.zak.giveawaybot.discord.GiveawayBot;
 import pink.zak.giveawaybot.discord.cache.ServerCache;
 import pink.zak.giveawaybot.discord.lang.enums.Text;
 import pink.zak.giveawaybot.discord.models.Server;
+import pink.zak.giveawaybot.discord.service.bot.JdaBot;
 import pink.zak.giveawaybot.discord.service.cache.CacheBuilder;
 import pink.zak.giveawaybot.discord.service.cache.caches.Cache;
 import pink.zak.giveawaybot.discord.service.colour.Palette;
@@ -92,7 +93,7 @@ public class BanListSub extends SubCommand implements EventListener {
                 messageAndPage.setValue(newPage);
             }
         }).exceptionally(ex -> {
-            GiveawayBot.logger().error("BanListSub Page Reaction Listener: ", ex);
+            JdaBot.logger.error("BanListSub Page Reaction Listener: ", ex);
             return null;
         });
     }
