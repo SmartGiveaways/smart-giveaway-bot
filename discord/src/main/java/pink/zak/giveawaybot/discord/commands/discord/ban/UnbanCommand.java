@@ -49,6 +49,7 @@ public class UnbanCommand extends SimpleCommand {
             }
             User user = server.getUserCache().get(target.getIdLong());
             String userPlaceholder = UserUtils.getNameDiscrim(target);
+            server.getBannedUsers().remove(user.getId());
             if (user.isShadowBanned()) {
                 this.langFor(server, Text.SHADOW_UNBANNED, replacer -> replacer.set("target", userPlaceholder)).to(textChannel);
                 user.setShadowBanned(false);
@@ -60,7 +61,7 @@ public class UnbanCommand extends SimpleCommand {
                 user.setBanned(false);
                 return;
             }
-            this.langFor(server, Text.UNBAN_NOT_BANNED, replacer -> replacer.set("target", user)).to(textChannel);
+            this.langFor(server, Text.UNBAN_NOT_BANNED, replacer -> replacer.set("target", "<@" + user.getId() + ">")).to(textChannel);
         }
     }
 }

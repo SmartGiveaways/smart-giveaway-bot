@@ -13,14 +13,11 @@ public class BanCommand extends SimpleHelpCommand {
         super(bot, "gban", true, false);
 
         BanCmdUtils cmdUtils = new BanCmdUtils(bot);
-        BanListSub banListSub = new BanListSub(bot);
         this.setSubCommands(
-                banListSub,
+                new BanListSub(bot),
                 new BanSub(bot, cmdUtils),
                 new ShadowBanSub(bot, cmdUtils)
         );
-        bot.registerListeners(banListSub);
-
         this.setupMessages(Text.BAN_EMBED_TITLE, Text.BAN_EMBED_CONTENT);
     }
 }

@@ -44,7 +44,7 @@ public enum ServerQuery implements QueryInterface<Server> {
     public BiFunction<Server, Point, Point> tag() {
         return (server, point) -> point
                 .addTag("server-id", server.getStringId())
-                .addTag("system", BotConstants.getDeviceName());
+                .addTag("system", BotConstants.DEVICE_NAME);
     }
 
     @Override

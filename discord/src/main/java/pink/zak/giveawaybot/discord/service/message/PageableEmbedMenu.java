@@ -24,7 +24,7 @@ public abstract class PageableEmbedMenu extends PageableMenu implements Pageable
 
     private final Map<Integer, MessageEmbed> cachedPages = Maps.newConcurrentMap();
     private Message message;
-    private final Server server;
+    protected final Server server;
     private final boolean managerOnly;
 
     private ScheduledFuture<?> scheduledFuture;
@@ -44,8 +44,8 @@ public abstract class PageableEmbedMenu extends PageableMenu implements Pageable
         MessageEmbed embed = this.createPage(super.currentPage.get());
         this.cachedPages.put(super.currentPage.get(), embed);
         channel.sendMessage(embed).queue(sentMessage -> {
-            sentMessage.addReaction(BotConstants.getForwardArrow()).queue();
-            sentMessage.addReaction(BotConstants.getBackArrow()).queue();
+            sentMessage.addReaction(BotConstants.BACK_ARROW).queue();
+            sentMessage.addReaction(BotConstants.FORWARD_ARROW).queue();
             this.message = sentMessage;
             this.scheduleDeletion();
         });

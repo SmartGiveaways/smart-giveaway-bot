@@ -24,8 +24,7 @@ public class UserStorage extends MongoStorage<Long, User> {
         super(bot, "users", "userId");
         this.serverId = serverId;
 
-        this.gson = new GsonBuilder().registerTypeAdapter(new TypeToken<EnumMap<EntryType, AtomicInteger>>() {
-        }.getType(), new MapCreator<>(EntryType.class)).create();
+        this.gson = new GsonBuilder().registerTypeAdapter(new TypeToken<EnumMap<EntryType, AtomicInteger>>() {}.getType(), new MapCreator<>(EntryType.class)).create();
     }
 
     @Override

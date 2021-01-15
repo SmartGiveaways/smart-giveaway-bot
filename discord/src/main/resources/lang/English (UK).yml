@@ -107,8 +107,7 @@ values:
   shadow-banned-successfully: ":white_check_mark: shadowbanned %target%."
 
   ban-list-embed-title: "Banned Users"
-  ban-list-footer: "%amount% total bans"
-  ban-list-page-footer: "Page %page%/%maxPage% | %amount% total bans"
+  ban-list-footer: "Page %page%/%max_page% | %total% total"
   ban-list-banned: "banned"
   ban-list-shadow-banned: "shadowbanned"
 

@@ -58,7 +58,7 @@ public abstract class SimpleHelpCommand extends SimpleCommand implements Reloada
         for (Language language : this.languageRegistry.languageMap().values()) {
             EmbedBuilder embedBuilder = new EmbedBuilder()
                     .setTitle(language.getValue(this.title).get())
-                    .setFooter(language.getValue(this.footer).replace(BotConstants.getBaseReplace()).get())
+                    .setFooter(language.getValue(this.footer).replace(BotConstants.BASE_REPLACE).get())
                     .setColor(this.palette.primary())
                     .setDescription(language.getValue(Text.GENERIC_COMMAND_USAGE_EXAMPLE).replace(replacer -> replacer.set("command", this.getCommand())).toString().concat(
                             language.getValue(this.description).replace(this.replace.apply(language)).get()));

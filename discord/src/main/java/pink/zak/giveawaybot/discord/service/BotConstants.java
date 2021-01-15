@@ -7,12 +7,12 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 public class BotConstants {
-    private static final String version = BotConstants.class.getPackage().getImplementationVersion();
-    private static final Replace baseReplace = replacer -> replacer.set("version", version);
-    private static final String deviceName = getInitDeviceName();
+    public static final String VERSION = BotConstants.class.getPackage().getImplementationVersion();
+    public static final Replace BASE_REPLACE = replacer -> replacer.set("version", VERSION);
+    public static final String DEVICE_NAME = getInitDeviceName();
 
-    private static final String backArrow = "\u2B05";
-    private static final String forwardArrow = "\u27A1";
+    public static final String BACK_ARROW = "\u2B05";
+    public static final String FORWARD_ARROW = "\u27A1";
 
     private static String getInitDeviceName() {
         try {
@@ -21,25 +21,5 @@ public class BotConstants {
             JdaBot.logger.error("Could not get local hostname", ex);
             return "UNKNOWN";
         }
-    }
-
-    public static String getDeviceName() {
-        return deviceName;
-    }
-
-    public static String getVersion() {
-        return version;
-    }
-
-    public static Replace getBaseReplace() {
-        return baseReplace;
-    }
-
-    public static String getBackArrow() {
-        return backArrow;
-    }
-
-    public static String getForwardArrow() {
-        return forwardArrow;
     }
 }

@@ -37,7 +37,7 @@ public enum GiveawayCacheQuery implements QueryInterface<GiveawayCache> {
 
     @Override
     public BiFunction<GiveawayCache, Point, Point> tag() {
-        return (giveawayCache, point) -> point.addTag("system", BotConstants.getDeviceName());
+        return (giveawayCache, point) -> point.addTag("system", BotConstants.DEVICE_NAME);
     }
 
     @Override

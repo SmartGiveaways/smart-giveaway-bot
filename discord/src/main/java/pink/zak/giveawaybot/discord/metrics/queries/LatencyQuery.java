@@ -23,7 +23,7 @@ public enum LatencyQuery implements AdvancedQueryInterface<LatencyMonitor, JDA> 
     public TriFunction<LatencyMonitor, JDA, Point, Point> tag() {
         return (monitor, shard, point) -> point
                 .addTag("shard", String.valueOf(shard.getShardInfo().getShardId()))
-                .addTag("system", BotConstants.getDeviceName());
+                .addTag("system", BotConstants.DEVICE_NAME);
     }
 
     @Override

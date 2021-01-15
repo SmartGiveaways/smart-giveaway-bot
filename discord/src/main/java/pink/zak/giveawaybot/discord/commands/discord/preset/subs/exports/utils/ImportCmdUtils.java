@@ -76,7 +76,7 @@ public class ImportCmdUtils extends ListenerAdapter {
                         if (returnData.getValue() != null) {
                             this.serializedCache.set(sent.getIdLong(), returnData.getValue());
                         }
-                        sent.addReaction(BotConstants.getForwardArrow()).queue();
+                        sent.addReaction(BotConstants.FORWARD_ARROW).queue();
                     };
                     if (affected == null) {
                         return;

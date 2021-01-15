@@ -19,7 +19,7 @@ public enum CommandQuery implements QueryInterface<DiscordCommandBase> {
 
     @Override
     public BiFunction<DiscordCommandBase, Point, Point> tag() {
-        return (giveawayCache, point) -> point.addTag("system", BotConstants.getDeviceName());
+        return (giveawayCache, point) -> point.addTag("system", BotConstants.DEVICE_NAME);
     }
 
     @Override

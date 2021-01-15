@@ -39,7 +39,7 @@ public enum ServerCacheQuery implements QueryInterface<ServerCache> {
 
     @Override
     public BiFunction<ServerCache, Point, Point> tag() {
-        return (serverCache, point) -> point.addTag("system", BotConstants.getDeviceName());
+        return (serverCache, point) -> point.addTag("system", BotConstants.DEVICE_NAME);
     }
 
     @Override

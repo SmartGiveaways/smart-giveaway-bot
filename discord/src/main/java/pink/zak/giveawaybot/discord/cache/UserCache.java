@@ -33,11 +33,7 @@ public class UserCache extends AccessExpiringCache<Long, User> {
     }
 
     @Override
-    public User get(Long key) {
-        return this.getUserSync(key);
-    }
-
-    public User getUserSync(long userId) {
+    public User get(Long userId) {
         User retrieved = super.cacheMap.get(userId);
         super.hits.incrementAndGet();
         if (retrieved == null) {
@@ -49,6 +45,22 @@ public class UserCache extends AccessExpiringCache<Long, User> {
             return null;
         }
         return retrieved;
+    }
+
+    public CompletableFuture<User> getUserAsync(long userId) {
+        User retrieved = super.cacheMap.get(userId);
+        super.hits.incrementAndGet();
+        if (retrieved == null) {
+            CompletableFuture<User> loaded = this.storage.load(userId, this.getUserValues(userId));
+            super.loads.incrementAndGet();
+            loaded.thenAccept(user -> {
+                if (user != null) {
+                    this.set(userId, user);
+                }
+            });
+            return loaded;
+        }
+        return CompletableFuture.supplyAsync(() -> retrieved);
     }
 
     @Override

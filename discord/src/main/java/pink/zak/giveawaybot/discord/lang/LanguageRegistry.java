@@ -77,7 +77,7 @@ public class LanguageRegistry {
                 JdaBot.logger.error("Could not match Text value from identifier {} for language {}", key, identifier);
                 continue;
             }
-            values.put(text, new LangSub(section.getString(key), BotConstants.getBaseReplace()));
+            values.put(text, new LangSub(section.getString(key), BotConstants.BASE_REPLACE));
         }
         return new Language(identifier, name, flag, aliases, values);
     }

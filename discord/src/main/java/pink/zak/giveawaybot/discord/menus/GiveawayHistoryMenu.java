@@ -13,35 +13,30 @@ import java.util.List;
 
 public class GiveawayHistoryMenu extends PageableEmbedMenu {
     private final List<PartialFinishedGiveaway> finishedGiveaways;
-    private final Server server;
 
     public GiveawayHistoryMenu(GiveawayBot bot, Server server) {
         super(bot, server, true);
         super.cooldown = 500;
         this.finishedGiveaways = bot.getFinishedGiveawayCache().getAllPartial(server);
         super.maxPage = (int) Math.ceil(this.finishedGiveaways.size() / 10.0);
-        this.server = server;
     }
 
     @Override
     public MessageEmbed createPage(int page) {
-        for (PartialFinishedGiveaway giveaway : this.finishedGiveaways) {
-            giveaway.setEndTime(giveaway.getEndTime() + 1);
-        }
         StringBuilder description = new StringBuilder();
         for (int i = (page - 1) * 10; i < this.finishedGiveaways.size() && i < page * 10; i++) {
             PartialFinishedGiveaway giveaway = this.finishedGiveaways.get(i);
             description.append(
-                    super.languageRegistry.get(this.server, Text.GIVEAWAY_HISTORY_EMBED_LINE, replacer -> replacer
+                    super.languageRegistry.get(super.server, Text.GIVEAWAY_HISTORY_EMBED_LINE, replacer -> replacer
                             .set("item", giveaway.getLinkedGiveawayItem())
                             .set("time", Time.formatAsDateTime(giveaway.getEndTime()) + " UTC")
                             .set("id", giveaway.getMessageId())).toString()
             );
         }
         return new EmbedBuilder()
-                .setTitle(this.languageRegistry.get(this.server, Text.GIVEAWAY_HISTORY_EMBED_TITLE).get())
+                .setTitle(this.languageRegistry.get(super.server, Text.GIVEAWAY_HISTORY_EMBED_TITLE).get())
                 .setDescription(description.toString())
-                .setFooter(this.languageRegistry.get(this.server, Text.GIVEAWAY_HISTORY_EMBED_FOOTER, replacer -> replacer
+                .setFooter(this.languageRegistry.get(super.server, Text.GIVEAWAY_HISTORY_EMBED_FOOTER, replacer -> replacer
                         .set("page", page)
                         .set("max_page", super.maxPage)
                         .set("total", this.finishedGiveaways.size())).get())

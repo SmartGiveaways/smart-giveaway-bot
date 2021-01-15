@@ -220,7 +220,7 @@ public class GiveawayBot extends JdaBot {
     }
 
     private static void setApiInstance(GiveawayBot apiInstance) {
-        apiInstance = apiInstance;
+        GiveawayBot.apiInstance = apiInstance;
     }
 
     public Defaults getDefaults() {

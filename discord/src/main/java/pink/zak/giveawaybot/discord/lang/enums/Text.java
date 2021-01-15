@@ -89,7 +89,6 @@ public enum Text {
 
     // Applies to >gban list
     BAN_LIST_EMBED_TITLE,
-    BAN_LIST_PAGE_FOOTER,
     BAN_LIST_FOOTER,
     BAN_LIST_BANNED,
     BAN_LIST_SHADOW_BANNED,
