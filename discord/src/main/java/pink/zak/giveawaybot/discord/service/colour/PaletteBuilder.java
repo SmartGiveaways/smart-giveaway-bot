@@ -1,7 +1,7 @@
 package pink.zak.giveawaybot.discord.service.colour;
 
 
-import java.awt.Color;
+import java.awt.*;
 
 public class PaletteBuilder {
     private Color primary;

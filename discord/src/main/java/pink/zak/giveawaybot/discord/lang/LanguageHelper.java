@@ -1,7 +1,6 @@
 package pink.zak.giveawaybot.discord.lang;
 
 import lombok.experimental.UtilityClass;
-import pink.zak.giveawaybot.discord.GiveawayBot;
 import pink.zak.giveawaybot.discord.lang.enums.Text;
 import pink.zak.giveawaybot.discord.lang.model.Language;
 import pink.zak.giveawaybot.discord.service.bot.JdaBot;

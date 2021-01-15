@@ -96,7 +96,7 @@ public class ImportCmdUtils extends ListenerAdapter {
                 default -> {}
             }
         }).exceptionally(ex -> {
-            ex.printStackTrace();
+            GiveawayBot.logger.error("Error parsing attachment", ex);
             return null;
         });
     }

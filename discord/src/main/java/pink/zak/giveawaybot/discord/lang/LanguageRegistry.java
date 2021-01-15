@@ -7,7 +7,6 @@ import com.timvisee.yamlwrapper.YamlConfiguration;
 import lombok.SneakyThrows;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
-import pink.zak.giveawaybot.discord.GiveawayBot;
 import pink.zak.giveawaybot.discord.lang.enums.Text;
 import pink.zak.giveawaybot.discord.lang.model.Language;
 import pink.zak.giveawaybot.discord.models.Server;

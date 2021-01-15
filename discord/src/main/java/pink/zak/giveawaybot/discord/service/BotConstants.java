@@ -1,5 +1,6 @@
 package pink.zak.giveawaybot.discord.service;
 
+import pink.zak.giveawaybot.discord.GiveawayBot;
 import pink.zak.giveawaybot.discord.service.text.Replace;
 
 import java.net.InetAddress;
@@ -13,8 +14,8 @@ public class BotConstants {
     private static String getInitDeviceName() {
         try {
             return InetAddress.getLocalHost().getHostName();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
+        } catch (UnknownHostException ex) {
+            GiveawayBot.logger.error("Could not get local hostname", ex);
             return "UNKNOWN";
         }
     }

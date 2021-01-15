@@ -52,9 +52,9 @@ public class ExportSub extends SubCommand {
 
         try (InputStream inputStream = new ByteArrayInputStream(jsonObject.toString().getBytes(StandardCharsets.UTF_8))) {
             channel.sendMessage(this.langFor(server, Text.PRESET_EXPORTED_SINGLE, replacer -> replacer
-                    .set("preset", preset.getName())).get()).addFile(inputStream, fileName).queue(message -> {}, Throwable::printStackTrace);
+                    .set("preset", preset.getName())).get()).addFile(inputStream, fileName).queue(message -> {}, ex -> GiveawayBot.logger.error("Error sending exported preset", ex));
         } catch (IOException ex) {
-            ex.printStackTrace();
+            GiveawayBot.logger.error("Error exporting preset", ex);
         }
     }
 }

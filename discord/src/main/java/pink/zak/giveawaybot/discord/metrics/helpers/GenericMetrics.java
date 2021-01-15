@@ -1,6 +1,5 @@
 package pink.zak.giveawaybot.discord.metrics.helpers;
 
-import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import pink.zak.giveawaybot.discord.GiveawayBot;
 import pink.zak.giveawaybot.discord.service.cache.singular.CachedValue;
