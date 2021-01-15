@@ -14,7 +14,7 @@ public class EligibilityCheckStep {
     private final RewardStep rewardStep;
 
     public EligibilityCheckStep(GiveawayBot bot) {
-        this.rewardStep = new RewardStep(bot.getMetricsLogger().getGenericBotMetrics());
+        this.rewardStep = new RewardStep(bot.getMetricsLogger().getGenericMetrics());
     }
 
     public void process(EntryType entryType, User user, CurrentGiveaway giveaway, Preset preset) {

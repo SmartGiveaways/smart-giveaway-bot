@@ -53,6 +53,7 @@ public class BotAboutCommand extends SimpleCommand {
                 .setColor(this.palette.primary())
                 .setDescription(this.languageRegistry.get(server, Text.ABOUT_EMBED_CONTENT, replacer -> replacer
                         .set("servers", this.metricsLogger.getGuildCount())
+                        .set("users", this.metricsLogger.getGenericMetrics().getUsers())
                         .set("active_giveaways", this.giveawayCache.size())
                         .set("shard", jda.getShardInfo().getShardId())
                         .set("total_shards", this.shardManager.getShardsTotal() - 1)

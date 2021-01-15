@@ -2,7 +2,7 @@ package pink.zak.giveawaybot.discord.pipelines.entries.steps;
 
 import pink.zak.giveawaybot.discord.enums.EntryType;
 import pink.zak.giveawaybot.discord.enums.Setting;
-import pink.zak.giveawaybot.discord.metrics.helpers.GenericBotMetrics;
+import pink.zak.giveawaybot.discord.metrics.helpers.GenericMetrics;
 import pink.zak.giveawaybot.discord.models.Preset;
 import pink.zak.giveawaybot.discord.models.User;
 import pink.zak.giveawaybot.discord.models.giveaway.CurrentGiveaway;
@@ -13,7 +13,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class RewardStep {
     private final AtomicInteger entryCount;
 
-    public RewardStep(GenericBotMetrics metrics) {
+    public RewardStep(GenericMetrics metrics) {
         this.entryCount = metrics.getEntryCount();
     }
 

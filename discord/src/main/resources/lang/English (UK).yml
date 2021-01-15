@@ -59,10 +59,10 @@ values:
                         <:discord:790985028732452924> [Discord (Click)](https://discord.gg/aS4PebKZpe)\n
                         :globe_with_meridians: [Website (Click)](https://smartgiveaways.xyz/) \n
 
-                        :1234: Servers: %servers%\n
-                        :tada: Active Giveaways: %active_giveaways%\n
-                        :large_blue_diamond: Shard: %shard% of %total_shards%\n
-                        :timer: Shard Ping: %shard_ping% (updated %last_shard_ping_update% ago)
+                        :1234: %servers% servers with %users% users\n
+                        :tada: %active_giveaways% active giveaways\n
+                        :large_blue_diamond: Shard %shard% of %total_shards%\n
+                        :timer: %shard_ping%ms shard ping (updated %last_shard_ping_update% ago)
                         "
 
   # >gadmin command messages

@@ -30,7 +30,7 @@ public class ReactionAddListener extends ListenerAdapter {
         this.serverCache = bot.getServerCache();
         this.giveawayCache = bot.getGiveawayCache();
         this.defaultPreset = Defaults.defaultPreset;
-        this.entryCount = bot.getMetricsLogger().getGenericBotMetrics().getEntryCount();
+        this.entryCount = bot.getMetricsLogger().getGenericMetrics().getEntryCount();
 
         this.baseMap = Maps.newEnumMap(EntryType.class);
         this.baseMap.put(EntryType.REACTION, new AtomicInteger(1));

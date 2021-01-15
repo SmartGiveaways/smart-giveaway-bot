@@ -2,12 +2,12 @@ package pink.zak.giveawaybot.api.controllers;
 
 import org.springframework.stereotype.Component;
 import pink.zak.giveawaybot.discord.GiveawayBot;
-import pink.zak.giveawaybot.discord.metrics.helpers.GenericBotMetrics;
+import pink.zak.giveawaybot.discord.metrics.helpers.GenericMetrics;
 import pink.zak.giveawaybot.discord.service.time.Time;
 
 @Component
 public class StatsControllerImpl implements StatsController {
-    private final GenericBotMetrics metrics = GiveawayBot.apiInstance.getMetricsLogger().getGenericBotMetrics();
+    private final GenericMetrics metrics = GiveawayBot.apiInstance.getMetricsLogger().getGenericMetrics();
 
     @Override
     public String getUptime(Boolean formatted) {

@@ -5,7 +5,7 @@ import net.dv8tion.jda.api.sharding.ShardManager;
 import pink.zak.giveawaybot.discord.GiveawayBot;
 import pink.zak.giveawaybot.discord.cache.GiveawayCache;
 import pink.zak.giveawaybot.discord.cache.ServerCache;
-import pink.zak.giveawaybot.discord.metrics.helpers.GenericBotMetrics;
+import pink.zak.giveawaybot.discord.metrics.helpers.GenericMetrics;
 import pink.zak.giveawaybot.discord.metrics.queries.CommandQuery;
 import pink.zak.giveawaybot.discord.metrics.queries.GenericQuery;
 import pink.zak.giveawaybot.discord.metrics.queries.GiveawayCacheQuery;
@@ -22,11 +22,11 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class MetricsLogger {
-    private final GenericBotMetrics genericBotMetrics;
+    private final GenericMetrics genericMetrics;
     private final ShardManager shardManager;
 
     public MetricsLogger(GiveawayBot bot) {
-        this.genericBotMetrics = new GenericBotMetrics(bot);
+        this.genericMetrics = new GenericMetrics(bot);
         this.shardManager = bot.getShardManager();
     }
 
@@ -58,8 +58,8 @@ public class MetricsLogger {
             metrics.<DiscordCommandBase>log(query -> query
                     .primary(commandBase)
                     .push(CommandQuery.COMMAND_EXECUTIONS));
-            metrics.<GenericBotMetrics>log(query -> query
-                    .primary(this.genericBotMetrics)
+            metrics.<GenericMetrics>log(query -> query
+                    .primary(this.genericMetrics)
                     .push(GenericQuery.ALL));
             for (Server server : serverCache.getMap().values()) {
                 Guild guild = this.shardManager.getGuildById(server.getId());
@@ -71,11 +71,11 @@ public class MetricsLogger {
         }, 0, 5, TimeUnit.SECONDS);
     }
 
-    public GenericBotMetrics getGenericBotMetrics() {
-        return this.genericBotMetrics;
+    public GenericMetrics getGenericMetrics() {
+        return this.genericMetrics;
     }
 
-    public int getGuildCount() {
-        return this.genericBotMetrics.getGuilds();
+    public long getGuildCount() {
+        return this.genericMetrics.getGuilds();
     }
 }
