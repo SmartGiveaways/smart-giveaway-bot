@@ -10,6 +10,7 @@ import pink.zak.giveawaybot.discord.GiveawayBot;
 import pink.zak.giveawaybot.discord.lang.enums.Text;
 import pink.zak.giveawaybot.discord.models.Preset;
 import pink.zak.giveawaybot.discord.models.Server;
+import pink.zak.giveawaybot.discord.service.bot.JdaBot;
 import pink.zak.giveawaybot.discord.service.command.discord.command.SubCommand;
 
 import java.io.ByteArrayInputStream;

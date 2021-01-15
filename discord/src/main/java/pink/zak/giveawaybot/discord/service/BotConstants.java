@@ -1,6 +1,5 @@
 package pink.zak.giveawaybot.discord.service;
 
-import pink.zak.giveawaybot.discord.GiveawayBot;
 import pink.zak.giveawaybot.discord.service.bot.JdaBot;
 import pink.zak.giveawaybot.discord.service.text.Replace;
 
