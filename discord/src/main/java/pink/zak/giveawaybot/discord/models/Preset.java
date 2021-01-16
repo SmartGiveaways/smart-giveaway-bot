@@ -21,7 +21,7 @@ public class Preset {
         this(name, Maps.newEnumMap(Setting.class));
     }
 
-    public <T> T getSetting(Setting setting) { // TODO will generic types work? Try sometime
+    public <T> T getSetting(Setting setting) {
         return this.hasSetting(setting) ? (T) this.settings.get(setting) : Defaults.defaultPreset.getSetting(setting);
     }
 
@@ -38,7 +38,7 @@ public class Preset {
     }
 
     @JsonIgnore
-    public EnumMap<Setting, Object> getSettings() {
+    public Map<Setting, Object> getSettings() {
         return this.settings;
     }
 

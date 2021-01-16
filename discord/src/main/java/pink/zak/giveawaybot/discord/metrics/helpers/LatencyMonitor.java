@@ -63,6 +63,7 @@ public class LatencyMonitor extends ListenerAdapter {
         });
     }
 
+    @Override
     public void onHttpRequest(HttpRequestEvent event) {
         if (event.getResponse() != null) {
             JDA jda = event.getJDA();
@@ -77,6 +78,7 @@ public class LatencyMonitor extends ListenerAdapter {
         }
     }
 
+    @Override
     public void onException(ExceptionEvent event) {
         this.onHttpException(event.getCause(), event.getJDA());
     }

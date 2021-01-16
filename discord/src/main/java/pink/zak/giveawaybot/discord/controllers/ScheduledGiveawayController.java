@@ -111,9 +111,9 @@ public class ScheduledGiveawayController {
             }
             this.schedule(giveaway);
         }
-        for (long serverId : giveawaysToRemove.keySet()) {
-            this.serverCache.getAsync(serverId, ThreadFunction.GENERAL).thenAccept(server -> {
-                for (ScheduledGiveaway giveaway : giveawaysToRemove.get(serverId)) {
+        for (Map.Entry<Long, Set<ScheduledGiveaway>> entry : giveawaysToRemove.entrySet()) {
+            this.serverCache.getAsync(entry.getKey(), ThreadFunction.GENERAL).thenAccept(server -> {
+                for (ScheduledGiveaway giveaway : entry.getValue()) {
                     this.deleteGiveaway(server, giveaway);
                 }
             });

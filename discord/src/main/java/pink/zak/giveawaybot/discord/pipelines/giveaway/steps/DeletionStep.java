@@ -25,7 +25,7 @@ public class DeletionStep {
     private final GiveawayStorage giveawayStorage;
     private final ServerCache serverCache;
 
-    private final Map<CurrentGiveaway, ScheduledFuture<?>> scheduledFutures;
+    private final Map<CurrentGiveaway, ScheduledFuture<Void>> scheduledFutures;
 
     public DeletionStep(GiveawayBot bot, GiveawayController giveawayController) {
         this.finishedGiveawayCache = bot.getFinishedGiveawayCache();

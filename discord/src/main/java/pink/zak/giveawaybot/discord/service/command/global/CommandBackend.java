@@ -23,7 +23,7 @@ public abstract class CommandBackend {
     private final ServerCache serverCache;
     private final LanguageRegistry languageRegistry;
 
-    public CommandBackend(GiveawayBot bot) {
+    protected CommandBackend(GiveawayBot bot) {
         this.bot = bot;
         this.serverCache = bot.getServerCache();
         this.languageRegistry = bot.getLanguageRegistry();
@@ -31,7 +31,7 @@ public abstract class CommandBackend {
         this.registerArgumentTypes();
     }
 
-    public CommandBackend registerArgumentType(Class<?> clazz, ArgumentType<?> argumentType) {
+    protected CommandBackend registerArgumentType(Class<?> clazz, ArgumentType<?> argumentType) {
         ArgumentTypeUtils.register(clazz, argumentType);
         return this;
     }

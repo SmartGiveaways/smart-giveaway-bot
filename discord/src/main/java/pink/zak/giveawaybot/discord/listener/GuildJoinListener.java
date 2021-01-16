@@ -23,6 +23,7 @@ public class GuildJoinListener extends ListenerAdapter {
         this.languageRegistry = bot.getLanguageRegistry();
     }
 
+    @Override
     public void onGuildJoin(GuildJoinEvent event) {
         Guild guild = event.getGuild();
         TextChannel defaultChannel = guild.getDefaultChannel();

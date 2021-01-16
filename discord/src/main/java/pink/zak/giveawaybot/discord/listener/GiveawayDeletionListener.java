@@ -31,6 +31,7 @@ public class GiveawayDeletionListener extends ListenerAdapter {
         this.deletionStep = new DeletionStep(bot);
     }
 
+    @Override
     public void onGuildMessageDelete(GuildMessageDeleteEvent event) {
         this.giveawayCache.getAsync(event.getMessageIdLong(), ThreadFunction.GENERAL).thenAccept(giveaway -> {
             if (giveaway != null) {
@@ -40,6 +41,7 @@ public class GiveawayDeletionListener extends ListenerAdapter {
         });
     }
 
+    @Override
     public void onTextChannelDelete(TextChannelDeleteEvent event) {
         long channelId = event.getChannel().getIdLong();
         this.serverCache.getAsync(event.getGuild().getIdLong(), ThreadFunction.GENERAL).thenAccept(server -> {
@@ -60,10 +62,12 @@ public class GiveawayDeletionListener extends ListenerAdapter {
         });
     }
 
+    @Override
     public void onGuildLeave(GuildLeaveEvent event) {
         this.onUnavailableGuildLeave(new UnavailableGuildLeaveEvent(event.getJDA(), event.getResponseNumber(), event.getGuild().getIdLong()));
     }
 
+    @Override
     public void onUnavailableGuildLeave(UnavailableGuildLeaveEvent event) {
         long guildId = event.getGuildIdLong();
         this.serverCache.getAsync(guildId, ThreadFunction.GENERAL).thenAccept(server -> {

@@ -48,7 +48,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class GiveawayController {
-    private final Map<CurrentGiveaway, ScheduledFuture<?>> scheduledFutures = Maps.newConcurrentMap();
+    private final Map<CurrentGiveaway, ScheduledFuture<Void>> scheduledFutures = Maps.newConcurrentMap();
     private final ThreadManager threadManager;
     private final LanguageRegistry languageRegistry;
     private final GiveawayCache giveawayCache;
@@ -296,6 +296,7 @@ public class GiveawayController {
             this.scheduledFutures.put(giveaway, this.threadManager.getScheduler().schedule(() -> {
                 JdaBot.logger.debug("Giveaway {} expired", giveaway.getMessageId());
                 this.giveawayPipeline.endGiveaway(giveaway);
+                return null;
             }, giveaway.getTimeToExpiry(), TimeUnit.MILLISECONDS));
         }
     }
@@ -322,7 +323,7 @@ public class GiveawayController {
                 replacer -> replacer.set("time", Time.format(length)).set("winner-count", winnerAmount)).get();
     }
 
-    public Map<CurrentGiveaway, ScheduledFuture<?>> getScheduledFutures() {
+    public Map<CurrentGiveaway, ScheduledFuture<Void>> getScheduledFutures() {
         return this.scheduledFutures;
     }
 }

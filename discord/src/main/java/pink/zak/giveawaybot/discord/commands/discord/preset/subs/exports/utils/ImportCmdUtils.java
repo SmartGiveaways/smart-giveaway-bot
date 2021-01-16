@@ -135,7 +135,8 @@ public class ImportCmdUtils extends ListenerAdapter {
         return clashing;
     }
 
-    public void onGuildMessageReactionAdd(@NotNull GuildMessageReactionAddEvent event) {
+    @Override
+    public void onGuildMessageReactionAdd(GuildMessageReactionAddEvent event) {
         long messageId = event.getMessageIdLong();
         if (event.getUser().isBot() || event.getReactionEmote().isEmote() || !this.confirmations.contains(messageId)) {
             return;

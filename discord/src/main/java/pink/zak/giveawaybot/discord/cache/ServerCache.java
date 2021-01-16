@@ -15,6 +15,7 @@ public class ServerCache extends AccessExpiringCache<Long, Server> {
         super(bot, bot.getServerStorage(), TimeUnit.MINUTES, 10, TimeUnit.MINUTES, 5);
     }
 
+    @Override
     public Set<CompletableFuture<Void>> shutdown() {
         Set<CompletableFuture<Void>> futures = Sets.newHashSet();
         this.cacheMap.values().stream().map(Server::getUserCache).map(UserCache::shutdown).forEach(futures::addAll);

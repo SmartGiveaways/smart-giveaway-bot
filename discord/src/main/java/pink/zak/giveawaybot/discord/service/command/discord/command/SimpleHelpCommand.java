@@ -27,7 +27,7 @@ public abstract class SimpleHelpCommand extends SimpleCommand implements Reloada
     private Text description;
     private Function<Language, Replace> replace;
 
-    public SimpleHelpCommand(GiveawayBot bot, String command, boolean manager, boolean premium) {
+    protected SimpleHelpCommand(GiveawayBot bot, String command, boolean manager, boolean premium) {
         super(bot, command, manager, premium);
         this.palette = bot.getDefaults().getPalette();
     }
@@ -54,7 +54,7 @@ public abstract class SimpleHelpCommand extends SimpleCommand implements Reloada
     }
 
     private void buildMessages() {
-        Map<String, MessageEmbed> languageMessages = Maps.newHashMap();
+        Map<String, MessageEmbed> tempLanguageMessages = Maps.newHashMap();
         for (Language language : this.languageRegistry.languageMap().values()) {
             EmbedBuilder embedBuilder = new EmbedBuilder()
                     .setTitle(language.getValue(this.title).get())
@@ -62,9 +62,9 @@ public abstract class SimpleHelpCommand extends SimpleCommand implements Reloada
                     .setColor(this.palette.primary())
                     .setDescription(language.getValue(Text.GENERIC_COMMAND_USAGE_EXAMPLE).replace(replacer -> replacer.set("command", this.getCommand())).toString().concat(
                             language.getValue(this.description).replace(this.replace.apply(language)).get()));
-            languageMessages.put(language.getIdentifier(), embedBuilder.build());
+            tempLanguageMessages.put(language.getIdentifier(), embedBuilder.build());
         }
-        this.languageMessages = languageMessages;
+        this.languageMessages = tempLanguageMessages;
     }
 
     @Override

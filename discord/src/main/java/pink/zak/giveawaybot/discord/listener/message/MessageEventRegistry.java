@@ -12,6 +12,7 @@ public class MessageEventRegistry extends ListenerAdapter {
     private final Set<GiveawayMessageListener> listeners = Sets.newHashSet();
     private ServerCache serverCache;
 
+    @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
         if (event.getAuthor().isBot() || this.serverCache == null) {
             return;

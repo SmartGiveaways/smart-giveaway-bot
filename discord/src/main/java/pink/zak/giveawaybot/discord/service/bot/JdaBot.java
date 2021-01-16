@@ -52,7 +52,7 @@ public abstract class JdaBot implements SimpleBot {
     private ReadyListener readyListener;
 
     @SneakyThrows
-    public JdaBot(UnaryOperator<Path> subBasePath) {
+    protected JdaBot(UnaryOperator<Path> subBasePath) {
         this.storageSettings = new StorageSettings();
         this.backendFactory = new BackendFactory(this);
         this.configStore = new ConfigStore(this);

@@ -9,6 +9,7 @@ import java.util.Set;
 public class PageableReactionEventRegistry extends ListenerAdapter {
     private final Set<PageableReactionListener> listeners = Sets.newHashSet();
 
+    @Override
     public void onGuildMessageReactionAdd(GuildMessageReactionAddEvent event) {
         if (event.getUser().isBot() || event.getReactionEmote().isEmote()) {
             return;
