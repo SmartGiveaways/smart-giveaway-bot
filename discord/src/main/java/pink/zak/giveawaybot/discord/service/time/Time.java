@@ -9,14 +9,10 @@ import java.time.format.DateTimeFormatter;
 
 @UtilityClass
 public class Time {
-    private static final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd kk:mm:ss");
-
-    public static DateTimeFormatter getDateFormat() {
-        return dateFormat;
-    }
+    public static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd kk:mm:ss");
 
     public static String formatAsDateTime(long time) {
-        return LocalDateTime.ofInstant(Instant.ofEpochMilli(time), ZoneOffset.UTC).format(Time.getDateFormat());
+        return LocalDateTime.ofInstant(Instant.ofEpochMilli(time), ZoneOffset.UTC).format(Time.DATE_FORMAT);
     }
 
     public static String format(long millis) {
@@ -160,7 +156,12 @@ public class Time {
         if (identifier == null) {
             return -1;
         }
-        long amount = amountBuilder.toString().isEmpty() ? 1 : Long.parseLong(amountBuilder.toString());
+        long amount;
+        try {
+            amount = amountBuilder.toString().isEmpty() ? 1 : Long.parseLong(amountBuilder.toString());
+        } catch (NumberFormatException ignored) {
+            return -1;
+        }
         return identifier.getMilliseconds(amount);
     }
 

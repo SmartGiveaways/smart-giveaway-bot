@@ -2,7 +2,6 @@ package pink.zak.giveawaybot.discord.service.cache.caches;
 
 import pink.zak.giveawaybot.discord.GiveawayBot;
 import pink.zak.giveawaybot.discord.service.bot.JdaBot;
-import pink.zak.giveawaybot.discord.service.cache.options.CacheExpiryListener;
 import pink.zak.giveawaybot.discord.service.storage.mongo.MongoStorage;
 import pink.zak.giveawaybot.discord.threads.ThreadFunction;
 
@@ -12,7 +11,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
 
 public class AccessExpiringCache<K, V> extends Cache<K, V> {
     protected final Map<K, Long> accessTimes = new ConcurrentHashMap<>();
