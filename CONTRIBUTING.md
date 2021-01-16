@@ -38,6 +38,8 @@
 We welcome anyone to review a pull request and bear in mind the code expectations listed above.
 We're not extremely strict and there's not a definite set of rules but as always, the best advice is to use common sense.
 
+***
+
 ### Developer's Certificate of Origin 1.1
 
 By making a contribution to this project, I certify that:
