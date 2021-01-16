@@ -1,4 +1,4 @@
-package pink.zak.test.giveawaybot.command.discord;
+package pink.zak.test.giveawaybot.discord.command.discord;
 
 import org.junit.jupiter.api.Test;
 

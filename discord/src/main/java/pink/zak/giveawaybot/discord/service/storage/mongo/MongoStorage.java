@@ -6,8 +6,9 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import org.bson.Document;
 import org.bson.conversions.Bson;
-import pink.zak.giveawaybot.discord.GiveawayBot;
+import pink.zak.giveawaybot.discord.service.storage.mongo.factory.MongoConnectionFactory;
 import pink.zak.giveawaybot.discord.threads.ThreadFunction;
+import pink.zak.giveawaybot.discord.threads.ThreadManager;
 
 import java.util.Map;
 import java.util.Set;
@@ -19,9 +20,9 @@ public abstract class MongoStorage<K, T> {
     private final String idKey;
     private ExecutorService executorService;
 
-    protected MongoStorage(GiveawayBot bot, String collectionName, String idKey) {
-        this.collection = bot.getMongoConnectionFactory().getCollection(collectionName);
-        this.executorService = bot.getAsyncExecutor(ThreadFunction.STORAGE);
+    protected MongoStorage(ThreadManager threadManager, MongoConnectionFactory connectionFactory, String collectionName, String idKey) {
+        this.collection = connectionFactory.getCollection(collectionName);
+        this.executorService = threadManager.getAsyncExecutor(ThreadFunction.STORAGE);
         this.idKey = idKey;
     }
 

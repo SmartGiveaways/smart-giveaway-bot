@@ -3,13 +3,14 @@ package pink.zak.giveawaybot.discord.storage;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import pink.zak.giveawaybot.discord.GiveawayBot;
 import pink.zak.giveawaybot.discord.enums.EntryType;
 import pink.zak.giveawaybot.discord.models.User;
 import pink.zak.giveawaybot.discord.service.storage.mongo.MongoDeserializer;
 import pink.zak.giveawaybot.discord.service.storage.mongo.MongoSerializer;
 import pink.zak.giveawaybot.discord.service.storage.mongo.MongoStorage;
+import pink.zak.giveawaybot.discord.service.storage.mongo.factory.MongoConnectionFactory;
 import pink.zak.giveawaybot.discord.service.types.MapCreator;
+import pink.zak.giveawaybot.discord.threads.ThreadManager;
 
 import java.util.EnumMap;
 import java.util.concurrent.ConcurrentHashMap;
@@ -20,8 +21,8 @@ public class UserStorage extends MongoStorage<Long, User> {
     private final long serverId;
     private final Gson gson;
 
-    public UserStorage(GiveawayBot bot, long serverId) {
-        super(bot, "users", "userId");
+    public UserStorage(ThreadManager threadManager, MongoConnectionFactory connectionFactory, long serverId) {
+        super(threadManager, connectionFactory, "users", "userId");
         this.serverId = serverId;
 
         this.gson = new GsonBuilder().registerTypeAdapter(new TypeToken<EnumMap<EntryType, AtomicInteger>>() {}.getType(), new MapCreator<>(EntryType.class)).create();

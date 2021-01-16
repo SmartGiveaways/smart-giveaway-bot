@@ -28,7 +28,7 @@ public class ServerStorage extends MongoStorage<Long, Server> {
     private final Gson gson = new Gson();
 
     public ServerStorage(GiveawayBot bot) {
-        super(bot, "server-settings", "_id");
+        super(bot.getThreadManager(), bot.getMongoConnectionFactory(), "server-settings", "_id");
         this.bot = bot;
     }
 

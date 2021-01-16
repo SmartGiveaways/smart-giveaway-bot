@@ -40,7 +40,8 @@ import pink.zak.giveawaybot.discord.service.bot.JdaBot;
 import pink.zak.giveawaybot.discord.service.command.discord.command.Command;
 import pink.zak.giveawaybot.discord.service.config.Config;
 import pink.zak.giveawaybot.discord.service.config.Reloadable;
-import pink.zak.giveawaybot.discord.service.storage.mongo.MongoConnectionFactory;
+import pink.zak.giveawaybot.discord.service.storage.mongo.factory.MongoConnectionFactory;
+import pink.zak.giveawaybot.discord.service.storage.mongo.factory.MongoConnectionFactoryImpl;
 import pink.zak.giveawaybot.discord.shutdown.ShutdownHelper;
 import pink.zak.giveawaybot.discord.shutdown.ShutdownHook;
 import pink.zak.giveawaybot.discord.storage.GiveawayStorage;
@@ -49,6 +50,7 @@ import pink.zak.giveawaybot.discord.storage.ServerStorage;
 import pink.zak.giveawaybot.discord.storage.finishedgiveaway.FullFinishedGiveawayStorage;
 import pink.zak.giveawaybot.discord.threads.ThreadFunction;
 import pink.zak.giveawaybot.discord.threads.ThreadManager;
+import pink.zak.giveawaybot.discord.threads.ThreadManagerImpl;
 import pink.zak.metrics.Metrics;
 
 import java.nio.file.Path;
@@ -87,7 +89,7 @@ public class GiveawayBot extends JdaBot {
 
     public void load() {
         this.configRelations();
-        this.threadManager = new ThreadManager();
+        this.threadManager = new ThreadManagerImpl();
 
         Config settings = this.getConfigStore().getConfig("settings");
 
@@ -216,7 +218,7 @@ public class GiveawayBot extends JdaBot {
         this.storageSettings.setAuthDatabase(settings.string("mongo-auth-database"));
         this.storageSettings.setUsername(settings.string("mongo-username"));
         this.storageSettings.setPassword(settings.string("mongo-password"));
-        this.mongoConnectionFactory = new MongoConnectionFactory(this.getStorageSettings());
+        this.mongoConnectionFactory = new MongoConnectionFactoryImpl(this.getStorageSettings());
     }
 
     private static void setApiInstance(GiveawayBot apiInstance) {

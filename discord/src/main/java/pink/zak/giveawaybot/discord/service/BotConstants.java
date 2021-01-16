@@ -1,11 +1,13 @@
 package pink.zak.giveawaybot.discord.service;
 
+import lombok.experimental.UtilityClass;
 import pink.zak.giveawaybot.discord.service.bot.JdaBot;
 import pink.zak.giveawaybot.discord.service.text.Replace;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
+@UtilityClass
 public class BotConstants {
     public static final String VERSION = BotConstants.class.getPackage().getImplementationVersion();
     public static final Replace BASE_REPLACE = replacer -> replacer.set("version", VERSION);

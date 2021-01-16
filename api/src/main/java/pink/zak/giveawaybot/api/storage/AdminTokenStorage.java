@@ -9,7 +9,7 @@ import pink.zak.giveawaybot.discord.service.storage.mongo.MongoStorage;
 public class AdminTokenStorage extends MongoStorage<String, AdminToken> {
 
     public AdminTokenStorage(GiveawayBot bot) {
-        super(bot, "admin-tokens", "token");
+        super(bot.getThreadManager(), bot.getMongoConnectionFactory(), "admin-tokens", "token");
     }
 
     @Override

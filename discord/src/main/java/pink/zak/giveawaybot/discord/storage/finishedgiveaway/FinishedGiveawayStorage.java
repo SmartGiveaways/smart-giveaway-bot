@@ -14,7 +14,7 @@ import java.util.List;
 public abstract class FinishedGiveawayStorage<T extends PartialFinishedGiveaway> extends MongoStorage<Long, T> {
 
     protected FinishedGiveawayStorage(GiveawayBot bot) {
-        super(bot, "finished-giveaways", "_id");
+        super(bot.getThreadManager(), bot.getMongoConnectionFactory(), "finished-giveaways", "_id");
     }
 
     public List<T> loadAll(Server server, List<Long> targeted) {

@@ -1,4 +1,4 @@
-package pink.zak.test.giveawaybot.command.console;
+package pink.zak.test.giveawaybot.discord.command.console;
 
 public class PremiumCommandTests {
 

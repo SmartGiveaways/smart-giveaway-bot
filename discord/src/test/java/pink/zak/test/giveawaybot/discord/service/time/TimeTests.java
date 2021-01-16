@@ -1,4 +1,4 @@
-package pink.zak.test.giveawaybot.service.time;
+package pink.zak.test.giveawaybot.discord.service.time;
 
 import org.junit.jupiter.api.Test;
 import pink.zak.giveawaybot.discord.service.time.Time;

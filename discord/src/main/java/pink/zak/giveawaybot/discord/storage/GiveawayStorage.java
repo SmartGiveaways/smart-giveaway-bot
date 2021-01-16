@@ -16,7 +16,7 @@ public class GiveawayStorage extends MongoStorage<Long, CurrentGiveaway> {
     private final Gson gson = new Gson();
 
     public GiveawayStorage(GiveawayBot bot) {
-        super(bot, "giveaways", "_id");
+        super(bot.getThreadManager(), bot.getMongoConnectionFactory(), "giveaways", "_id");
     }
 
     @Override

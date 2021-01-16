@@ -1,11 +1,11 @@
 package pink.zak.giveawaybot.discord.service.types;
 
 import com.vdurmont.emoji.EmojiParser;
-import lombok.SneakyThrows;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageReaction;
+import net.dv8tion.jda.api.exceptions.RateLimitedException;
 
 import java.util.List;
 
@@ -24,26 +24,17 @@ public class ReactionContainer {
         }
     }
 
-    public ReactionContainer(MessageReaction.ReactionEmote emote) {
-        this.reactionEmote = emote;
-    }
-
-    @SneakyThrows
     public static ReactionContainer fromUnknown(String input, Guild guild) {
         if (input.startsWith("<") && input.endsWith(">") && input.contains(":")) {
             String[] split = input.split(":");
-            if (split.length != 3 || split[2].length() < 19) {
+            if (split.length != 3 || split[1].isEmpty() || split[2].length() < 19) {
                 return null;
             }
             String id = split[2].substring(0, split[2].length() - 1);
             try {
-                Emote possibleEmote = guild.getEmoteById(id);
-                if (possibleEmote == null) {
-                    possibleEmote = guild.retrieveEmoteById(id).complete(true);
-                }
-                ReactionContainer built = new ReactionContainer(possibleEmote);
-                return built.getReactionEmote() == null ? null : built;
-            } catch (NumberFormatException ex) {
+                Emote possibleEmote = guild.retrieveEmoteById(id).complete(true);
+                return possibleEmote == null ? null : new ReactionContainer(possibleEmote);
+            } catch (IllegalArgumentException | RateLimitedException ex) {
                 return null;
             }
         }

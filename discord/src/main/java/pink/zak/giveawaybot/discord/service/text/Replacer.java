@@ -13,9 +13,9 @@ public class Replacer {
         return replacer.apply(new Replacer()).applyTo(string);
     }
 
-    public static Replacer of(Map<String, String> placeholderValues) {
+    public static Replacer of(Map<String, String> values) {
         Replacer replacer = new Replacer();
-        for (Map.Entry<String, String> entry : placeholderValues.entrySet()) {
+        for (Map.Entry<String, String> entry : values.entrySet()) {
             replacer.set(entry.getKey(), entry.getValue());
         }
         return replacer;
@@ -34,8 +34,9 @@ public class Replacer {
         return result;
     }
 
-    public Replacer addReplaces(Replace... replaces) {
-        for (Replace replace : replaces) {
+    @SafeVarargs
+    public final Replacer addReplaces(UnaryOperator<Replacer>... replaces) {
+        for (UnaryOperator<Replacer> replace : replaces) {
             replace.apply(this);
         }
         return this;

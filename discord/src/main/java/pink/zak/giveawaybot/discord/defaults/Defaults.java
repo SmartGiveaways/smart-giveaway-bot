@@ -9,7 +9,7 @@ import pink.zak.giveawaybot.discord.service.colour.Palette;
 import pink.zak.giveawaybot.discord.service.colour.PaletteBuilder;
 import pink.zak.giveawaybot.discord.service.types.ReactionContainer;
 
-import java.awt.Color;
+import java.awt.*;
 
 public class Defaults {
     public static final Preset defaultPreset = new Preset("default");

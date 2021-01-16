@@ -18,7 +18,7 @@ public class NumberUtils {
     }
 
     public static boolean isLikelyInteger(String input) {
-        return isNumerical(input, 11);
+        return isNumerical(input, 10);
     }
 
     public static boolean isNumerical(String input, int maxLength) {

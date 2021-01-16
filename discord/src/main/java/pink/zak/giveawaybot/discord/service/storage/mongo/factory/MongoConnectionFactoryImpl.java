@@ -1,4 +1,4 @@
-package pink.zak.giveawaybot.discord.service.storage.mongo;
+package pink.zak.giveawaybot.discord.service.storage.mongo.factory;
 
 import com.mongodb.MongoClientSettings;
 import com.mongodb.MongoCredential;
@@ -12,11 +12,11 @@ import pink.zak.giveawaybot.discord.service.storage.settings.StorageSettings;
 
 import java.util.Collections;
 
-public class MongoConnectionFactory {
+public class MongoConnectionFactoryImpl implements MongoConnectionFactory {
     private final MongoClient mongoClient;
     private final MongoDatabase mongoDatabase;
 
-    public MongoConnectionFactory(StorageSettings storageSettings) {
+    public MongoConnectionFactoryImpl(StorageSettings storageSettings) {
         ServerAddress address = new ServerAddress(storageSettings.getHost(), Integer.parseInt(storageSettings.getPort()));
         MongoCredential credential = MongoCredential.createCredential(storageSettings.getUsername(), storageSettings.getAuthDatabase(), storageSettings.getPassword().toCharArray());
 
@@ -41,12 +41,6 @@ public class MongoConnectionFactory {
         } catch (IllegalArgumentException ex) {
             this.mongoDatabase.createCollection(collectionName);
             return this.mongoDatabase.getCollection(collectionName);
-        }
-    }
-
-    public void close() {
-        if (this.mongoClient != null) {
-            this.mongoClient.close();
         }
     }
 }

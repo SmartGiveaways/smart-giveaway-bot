@@ -12,7 +12,7 @@ import java.util.UUID;
 public class ScheduledGiveawayStorage extends MongoStorage<UUID, ScheduledGiveaway> {
 
     public ScheduledGiveawayStorage(GiveawayBot bot) {
-        super(bot, "scheduled-giveaways", "_id");
+        super(bot.getThreadManager(), bot.getMongoConnectionFactory(), "scheduled-giveaways", "_id");
     }
 
     @Override

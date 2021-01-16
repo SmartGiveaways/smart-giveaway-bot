@@ -35,7 +35,7 @@ public class Server {
                   long premiumExpiry, String language) {
         this.id = id;
         this.presets = presets;
-        this.userStorage = new UserStorage(bot, this.id);
+        this.userStorage = new UserStorage(bot.getThreadManager(), bot.getMongoConnectionFactory(), this.id);
         this.userCache = new UserCache(bot, this.userStorage, this.id);
         this.activeGiveaways = activeGiveaways;
         this.finishedGiveaways = finishedGiveaways;
