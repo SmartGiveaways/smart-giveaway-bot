@@ -11,7 +11,7 @@ public class UnloadServerSub extends ConsoleSubCommand {
     private final ServerCache serverCache;
 
     public UnloadServerSub(GiveawayBot bot) {
-        super(bot, false);
+        super(bot, bot.getServerCache(), false);
         this.serverCache = bot.getServerCache();
 
         this.addFlat("server");

@@ -5,6 +5,7 @@ import pink.zak.giveawaybot.discord.GiveawayBot;
 import pink.zak.giveawaybot.discord.models.Server;
 import pink.zak.giveawaybot.discord.service.cache.caches.AccessExpiringCache;
 
+import java.net.ServerSocket;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
@@ -12,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 public class ServerCache extends AccessExpiringCache<Long, Server> {
 
     public ServerCache(GiveawayBot bot) {
-        super(bot, bot.getServerStorage(), null, server -> server.getUserCache().invalidateAll(), TimeUnit.MINUTES, 10, TimeUnit.MINUTES, 5);
+        super(bot, bot.getServerStorage(), TimeUnit.MINUTES, 10, TimeUnit.MINUTES, 5);
     }
 
     public Set<CompletableFuture<Void>> shutdown() {
@@ -31,5 +32,14 @@ public class ServerCache extends AccessExpiringCache<Long, Server> {
         super.set(key, server);
         server.setLanguage(languageId);
         return super.get(key);
+    }
+
+    @Override
+    public Server invalidate(Long key) {
+        Server server = super.invalidate(key);
+        if (server != null) {
+            server.getUserCache().invalidateAll();
+        }
+        return server;
     }
 }

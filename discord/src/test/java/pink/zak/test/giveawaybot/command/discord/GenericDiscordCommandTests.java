@@ -1,8 +1,8 @@
-package pink.zak.test.giveawaybot.command;
+package pink.zak.test.giveawaybot.command.discord;
 
 import org.junit.jupiter.api.Test;
 
-class DiscordCommandTests {
+class GenericDiscordCommandTests {
 
     @Test
     public void testCommandBase() {

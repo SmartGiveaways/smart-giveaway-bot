@@ -4,16 +4,12 @@ import pink.zak.giveawaybot.discord.GiveawayBot;
 import pink.zak.giveawaybot.discord.service.cache.caches.AccessExpiringCache;
 import pink.zak.giveawaybot.discord.service.cache.caches.Cache;
 import pink.zak.giveawaybot.discord.service.cache.caches.WriteExpiringCache;
-import pink.zak.giveawaybot.discord.service.cache.options.CacheExpiryListener;
 import pink.zak.giveawaybot.discord.service.storage.mongo.MongoStorage;
 
 import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
 
 public class CacheBuilder<K, V> {
     private GiveawayBot bot;
-    private CacheExpiryListener<K, V> expiryListener;
-    private Consumer<V> removalAction;
     private MongoStorage<K, V> storage;
     private TimeUnit autoSaveTimeUnit;
     private int autoSaveInterval;
@@ -21,32 +17,18 @@ public class CacheBuilder<K, V> {
     private int expiryDelay;
     private boolean expireAfterAccess;
 
-    public static CacheBuilder<Object, Object> newBuilder() {
-        return new CacheBuilder<>();
-    }
-
     public Cache<K, V> build() {
         if (this.expiryTimeUnit != null && this.expiryDelay > 0) {
             if (this.expireAfterAccess) {
-                return new AccessExpiringCache<>(this.bot, this.storage, this.expiryListener, this.removalAction, this.expiryTimeUnit, this.expiryDelay, this.autoSaveTimeUnit, this.autoSaveInterval);
+                return new AccessExpiringCache<>(this.bot, this.storage, this.expiryTimeUnit, this.expiryDelay, this.autoSaveTimeUnit, this.autoSaveInterval);
             }
-            return new WriteExpiringCache<>(this.bot, this.storage, this.expiryListener, this.removalAction, this.expiryTimeUnit, this.expiryDelay, this.autoSaveTimeUnit, this.autoSaveInterval);
+            return new WriteExpiringCache<>(this.bot, this.storage, this.expiryTimeUnit, this.expiryDelay, this.autoSaveTimeUnit, this.autoSaveInterval);
         }
-        return new Cache<>(this.bot, this.removalAction, this.storage, this.autoSaveTimeUnit, this.autoSaveInterval);
+        return new Cache<>(this.bot, this.storage, this.autoSaveTimeUnit, this.autoSaveInterval);
     }
 
     public CacheBuilder<K, V> setControlling(GiveawayBot bot) {
         this.bot = bot;
-        return this;
-    }
-
-    public CacheBuilder<K, V> setExpiryListener(CacheExpiryListener<K, V> expiryListener) {
-        this.expiryListener = expiryListener;
-        return this;
-    }
-
-    public CacheBuilder<K, V> setRemovalAction(Consumer<V> operator) {
-        this.removalAction = operator;
         return this;
     }
 

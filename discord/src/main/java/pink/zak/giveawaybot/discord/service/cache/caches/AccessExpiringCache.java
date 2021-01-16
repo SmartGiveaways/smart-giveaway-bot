@@ -17,30 +17,20 @@ import java.util.function.Consumer;
 public class AccessExpiringCache<K, V> extends Cache<K, V> {
     protected final Map<K, Long> accessTimes = new ConcurrentHashMap<>();
     private final ScheduledExecutorService scheduler;
-    private final CacheExpiryListener<K, V> expiryListener;
     private final TimeUnit timeUnit;
     private final int delay;
 
-    public AccessExpiringCache(GiveawayBot bot, MongoStorage<K, V> storage, CacheExpiryListener<K, V> expiryListener, Consumer<V> removalAction, TimeUnit timeUnit, int delay, TimeUnit autoSaveUnit, int autoSaveInterval) {
-        super(bot, removalAction, storage, autoSaveUnit, autoSaveInterval);
+    public AccessExpiringCache(GiveawayBot bot, MongoStorage<K, V> storage, TimeUnit timeUnit, int delay, TimeUnit autoSaveUnit, int autoSaveInterval) {
+        super(bot, storage, autoSaveUnit, autoSaveInterval);
         this.scheduler = bot.getThreadManager().getScheduler();
-        this.expiryListener = expiryListener;
         this.timeUnit = timeUnit;
         this.delay = delay;
 
         this.startScheduledCleanup();
     }
 
-    public AccessExpiringCache(GiveawayBot bot, MongoStorage<K, V> storage, CacheExpiryListener<K, V> expiryListener, Consumer<V> removalAction, TimeUnit timeUnit, int delay) {
-        this(bot, storage, expiryListener, removalAction, timeUnit, delay, null, 0);
-    }
-
-    public AccessExpiringCache(GiveawayBot bot, MongoStorage<K, V> storage, TimeUnit timeUnit, int delay, TimeUnit autoSaveUnit, int autoSaveInterval) {
-        this(bot, storage, null, null, timeUnit, delay, autoSaveUnit, autoSaveInterval);
-    }
-
     public AccessExpiringCache(GiveawayBot bot, MongoStorage<K, V> storage, TimeUnit timeUnit, int delay) {
-        this(bot, storage, null, null, timeUnit, delay);
+        this(bot, storage, timeUnit, delay, null, 0);
     }
 
     @Override
@@ -68,18 +58,12 @@ public class AccessExpiringCache<K, V> extends Cache<K, V> {
     @Override
     public V invalidate(K key) {
         this.accessTimes.remove(key);
-        if (this.expiryListener != null) {
-            this.expiryListener.onExpiry(key, this.get(key));
-        }
         return super.invalidate(key);
     }
 
     @Override
     public V invalidate(K key, boolean save) {
         this.accessTimes.remove(key);
-        if (save && this.expiryListener != null) {
-            this.expiryListener.onExpiry(key, this.get(key));
-        }
         return super.invalidate(key, save);
     }
 

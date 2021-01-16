@@ -11,7 +11,7 @@ import java.util.List;
 public class PremiumAddSub extends ConsoleSubCommand {
 
     public PremiumAddSub(GiveawayBot bot) {
-        super(bot, false);
+        super(bot, bot.getServerCache(), false);
 
         this.addFlat("add");
         this.addArguments(Long.class, String.class); // server id, time

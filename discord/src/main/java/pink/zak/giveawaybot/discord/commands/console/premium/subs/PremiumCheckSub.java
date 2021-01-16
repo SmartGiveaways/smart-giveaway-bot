@@ -11,7 +11,7 @@ import java.util.List;
 public class PremiumCheckSub extends ConsoleSubCommand {
 
     public PremiumCheckSub(GiveawayBot bot) {
-        super(bot, false);
+        super(bot, bot.getServerCache(), false);
 
         this.addFlatWithAliases("check", "status");
         this.addArgument(Long.class); // server id

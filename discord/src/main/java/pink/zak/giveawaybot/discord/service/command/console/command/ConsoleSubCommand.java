@@ -1,7 +1,9 @@
 package pink.zak.giveawaybot.discord.service.command.console.command;
 
 import com.google.common.collect.Lists;
+import org.jetbrains.annotations.Nullable;
 import pink.zak.giveawaybot.discord.GiveawayBot;
+import pink.zak.giveawaybot.discord.cache.ServerCache;
 import pink.zak.giveawaybot.discord.models.Server;
 import pink.zak.giveawaybot.discord.service.bot.JdaBot;
 import pink.zak.giveawaybot.discord.service.command.global.argument.Argument;
@@ -12,19 +14,17 @@ import java.util.function.Predicate;
 
 public abstract class ConsoleSubCommand extends ConsoleCommand {
     private final boolean endless;
+    private final ServerCache serverCache;
     private List<Argument<?>> arguments = Lists.newArrayList();
 
-    protected ConsoleSubCommand(GiveawayBot bot, boolean endless) {
+    protected ConsoleSubCommand(@Nullable GiveawayBot bot, ServerCache serverCache, boolean endless) {
         super(bot);
+        this.serverCache = serverCache;
         this.endless = endless;
     }
 
     public boolean isEndless() {
         return this.endless;
-    }
-
-    public void setArguments(List<Argument<?>> arguments) {
-        this.arguments = arguments;
     }
 
     public void addFlat(String flat) {
@@ -118,7 +118,7 @@ public abstract class ConsoleSubCommand extends ConsoleCommand {
             JdaBot.logger.error("Input is not a long ({})", args.get(1));
             return null;
         }
-        Server server = this.bot.getServerCache().get(serverId);
+        Server server = this.serverCache.get(serverId);
         if (server == null) {
             JdaBot.logger.error("Could not find a server with the ID {}", serverId);
         }

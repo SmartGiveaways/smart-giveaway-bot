@@ -20,7 +20,6 @@ public class Cache<K, V> {
     protected final ConcurrentHashMap<K, V> cacheMap = new ConcurrentHashMap<>();
 
     protected final ThreadManager threadManager;
-    protected final Consumer<V> removalAction;
     protected final MongoStorage<K, V> storage;
     protected final AtomicInteger hits = new AtomicInteger();
     protected final AtomicInteger loads = new AtomicInteger();
@@ -28,16 +27,15 @@ public class Cache<K, V> {
     protected ShutdownData<K, V> shutdownData;
 
     public Cache(GiveawayBot bot) {
-        this(bot, null, null);
+        this(bot, null);
     }
 
-    public Cache(GiveawayBot bot, Consumer<V> removalAction, MongoStorage<K, V> storage) {
-        this(bot, removalAction, storage, null, 0);
+    public Cache(GiveawayBot bot, MongoStorage<K, V> storage) {
+        this(bot, storage, null, 0);
     }
 
-    public Cache(GiveawayBot bot, Consumer<V> removalAction, MongoStorage<K, V> storage, TimeUnit autoSaveTimeUnit, int autoSaveInterval) {
+    public Cache(GiveawayBot bot, MongoStorage<K, V> storage, TimeUnit autoSaveTimeUnit, int autoSaveInterval) {
         this.threadManager = bot.getThreadManager();
-        this.removalAction = removalAction;
         this.storage = storage;
         if (autoSaveTimeUnit != null && autoSaveInterval > 0) {
             this.startAutoSave(bot.getThreadManager().getScheduler(), autoSaveTimeUnit, autoSaveInterval);
@@ -81,9 +79,6 @@ public class Cache<K, V> {
     public V invalidate(K key) {
         if (this.storage != null) {
             this.save(key);
-        }
-        if (this.removalAction != null) {
-            this.removalAction.accept(this.cacheMap.get(key));
         }
         return this.cacheMap.remove(key);
     }

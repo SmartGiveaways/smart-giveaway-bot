@@ -11,7 +11,7 @@ import java.util.List;
 public class StatsServerSub extends ConsoleSubCommand {
 
     public StatsServerSub(GiveawayBot bot) {
-        super(bot, false);
+        super(bot, bot.getServerCache(), false);
 
         this.addArgument(Long.class); // server id
     }
