@@ -1,6 +1,5 @@
 [![codacy-rating](https://app.codacy.com/project/badge/Grade/623f090b77d94b26861915bac0db5309)](https://app.codacy.com/gh/SmartGiveaways/smart-giveaway-bot/dashboard)
-[![github-issues](https://img.shields.io/github/issues/SmartGiveaways/smart-giveaway-bot)](https://github.com/SmartGiveaways/smart-giveaway-bot/issues)
-[![github-prs](https://img.shields.io/github/issues-pr/SmartGiveaways/smart-giveaway-bot)](https://github.com/SmartGiveaways/smart-giveaway-bot/pulls)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=SmartGiveaways_smart-giveaway-bot&metric=alert_status)](https://sonarcloud.io/dashboard?id=SmartGiveaways_smart-giveaway-bot)
 ![project-license](https://img.shields.io/github/license/SmartGiveaways/smart-giveaway-bot)
 [![discord-widget](https://discord.com/api/guilds/751886048623067186/widget.png)](https://discord.gg/aS4PebKZpe)
 
@@ -34,5 +33,5 @@ No support is officially provided for self hosting but if you have issues direct
 - At least 50MB RAM (we'd hope a bit more, varies on what JDK you use)
 - Java 14 (or 15) / Control over JVM arguments (--enable-preview on)
 - MongoDB
-- InfluxDB (Optional, used for [metrics](https://zak.pink/2020/11/Narrow-Minded-Lacewing-9912.png))
-- Us telling you that you **must** manually copy **all** the resource files (including lang) and make a file for ping testing messages.
+- InfluxDB v2 (Optional, used for [metrics](https://zak.pink/2020/11/Narrow-Minded-Lacewing-9912.png))
+- Us telling you that you **must** manually copy **all** the resource files (including lang).
