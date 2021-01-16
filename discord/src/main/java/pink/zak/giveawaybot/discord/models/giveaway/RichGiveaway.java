@@ -22,4 +22,17 @@ public abstract class RichGiveaway extends Giveaway {
     public String getLinkedGiveawayItem() {
         return "[" + this.giveawayItem + "](" + this.getMessageLink() + ")";
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof RichGiveaway giveaway) {
+            return giveaway.getMessageId() == this.messageId;
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return Long.hashCode(this.messageId);
+    }
 }
