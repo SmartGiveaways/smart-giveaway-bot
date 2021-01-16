@@ -17,11 +17,6 @@ class TimeTests {
         String formatThree = Time.formatAsDateTime(1200262008530L);
         String formatFour = Time.formatAsDateTime(1800262008530L);
 
-        System.out.println(formatOne);
-        System.out.println(formatTwo);
-        System.out.println(formatThree);
-        System.out.println(formatFour);
-
         assertEquals("2021-01-16 03:33:28", formatOne);
         assertEquals("2020-09-16 13:13:28", formatTwo);
         assertEquals("2008-01-13 22:06:48", formatThree);
