@@ -6,7 +6,7 @@ import pink.zak.giveawaybot.discord.service.tuple.MutablePair;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class MutablePairTests {
+class MutablePairTests {
 
     @Test
     void testAll() {

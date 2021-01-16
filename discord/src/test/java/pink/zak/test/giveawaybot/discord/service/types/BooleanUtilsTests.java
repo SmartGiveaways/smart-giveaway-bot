@@ -6,7 +6,7 @@ import pink.zak.giveawaybot.discord.service.types.BooleanUtils;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class BooleanUtilsTests {
+class BooleanUtilsTests {
 
     @Test
     void testIsBoolean() {
