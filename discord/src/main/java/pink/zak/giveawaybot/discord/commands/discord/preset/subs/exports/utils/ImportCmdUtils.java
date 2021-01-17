@@ -19,8 +19,8 @@ import pink.zak.giveawaybot.discord.models.Preset;
 import pink.zak.giveawaybot.discord.models.Server;
 import pink.zak.giveawaybot.discord.service.BotConstants;
 import pink.zak.giveawaybot.discord.service.bot.JdaBot;
-import pink.zak.giveawaybot.discord.service.cache.CacheBuilder;
 import pink.zak.giveawaybot.discord.service.cache.caches.Cache;
+import pink.zak.giveawaybot.discord.service.cache.caches.WriteExpiringCache;
 import pink.zak.giveawaybot.discord.service.tuple.ImmutablePair;
 import pink.zak.giveawaybot.discord.storage.ServerStorage;
 import pink.zak.giveawaybot.discord.threads.ThreadFunction;
@@ -53,8 +53,8 @@ public class ImportCmdUtils extends ListenerAdapter {
         this.serverStorage = bot.getServerStorage();
         this.serverCache = bot.getServerCache();
 
-        this.confirmations = new CacheBuilder<Long, JsonObject>().expireAfterWrite(1, TimeUnit.MINUTES).setControlling(bot).build();
-        this.serializedCache = new CacheBuilder<Long, Map<String, Preset>>().expireAfterWrite(1, TimeUnit.MINUTES).setControlling(bot).build();
+        this.confirmations = new WriteExpiringCache<>(bot, null, TimeUnit.MINUTES, 1, null, -1);
+        this.serializedCache = new WriteExpiringCache<>(bot, null, TimeUnit.MINUTES, 1, null, -1);
 
         bot.registerListeners(this);
     }
@@ -67,29 +67,7 @@ public class ImportCmdUtils extends ListenerAdapter {
         }
         this.parseAttachment(message.getAttachments().get(0)).thenAccept(pair -> {
             switch (pair.getValue()) {
-                case SUCCESS -> {
-                    ImmutablePair<Set<String>, Map<String, Preset>> returnData = this.getAffectedPresets(server, message, pair.getKey());
-                    Set<String> affected = returnData.getKey();
-                    Consumer<Message> messageAction = sent -> {
-                        this.confirmations.set(sent.getIdLong(), pair.getKey());
-                        if (returnData.getValue() != null) {
-                            this.serializedCache.set(sent.getIdLong(), returnData.getValue());
-                        }
-                        sent.addReaction(BotConstants.FORWARD_ARROW).queue();
-                    };
-                    if (affected == null) {
-                        return;
-                    }
-                    if (affected.isEmpty()) {
-                        this.languageRegistry.get(server, Text.PRESET_IMPORT_CONFIRM).to(channel, messageAction);
-                    } else if (affected.size() == 1) {
-                        this.languageRegistry.get(server, Text.PRESET_IMPORT_CONFIRM_OVERRIDE_SINGULAR, replacer -> replacer
-                                .set("preset", affected.iterator().next())).to(channel, messageAction);
-                    } else {
-                        this.languageRegistry.get(server, Text.PRESET_IMPORT_CONFIRM_OVERRIDE_PLURAL, replacer -> replacer
-                                .set("presets", String.join(", ", affected))).to(channel, messageAction);
-                    }
-                }
+                case SUCCESS -> this.importOrConfirm(server, channel, message, pair.getKey());
                 case MALFORMED_URL -> this.languageRegistry.get(server, Text.PRESET_IMPORT_INVALID_FILE, replacer -> replacer.set("exception", "MalformedUrlException")).to(channel);
                 case INVALID_FILE_PARSING -> this.languageRegistry.get(server, Text.PRESET_IMPORT_INVALID_FILE, replacer -> replacer.set("exception", "JsonParseException")).to(channel);
                 case INVALID_FILE_EXTENSION -> this.languageRegistry.get(server, Text.PRESET_IMPORT_INVALID_FILE, replacer -> replacer.set("exception", "InvalidFileExtension")).to(channel);
@@ -102,7 +80,30 @@ public class ImportCmdUtils extends ListenerAdapter {
         });
     }
 
-    public ImmutablePair<Set<String>, Map<String, Preset>> getAffectedPresets(Server server, Message message, JsonObject jsonObject) {
+    private void importOrConfirm(Server server, TextChannel channel, Message message, JsonObject jsonObject) {
+        ImmutablePair<Set<String>, Map<String, Preset>> returnData = this.getAffectedPresets(server, message, jsonObject);
+        Set<String> affected = returnData.getKey();
+        Consumer<Message> messageAction = sent -> {
+            this.confirmations.set(sent.getIdLong(), jsonObject);
+            if (returnData.getValue() != null) {
+                this.serializedCache.set(sent.getIdLong(), returnData.getValue());
+            }
+            sent.addReaction("\u2705").queue();
+        };
+        if (affected != null) {
+            if (affected.isEmpty()) {
+                this.languageRegistry.get(server, Text.PRESET_IMPORT_CONFIRM).to(channel, messageAction);
+            } else if (affected.size() == 1) {
+                this.languageRegistry.get(server, Text.PRESET_IMPORT_CONFIRM_OVERRIDE_SINGULAR, replacer -> replacer
+                        .set("preset", affected.iterator().next())).to(channel, messageAction);
+            } else {
+                this.languageRegistry.get(server, Text.PRESET_IMPORT_CONFIRM_OVERRIDE_PLURAL, replacer -> replacer
+                        .set("presets", String.join(", ", affected))).to(channel, messageAction);
+            }
+        }
+    }
+
+    private ImmutablePair<Set<String>, Map<String, Preset>> getAffectedPresets(Server server, Message message, JsonObject jsonObject) {
         long messageId = message.getIdLong();
         Map<String, Preset> cachedValues = this.serializedCache.get(messageId);
         if (cachedValues != null) {
@@ -116,7 +117,7 @@ public class ImportCmdUtils extends ListenerAdapter {
             return ImmutablePair.of(Sets.newHashSet(), null);
         }
         try {
-            Map<String, Preset> serialized = this.serverStorage.deserializePresets(server.getId(), this.gson.fromJson(jsonObject.get("preset-values").getAsString(), new TypeToken<HashMap<String, HashMap<Setting, String>>>() {}.getType()));
+            Map<String, Preset> serialized = this.serverStorage.deserializePresets(server.getId(), this.gson.fromJson(jsonObject.get("preset-values").getAsString(), new TypeToken<HashMap<String, HashMap<Setting, String>>>(){}.getType()));
             return ImmutablePair.of(this.getClashingPresetsMessage(server, serialized), serialized);
         } catch (Exception ex) {
             this.languageRegistry.get(server, Text.PRESET_IMPORT_INVALID_FILE, replacer -> replacer.set("exception", ex.getClass().getSimpleName())).to(message.getTextChannel());

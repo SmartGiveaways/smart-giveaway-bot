@@ -12,7 +12,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
 public class UserCache extends AccessExpiringCache<Long, User> {
-
     private final Map<String, Long> baseValueMap = Maps.newHashMap();
 
     public UserCache(GiveawayBot bot, MongoStorage<Long, User> storage, long serverId) {

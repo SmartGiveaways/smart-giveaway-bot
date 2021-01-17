@@ -16,7 +16,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 
 public abstract class MongoStorage<K, T> {
-    protected final MongoCollection<Document> collection;
+    public final MongoCollection<Document> collection;
     private final String idKey;
     private ExecutorService executorService;
 

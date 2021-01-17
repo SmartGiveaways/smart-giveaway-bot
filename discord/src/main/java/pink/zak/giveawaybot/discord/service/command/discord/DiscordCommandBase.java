@@ -12,7 +12,7 @@ import pink.zak.giveawaybot.discord.lang.enums.Text;
 import pink.zak.giveawaybot.discord.listener.message.GiveawayMessageListener;
 import pink.zak.giveawaybot.discord.models.Server;
 import pink.zak.giveawaybot.discord.service.bot.JdaBot;
-import pink.zak.giveawaybot.discord.service.cache.CacheBuilder;
+import pink.zak.giveawaybot.discord.service.cache.caches.AccessExpiringCache;
 import pink.zak.giveawaybot.discord.service.cache.caches.Cache;
 import pink.zak.giveawaybot.discord.service.command.discord.command.Command;
 import pink.zak.giveawaybot.discord.service.command.discord.command.SimpleCommand;
@@ -41,7 +41,7 @@ public class DiscordCommandBase extends CommandBackend implements GiveawayMessag
         super(bot);
         this.prefix = bot.getPrefix();
         this.executor = bot.getThreadManager().getAsyncExecutor(ThreadFunction.GENERAL);
-        this.commandCooldowns = new CacheBuilder<Long, Long>().expireAfterAccess(1, TimeUnit.SECONDS).setControlling(bot).build();
+        this.commandCooldowns = new AccessExpiringCache<>(bot, null, TimeUnit.SECONDS, 1);
         this.languageRegistry = bot.getLanguageRegistry();
         this.requiredPermissions = Sets.newHashSet(Permission.MESSAGE_READ,
                 Permission.MESSAGE_EXT_EMOJI,
