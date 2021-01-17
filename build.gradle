@@ -57,13 +57,17 @@ allprojects {
         options.compilerArgs += ["--enable-preview"]
     }
 
-    test {
+
+    tasks.withType(Test).configureEach {
         useJUnitPlatform()
-        finalizedBy jacocoTestReport
         jvmArgs(['--enable-preview'])
     }
 
     jacocoTestReport {
+        reports {
+            xml.enabled(true)
+            html.destination file("${buildDir}/reports/jacoco")
+        }
         dependsOn test
     }
 }
@@ -72,6 +76,33 @@ dependencies {
     implementation project(":api")
     implementation project(":discord")
     implementation("org.springframework.boot:spring-boot-starter-web")
+}
+
+tasks.register("codeCoverageReport", JacocoReport) {
+    // If a subproject applies the 'jacoco' plugin, add the result it to the report
+    subprojects { subproject ->
+        subproject.plugins.withType(JacocoPlugin).configureEach {
+            subproject.tasks.matching({ t -> t.extensions.findByType(JacocoTaskExtension) }).configureEach { testTask ->
+                sourceSets subproject.sourceSets.main
+                executionData fileTree(project.rootDir.absolutePath).include("**/build/jacoco/*.exec")
+                //executionData(testTask)
+
+            }
+        }
+    }
+
+    reports {
+        // SonarQube usage
+        xml.enabled true
+
+        // User usage
+        html.enabled true
+    }
+}
+
+// Make sure test is run for subprojects before report is generated
+codeCoverageReport.dependsOn {
+    subprojects*.test
 }
 
 shadowJar {
