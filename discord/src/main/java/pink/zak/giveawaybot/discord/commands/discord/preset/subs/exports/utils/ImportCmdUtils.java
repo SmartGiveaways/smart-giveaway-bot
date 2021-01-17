@@ -17,7 +17,6 @@ import pink.zak.giveawaybot.discord.lang.LanguageRegistry;
 import pink.zak.giveawaybot.discord.lang.enums.Text;
 import pink.zak.giveawaybot.discord.models.Preset;
 import pink.zak.giveawaybot.discord.models.Server;
-import pink.zak.giveawaybot.discord.service.BotConstants;
 import pink.zak.giveawaybot.discord.service.bot.JdaBot;
 import pink.zak.giveawaybot.discord.service.cache.caches.Cache;
 import pink.zak.giveawaybot.discord.service.cache.caches.WriteExpiringCache;
@@ -59,6 +58,13 @@ public class ImportCmdUtils extends ListenerAdapter {
         bot.registerListeners(this);
     }
 
+    /**
+     * The initial call to begin the request for importing a file.
+     * Checks attachments & initially parses the file.
+     *
+     * @param server  The server to import for
+     * @param message The message sent to get the file from
+     */
     public void requestImport(Server server, Message message) {
         TextChannel channel = message.getTextChannel();
         if (message.getAttachments().isEmpty()) {
@@ -67,12 +73,13 @@ public class ImportCmdUtils extends ListenerAdapter {
         }
         this.parseAttachment(message.getAttachments().get(0)).thenAccept(pair -> {
             switch (pair.getValue()) {
-                case SUCCESS -> this.importOrConfirm(server, channel, message, pair.getKey());
+                case SUCCESS -> this.checkOverridesAndConfirm(server, channel, message, pair.getKey());
                 case MALFORMED_URL -> this.languageRegistry.get(server, Text.PRESET_IMPORT_INVALID_FILE, replacer -> replacer.set("exception", "MalformedUrlException")).to(channel);
                 case INVALID_FILE_PARSING -> this.languageRegistry.get(server, Text.PRESET_IMPORT_INVALID_FILE, replacer -> replacer.set("exception", "JsonParseException")).to(channel);
                 case INVALID_FILE_EXTENSION -> this.languageRegistry.get(server, Text.PRESET_IMPORT_INVALID_FILE, replacer -> replacer.set("exception", "InvalidFileExtension")).to(channel);
                 case INVALID_FILE_MISSING_ELEMENTS -> this.languageRegistry.get(server, Text.PRESET_IMPORT_INVALID_FILE, replacer -> replacer.set("exception", "MissingPresetElements")).to(channel);
-                default -> {}
+                default -> {
+                }
             }
         }).exceptionally(ex -> {
             JdaBot.logger.error("Error parsing attachment", ex);
@@ -80,7 +87,12 @@ public class ImportCmdUtils extends ListenerAdapter {
         });
     }
 
-    private void importOrConfirm(Server server, TextChannel channel, Message message, JsonObject jsonObject) {
+    /**
+     * Sends messages to the user to confirm importing/overrides and adds reactions
+     *
+     * @param jsonObject The original JsonObject parsed from the file - NOT yet deserialized
+     */
+    private void checkOverridesAndConfirm(Server server, TextChannel channel, Message message, JsonObject jsonObject) {
         ImmutablePair<Set<String>, Map<String, Preset>> returnData = this.getAffectedPresets(server, message, jsonObject);
         Set<String> affected = returnData.getKey();
         Consumer<Message> messageAction = sent -> {
@@ -103,6 +115,12 @@ public class ImportCmdUtils extends ListenerAdapter {
         }
     }
 
+    /**
+     * Gets the affected presets and the deserialized presets to cache where appropriate.
+     *
+     * @param server     The server to get affected presets for (checks for clashes)
+     * @param jsonObject The original JsonObject parsed from the file - NOT yet deserialized
+     */
     private ImmutablePair<Set<String>, Map<String, Preset>> getAffectedPresets(Server server, Message message, JsonObject jsonObject) {
         long messageId = message.getIdLong();
         Map<String, Preset> cachedValues = this.serializedCache.get(messageId);
@@ -117,7 +135,8 @@ public class ImportCmdUtils extends ListenerAdapter {
             return ImmutablePair.of(Sets.newHashSet(), null);
         }
         try {
-            Map<String, Preset> serialized = this.serverStorage.deserializePresets(server.getId(), this.gson.fromJson(jsonObject.get("preset-values").getAsString(), new TypeToken<HashMap<String, HashMap<Setting, String>>>(){}.getType()));
+            Map<String, Preset> serialized = this.serverStorage.deserializePresets(server.getId(), this.gson.fromJson(jsonObject.get("preset-values").getAsString(), new TypeToken<HashMap<String, HashMap<Setting, String>>>() {
+            }.getType()));
             return ImmutablePair.of(this.getClashingPresetsMessage(server, serialized), serialized);
         } catch (Exception ex) {
             this.languageRegistry.get(server, Text.PRESET_IMPORT_INVALID_FILE, replacer -> replacer.set("exception", ex.getClass().getSimpleName())).to(message.getTextChannel());
@@ -125,16 +144,24 @@ public class ImportCmdUtils extends ListenerAdapter {
         }
     }
 
-    public Set<String> getClashingPresetsMessage(Server server, Map<String, Preset> serialized) {
+    /**
+     * Gets a list of the names of presets that are being imported but already exist.
+     *
+     * @param presets The already deserialized presets
+     */
+    public Set<String> getClashingPresetsMessage(Server server, Map<String, Preset> presets) {
         Set<String> clashing = Sets.newHashSet();
         for (Map.Entry<String, Preset> entry : server.getPresets().entrySet()) {
-            if (serialized.containsKey(entry.getKey())) {
+            if (presets.containsKey(entry.getKey())) {
                 clashing.add("`" + entry.getKey() + "`");
             }
         }
         return clashing;
     }
 
+    /**
+     * Registers the confirmation reaction and proceeds to verify & import
+     */
     @Override
     public void onGuildMessageReactionAdd(GuildMessageReactionAddEvent event) {
         long messageId = event.getMessageIdLong();
@@ -142,53 +169,74 @@ public class ImportCmdUtils extends ListenerAdapter {
             return;
         }
         TextChannel channel = event.getChannel();
-        this.serverCache.getAsync(event.getGuild().getIdLong(), ThreadFunction.GENERAL).thenAccept(server -> {
-            if (!server.canMemberManage(event.getMember())) {
-                return;
+        Server server = this.serverCache.getAsync(event.getGuild().getIdLong(), ThreadFunction.GENERAL).join();
+        if (!server.canMemberManage(event.getMember())) {
+            return;
+        }
+        Map<String, Preset> toAdd = this.serializedCache.get(messageId);
+        if (toAdd != null) {
+            this.massImport(server, channel, messageId, toAdd);
+            return;
+        }
+        JsonObject json = this.confirmations.get(messageId);
+        if (json != null) {
+            this.singleImport(server, channel, messageId, json);
+        }
+    }
+
+    /**
+     * Imports presets from a multi-preset file already parsed in the cache.
+     *
+     * @param server       The server to add presets to
+     * @param messageId    The ID to invalidate the caches with
+     * @param presetsToAdd The cached presets that will be added to the server.
+     */
+    private void massImport(Server server, TextChannel channel, long messageId, Map<String, Preset> presetsToAdd) {
+        this.serializedCache.invalidate(messageId, false);
+        this.confirmations.invalidate(messageId, false);
+        Map<String, Preset> updatedPresets = server.getPresets();
+        updatedPresets.putAll(presetsToAdd);
+        if (updatedPresets.size() > 10) {
+            this.languageRegistry.get(server, Text.PRESET_IMPORT_TOO_MANY).to(channel);
+            return;
+        }
+        if (presetsToAdd.size() > 1) {
+            String presetList = presetsToAdd.keySet().stream().map(str -> "`" + str + "`").collect(Collectors.joining(", "));
+            this.languageRegistry.get(server, Text.PRESET_IMPORTED_PLURAL, replacer -> replacer.set("presets", presetList)).to(channel);
+        } else {
+            this.languageRegistry.get(server, Text.PRESET_IMPORTED_SINGULAR, replacer -> replacer.set("preset", presetsToAdd.keySet().iterator().next())).to(channel);
+        }
+        server.setPresets(updatedPresets);
+    }
+
+    /**
+     * Imports a single preset that's already converted into a JsonObject in the cache.
+     *
+     * @param server    The server to add the preset to
+     * @param messageId The ID to invalidate the caches with
+     * @param json      The {@link JsonObject} of the preset to parse
+     */
+    private void singleImport(Server server, TextChannel channel, long messageId, JsonObject json) {
+        this.confirmations.invalidate(messageId, false);
+        if (server.getPresets().size() == 10) {
+            this.languageRegistry.get(server, Text.PRESET_IMPORT_TOO_MANY).to(channel);
+            return;
+        }
+        try {
+            String name = json.get("preset-name").getAsString();
+            EnumMap<Setting, Object> presetValues = this.serverStorage
+                    .convertPresetValue(channel.getGuild(), this.gson.fromJson(json.get("preset-values").getAsString(), new TypeToken<HashMap<Setting, String>>() {
+                    }.getType()));
+            if (name == null || name.length() < 3 || presetValues == null || presetValues.isEmpty()) {
+                this.languageRegistry.get(server, Text.PRESET_IMPORT_INVALID_FILE, replacer -> replacer.set("exception", "MissingPresetElements")).to(channel);
+            } else {
+                Preset preset = new Preset(name, presetValues);
+                server.addPreset(preset);
+                this.languageRegistry.get(server, Text.PRESET_IMPORTED_SINGULAR, replacer -> replacer.set("preset", preset.getName())).to(channel);
             }
-            Map<String, Preset> toAdd = this.serializedCache.get(messageId);
-            if (toAdd != null) {
-                this.serializedCache.invalidate(messageId, false);
-                this.confirmations.invalidate(messageId, false);
-                Map<String, Preset> updatedPresets = server.getPresets();
-                updatedPresets.putAll(toAdd);
-                if (updatedPresets.size() > 10) {
-                    this.languageRegistry.get(server, Text.PRESET_IMPORT_TOO_MANY).to(channel);
-                    return;
-                }
-                if (toAdd.size() > 1) {
-                    String presetList = toAdd.keySet().stream().map(str -> "`" + str + "`").collect(Collectors.joining(", "));
-                    this.languageRegistry.get(server, Text.PRESET_IMPORTED_PLURAL, replacer -> replacer.set("presets", presetList)).to(channel);
-                } else {
-                    this.languageRegistry.get(server, Text.PRESET_IMPORTED_SINGULAR, replacer -> replacer.set("preset", toAdd.keySet().iterator().next())).to(channel);
-                }
-                server.setPresets(updatedPresets);
-                return;
-            }
-            JsonObject json = this.confirmations.get(messageId);
-            if (json != null) {
-                this.confirmations.invalidate(messageId, false);
-                if (server.getPresets().size() == 10) {
-                    this.languageRegistry.get(server, Text.PRESET_IMPORT_TOO_MANY).to(channel);
-                    return;
-                }
-                try {
-                    String name = json.get("preset-name").getAsString();
-                    EnumMap<Setting, Object> presetValues = this.serverStorage
-                            .convertPresetValue(event.getGuild(), this.gson.fromJson(json.get("preset-values").getAsString(), new TypeToken<HashMap<Setting, String>>() {
-                            }.getType()));
-                    if (name == null || name.length() < 3 || presetValues == null || presetValues.isEmpty()) {
-                        this.languageRegistry.get(server, Text.PRESET_IMPORT_INVALID_FILE, replacer -> replacer.set("exception", "MissingPresetElements")).to(channel);
-                    } else {
-                        Preset preset = new Preset(name, presetValues);
-                        server.addPreset(preset);
-                        this.languageRegistry.get(server, Text.PRESET_IMPORTED_SINGULAR, replacer -> replacer.set("preset", preset.getName())).to(channel);
-                    }
-                } catch (Exception ex) {
-                    this.languageRegistry.get(server, Text.PRESET_IMPORT_INVALID_FILE, replacer -> replacer.set("exception", ex.getClass().getSimpleName())).to(channel);
-                }
-            }
-        });
+        } catch (Exception ex) {
+            this.languageRegistry.get(server, Text.PRESET_IMPORT_INVALID_FILE, replacer -> replacer.set("exception", ex.getClass().getSimpleName())).to(channel);
+        }
     }
 
     private CompletableFuture<ImmutablePair<JsonObject, ResponseCode>> parseAttachment(Message.Attachment attachment) {
