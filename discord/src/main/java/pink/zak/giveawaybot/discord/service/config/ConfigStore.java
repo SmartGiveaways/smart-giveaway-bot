@@ -10,12 +10,12 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 public class ConfigStore {
-    private final SimpleBot bot;
-    private final Map<String, Config> configMap = Maps.newHashMap();
-    private final Map<String, String> commons = Maps.newHashMap();
+    protected final Path basePath;
+    protected final Map<String, Config> configMap = Maps.newHashMap();
+    protected final Map<String, String> commons = Maps.newHashMap();
 
-    public ConfigStore(SimpleBot bot) {
-        this.bot = bot;
+    public ConfigStore(Path bot) {
+        this.basePath = bot;
     }
 
     public Map<String, String> commons() {
@@ -27,7 +27,7 @@ public class ConfigStore {
     }
 
     public ConfigStore config(String name, BiFunction<Path, String, Path> pathFunc, boolean reloadable) {
-        this.configMap.put(name, new Config(this.bot, path -> Paths.get(pathFunc.apply(path, name).toString().concat(".yml")), reloadable));
+        this.configMap.put(name, new Config(this.basePath, path -> Paths.get(pathFunc.apply(path, name).toString().concat(".yml")), reloadable));
         return this;
     }
 
@@ -36,7 +36,7 @@ public class ConfigStore {
         return this;
     }
 
-    public void forceReload(String string) {
+    private void forceReload(String string) {
         Config config = this.getConfig(string);
         if (config != null) {
             config.reload();

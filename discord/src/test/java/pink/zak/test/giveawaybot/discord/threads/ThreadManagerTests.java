@@ -13,7 +13,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class ThreadManagerTests {
+class ThreadManagerTests {
     private final ThreadManager threadManager = new ThreadManagerImpl();
 
     @Test
