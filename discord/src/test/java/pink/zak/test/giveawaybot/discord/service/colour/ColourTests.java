@@ -9,7 +9,7 @@ import java.awt.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class ColourTests {
+class ColourTests {
 
     @Test
     void testBuilder() {
@@ -52,7 +52,9 @@ public class ColourTests {
 
     @Test
     void testErroneousBuilder() {
-        assertThrows(IllegalArgumentException.class, () -> new PaletteBuilder().build());
-        assertThrows(IllegalArgumentException.class, () -> new PaletteBuilder().setPrimary(Color.RED).build());
+        PaletteBuilder paletteBuilderA = new PaletteBuilder();
+        assertThrows(IllegalArgumentException.class, paletteBuilderA::build);
+        PaletteBuilder paletteBuilderB = new PaletteBuilder().setPrimary(Color.RED);
+        assertThrows(IllegalArgumentException.class, paletteBuilderB::build);
     }
 }
