@@ -4,6 +4,7 @@ import lombok.experimental.UtilityClass;
 
 import java.math.BigInteger;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 @UtilityClass
 public class NumberUtils {
@@ -60,7 +61,7 @@ public class NumberUtils {
     public static BigInteger getRandomBigInteger(BigInteger max) {
         BigInteger randomNumber;
         do {
-            randomNumber = new BigInteger(max.bitLength(), random);
+            randomNumber = new BigInteger(max.bitLength(), ThreadLocalRandom.current());
         } while (randomNumber.compareTo(max) >= 0);
         return randomNumber.add(BigInteger.ONE); // Added to make inclusive
     }
