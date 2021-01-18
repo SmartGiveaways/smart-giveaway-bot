@@ -18,7 +18,7 @@ public class CachedValue<V> {
     }
 
     public V get() {
-        if (System.currentTimeMillis() - this.lastUpdateTime > this.timeUnit.toMillis(delay)) {
+        if (System.currentTimeMillis() - this.lastUpdateTime > this.timeUnit.toMillis(this.delay)) {
             return this.updateAndGet();
         }
         return this.value;

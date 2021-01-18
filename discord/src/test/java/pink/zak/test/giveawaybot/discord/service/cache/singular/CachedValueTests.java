@@ -20,7 +20,8 @@ class CachedValueTests {
         assertEquals(1, cachedValue.get());
         assertEquals(2, cachedValue.updateAndGet());
         assertEquals(2, cachedValue.getAndUpdate());
-        Awaitility.await().pollInterval(1, TimeUnit.MILLISECONDS).atMost(40, TimeUnit.MILLISECONDS).until(() -> cachedValue.getWithoutUpdating() == 3);
+        Awaitility.await().pollInterval(1, TimeUnit.MILLISECONDS).atMost(40, TimeUnit.MILLISECONDS).until(() -> cachedValue.get() == 3);
+        assertEquals(3, cachedValue.get());
     }
 
     @SneakyThrows
@@ -29,7 +30,7 @@ class CachedValueTests {
         AtomicInteger counter = new AtomicInteger();
         CountDownLatch waiter = new CountDownLatch(1);
         CachedValue<Integer> cachedValue = new CachedValue<>(TimeUnit.MILLISECONDS, 2, counter::incrementAndGet);
-        waiter.await(2, TimeUnit.MILLISECONDS);
+        waiter.await(3, TimeUnit.MILLISECONDS);
         assertEquals(2, cachedValue.get());
     }
 }
