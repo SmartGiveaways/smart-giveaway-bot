@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import pink.zak.giveawaybot.discord.service.BotConstants;
 import pink.zak.giveawaybot.discord.service.types.ReactionContainer;
-import pink.zak.test.giveawaybot.discord.TestBase;
+import pink.zak.test.giveawaybot.discord.TestHelper;
 import pink.zak.test.giveawaybot.discord.fakes.FakeRestAction;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -23,7 +23,7 @@ class ReactionContainerTests {
 
     @Test
     void testFromUnicode() {
-        assertEquals(BotConstants.BACK_ARROW, new ReactionContainer(BotConstants.BACK_ARROW, TestBase.JDA_MOCK).getReactionEmote().getEmoji());
+        assertEquals(BotConstants.BACK_ARROW, new ReactionContainer(BotConstants.BACK_ARROW, TestHelper.JDA_MOCK).getReactionEmote().getEmoji());
     }
 
     @Test
@@ -58,7 +58,7 @@ class ReactionContainerTests {
     static class FakeReactionGuild extends GuildImpl {
 
         public FakeReactionGuild() {
-            super(TestBase.JDA_MOCK, 751886048623067186L);
+            super(TestHelper.JDA_MOCK, 751886048623067186L);
         }
 
         @NotNull

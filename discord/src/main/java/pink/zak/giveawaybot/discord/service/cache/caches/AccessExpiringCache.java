@@ -19,7 +19,7 @@ public class AccessExpiringCache<K, V> extends Cache<K, V> {
     private final int delay;
 
     public AccessExpiringCache(GiveawayBot bot, MongoStorage<K, V> storage, TimeUnit timeUnit, int delay, TimeUnit autoSaveUnit, int autoSaveInterval) {
-        super(bot, storage, autoSaveUnit, autoSaveInterval);
+        super(bot.getThreadManager(), storage, autoSaveUnit, autoSaveInterval);
         this.scheduler = bot.getThreadManager().getScheduler();
         this.timeUnit = timeUnit;
         this.delay = delay;

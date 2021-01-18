@@ -4,7 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import pink.zak.giveawaybot.discord.service.config.Config;
 import pink.zak.giveawaybot.discord.service.config.ConfigStore;
-import pink.zak.test.giveawaybot.discord.TestBase;
+import pink.zak.test.giveawaybot.discord.TestHelper;
 import pink.zak.test.giveawaybot.discord.fakes.FakeConfigStore;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -18,10 +18,10 @@ class ConfigStoreTests {
     @Test
     @BeforeEach
     void testCreation() {
-        this.configStore = new FakeConfigStore(TestBase.SIMPLE_BOT.getBasePath());
-        this.configStore.config("config-1", (path, s) -> path.resolve("spam").resolve(s), false);
-        this.configStore.config("config-2", (path, s) -> path.resolve("spam").resolve(s), true);
-        this.configStore.config("config-3", (path, s) -> path.resolve("spam").resolve(s), true);
+        assertDoesNotThrow(() -> this.configStore = new FakeConfigStore(TestHelper.SIMPLE_BOT.getBasePath()));
+        assertDoesNotThrow(() -> this.configStore.config("config-1", (path, s) -> path.resolve("spam").resolve(s), false));
+        assertDoesNotThrow(() -> this.configStore.config("config-2", (path, s) -> path.resolve("spam").resolve(s), true));
+        assertDoesNotThrow(() -> this.configStore.config("config-3", (path, s) -> path.resolve("spam").resolve(s), true));
     }
 
     @Test

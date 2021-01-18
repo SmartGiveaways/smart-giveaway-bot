@@ -3,12 +3,10 @@ package pink.zak.giveawaybot.discord.service.types;
 import lombok.experimental.UtilityClass;
 
 import java.math.BigInteger;
-import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 @UtilityClass
 public class NumberUtils {
-    private final Random random = new Random();
 
     public static boolean isNumerical(String input) {
         return isNumerical(input, Integer.MAX_VALUE);

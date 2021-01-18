@@ -13,7 +13,7 @@ import pink.zak.test.giveawaybot.discord.fakes.FakeJdaBot;
 
 import java.util.EnumSet;
 
-public class TestBase {
+public class TestHelper {
 
     public static final JDAImpl JDA_MOCK = new JDAImpl(
             new AuthorizationConfig("aa"), null, null,

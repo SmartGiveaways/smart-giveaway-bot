@@ -12,13 +12,13 @@ public class CachedValue<V> {
 
     public CachedValue(TimeUnit timeUnit, int delay, Supplier<V> valueSupplier) {
         this.valueSupplier = valueSupplier;
-        this.value = valueSupplier.get();
+        this.updateAndGet();
         this.timeUnit = timeUnit;
         this.delay = delay;
     }
 
     public V get() {
-        if (System.currentTimeMillis() - lastUpdateTime > this.timeUnit.toMillis(delay)) {
+        if (System.currentTimeMillis() - this.lastUpdateTime > this.timeUnit.toMillis(delay)) {
             return this.updateAndGet();
         }
         return this.value;
@@ -35,5 +35,9 @@ public class CachedValue<V> {
         this.value = this.valueSupplier.get();
         this.lastUpdateTime = System.currentTimeMillis();
         return initialValue;
+    }
+
+    public V getWithoutUpdating() {
+        return this.value;
     }
 }

@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.timvisee.yamlwrapper.ConfigurationSection;
 import com.timvisee.yamlwrapper.YamlConfiguration;
-import pink.zak.giveawaybot.discord.service.bot.SimpleBot;
 
 import java.io.File;
 import java.nio.file.Path;

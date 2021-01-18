@@ -6,6 +6,6 @@ import pink.zak.giveawaybot.discord.service.cache.caches.Cache;
 public class TokenCache extends Cache<Void, Void> {
 
     public TokenCache(GiveawayBot bot) {
-        super(bot);
+        super(bot.getThreadManager());
     }
 }

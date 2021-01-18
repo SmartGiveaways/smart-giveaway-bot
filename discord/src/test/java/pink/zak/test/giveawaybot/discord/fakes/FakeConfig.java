@@ -1,6 +1,5 @@
 package pink.zak.test.giveawaybot.discord.fakes;
 
-import lombok.SneakyThrows;
 import pink.zak.giveawaybot.discord.service.config.Config;
 
 import java.io.File;

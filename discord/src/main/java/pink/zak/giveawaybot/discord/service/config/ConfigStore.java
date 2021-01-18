@@ -1,7 +1,6 @@
 package pink.zak.giveawaybot.discord.service.config;
 
 import com.google.common.collect.Maps;
-import pink.zak.giveawaybot.discord.service.bot.SimpleBot;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
