@@ -42,6 +42,10 @@ public class StorageSettings {
         return this.prefix;
     }
 
+    public String addPrefixTo(String input) {
+        return this.prefix.concat(input);
+    }
+
     public void setPrefix(String prefix) {
         this.prefix = prefix;
     }

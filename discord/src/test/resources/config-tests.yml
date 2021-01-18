@@ -1,0 +1,19 @@
+test-string: "test-value"
+test-true-boolean: true
+test-false-boolean: false
+test-integer: 12345
+test-double: 12.345
+test-string-list:
+  - "one"
+  - "two"
+  - "idk"
+  - "four"
+  - "five"
+test-integer-list:
+  - 1
+  - 8
+some:
+  thing:
+    with:
+      a:
+        value: "f"

@@ -6,7 +6,7 @@ mongo-ip: "127.0.0.1"
 mongo-port: "27017"
 mongo-auth-database: "admin"
 mongo-storage-database: "giveaway-bot"
-mongo-username: "yourUsername" # If you dont have credentials for ur DB, just remove the actual config parts themselves, so comment the entire username and password section.
+mongo-username: "yourUsername"
 mongo-password: "thisIsSecure"
 
 enable-metrics: false

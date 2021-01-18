@@ -5,49 +5,33 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.timvisee.yamlwrapper.ConfigurationSection;
 import com.timvisee.yamlwrapper.YamlConfiguration;
-import pink.zak.giveawaybot.discord.service.bot.JdaBot;
 import pink.zak.giveawaybot.discord.service.bot.SimpleBot;
 
 import java.io.File;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.UnaryOperator;
 
 public class Config {
-    private final Path basePath;
     private final File file;
     private final boolean reloadable;
     private YamlConfiguration configuration;
     private Map<String, Object> valueMap;
-    private final Set<String> enduringKeys;
 
-    public Config(SimpleBot bot, UnaryOperator<Path> path, boolean reloadable, String... enduringKeys) {
-        this.basePath = bot.getBasePath();
-        this.file = path.apply(this.basePath).toFile();
-        this.reloadable = reloadable;
-        this.enduringKeys = Sets.newHashSet(enduringKeys);
-        this.createIfAbsent(path.apply(Paths.get("")).toString());
-        this.reload();
-        this.load();
-    }
-
-    public Config(SimpleBot bot, File file, boolean reloadable, String... enduringKeys) {
-        this.basePath = bot.getBasePath();
+    public Config(File file, boolean reloadable) {
         this.file = file;
         this.reloadable = reloadable;
-        this.enduringKeys = Sets.newHashSet(enduringKeys);
         this.reload();
     }
 
-    public Config(SimpleBot bot, File file, String... enduringKeys) {
-        this.basePath = bot.getBasePath();
-        this.file = file;
-        this.reloadable = false;
-        this.enduringKeys = Sets.newHashSet(enduringKeys);
-        this.reload();
+    public Config(SimpleBot bot, UnaryOperator<Path> path, boolean reloadable) {
+        this(path.apply(bot.getBasePath()).toFile(), reloadable);
+    }
+
+    public Map<String, Object> getValueMap() {
+        return this.valueMap;
     }
 
     public YamlConfiguration getConfiguration() {
@@ -106,29 +90,34 @@ public class Config {
     }
 
     public synchronized void load() {
-        boolean isReload = true;
-        if (this.valueMap == null) {
-            this.valueMap = Maps.newHashMap();
-            isReload = false;
-        }
-        for (String key : this.configuration.getKeys("")) {
-            if (isReload && this.enduringKeys.contains(key)) {
-                continue;
+        Map<String, Object> newValueMap = Maps.newHashMap();
+        for (String key : this.configuration.getKeys()) {
+            ConfigurationSection section = this.configuration.getConfigurationSection(key);
+            if (!section.getKeys().isEmpty()) {
+                newValueMap.putAll(this.resolveSection(key, section));
+            } else {
+                newValueMap.put(key, section.get());
             }
-            this.valueMap.put(key, this.configuration.get(key));
         }
+        this.valueMap = newValueMap;
+    }
+
+    private Map<String, Object> resolveSection(String sectionKey, ConfigurationSection section) {
+        Map<String, Object> values = Maps.newHashMap();
+        for (String subKey : section.getKeys()) {
+            String key = sectionKey + "." + subKey;
+            ConfigurationSection retrieved = section.getSection(subKey);
+            if (!retrieved.getKeys().isEmpty()) {
+                values.putAll(this.resolveSection(key, retrieved));
+            } else {
+                values.put(key, retrieved.get());
+            }
+        }
+        return values;
     }
 
     public void reload() {
         this.configuration = YamlConfiguration.loadFromFile(this.file);
         this.load();
-    }
-
-    private void createIfAbsent(String file) {
-        if (!this.file.exists()) {
-            this.basePath.toFile().mkdirs();
-            JdaBot.logger.error("The file '{}' did not exist. You must make it.", file);
-            JdaBot.logger.error("Target path to file: {}", this.file.getAbsolutePath());
-        }
     }
 }
