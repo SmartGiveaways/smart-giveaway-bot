@@ -1,5 +1,6 @@
 package pink.zak.test.giveawaybot.discord.service.config;
 
+import com.timvisee.yamlwrapper.ConfigurationSection;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import pink.zak.giveawaybot.discord.service.config.Config;
@@ -7,6 +8,7 @@ import pink.zak.giveawaybot.discord.service.config.Config;
 import java.io.File;
 import java.net.URL;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -24,7 +26,6 @@ class ConfigTests {
             URL resourceLocation = ClassLoader.getSystemResource("config-tests.yml");
             File file = new File(resourceLocation.toURI());
             this.config = new Config(file, true);
-            System.out.println(this.config.getValueMap());
         } catch (Exception ex) {
             fail(ex);
         }
@@ -34,6 +35,13 @@ class ConfigTests {
     void testGeneralGetters() {
         assertNotNull(this.config.getConfiguration());
         assertTrue(this.config.isReloadable());
+    }
+
+    @Test
+    void testGetValueMap() {
+        Map<String, Object> valueMap = this.config.getValueMap();
+        assertTrue((Boolean) valueMap.get("test-true-boolean"));
+        assertFalse((Boolean) valueMap.get("test-false-boolean"));
     }
 
     @Test
@@ -74,6 +82,13 @@ class ConfigTests {
         assertEquals(2, intList.size());
         assertEquals(1, intList.get(0));
         assertTrue(this.config.list("not-present-integer-list").isEmpty());
+    }
+
+    @Test
+    void testKeys() {
+        assertTrue(this.config.keys("some").contains("thing"));
+        assertTrue(this.config.keys("some.thing.with.a").contains("value"));
+        assertTrue(this.config.keys("not-present-key").isEmpty());
     }
 
     @Test

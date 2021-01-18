@@ -73,12 +73,12 @@ public class Config {
         return object instanceof List ? (List<T>) object : Lists.newArrayList();
     }
 
-    public Set<String> keys(String key) {
-        ConfigurationSection configurationSection = this.configuration.getConfigurationSection(key);
+    public List<String> keys(String key) {
+        ConfigurationSection configurationSection = this.configuration.getSection(key);
         if (configurationSection == null) {
-            return Sets.newHashSet();
+            return Lists.newArrayList();
         }
-        return Sets.newHashSet(configurationSection.getKeys(key));
+        return configurationSection.getKeys();
     }
 
     public Object get(String key) {
