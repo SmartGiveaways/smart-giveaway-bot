@@ -3,11 +3,10 @@ package pink.zak.giveawaybot.discord.service.types;
 import lombok.experimental.UtilityClass;
 
 import java.math.BigInteger;
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 @UtilityClass
 public class NumberUtils {
-    private final Random random = new Random();
 
     public static boolean isNumerical(String input) {
         return isNumerical(input, Integer.MAX_VALUE);
@@ -60,7 +59,7 @@ public class NumberUtils {
     public static BigInteger getRandomBigInteger(BigInteger max) {
         BigInteger randomNumber;
         do {
-            randomNumber = new BigInteger(max.bitLength(), random);
+            randomNumber = new BigInteger(max.bitLength(), ThreadLocalRandom.current());
         } while (randomNumber.compareTo(max) >= 0);
         return randomNumber.add(BigInteger.ONE); // Added to make inclusive
     }

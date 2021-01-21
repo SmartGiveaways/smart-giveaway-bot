@@ -2,16 +2,13 @@ package pink.zak.giveawaybot.discord.service.config;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import com.timvisee.yamlwrapper.ConfigurationSection;
 import com.timvisee.yamlwrapper.YamlConfiguration;
-import pink.zak.giveawaybot.discord.service.bot.SimpleBot;
 
 import java.io.File;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.UnaryOperator;
 
 public class Config {
@@ -26,8 +23,8 @@ public class Config {
         this.reload();
     }
 
-    public Config(SimpleBot bot, UnaryOperator<Path> path, boolean reloadable) {
-        this(path.apply(bot.getBasePath()).toFile(), reloadable);
+    public Config(Path basePath, UnaryOperator<Path> path, boolean reloadable) {
+        this(path.apply(basePath).toFile(), reloadable);
     }
 
     public Map<String, Object> getValueMap() {

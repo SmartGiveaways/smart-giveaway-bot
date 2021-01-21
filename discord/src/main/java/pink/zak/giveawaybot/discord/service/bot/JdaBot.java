@@ -53,11 +53,11 @@ public abstract class JdaBot implements SimpleBot {
 
     @SneakyThrows
     protected JdaBot(UnaryOperator<Path> subBasePath) {
+        this.basePath = subBasePath.apply(new File(this.getClass().getProtectionDomain().getCodeSource().getLocation().toURI()).getParentFile().toPath().toAbsolutePath());
         this.storageSettings = new StorageSettings();
         this.backendFactory = new BackendFactory(this);
-        this.configStore = new ConfigStore(this);
+        this.configStore = new ConfigStore(this.basePath);
         logger.info("Base path set to: {}", this.getClass().getProtectionDomain().getCodeSource().getLocation().toURI());
-        this.basePath = subBasePath.apply(new File(this.getClass().getProtectionDomain().getCodeSource().getLocation().toURI()).getParentFile().toPath().toAbsolutePath());
     }
 
     @SneakyThrows

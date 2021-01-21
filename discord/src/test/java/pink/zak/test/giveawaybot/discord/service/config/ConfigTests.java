@@ -1,6 +1,5 @@
 package pink.zak.test.giveawaybot.discord.service.config;
 
-import com.timvisee.yamlwrapper.ConfigurationSection;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import pink.zak.giveawaybot.discord.service.config.Config;

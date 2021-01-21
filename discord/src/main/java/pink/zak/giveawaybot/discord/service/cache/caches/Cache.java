@@ -25,19 +25,19 @@ public class Cache<K, V> {
 
     protected ShutdownData<K, V> shutdownData;
 
-    public Cache(GiveawayBot bot) {
-        this(bot, null);
+    public Cache(ThreadManager threadManager) {
+        this(threadManager, null);
     }
 
-    public Cache(GiveawayBot bot, MongoStorage<K, V> storage) {
-        this(bot, storage, null, 0);
+    public Cache(ThreadManager threadManager, MongoStorage<K, V> storage) {
+        this(threadManager, storage, null, 0);
     }
 
-    public Cache(GiveawayBot bot, MongoStorage<K, V> storage, TimeUnit autoSaveTimeUnit, int autoSaveInterval) {
-        this.threadManager = bot.getThreadManager();
+    public Cache(ThreadManager threadManager, MongoStorage<K, V> storage, TimeUnit autoSaveTimeUnit, int autoSaveInterval) {
+        this.threadManager = threadManager;
         this.storage = storage;
         if (autoSaveTimeUnit != null && autoSaveInterval > 0) {
-            this.startAutoSave(bot.getThreadManager().getScheduler(), autoSaveTimeUnit, autoSaveInterval);
+            this.startAutoSave(threadManager.getScheduler(), autoSaveTimeUnit, autoSaveInterval);
         }
     }
 

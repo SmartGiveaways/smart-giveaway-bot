@@ -6,7 +6,7 @@ import net.dv8tion.jda.internal.entities.MemberImpl;
 import net.dv8tion.jda.internal.entities.UserImpl;
 import org.junit.jupiter.api.Test;
 import pink.zak.giveawaybot.discord.service.types.UserUtils;
-import pink.zak.test.giveawaybot.discord.TestBase;
+import pink.zak.test.giveawaybot.discord.TestHelper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -17,7 +17,7 @@ class UserUtilsTests {
      */
     @Test
     void testGetNameDiscrim() {
-        User user = new UserImpl(240721111174610945L, TestBase.JDA_MOCK)
+        User user = new UserImpl(240721111174610945L, TestHelper.JDA_MOCK)
                 .setName("Zak")
                 .setDiscriminator("6435");
         Member member = new MemberImpl(null, user);

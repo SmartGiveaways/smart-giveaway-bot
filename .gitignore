@@ -4,9 +4,11 @@
 /discord/build
 /lib
 /logs
+
 *.idea
 .idea
-
+*.log
+*.log.gz
 *.bin
 *.lock
 .gradle

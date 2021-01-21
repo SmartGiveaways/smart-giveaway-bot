@@ -94,6 +94,9 @@ public class ImportCmdUtils extends ListenerAdapter {
      */
     private void checkOverridesAndConfirm(Server server, TextChannel channel, Message message, JsonObject jsonObject) {
         ImmutablePair<Set<String>, Map<String, Preset>> returnData = this.getAffectedPresets(server, message, jsonObject);
+        if (returnData == null) {
+            return;
+        }
         Set<String> affected = returnData.getKey();
         Consumer<Message> messageAction = sent -> {
             this.confirmations.set(sent.getIdLong(), jsonObject);
