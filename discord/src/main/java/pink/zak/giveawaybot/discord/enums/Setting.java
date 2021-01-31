@@ -2,8 +2,8 @@ package pink.zak.giveawaybot.discord.enums;
 
 import com.google.common.collect.Sets;
 import net.dv8tion.jda.api.entities.Guild;
-import pink.zak.giveawaybot.discord.lang.enums.Text;
-import pink.zak.giveawaybot.discord.models.Server;
+import pink.zak.giveawaybot.discord.lang.Text;
+import pink.zak.giveawaybot.discord.data.models.Server;
 import pink.zak.giveawaybot.discord.service.types.BooleanUtils;
 import pink.zak.giveawaybot.discord.service.types.NumberUtils;
 import pink.zak.giveawaybot.discord.service.types.ReactionContainer;

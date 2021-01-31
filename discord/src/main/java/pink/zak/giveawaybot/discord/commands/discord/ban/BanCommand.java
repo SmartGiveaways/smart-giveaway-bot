@@ -4,7 +4,7 @@ import pink.zak.giveawaybot.discord.GiveawayBot;
 import pink.zak.giveawaybot.discord.commands.discord.ban.subs.BanListSub;
 import pink.zak.giveawaybot.discord.commands.discord.ban.subs.BanSub;
 import pink.zak.giveawaybot.discord.commands.discord.ban.subs.ShadowBanSub;
-import pink.zak.giveawaybot.discord.lang.enums.Text;
+import pink.zak.giveawaybot.discord.lang.Text;
 import pink.zak.giveawaybot.discord.service.command.discord.command.SimpleHelpCommand;
 
 public class BanCommand extends SimpleHelpCommand {

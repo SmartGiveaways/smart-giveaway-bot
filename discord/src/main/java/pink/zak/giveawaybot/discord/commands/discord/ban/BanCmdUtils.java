@@ -4,8 +4,8 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
 import pink.zak.giveawaybot.discord.GiveawayBot;
 import pink.zak.giveawaybot.discord.lang.LanguageRegistry;
-import pink.zak.giveawaybot.discord.lang.enums.Text;
-import pink.zak.giveawaybot.discord.models.Server;
+import pink.zak.giveawaybot.discord.lang.Text;
+import pink.zak.giveawaybot.discord.data.models.Server;
 
 
 public class BanCmdUtils {

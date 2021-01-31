@@ -1,13 +1,13 @@
 package pink.zak.giveawaybot.discord.pipelines.entries;
 
 import pink.zak.giveawaybot.discord.GiveawayBot;
-import pink.zak.giveawaybot.discord.cache.GiveawayCache;
-import pink.zak.giveawaybot.discord.defaults.Defaults;
-import pink.zak.giveawaybot.discord.enums.EntryType;
-import pink.zak.giveawaybot.discord.models.Preset;
-import pink.zak.giveawaybot.discord.models.Server;
-import pink.zak.giveawaybot.discord.models.User;
-import pink.zak.giveawaybot.discord.models.giveaway.CurrentGiveaway;
+import pink.zak.giveawaybot.discord.data.cache.GiveawayCache;
+import pink.zak.giveawaybot.discord.data.Defaults;
+import pink.zak.giveawaybot.discord.pipelines.entries.steps.EntryType;
+import pink.zak.giveawaybot.discord.data.models.Preset;
+import pink.zak.giveawaybot.discord.data.models.Server;
+import pink.zak.giveawaybot.discord.data.models.User;
+import pink.zak.giveawaybot.discord.data.models.giveaway.CurrentGiveaway;
 import pink.zak.giveawaybot.discord.pipelines.entries.steps.EligibilityCheckStep;
 import pink.zak.giveawaybot.discord.threads.ThreadFunction;
 

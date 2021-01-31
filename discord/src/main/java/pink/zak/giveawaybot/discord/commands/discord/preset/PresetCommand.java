@@ -11,7 +11,7 @@ import pink.zak.giveawaybot.discord.commands.discord.preset.subs.exports.ExportA
 import pink.zak.giveawaybot.discord.commands.discord.preset.subs.exports.ExportSub;
 import pink.zak.giveawaybot.discord.commands.discord.preset.subs.exports.ImportSub;
 import pink.zak.giveawaybot.discord.commands.discord.preset.subs.exports.utils.ImportCmdUtils;
-import pink.zak.giveawaybot.discord.lang.enums.Text;
+import pink.zak.giveawaybot.discord.lang.Text;
 import pink.zak.giveawaybot.discord.service.command.discord.command.SimpleHelpCommand;
 
 public class PresetCommand extends SimpleHelpCommand {

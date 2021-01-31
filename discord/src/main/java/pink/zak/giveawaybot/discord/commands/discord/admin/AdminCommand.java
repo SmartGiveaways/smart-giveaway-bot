@@ -6,7 +6,7 @@ import pink.zak.giveawaybot.discord.commands.discord.admin.subs.language.SetLang
 import pink.zak.giveawaybot.discord.commands.discord.admin.subs.manager.ListManagersSub;
 import pink.zak.giveawaybot.discord.commands.discord.admin.subs.manager.ManagerAddSub;
 import pink.zak.giveawaybot.discord.commands.discord.admin.subs.manager.ManagerRemoveSub;
-import pink.zak.giveawaybot.discord.lang.enums.Text;
+import pink.zak.giveawaybot.discord.lang.Text;
 import pink.zak.giveawaybot.discord.service.command.discord.command.SimpleHelpCommand;
 
 public class AdminCommand extends SimpleHelpCommand {

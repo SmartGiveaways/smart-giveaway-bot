@@ -3,12 +3,12 @@ package pink.zak.giveawaybot.api.controllers;
 import org.springframework.stereotype.Component;
 import pink.zak.giveawaybot.api.model.giveaway.ScheduledGiveawayCreation;
 import pink.zak.giveawaybot.discord.GiveawayBot;
-import pink.zak.giveawaybot.discord.cache.FinishedGiveawayCache;
-import pink.zak.giveawaybot.discord.cache.GiveawayCache;
-import pink.zak.giveawaybot.discord.cache.ScheduledGiveawayCache;
-import pink.zak.giveawaybot.discord.models.giveaway.CurrentGiveaway;
-import pink.zak.giveawaybot.discord.models.giveaway.ScheduledGiveaway;
-import pink.zak.giveawaybot.discord.models.giveaway.finished.FullFinishedGiveaway;
+import pink.zak.giveawaybot.discord.data.cache.FinishedGiveawayCache;
+import pink.zak.giveawaybot.discord.data.cache.GiveawayCache;
+import pink.zak.giveawaybot.discord.data.cache.ScheduledGiveawayCache;
+import pink.zak.giveawaybot.discord.data.models.giveaway.CurrentGiveaway;
+import pink.zak.giveawaybot.discord.data.models.giveaway.ScheduledGiveaway;
+import pink.zak.giveawaybot.discord.data.models.giveaway.finished.FullFinishedGiveaway;
 
 import java.util.UUID;
 

@@ -1,7 +1,7 @@
 package pink.zak.giveawaybot.discord.commands.console.unload.subs;
 
 import pink.zak.giveawaybot.discord.GiveawayBot;
-import pink.zak.giveawaybot.discord.cache.ServerCache;
+import pink.zak.giveawaybot.discord.data.cache.ServerCache;
 import pink.zak.giveawaybot.discord.service.bot.JdaBot;
 import pink.zak.giveawaybot.discord.service.command.console.command.ConsoleSubCommand;
 

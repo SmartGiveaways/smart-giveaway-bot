@@ -23,7 +23,7 @@ public class UserUtils {
             } else if (input.length() == 22) {
                 toParse = input.substring(3, 21);
             } else {
-                toParse = "-1";
+                return -1;
             }
             return Long.parseLong(toParse);
         } catch (NumberFormatException ex) {

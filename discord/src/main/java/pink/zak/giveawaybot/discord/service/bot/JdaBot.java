@@ -35,13 +35,13 @@ import java.util.function.UnaryOperator;
 
 public abstract class JdaBot implements SimpleBot {
     public static final Logger logger = JDALogger.getLog(GiveawayBot.class);
-    private boolean buildEarlyUsed;
     protected final MessageEventRegistry messageEventRegistry = new MessageEventRegistry();
     protected final StorageSettings storageSettings;
     private final PageableReactionEventRegistry pageableReactionEventRegistry = new PageableReactionEventRegistry();
     private final BackendFactory backendFactory;
     private final ConfigStore configStore;
     private final Path basePath;
+    private boolean buildEarlyUsed;
     private boolean connected;
     private boolean initialized;
     private DiscordCommandBase discordCommandBase;

@@ -3,8 +3,8 @@ package pink.zak.giveawaybot.discord.listener.message;
 import com.google.common.collect.Sets;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import pink.zak.giveawaybot.discord.cache.ServerCache;
-import pink.zak.giveawaybot.discord.models.Server;
+import pink.zak.giveawaybot.discord.data.cache.ServerCache;
+import pink.zak.giveawaybot.discord.data.models.Server;
 
 import java.util.Set;
 

@@ -3,9 +3,9 @@ package pink.zak.giveawaybot.discord.pipelines.giveaway.steps;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import net.dv8tion.jda.api.entities.Message;
-import pink.zak.giveawaybot.discord.models.Server;
-import pink.zak.giveawaybot.discord.models.giveaway.CurrentGiveaway;
-import pink.zak.giveawaybot.discord.models.giveaway.finished.FullFinishedGiveaway;
+import pink.zak.giveawaybot.discord.data.models.Server;
+import pink.zak.giveawaybot.discord.data.models.giveaway.CurrentGiveaway;
+import pink.zak.giveawaybot.discord.data.models.giveaway.finished.FullFinishedGiveaway;
 import pink.zak.giveawaybot.discord.service.types.NumberUtils;
 
 import java.math.BigInteger;

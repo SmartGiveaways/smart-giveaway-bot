@@ -1,7 +1,7 @@
 package pink.zak.giveawaybot.discord.metrics.queries;
 
 import com.influxdb.client.write.Point;
-import pink.zak.giveawaybot.discord.models.Server;
+import pink.zak.giveawaybot.discord.data.models.Server;
 import pink.zak.giveawaybot.discord.service.BotConstants;
 import pink.zak.metrics.queries.QueryInterface;
 

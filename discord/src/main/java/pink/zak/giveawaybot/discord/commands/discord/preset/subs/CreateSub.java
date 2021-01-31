@@ -3,9 +3,9 @@ package pink.zak.giveawaybot.discord.commands.discord.preset.subs;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import pink.zak.giveawaybot.discord.GiveawayBot;
-import pink.zak.giveawaybot.discord.lang.enums.Text;
-import pink.zak.giveawaybot.discord.models.Preset;
-import pink.zak.giveawaybot.discord.models.Server;
+import pink.zak.giveawaybot.discord.lang.Text;
+import pink.zak.giveawaybot.discord.data.models.Preset;
+import pink.zak.giveawaybot.discord.data.models.Server;
 import pink.zak.giveawaybot.discord.service.command.discord.command.SubCommand;
 
 import java.util.List;

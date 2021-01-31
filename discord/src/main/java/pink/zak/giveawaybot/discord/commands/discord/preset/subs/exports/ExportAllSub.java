@@ -6,11 +6,11 @@ import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.json.JSONObject;
 import pink.zak.giveawaybot.discord.GiveawayBot;
-import pink.zak.giveawaybot.discord.lang.enums.Text;
-import pink.zak.giveawaybot.discord.models.Server;
+import pink.zak.giveawaybot.discord.lang.Text;
+import pink.zak.giveawaybot.discord.data.models.Server;
 import pink.zak.giveawaybot.discord.service.bot.JdaBot;
 import pink.zak.giveawaybot.discord.service.command.discord.command.SubCommand;
-import pink.zak.giveawaybot.discord.storage.ServerStorage;
+import pink.zak.giveawaybot.discord.data.storage.ServerStorage;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

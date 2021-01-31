@@ -12,7 +12,7 @@ import pink.zak.giveawaybot.discord.commands.discord.giveaway.subs.info.InfoSubL
 import pink.zak.giveawaybot.discord.commands.discord.giveaway.subs.info.InfoSubUuid;
 import pink.zak.giveawaybot.discord.commands.discord.giveaway.subs.schedule.ScheduleSub;
 import pink.zak.giveawaybot.discord.commands.discord.giveaway.subs.schedule.ScheduleWithChannelSub;
-import pink.zak.giveawaybot.discord.lang.enums.Text;
+import pink.zak.giveawaybot.discord.lang.Text;
 import pink.zak.giveawaybot.discord.service.command.discord.command.SimpleHelpCommand;
 
 public class GiveawayCommand extends SimpleHelpCommand {

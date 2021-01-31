@@ -7,8 +7,8 @@ import org.springframework.stereotype.Component;
 import pink.zak.giveawaybot.api.exception.GuildNotFoundException;
 import pink.zak.giveawaybot.api.exception.MemberNotFoundException;
 import pink.zak.giveawaybot.discord.GiveawayBot;
-import pink.zak.giveawaybot.discord.cache.ServerCache;
-import pink.zak.giveawaybot.discord.models.User;
+import pink.zak.giveawaybot.discord.data.cache.ServerCache;
+import pink.zak.giveawaybot.discord.data.models.User;
 
 @Component
 public class UserControllerImpl implements UserController {

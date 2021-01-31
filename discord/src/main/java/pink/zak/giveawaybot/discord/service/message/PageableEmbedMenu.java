@@ -9,7 +9,7 @@ import pink.zak.giveawaybot.discord.GiveawayBot;
 import pink.zak.giveawaybot.discord.lang.LanguageRegistry;
 import pink.zak.giveawaybot.discord.listener.reaction.pageable.Page;
 import pink.zak.giveawaybot.discord.listener.reaction.pageable.PageableReactionListener;
-import pink.zak.giveawaybot.discord.models.Server;
+import pink.zak.giveawaybot.discord.data.models.Server;
 import pink.zak.giveawaybot.discord.service.BotConstants;
 import pink.zak.giveawaybot.discord.service.colour.Palette;
 

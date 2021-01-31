@@ -9,11 +9,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pink.zak.giveawaybot.api.model.server.PremiumTimeAdd;
-import pink.zak.giveawaybot.discord.models.Server;
-import pink.zak.giveawaybot.discord.models.User;
-import pink.zak.giveawaybot.discord.models.giveaway.CurrentGiveaway;
-import pink.zak.giveawaybot.discord.models.giveaway.ScheduledGiveaway;
-import pink.zak.giveawaybot.discord.models.giveaway.finished.FullFinishedGiveaway;
+import pink.zak.giveawaybot.discord.data.models.Server;
+import pink.zak.giveawaybot.discord.data.models.User;
+import pink.zak.giveawaybot.discord.data.models.giveaway.CurrentGiveaway;
+import pink.zak.giveawaybot.discord.data.models.giveaway.ScheduledGiveaway;
+import pink.zak.giveawaybot.discord.data.models.giveaway.finished.FullFinishedGiveaway;
 
 import java.util.List;
 

@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import org.junit.jupiter.api.Test;
-import pink.zak.giveawaybot.discord.enums.EntryType;
+import pink.zak.giveawaybot.discord.pipelines.entries.steps.EntryType;
 import pink.zak.giveawaybot.discord.service.types.MapCreator;
 
 import java.util.EnumMap;

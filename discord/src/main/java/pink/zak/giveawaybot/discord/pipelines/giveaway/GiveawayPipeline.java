@@ -8,7 +8,7 @@ import net.dv8tion.jda.api.sharding.ShardManager;
 import pink.zak.giveawaybot.discord.GiveawayBot;
 import pink.zak.giveawaybot.discord.controllers.GiveawayController;
 import pink.zak.giveawaybot.discord.metrics.helpers.LatencyMonitor;
-import pink.zak.giveawaybot.discord.models.giveaway.CurrentGiveaway;
+import pink.zak.giveawaybot.discord.data.models.giveaway.CurrentGiveaway;
 import pink.zak.giveawaybot.discord.pipelines.giveaway.steps.EntryCounterStep;
 import pink.zak.giveawaybot.discord.service.bot.JdaBot;
 import pink.zak.giveawaybot.discord.threads.ThreadFunction;

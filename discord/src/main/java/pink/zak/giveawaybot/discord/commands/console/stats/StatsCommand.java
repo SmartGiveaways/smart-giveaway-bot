@@ -1,11 +1,11 @@
 package pink.zak.giveawaybot.discord.commands.console.stats;
 
 import pink.zak.giveawaybot.discord.GiveawayBot;
-import pink.zak.giveawaybot.discord.cache.FinishedGiveawayCache;
-import pink.zak.giveawaybot.discord.cache.GiveawayCache;
-import pink.zak.giveawaybot.discord.cache.ServerCache;
+import pink.zak.giveawaybot.discord.data.cache.FinishedGiveawayCache;
+import pink.zak.giveawaybot.discord.data.cache.GiveawayCache;
+import pink.zak.giveawaybot.discord.data.cache.ServerCache;
 import pink.zak.giveawaybot.discord.commands.console.stats.subs.StatsServerSub;
-import pink.zak.giveawaybot.discord.models.Server;
+import pink.zak.giveawaybot.discord.data.models.Server;
 import pink.zak.giveawaybot.discord.service.bot.JdaBot;
 import pink.zak.giveawaybot.discord.service.command.console.command.ConsoleBaseCommand;
 
