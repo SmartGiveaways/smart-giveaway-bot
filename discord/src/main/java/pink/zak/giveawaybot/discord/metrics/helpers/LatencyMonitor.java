@@ -84,7 +84,7 @@ public class LatencyMonitor extends ListenerAdapter {
     }
 
     public void onHttpException(Throwable ex, JDA jda) {
-            if (ex instanceof NoRouteToHostException || ex instanceof UnknownHostException || ex instanceof ErrorResponseException) {
+        if (ex instanceof NoRouteToHostException || ex instanceof UnknownHostException || ex instanceof ErrorResponseException) {
             JdaBot.logger.warn("Shard {} had a timeout exception ({})", jda.getShardInfo().getShardId(), ex.getClass().getSimpleName());
             this.shardTimings.put(jda, Long.MAX_VALUE);
         }

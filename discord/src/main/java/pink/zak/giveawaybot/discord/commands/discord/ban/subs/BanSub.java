@@ -31,7 +31,7 @@ public class BanSub extends SubCommand {
             return;
         }
         User user = server.getUserCache().get(target.getIdLong());
-        String userPlaceholder = UserUtils.getNameDiscrim(target);
+        String userPlaceholder = target.getUser().getAsTag();
         if (user.isBanned()) {
             this.langFor(server, Text.TARGET_ALREADY_BANNED, replacer -> replacer.set("target", userPlaceholder)).to(textChannel);
             return;

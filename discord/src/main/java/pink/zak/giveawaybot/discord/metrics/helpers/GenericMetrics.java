@@ -1,9 +1,12 @@
 package pink.zak.giveawaybot.discord.metrics.helpers;
 
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.utils.cache.CacheView;
 import pink.zak.giveawaybot.discord.GiveawayBot;
 import pink.zak.giveawaybot.discord.service.cache.singular.CachedValue;
 
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -38,7 +41,14 @@ public class GenericMetrics {
     }
 
     private void addJdaStats(GiveawayBot bot) {
-        this.guilds = new CachedValue<>(TimeUnit.SECONDS, 5, () -> bot.getShardManager().getGuildCache().size());
+        this.guilds = new CachedValue<>(TimeUnit.SECONDS, 5, () -> {
+            Optional<Long> count = bot.getShardManager().getShards().stream().map(JDA::getGuildCache).map(CacheView::size).reduce(Long::sum);
+            if (count.isPresent()) {
+                return count.get();
+            }
+            GiveawayBot.logger.warn("Could not get guild count. Optional not present.");
+            return 0L;
+        });
         this.users = new CachedValue<>(TimeUnit.SECONDS, 30, () -> {
             int counter = 0;
             for (Guild guild : bot.getShardManager().getGuildCache().asSet()) {

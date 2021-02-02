@@ -64,6 +64,7 @@ public abstract class JdaBot implements SimpleBot {
     public void buildJdaEarly(String token, Set<GatewayIntent> intents, UnaryOperator<DefaultShardManagerBuilder> jdaOperator) {
         this.buildEarlyUsed = true;
         this.readyListener = new ReadyListener(this);
+
         DefaultShardManagerBuilder builder = DefaultShardManagerBuilder.createDefault(token)
                 .setEnabledIntents(intents)
                 .addEventListeners(this.readyListener);

@@ -146,7 +146,7 @@ public class MessageStep {
             if (member == null) {
                 member = guild.retrieveMemberById(winnerId).complete();
             }
-            winnerEntries.add(UserUtils.getNameDiscrim(member));
+            winnerEntries.add(member.getUser().getAsTag());
         }
         this.sendEnd(server, giveaway, channel, winnerEntries);
     }

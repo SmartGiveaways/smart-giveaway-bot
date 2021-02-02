@@ -36,7 +36,7 @@ public class ShadowBanSub extends SubCommand {
             return;
         }
         User user = server.getUserCache().get(target.getIdLong());
-        String userPlaceholder = UserUtils.getNameDiscrim(target);
+        String userPlaceholder = target.getUser().getAsTag();
         if (user.isShadowBanned()) {
             this.langFor(server, Text.TARGET_ALREADY_SHADOW_BANNED, replacer -> replacer.set("target", userPlaceholder)).to(textChannel);
             return;

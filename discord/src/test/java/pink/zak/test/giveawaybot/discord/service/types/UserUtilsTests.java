@@ -12,22 +12,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class UserUtilsTests {
 
-    /**
-     * Input cannot be erroneous
-     */
-    @Test
-    void testGetNameDiscrim() {
-        User user = new UserImpl(240721111174610945L, TestHelper.JDA_MOCK)
-                .setName("Zak")
-                .setDiscriminator("6435");
-        Member member = new MemberImpl(null, user);
-        Member nickedMember = new MemberImpl(null, user)
-                .setNickname("boop");
-
-        assertEquals("Zak#6435", UserUtils.getNameDiscrim(member));
-        assertEquals("boop#6435", UserUtils.getNameDiscrim(nickedMember));
-    }
-
     @Test
     void testParseIdInput() {
         assertEquals(340980635042578444L, UserUtils.parseIdInput("340980635042578444"));

@@ -6,10 +6,6 @@ import net.dv8tion.jda.api.entities.Member;
 @UtilityClass
 public class UserUtils {
 
-    public static String getNameDiscrim(Member member) {
-        return member.getEffectiveName() + "#" + member.getUser().getDiscriminator();
-    }
-
     public long parseIdInput(String input) {
         if (input.contains(" ")) {
             return -1;

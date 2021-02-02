@@ -38,7 +38,7 @@ public class EntriesCommand extends SimpleCommand {
     }
 
     private void runLogic(Member target, Server server, TextChannel channel, boolean self) {
-        String targetName = UserUtils.getNameDiscrim(target);
+        String targetName = target.getUser().getAsTag();
         if (server.getActiveGiveaways().isEmpty()) {
             this.langFor(server, Text.NO_ACTIVE_GIVEAWAYS).to(channel);
             return;
