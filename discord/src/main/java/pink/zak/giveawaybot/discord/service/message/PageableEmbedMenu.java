@@ -44,8 +44,10 @@ public abstract class PageableEmbedMenu extends PageableMenu implements Pageable
         MessageEmbed embed = this.createPage(super.currentPage.get());
         this.cachedPages.put(super.currentPage.get(), embed);
         channel.sendMessage(embed).queue(sentMessage -> {
-            sentMessage.addReaction(BotConstants.BACK_ARROW).queue();
-            sentMessage.addReaction(BotConstants.FORWARD_ARROW).queue();
+            if (super.maxPage > 1) {
+                sentMessage.addReaction(BotConstants.BACK_ARROW).queue();
+                sentMessage.addReaction(BotConstants.FORWARD_ARROW).queue();
+            }
             this.message = sentMessage;
             this.scheduleDeletion();
         });
