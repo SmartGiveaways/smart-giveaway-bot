@@ -107,6 +107,7 @@ values:
   shadow-banned-successfully: ":white_check_mark: shadowbanned %target%."
 
   ban-list-embed-title: "Banned Users"
+  ban-list-none-banned: ":x: There are no banned users"
   ban-list-footer: "Page %page%/%max_page% | %total% total"
   ban-list-banned: "banned"
   ban-list-shadow-banned: "shadowbanned"
@@ -190,6 +191,7 @@ values:
   giveaway-deleted: "Deleted the giveaway for: %item%"
   # history sub
   giveaway-history-embed-title: "**Finished Giveaways**"
+  giveaway-history-no-history: ":x: No previous giveaways found"
   giveaway-history-embed-line: "%item% - ended %time% `(ID %id%)`\n"
   giveaway-history-embed-footer: "Page %page%/%max_page% | %total% total | >g info <id> for more info"
   # reroll messages

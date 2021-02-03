@@ -3,9 +3,9 @@ package pink.zak.giveawaybot.discord.commands.menus;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import pink.zak.giveawaybot.discord.GiveawayBot;
-import pink.zak.giveawaybot.discord.lang.Text;
 import pink.zak.giveawaybot.discord.data.models.Server;
 import pink.zak.giveawaybot.discord.data.models.giveaway.finished.PartialFinishedGiveaway;
+import pink.zak.giveawaybot.discord.lang.Text;
 import pink.zak.giveawaybot.discord.service.message.PageableEmbedMenu;
 import pink.zak.giveawaybot.discord.service.time.Time;
 
@@ -24,14 +24,18 @@ public class GiveawayHistoryMenu extends PageableEmbedMenu {
     @Override
     public MessageEmbed createPage(int page) {
         StringBuilder description = new StringBuilder();
-        for (int i = (page - 1) * 10; i < this.finishedGiveaways.size() && i < page * 10; i++) {
-            PartialFinishedGiveaway giveaway = this.finishedGiveaways.get(i);
-            description.append(
-                    super.languageRegistry.get(super.server, Text.GIVEAWAY_HISTORY_EMBED_LINE, replacer -> replacer
-                            .set("item", giveaway.getLinkedGiveawayItem())
-                            .set("time", Time.formatAsDateTime(giveaway.getEndTime()) + " UTC")
-                            .set("id", giveaway.getMessageId())).toString()
-            );
+        if (this.finishedGiveaways.isEmpty()) {
+            description.append(this.languageRegistry.get(super.server, Text.GIVEAWAY_HISTORY_NO_HISTORY));
+        } else {
+            for (int i = (page - 1) * 10; i < this.finishedGiveaways.size() && i < page * 10; i++) {
+                PartialFinishedGiveaway giveaway = this.finishedGiveaways.get(i);
+                description.append(
+                        super.languageRegistry.get(super.server, Text.GIVEAWAY_HISTORY_EMBED_LINE, replacer -> replacer
+                                .set("item", giveaway.getLinkedGiveawayItem())
+                                .set("time", Time.formatAsDateTime(giveaway.getEndTime()) + " UTC")
+                                .set("id", giveaway.getMessageId())).toString()
+                );
+            }
         }
         return new EmbedBuilder()
                 .setTitle(this.languageRegistry.get(super.server, Text.GIVEAWAY_HISTORY_EMBED_TITLE).get())

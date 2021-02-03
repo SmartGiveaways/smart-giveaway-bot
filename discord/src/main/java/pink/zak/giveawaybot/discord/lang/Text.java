@@ -89,6 +89,7 @@ public enum Text {
 
     // Applies to >gban list
     BAN_LIST_EMBED_TITLE,
+    BAN_LIST_NONE_BANNED,
     BAN_LIST_FOOTER,
     BAN_LIST_BANNED,
     BAN_LIST_SHADOW_BANNED,
@@ -149,6 +150,7 @@ public enum Text {
     SCHEDULED_GIVEAWAY_DELETED,
     // history sub
     GIVEAWAY_HISTORY_EMBED_TITLE,
+    GIVEAWAY_HISTORY_NO_HISTORY,
     GIVEAWAY_HISTORY_EMBED_LINE,
     GIVEAWAY_HISTORY_EMBED_FOOTER,
     // reroll

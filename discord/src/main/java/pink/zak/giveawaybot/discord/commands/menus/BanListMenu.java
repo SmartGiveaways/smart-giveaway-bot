@@ -31,7 +31,7 @@ public class BanListMenu extends PageableEmbedMenu {
     public MessageEmbed createPage(int page) {
         StringBuilder description = new StringBuilder();
         if (this.bannedUsers.isEmpty()) {
-            description.append(":x: There are no banned users");
+            description.append(this.languageRegistry.get(super.server, Text.BAN_LIST_NONE_BANNED));
         } else {
             for (int i = (page - 1) * 10; i < this.bannedUsers.size() && i < page * 10; i++) {
                 User user = this.bannedUsers.get(i);
