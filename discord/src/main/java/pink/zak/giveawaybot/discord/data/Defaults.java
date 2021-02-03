@@ -3,8 +3,8 @@ package pink.zak.giveawaybot.discord.data;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
 import pink.zak.giveawaybot.discord.GiveawayBot;
-import pink.zak.giveawaybot.discord.enums.Setting;
 import pink.zak.giveawaybot.discord.data.models.Preset;
+import pink.zak.giveawaybot.discord.enums.Setting;
 import pink.zak.giveawaybot.discord.service.colour.Palette;
 import pink.zak.giveawaybot.discord.service.colour.PaletteBuilder;
 import pink.zak.giveawaybot.discord.service.types.ReactionContainer;
@@ -12,15 +12,25 @@ import pink.zak.giveawaybot.discord.service.types.ReactionContainer;
 import java.awt.*;
 
 public class Defaults {
-    public static final Preset defaultPreset = new Preset("default");
+    public static final Preset defaultPreset;
+    public static final Permission[] requiredPermissions;
     private final JDA jda;
-    private Permission[] requiredPermissions;
     private Palette palette;
+
+    static {
+        defaultPreset = new Preset("default");
+        requiredPermissions = new Permission[]{
+                Permission.MESSAGE_WRITE,
+                Permission.MESSAGE_READ,
+                Permission.MESSAGE_HISTORY,
+                Permission.MESSAGE_ADD_REACTION,
+                Permission.VIEW_CHANNEL
+        };
+    }
 
     public Defaults(GiveawayBot bot) {
         this.jda = bot.getShardManager().retrieveApplicationInfo().getJDA();
         this.setupDefaultPreset();
-        this.setupRequiredPermissions();
         this.setupPalette();
     }
 
@@ -33,15 +43,6 @@ public class Defaults {
         defaultPreset.setSetting(Setting.PING_WINNERS, true);
         defaultPreset.setSetting(Setting.WINNERS_MESSAGE, true);
         defaultPreset.setSetting(Setting.DM_WINNERS, false);
-    }
-
-    private void setupRequiredPermissions() {
-        this.requiredPermissions = new Permission[]{Permission.MESSAGE_READ,
-                Permission.MESSAGE_HISTORY,
-                Permission.MESSAGE_EXT_EMOJI,
-                Permission.MESSAGE_ADD_REACTION,
-                Permission.VIEW_CHANNEL
-        };
     }
 
     private void setupPalette() {
@@ -58,7 +59,7 @@ public class Defaults {
     }
 
     public Permission[] getRequiredPermissions() {
-        return this.requiredPermissions;
+        return requiredPermissions;
     }
 
     public Palette getPalette() {

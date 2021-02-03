@@ -27,7 +27,6 @@ public class ScheduledGiveawayController {
     private final ServerCache serverCache;
     private final ScheduledGiveawayStorage scheduledGiveawayStorage;
     private final ScheduledGiveawayCache scheduledGiveawayCache;
-    private final Defaults defaults;
 
     public ScheduledGiveawayController(GiveawayBot bot) {
         this.scheduler = bot.getThreadManager().getScheduler();
@@ -36,7 +35,6 @@ public class ScheduledGiveawayController {
         this.serverCache = bot.getServerCache();
         this.scheduledGiveawayStorage = bot.getScheduledGiveawayStorage();
         this.scheduledGiveawayCache = bot.getScheduledGiveawayCache();
-        this.defaults = bot.getDefaults();
         this.load();
     }
 
@@ -44,7 +42,7 @@ public class ScheduledGiveawayController {
         if (server.getScheduledGiveaways().size() >= 10) {
             return ImmutablePair.of(null, ReturnCode.GIVEAWAY_LIMIT_FAILURE);
         }
-        if (!giveawayChannel.getGuild().getSelfMember().hasPermission(giveawayChannel, this.defaults.getRequiredPermissions())) {
+        if (!giveawayChannel.getGuild().getSelfMember().hasPermission(giveawayChannel, Defaults.requiredPermissions)) {
             return ImmutablePair.of(null, ReturnCode.PERMISSIONS_FAILURE);
         }
         if (!presetName.equalsIgnoreCase("default") && server.getPreset(presetName) == null) {

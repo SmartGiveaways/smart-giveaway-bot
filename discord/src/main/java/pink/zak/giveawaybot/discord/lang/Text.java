@@ -2,7 +2,6 @@ package pink.zak.giveawaybot.discord.lang;
 
 public enum Text {
     // Applies everywhere
-    BOT_MISSING_PERMISSIONS,
     BOT_MISSING_PERMISSION_SPECIFIC,
     BOT_MISSING_PERMISSIONS_SPECIFIC,
     NO_PERMISSION,

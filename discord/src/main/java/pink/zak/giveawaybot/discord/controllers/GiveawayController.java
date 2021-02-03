@@ -14,19 +14,20 @@ import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import net.dv8tion.jda.api.exceptions.RateLimitedException;
 import net.dv8tion.jda.api.requests.ErrorResponse;
 import pink.zak.giveawaybot.discord.GiveawayBot;
+import pink.zak.giveawaybot.discord.data.Defaults;
 import pink.zak.giveawaybot.discord.data.cache.GiveawayCache;
 import pink.zak.giveawaybot.discord.data.cache.ScheduledGiveawayCache;
 import pink.zak.giveawaybot.discord.data.cache.ServerCache;
-import pink.zak.giveawaybot.discord.data.Defaults;
-import pink.zak.giveawaybot.discord.enums.Setting;
-import pink.zak.giveawaybot.discord.lang.LanguageRegistry;
-import pink.zak.giveawaybot.discord.lang.Text;
-import pink.zak.giveawaybot.discord.metrics.helpers.LatencyMonitor;
 import pink.zak.giveawaybot.discord.data.models.Preset;
 import pink.zak.giveawaybot.discord.data.models.Server;
 import pink.zak.giveawaybot.discord.data.models.giveaway.CurrentGiveaway;
 import pink.zak.giveawaybot.discord.data.models.giveaway.Giveaway;
 import pink.zak.giveawaybot.discord.data.models.giveaway.RichGiveaway;
+import pink.zak.giveawaybot.discord.data.storage.GiveawayStorage;
+import pink.zak.giveawaybot.discord.enums.Setting;
+import pink.zak.giveawaybot.discord.lang.LanguageRegistry;
+import pink.zak.giveawaybot.discord.lang.Text;
+import pink.zak.giveawaybot.discord.metrics.helpers.LatencyMonitor;
 import pink.zak.giveawaybot.discord.pipelines.giveaway.GiveawayPipeline;
 import pink.zak.giveawaybot.discord.pipelines.giveaway.steps.DeletionStep;
 import pink.zak.giveawaybot.discord.service.bot.JdaBot;
@@ -35,7 +36,6 @@ import pink.zak.giveawaybot.discord.service.time.Time;
 import pink.zak.giveawaybot.discord.service.time.TimeIdentifier;
 import pink.zak.giveawaybot.discord.service.tuple.ImmutablePair;
 import pink.zak.giveawaybot.discord.service.types.ReactionContainer;
-import pink.zak.giveawaybot.discord.data.storage.GiveawayStorage;
 import pink.zak.giveawaybot.discord.threads.ThreadFunction;
 import pink.zak.giveawaybot.discord.threads.ThreadManager;
 
@@ -56,7 +56,6 @@ public class GiveawayController {
     private final ServerCache serverCache;
     private final Preset defaultPreset;
     private final Palette palette;
-    private final Defaults defaults;
     private final GiveawayBot bot;
 
     private final GiveawayPipeline giveawayPipeline;
@@ -71,7 +70,6 @@ public class GiveawayController {
         this.serverCache = bot.getServerCache();
         this.defaultPreset = Defaults.defaultPreset;
         this.palette = bot.getDefaults().getPalette();
-        this.defaults = bot.getDefaults();
         this.bot = bot;
 
         this.giveawayPipeline = new GiveawayPipeline(bot, this);
@@ -85,7 +83,7 @@ public class GiveawayController {
         if (server.getActiveGiveaways().size() >= (server.isPremium() ? 10000 : 5)) {
             return ImmutablePair.of(null, ReturnCode.GIVEAWAY_LIMIT_FAILURE);
         }
-        if (!giveawayChannel.getGuild().getSelfMember().hasPermission(giveawayChannel, this.defaults.getRequiredPermissions())) {
+        if (!giveawayChannel.getGuild().getSelfMember().hasPermission(giveawayChannel, Defaults.requiredPermissions)) {
             return ImmutablePair.of(null, ReturnCode.PERMISSIONS_FAILURE);
         }
         Preset preset = presetName.equalsIgnoreCase("default") ? this.defaultPreset : server.getPreset(presetName);

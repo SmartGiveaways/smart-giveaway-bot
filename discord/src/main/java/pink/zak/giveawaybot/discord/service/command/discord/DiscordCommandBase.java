@@ -1,5 +1,6 @@
 package pink.zak.giveawaybot.discord.service.command.discord;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import net.dv8tion.jda.api.Permission;
@@ -7,6 +8,7 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import pink.zak.giveawaybot.discord.GiveawayBot;
+import pink.zak.giveawaybot.discord.data.Defaults;
 import pink.zak.giveawaybot.discord.lang.LanguageRegistry;
 import pink.zak.giveawaybot.discord.lang.Text;
 import pink.zak.giveawaybot.discord.listener.message.GiveawayMessageListener;
@@ -18,6 +20,8 @@ import pink.zak.giveawaybot.discord.service.command.discord.command.Command;
 import pink.zak.giveawaybot.discord.service.command.discord.command.SimpleCommand;
 import pink.zak.giveawaybot.discord.service.command.discord.command.SubCommand;
 import pink.zak.giveawaybot.discord.service.command.global.CommandBackend;
+import pink.zak.giveawaybot.discord.service.tuple.ImmutablePair;
+import pink.zak.giveawaybot.discord.service.types.UserUtils;
 import pink.zak.giveawaybot.discord.threads.ThreadFunction;
 
 import java.util.List;
@@ -43,11 +47,8 @@ public class DiscordCommandBase extends CommandBackend implements GiveawayMessag
         this.executor = bot.getThreadManager().getAsyncExecutor(ThreadFunction.GENERAL);
         this.commandCooldowns = new AccessExpiringCache<>(bot, null, TimeUnit.SECONDS, 1);
         this.languageRegistry = bot.getLanguageRegistry();
-        this.requiredPermissions = Sets.newHashSet(Permission.MESSAGE_READ,
-                Permission.MESSAGE_EXT_EMOJI,
-                Permission.MESSAGE_ADD_REACTION,
-                Permission.VIEW_CHANNEL,
-                Permission.MESSAGE_MANAGE);
+        this.requiredPermissions = Sets.newHashSet(Defaults.requiredPermissions);
+        this.requiredPermissions.remove(Permission.MESSAGE_WRITE); // message write is checked early
     }
 
     public void registerCommand(SimpleCommand command) {
@@ -135,11 +136,7 @@ public class DiscordCommandBase extends CommandBackend implements GiveawayMessag
      */
     private boolean handleBotPermsCheck(Server server, TextChannel channel, Member selfMember) {
         if (!selfMember.hasPermission(channel, this.requiredPermissions)) {
-            Set<Permission> missingPerms = Sets.newHashSet(this.requiredPermissions);
-            missingPerms.removeAll(selfMember.getPermissions(channel));
-            String missingPermsString = missingPerms.stream().map(Permission::getName).map(str -> "`" + str + "`").collect(Collectors.joining(", "));
-            this.languageRegistry.get(server, missingPerms.size() > 1 ? Text.BOT_MISSING_PERMISSIONS_SPECIFIC : Text.BOT_MISSING_PERMISSION_SPECIFIC,
-                    replacer -> replacer.set("permission", missingPermsString)).to(channel);
+            UserUtils.sendMissingPermsMessage(this.languageRegistry, server, selfMember, channel, channel);
             return false;
         }
         return true;

@@ -12,6 +12,7 @@ import pink.zak.giveawaybot.discord.data.models.giveaway.ScheduledGiveaway;
 import pink.zak.giveawaybot.discord.service.bot.JdaBot;
 import pink.zak.giveawaybot.discord.service.time.TimeIdentifier;
 import pink.zak.giveawaybot.discord.service.tuple.ImmutablePair;
+import pink.zak.giveawaybot.discord.service.types.UserUtils;
 
 public class GiveawayCmdUtils {
     private final GiveawayController giveawayController;
@@ -43,7 +44,7 @@ public class GiveawayCmdUtils {
             case GIVEAWAY_LIMIT_FAILURE -> this.lang.get(server, Text.SCHEDULED_GIVEAWAY_LIMIT_FAILURE).to(responseChannel);
             case FUTURE_GIVEAWAY_LIMIT_FAILURE -> this.lang.get(server, Text.SCHEDULED_GIVEAWAY_LIMIT_FAILURE_FUTURE).to(responseChannel);
             case NO_PRESET -> this.lang.get(server, Text.NO_PRESET_FOUND_ON_CREATION).to(responseChannel);
-            case PERMISSIONS_FAILURE -> this.lang.get(server, Text.BOT_MISSING_PERMISSIONS).to(responseChannel);
+            case PERMISSIONS_FAILURE -> UserUtils.sendMissingPermsMessage(this.lang, server, responseChannel.getGuild().getSelfMember(), giveawayChannel, responseChannel);
             case SUCCESS -> this.lang.get(server, Text.GIVEAWAY_SCHEDULED, replacer -> replacer
                     .set("channel", giveawayChannel.getAsMention())
                     .set("time", returnedInfo.getKey().getStartFormatted())).to(responseChannel);
@@ -65,7 +66,7 @@ public class GiveawayCmdUtils {
                 this.lang.get(server, Text.NO_PRESET_FOUND_ON_CREATION).to(responseChannel);
                 break;
             case PERMISSIONS_FAILURE:
-                this.lang.get(server, Text.BOT_MISSING_PERMISSIONS).to(responseChannel);
+                UserUtils.sendMissingPermsMessage(this.lang, server, giveawayChannel.getGuild().getSelfMember(), giveawayChannel, responseChannel);
                 break;
             case GENERIC_FAILURE:
             case RATE_LIMIT_FAILURE:
