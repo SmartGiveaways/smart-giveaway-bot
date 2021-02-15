@@ -1,6 +1,5 @@
 package pink.zak.giveawaybot.discord.service.command.discord;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import net.dv8tion.jda.api.Permission;
@@ -9,10 +8,10 @@ import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import pink.zak.giveawaybot.discord.GiveawayBot;
 import pink.zak.giveawaybot.discord.data.Defaults;
+import pink.zak.giveawaybot.discord.data.models.Server;
 import pink.zak.giveawaybot.discord.lang.LanguageRegistry;
 import pink.zak.giveawaybot.discord.lang.Text;
 import pink.zak.giveawaybot.discord.listener.message.GiveawayMessageListener;
-import pink.zak.giveawaybot.discord.data.models.Server;
 import pink.zak.giveawaybot.discord.service.bot.JdaBot;
 import pink.zak.giveawaybot.discord.service.cache.caches.AccessExpiringCache;
 import pink.zak.giveawaybot.discord.service.cache.caches.Cache;
@@ -20,7 +19,6 @@ import pink.zak.giveawaybot.discord.service.command.discord.command.Command;
 import pink.zak.giveawaybot.discord.service.command.discord.command.SimpleCommand;
 import pink.zak.giveawaybot.discord.service.command.discord.command.SubCommand;
 import pink.zak.giveawaybot.discord.service.command.global.CommandBackend;
-import pink.zak.giveawaybot.discord.service.tuple.ImmutablePair;
 import pink.zak.giveawaybot.discord.service.types.UserUtils;
 import pink.zak.giveawaybot.discord.threads.ThreadFunction;
 
@@ -30,7 +28,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 public class DiscordCommandBase extends CommandBackend implements GiveawayMessageListener {
     private final String prefix;

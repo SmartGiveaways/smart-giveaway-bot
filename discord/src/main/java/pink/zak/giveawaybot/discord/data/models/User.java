@@ -1,6 +1,6 @@
 package pink.zak.giveawaybot.discord.data.models;
 
-import pink.zak.giveawaybot.discord.pipelines.entries.steps.EntryType;
+import pink.zak.giveawaybot.discord.pipelines.entries.EntryType;
 
 import java.math.BigInteger;
 import java.util.EnumMap;

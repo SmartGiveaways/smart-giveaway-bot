@@ -156,7 +156,7 @@ public abstract class JdaBot implements SimpleBot {
     }
 
     private void startConsoleThread() {
-        Thread thread = new Thread(new ConsoleListener((GiveawayBot) this));
+        Thread thread = new Thread(new ConsoleListener(this));
         thread.setUncaughtExceptionHandler(this.getExceptionHandler());
         thread.start();
     }

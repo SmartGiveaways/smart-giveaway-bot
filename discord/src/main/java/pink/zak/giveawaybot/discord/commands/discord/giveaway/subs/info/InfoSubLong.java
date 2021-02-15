@@ -7,10 +7,10 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import pink.zak.giveawaybot.discord.GiveawayBot;
 import pink.zak.giveawaybot.discord.data.cache.FinishedGiveawayCache;
 import pink.zak.giveawaybot.discord.data.cache.GiveawayCache;
-import pink.zak.giveawaybot.discord.lang.Text;
 import pink.zak.giveawaybot.discord.data.models.Server;
 import pink.zak.giveawaybot.discord.data.models.giveaway.CurrentGiveaway;
 import pink.zak.giveawaybot.discord.data.models.giveaway.finished.FullFinishedGiveaway;
+import pink.zak.giveawaybot.discord.lang.Text;
 import pink.zak.giveawaybot.discord.service.colour.Palette;
 import pink.zak.giveawaybot.discord.service.command.discord.command.SubCommand;
 import pink.zak.giveawaybot.discord.service.time.Time;
@@ -64,7 +64,7 @@ public class InfoSubLong extends SubCommand {
     private void finishedGiveawayMessage(TextChannel channel, Server server, FullFinishedGiveaway giveaway) {
         channel.sendMessage(
                 new EmbedBuilder()
-                        .setTitle(this.langFor(server, Text.FINISHED_GIVEAWAY_INFO_EMBED_TITLE).get())
+                        .setTitle(this.langFor(server, Text.FINISHED_GIVEAWAY_INFO_EMBED_TITLE).toString())
                         .setDescription(this.langFor(server, Text.FINISHED_GIVEAWAY_INFO_EMBED_DESCRIPTION, replacer -> replacer
                                 .set("id", giveaway.getMessageId())
                                 .set("item", giveaway.getGiveawayItem())
@@ -72,8 +72,8 @@ public class InfoSubLong extends SubCommand {
                                 .set("start_time", Time.formatAsDateTime(giveaway.getStartTime()) + " UTC")
                                 .set("end_time", Time.formatAsDateTime(giveaway.getEndTime()) + " UTC")
                                 .set("winners", giveaway.getWinners().stream().map(winnerId -> "<@" + winnerId + ">").collect(Collectors.joining(", ")))
-                                .set("total_entries", giveaway.getTotalEntries().toString())).get())
-                        .setFooter(this.langFor(server, Text.GENERIC_EMBED_FOOTER).get())
+                                .set("total_entries", giveaway.getTotalEntries().toString())).toString())
+                        .setFooter(this.langFor(server, Text.GENERIC_EMBED_FOOTER).toString())
                         .setColor(this.palette.primary())
                         .build()
         ).queue();
@@ -82,15 +82,15 @@ public class InfoSubLong extends SubCommand {
     private void currentGiveawayMessage(TextChannel channel, Server server, CurrentGiveaway giveaway) {
         channel.sendMessage(
                 new EmbedBuilder()
-                        .setTitle(this.langFor(server, Text.CURRENT_GIVEAWAY_INFO_EMBED_TITLE).get())
+                        .setTitle(this.langFor(server, Text.CURRENT_GIVEAWAY_INFO_EMBED_TITLE).toString())
                         .setDescription(this.langFor(server, Text.CURRENT_GIVEAWAY_INFO_EMBED_DESCRIPTION, replacer -> replacer
                                 .set("id", giveaway.getMessageId())
                                 .set("item", giveaway.getGiveawayItem())
                                 .set("message_link", giveaway.getMessageLink())
                                 .set("start_time", Time.formatAsDateTime(giveaway.getStartTime()) + " UTC")
                                 .set("end_time", Time.formatAsDateTime(giveaway.getEndTime()) + " UTC")
-                                .set("entered_users", giveaway.getEnteredUsers().size())).get())
-                        .setFooter(this.langFor(server, Text.GENERIC_EMBED_FOOTER).get())
+                                .set("entered_users", giveaway.getEnteredUsers().size())).toString())
+                        .setFooter(this.langFor(server, Text.GENERIC_EMBED_FOOTER).toString())
                         .setColor(this.palette.primary())
                         .build()
         ).queue();

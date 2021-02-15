@@ -5,9 +5,9 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import pink.zak.giveawaybot.discord.GiveawayBot;
 import pink.zak.giveawaybot.discord.data.cache.GiveawayCache;
-import pink.zak.giveawaybot.discord.lang.Text;
 import pink.zak.giveawaybot.discord.data.models.Server;
 import pink.zak.giveawaybot.discord.data.models.giveaway.CurrentGiveaway;
+import pink.zak.giveawaybot.discord.lang.Text;
 import pink.zak.giveawaybot.discord.service.colour.Palette;
 import pink.zak.giveawaybot.discord.service.command.discord.command.SubCommand;
 
@@ -42,8 +42,8 @@ public class ListSub extends SubCommand {
                     .append(")\n");
         }
         event.getChannel().sendMessage(new EmbedBuilder()
-                .setTitle(this.langFor(server, Text.GIVEAWAY_LIST_EMBED_TITLE).get())
-                .setFooter(this.langFor(server, Text.GENERIC_EMBED_FOOTER).get())
+                .setTitle(this.langFor(server, Text.GIVEAWAY_LIST_EMBED_TITLE).toString())
+                .setFooter(this.langFor(server, Text.GENERIC_EMBED_FOOTER).toString())
                 .setDescription(descriptionBuilder.toString())
                 .setColor(this.palette.primary())
                 .build()).queue();

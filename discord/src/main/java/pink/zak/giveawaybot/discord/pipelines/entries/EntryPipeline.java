@@ -1,9 +1,8 @@
 package pink.zak.giveawaybot.discord.pipelines.entries;
 
 import pink.zak.giveawaybot.discord.GiveawayBot;
-import pink.zak.giveawaybot.discord.data.cache.GiveawayCache;
 import pink.zak.giveawaybot.discord.data.Defaults;
-import pink.zak.giveawaybot.discord.pipelines.entries.steps.EntryType;
+import pink.zak.giveawaybot.discord.data.cache.GiveawayCache;
 import pink.zak.giveawaybot.discord.data.models.Preset;
 import pink.zak.giveawaybot.discord.data.models.Server;
 import pink.zak.giveawaybot.discord.data.models.User;

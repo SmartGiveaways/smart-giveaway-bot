@@ -1,6 +1,5 @@
 package pink.zak.giveawaybot.discord.service.cache.caches;
 
-import pink.zak.giveawaybot.discord.GiveawayBot;
 import pink.zak.giveawaybot.discord.service.cache.caches.shutdown.ShutdownData;
 import pink.zak.giveawaybot.discord.service.storage.mongo.MongoStorage;
 import pink.zak.giveawaybot.discord.threads.ThreadFunction;

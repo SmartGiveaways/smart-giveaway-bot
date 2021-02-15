@@ -93,8 +93,8 @@ public class GiveawayController {
         boolean reactToEnter = preset.getSetting(Setting.ENABLE_REACT_TO_ENTER);
         try {
             Message message = giveawayChannel.sendMessage(new EmbedBuilder()
-                    .setTitle(this.languageRegistry.get(server, Text.GIVEAWAY_EMBED_TITLE, replacer -> replacer.set("item", giveawayItem)).get())
-                    .setDescription(this.languageRegistry.get(server, reactToEnter ? Text.GIVEAWAY_EMBED_DESCRIPTION_REACTION : Text.GIVEAWAY_EMBED_DESCRIPTION_ALL).get())
+                    .setTitle(this.languageRegistry.get(server, Text.GIVEAWAY_EMBED_TITLE, replacer -> replacer.set("item", giveawayItem)).toString())
+                    .setDescription(this.languageRegistry.get(server, reactToEnter ? Text.GIVEAWAY_EMBED_DESCRIPTION_REACTION : Text.GIVEAWAY_EMBED_DESCRIPTION_ALL).toString())
                     .setColor(this.palette.primary())
                     .setFooter(this.getFooter(server, length, winnerAmount))
                     .build()).complete(true);
@@ -255,8 +255,8 @@ public class GiveawayController {
                 boolean reactToEnter = preset.getSetting(Setting.ENABLE_REACT_TO_ENTER);
                 if (!GiveawayBot.isLocked()) {
                     message.editMessage(new EmbedBuilder()
-                            .setTitle(this.languageRegistry.get(server, Text.GIVEAWAY_EMBED_TITLE, replacer -> replacer.set("item", giveaway.getGiveawayItem())).get())
-                            .setDescription(this.languageRegistry.get(server, reactToEnter ? Text.GIVEAWAY_EMBED_DESCRIPTION_REACTION : Text.GIVEAWAY_EMBED_DESCRIPTION_ALL).get())
+                            .setTitle(this.languageRegistry.get(server, Text.GIVEAWAY_EMBED_TITLE, replacer -> replacer.set("item", giveaway.getGiveawayItem())).toString())
+                            .setDescription(this.languageRegistry.get(server, reactToEnter ? Text.GIVEAWAY_EMBED_DESCRIPTION_REACTION : Text.GIVEAWAY_EMBED_DESCRIPTION_ALL).toString())
                             .setColor(this.palette.primary())
                             .setFooter(this.getFooter(server, giveaway.getTimeToExpiry(), giveaway.getWinnerAmount()))
                             .build()).queue();
@@ -317,7 +317,7 @@ public class GiveawayController {
 
     private String getFooter(Server server, long length, int winnerAmount) {
         return this.languageRegistry.get(server, winnerAmount > 1 ? Text.GIVEAWAY_EMBED_FOOTER_PLURAL : Text.GIVEAWAY_EMBED_FOOTER_SINGULAR,
-                replacer -> replacer.set("time", Time.format(length)).set("winner-count", winnerAmount)).get();
+                replacer -> replacer.set("time", Time.format(length)).set("winner-count", winnerAmount)).toString();
     }
 
     public Map<CurrentGiveaway, ScheduledFuture<Void>> getScheduledFutures() {

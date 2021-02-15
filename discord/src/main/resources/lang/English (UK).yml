@@ -191,7 +191,7 @@ values:
   # history sub
   giveaway-history-embed-title: "**Finished Giveaways**"
   giveaway-history-no-history: ":x: No previous giveaways found"
-  giveaway-history-embed-line: "%item% - ended %time% `(ID %id%)`\n"
+  giveaway-history-embed-line: "%item% - ended %time% `(ID %id%)`"
   giveaway-history-embed-footer: "Page %page%/%max_page% | %total% total | >g info <id> for more info"
   # reroll messages
   reroll-over-24-hours: ":x: You can only reroll a giveaway within 24 hours."

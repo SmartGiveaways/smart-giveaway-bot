@@ -6,10 +6,10 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import pink.zak.giveawaybot.discord.GiveawayBot;
+import pink.zak.giveawaybot.discord.data.models.Server;
 import pink.zak.giveawaybot.discord.enums.Setting;
 import pink.zak.giveawaybot.discord.lang.Text;
 import pink.zak.giveawaybot.discord.lang.model.Language;
-import pink.zak.giveawaybot.discord.data.models.Server;
 import pink.zak.giveawaybot.discord.service.colour.Palette;
 import pink.zak.giveawaybot.discord.service.command.discord.command.SubCommand;
 
@@ -40,12 +40,12 @@ public class OptionsSub extends SubCommand {
             for (Setting setting : Setting.values()) {
                 builder.append(setting.getPrimaryConfigName())
                         .append(" - ")
-                        .append(language.getValue(setting.getDescription()).get())
+                        .append(language.getValue(setting.getDescription()).toString())
                         .append("\n");
             }
             messageEmbeds.put(language.getIdentifier(), new EmbedBuilder()
                     .setColor(this.palette.primary())
-                    .setTitle(language.getValue(Text.PRESET_OPTIONS_LIST_OPTIONS_EMBED_TITLE).get())
+                    .setTitle(language.getValue(Text.PRESET_OPTIONS_LIST_OPTIONS_EMBED_TITLE).toString())
                     .setDescription(builder.toString())
                     .build());
         }

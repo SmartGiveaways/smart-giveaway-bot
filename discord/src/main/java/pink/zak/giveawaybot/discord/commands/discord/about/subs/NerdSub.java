@@ -6,10 +6,10 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import pink.zak.giveawaybot.discord.GiveawayBot;
 import pink.zak.giveawaybot.discord.data.cache.GiveawayCache;
+import pink.zak.giveawaybot.discord.data.models.Server;
 import pink.zak.giveawaybot.discord.lang.Text;
 import pink.zak.giveawaybot.discord.metrics.helpers.GenericMetrics;
 import pink.zak.giveawaybot.discord.metrics.helpers.LatencyMonitor;
-import pink.zak.giveawaybot.discord.data.models.Server;
 import pink.zak.giveawaybot.discord.service.cache.singular.CachedValue;
 import pink.zak.giveawaybot.discord.service.colour.Palette;
 import pink.zak.giveawaybot.discord.service.command.discord.command.SubCommand;
@@ -41,7 +41,7 @@ public class NerdSub extends SubCommand {
         JDA jda = event.getJDA();
         event.getChannel().sendMessage(new EmbedBuilder()
                 .setColor(this.palette.primary())
-                .setFooter(this.langFor(server, Text.GENERIC_EMBED_FOOTER).get())
+                .setFooter(this.langFor(server, Text.GENERIC_EMBED_FOOTER).toString())
                 .addField("**Uptime**", Time.format(this.genericMetrics.getUptime()), true)
                 .addField("**Servers**", String.valueOf(this.genericMetrics.getGuilds()), true)
                 .addField("**Users**", String.valueOf(this.genericMetrics.getUsers()), true)

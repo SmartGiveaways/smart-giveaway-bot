@@ -6,14 +6,13 @@ import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import pink.zak.giveawaybot.discord.GiveawayBot;
 import pink.zak.giveawaybot.discord.data.cache.GiveawayCache;
-import pink.zak.giveawaybot.discord.lang.Text;
 import pink.zak.giveawaybot.discord.data.models.Server;
 import pink.zak.giveawaybot.discord.data.models.User;
 import pink.zak.giveawaybot.discord.data.models.giveaway.CurrentGiveaway;
+import pink.zak.giveawaybot.discord.lang.Text;
 import pink.zak.giveawaybot.discord.service.colour.Palette;
 import pink.zak.giveawaybot.discord.service.command.discord.command.SimpleCommand;
 import pink.zak.giveawaybot.discord.service.command.discord.command.SubCommand;
-import pink.zak.giveawaybot.discord.service.types.UserUtils;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -61,11 +60,11 @@ public class EntriesCommand extends SimpleCommand {
                 descriptionBuilder.append(this.langFor(server,
                         entries.compareTo(BigInteger.ONE) < 1 ? Text.ENTRIES_EMBED_GIVEAWAY_LINE : Text.ENTRIES_EMBED_GIVEAWAY_LINE_PLURAL, replacer -> replacer
                                 .set("item", giveaway.getLinkedGiveawayItem())
-                                .set("entries", entries.toString())).get());
+                                .set("entries", entries.toString())).toString());
             }
         }
         channel.sendMessage(new EmbedBuilder()
-                .setTitle(this.langFor(server, Text.ENTRIES_EMBED_TITLE, replacer -> replacer.set("target", targetName)).get())
+                .setTitle(this.langFor(server, Text.ENTRIES_EMBED_TITLE, replacer -> replacer.set("target", targetName)).toString())
                 .setColor(this.palette.primary())
                 .setDescription(descriptionBuilder.toString())
                 .build()).queue();

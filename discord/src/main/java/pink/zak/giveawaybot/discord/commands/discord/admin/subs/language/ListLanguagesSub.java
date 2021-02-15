@@ -6,9 +6,9 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import pink.zak.giveawaybot.discord.GiveawayBot;
+import pink.zak.giveawaybot.discord.data.models.Server;
 import pink.zak.giveawaybot.discord.lang.Text;
 import pink.zak.giveawaybot.discord.lang.model.Language;
-import pink.zak.giveawaybot.discord.data.models.Server;
 import pink.zak.giveawaybot.discord.service.colour.Palette;
 import pink.zak.giveawaybot.discord.service.command.discord.command.SubCommand;
 
@@ -40,8 +40,8 @@ public class ListLanguagesSub extends SubCommand {
         }
         for (Language language : this.languageRegistry.languageMap().values()) {
             EmbedBuilder embedBuilder = new EmbedBuilder()
-                    .setTitle(language.getValue(Text.ADMIN_LIST_LANGUAGES_EMBED_TITLE).get())
-                    .setFooter(language.getValue(Text.ADMIN_LIST_LANGUAGES_EMBED_FOOTER).get())
+                    .setTitle(language.getValue(Text.ADMIN_LIST_LANGUAGES_EMBED_TITLE).toString())
+                    .setFooter(language.getValue(Text.ADMIN_LIST_LANGUAGES_EMBED_FOOTER).toString())
                     .setColor(palette.primary());
             embedBuilder.setDescription(description.toString());
             this.messageEmbeds.put(language.getIdentifier(), embedBuilder.build());

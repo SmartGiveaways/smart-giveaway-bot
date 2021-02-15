@@ -6,9 +6,9 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import pink.zak.giveawaybot.discord.GiveawayBot;
+import pink.zak.giveawaybot.discord.data.models.Server;
 import pink.zak.giveawaybot.discord.lang.Text;
 import pink.zak.giveawaybot.discord.lang.model.Language;
-import pink.zak.giveawaybot.discord.data.models.Server;
 import pink.zak.giveawaybot.discord.service.BotConstants;
 import pink.zak.giveawaybot.discord.service.colour.Palette;
 import pink.zak.giveawaybot.discord.service.config.Reloadable;
@@ -35,6 +35,8 @@ public abstract class SimpleHelpCommand extends SimpleCommand implements Reloada
     @Override
     public void onExecute(Member sender, Server server, GuildMessageReceivedEvent event, List<String> args) {
         event.getChannel().sendMessage(this.languageMessages.get(server.getLanguage())).queue();
+
+        
     }
 
     public void setupMessages(Text title, Text footer, Text description, Function<Language, Replace> replace) {
@@ -57,11 +59,11 @@ public abstract class SimpleHelpCommand extends SimpleCommand implements Reloada
         Map<String, MessageEmbed> tempLanguageMessages = Maps.newHashMap();
         for (Language language : this.languageRegistry.languageMap().values()) {
             EmbedBuilder embedBuilder = new EmbedBuilder()
-                    .setTitle(language.getValue(this.title).get())
-                    .setFooter(language.getValue(this.footer).replace(BotConstants.BASE_REPLACE).get())
+                    .setTitle(language.getValue(this.title).toString())
+                    .setFooter(language.getValue(this.footer).replace(BotConstants.BASE_REPLACE).toString())
                     .setColor(this.palette.primary())
                     .setDescription(language.getValue(Text.GENERIC_COMMAND_USAGE_EXAMPLE).replace(replacer -> replacer.set("command", this.getCommand())).toString().concat(
-                            language.getValue(this.description).replace(this.replace.apply(language)).get()));
+                            language.getValue(this.description).replace(this.replace.apply(language)).toString()));
             tempLanguageMessages.put(language.getIdentifier(), embedBuilder.build());
         }
         this.languageMessages = tempLanguageMessages;

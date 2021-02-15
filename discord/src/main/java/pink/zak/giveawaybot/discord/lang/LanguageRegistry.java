@@ -7,8 +7,8 @@ import com.timvisee.yamlwrapper.YamlConfiguration;
 import lombok.SneakyThrows;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
-import pink.zak.giveawaybot.discord.lang.model.Language;
 import pink.zak.giveawaybot.discord.data.models.Server;
+import pink.zak.giveawaybot.discord.lang.model.Language;
 import pink.zak.giveawaybot.discord.service.BotConstants;
 import pink.zak.giveawaybot.discord.service.bot.JdaBot;
 import pink.zak.giveawaybot.discord.service.bot.SimpleBot;
@@ -157,17 +157,13 @@ public class LanguageRegistry {
             channel.sendMessage(this.message).queue(messageConsumer);
         }
 
-        public String get() {
+        @Override
+        public String toString() {
             return this.message;
         }
 
         public LangSub replace(Replace replace) {
             return new LangSub(this.message, replace);
-        }
-
-        @Override
-        public String toString() {
-            return this.message;
         }
     }
 }

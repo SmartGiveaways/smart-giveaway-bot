@@ -1,12 +1,7 @@
 package pink.zak.test.giveawaybot.discord.service.types;
 
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.internal.entities.MemberImpl;
-import net.dv8tion.jda.internal.entities.UserImpl;
 import org.junit.jupiter.api.Test;
 import pink.zak.giveawaybot.discord.service.types.UserUtils;
-import pink.zak.test.giveawaybot.discord.TestHelper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

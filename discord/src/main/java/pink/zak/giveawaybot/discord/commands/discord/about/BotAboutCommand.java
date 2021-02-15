@@ -6,12 +6,12 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import pink.zak.giveawaybot.discord.GiveawayBot;
-import pink.zak.giveawaybot.discord.data.cache.GiveawayCache;
 import pink.zak.giveawaybot.discord.commands.discord.about.subs.NerdSub;
+import pink.zak.giveawaybot.discord.data.cache.GiveawayCache;
+import pink.zak.giveawaybot.discord.data.models.Server;
 import pink.zak.giveawaybot.discord.lang.Text;
 import pink.zak.giveawaybot.discord.metrics.MetricsLogger;
 import pink.zak.giveawaybot.discord.metrics.helpers.LatencyMonitor;
-import pink.zak.giveawaybot.discord.data.models.Server;
 import pink.zak.giveawaybot.discord.service.colour.Palette;
 import pink.zak.giveawaybot.discord.service.command.discord.command.SimpleCommand;
 import pink.zak.giveawaybot.discord.service.time.Time;
@@ -45,8 +45,8 @@ public class BotAboutCommand extends SimpleCommand {
     public void onExecute(Member sender, Server server, GuildMessageReceivedEvent event, List<String> args) {
         JDA jda = event.getJDA();
         event.getChannel().sendMessage(new EmbedBuilder()
-                .setTitle(super.languageRegistry.get(server, Text.ABOUT_EMBED_TITLE).get())
-                .setFooter(super.languageRegistry.get(server, Text.GENERIC_EMBED_FOOTER).get())
+                .setTitle(super.languageRegistry.get(server, Text.ABOUT_EMBED_TITLE).toString())
+                .setFooter(super.languageRegistry.get(server, Text.GENERIC_EMBED_FOOTER).toString())
                 .setColor(this.palette.primary())
                 .setDescription(super.languageRegistry.get(server, Text.ABOUT_EMBED_CONTENT, replacer -> replacer
                         .set("servers", this.metricsLogger.getGuildCount())
@@ -56,7 +56,7 @@ public class BotAboutCommand extends SimpleCommand {
                         .set("total_shards", this.shardManager.getShardsTotal() - 1)
                         .set("shard_ping", this.latencyMonitor.getLastTiming(jda))
                         .set("last_shard_ping_update", Time.format(System.currentTimeMillis() - this.latencyMonitor.getShardTestTimes().get(jda))))
-                        .get())
+                        .toString())
                 .build()).queue();
     }
 }

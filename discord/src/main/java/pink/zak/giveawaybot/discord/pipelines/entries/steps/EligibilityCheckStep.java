@@ -2,10 +2,11 @@ package pink.zak.giveawaybot.discord.pipelines.entries.steps;
 
 import com.google.common.collect.Maps;
 import pink.zak.giveawaybot.discord.GiveawayBot;
-import pink.zak.giveawaybot.discord.enums.Setting;
 import pink.zak.giveawaybot.discord.data.models.Preset;
 import pink.zak.giveawaybot.discord.data.models.User;
 import pink.zak.giveawaybot.discord.data.models.giveaway.CurrentGiveaway;
+import pink.zak.giveawaybot.discord.enums.Setting;
+import pink.zak.giveawaybot.discord.pipelines.entries.EntryType;
 
 import java.math.BigInteger;
 

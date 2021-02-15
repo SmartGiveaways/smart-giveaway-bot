@@ -6,9 +6,9 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import pink.zak.giveawaybot.discord.GiveawayBot;
+import pink.zak.giveawaybot.discord.data.models.Server;
 import pink.zak.giveawaybot.discord.lang.Text;
 import pink.zak.giveawaybot.discord.lang.model.Language;
-import pink.zak.giveawaybot.discord.data.models.Server;
 import pink.zak.giveawaybot.discord.service.colour.Palette;
 import pink.zak.giveawaybot.discord.service.command.discord.command.SimpleCommand;
 import pink.zak.giveawaybot.discord.service.config.Reloadable;
@@ -37,14 +37,14 @@ public class HelpCommand extends SimpleCommand implements Reloadable {
         Map<String, MessageEmbed> fullMessages = Maps.newHashMap();
         for (Language language : this.languageRegistry.languageMap().values()) {
             EmbedBuilder embedBuilder = new EmbedBuilder()
-                    .setTitle(language.getValue(Text.HELP_EMBED_TITLE).get())
-                    .setFooter(language.getValue(Text.HELP_EMBED_FOOTER).get())
+                    .setTitle(language.getValue(Text.HELP_EMBED_TITLE).toString())
+                    .setFooter(language.getValue(Text.HELP_EMBED_FOOTER).toString())
                     .setColor(palette.primary())
-                    .setDescription(language.getValue(Text.GENERIC_COMMAND_USAGE_EXAMPLE).replace(replacer -> replacer.set("command", "command")).get())
-                    .addField("General Commands", language.getValue(Text.HELP_LIMITED_SECTION).get(), false);
+                    .setDescription(language.getValue(Text.GENERIC_COMMAND_USAGE_EXAMPLE).replace(replacer -> replacer.set("command", "command")).toString())
+                    .addField("General Commands", language.getValue(Text.HELP_LIMITED_SECTION).toString(), false);
             limitedMessages.put(language.getIdentifier(), embedBuilder.build());
             embedBuilder.addField("Admin Commands",
-                    language.getValue(Text.HELP_ADMIN_SECTION).get(), false);
+                    language.getValue(Text.HELP_ADMIN_SECTION).toString(), false);
             fullMessages.put(language.getIdentifier(), embedBuilder.build());
         }
         this.limitedMessageEmbed = limitedMessages;

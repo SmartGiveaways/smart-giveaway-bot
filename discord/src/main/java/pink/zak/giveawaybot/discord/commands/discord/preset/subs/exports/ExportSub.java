@@ -7,9 +7,9 @@ import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.json.JSONObject;
 import pink.zak.giveawaybot.discord.GiveawayBot;
-import pink.zak.giveawaybot.discord.lang.Text;
 import pink.zak.giveawaybot.discord.data.models.Preset;
 import pink.zak.giveawaybot.discord.data.models.Server;
+import pink.zak.giveawaybot.discord.lang.Text;
 import pink.zak.giveawaybot.discord.service.bot.JdaBot;
 import pink.zak.giveawaybot.discord.service.command.discord.command.SubCommand;
 
@@ -53,7 +53,7 @@ public class ExportSub extends SubCommand {
 
         try (InputStream inputStream = new ByteArrayInputStream(jsonObject.toString().getBytes(StandardCharsets.UTF_8))) {
             channel.sendMessage(this.langFor(server, Text.PRESET_EXPORTED_SINGLE, replacer -> replacer
-                    .set("preset", preset.getName())).get()).addFile(inputStream, fileName).queue(message -> {}, ex -> JdaBot.logger.error("Error sending exported preset", ex));
+                    .set("preset", preset.getName())).toString()).addFile(inputStream, fileName).queue(message -> {}, ex -> JdaBot.logger.error("Error sending exported preset", ex));
         } catch (IOException ex) {
             JdaBot.logger.error("Error exporting preset", ex);
         }

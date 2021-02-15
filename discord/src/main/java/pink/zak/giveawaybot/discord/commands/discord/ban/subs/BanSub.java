@@ -5,11 +5,10 @@ import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import pink.zak.giveawaybot.discord.GiveawayBot;
 import pink.zak.giveawaybot.discord.commands.discord.ban.BanCmdUtils;
-import pink.zak.giveawaybot.discord.lang.Text;
 import pink.zak.giveawaybot.discord.data.models.Server;
 import pink.zak.giveawaybot.discord.data.models.User;
+import pink.zak.giveawaybot.discord.lang.Text;
 import pink.zak.giveawaybot.discord.service.command.discord.command.SubCommand;
-import pink.zak.giveawaybot.discord.service.types.UserUtils;
 
 import java.util.List;
 

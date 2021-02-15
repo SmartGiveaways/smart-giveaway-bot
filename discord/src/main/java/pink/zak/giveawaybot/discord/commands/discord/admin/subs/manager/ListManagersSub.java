@@ -4,8 +4,8 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import pink.zak.giveawaybot.discord.GiveawayBot;
-import pink.zak.giveawaybot.discord.lang.Text;
 import pink.zak.giveawaybot.discord.data.models.Server;
+import pink.zak.giveawaybot.discord.lang.Text;
 import pink.zak.giveawaybot.discord.service.colour.Palette;
 import pink.zak.giveawaybot.discord.service.command.discord.command.SubCommand;
 
@@ -32,8 +32,8 @@ public class ListManagersSub extends SubCommand {
             descriptionBuilder.append("<@&").append(roleId).append(">\n");
         }
         event.getChannel().sendMessage(new EmbedBuilder()
-                .setTitle(this.langFor(server, Text.ADMIN_MANAGER_LIST_TITLE).get())
-                .setFooter(this.langFor(server, Text.GENERIC_EMBED_FOOTER).get())
+                .setTitle(this.langFor(server, Text.ADMIN_MANAGER_LIST_TITLE).toString())
+                .setFooter(this.langFor(server, Text.GENERIC_EMBED_FOOTER).toString())
                 .setColor(this.palette.primary())
                 .setDescription(descriptionBuilder.toString())
                 .build()).queue();

@@ -6,9 +6,9 @@ import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import pink.zak.giveawaybot.discord.GiveawayBot;
 import pink.zak.giveawaybot.discord.data.cache.ScheduledGiveawayCache;
-import pink.zak.giveawaybot.discord.lang.Text;
 import pink.zak.giveawaybot.discord.data.models.Server;
 import pink.zak.giveawaybot.discord.data.models.giveaway.ScheduledGiveaway;
+import pink.zak.giveawaybot.discord.lang.Text;
 import pink.zak.giveawaybot.discord.service.colour.Palette;
 import pink.zak.giveawaybot.discord.service.command.discord.command.SubCommand;
 import pink.zak.giveawaybot.discord.service.time.Time;
@@ -46,15 +46,15 @@ public class InfoSubUuid extends SubCommand {
         }
         event.getChannel().sendMessage(
                 new EmbedBuilder()
-                        .setTitle(this.langFor(server, Text.SCHEDULED_GIVEAWAY_INFO_EMBED_TITLE).get())
+                        .setTitle(this.langFor(server, Text.SCHEDULED_GIVEAWAY_INFO_EMBED_TITLE).toString())
                         .setDescription(this.langFor(server, Text.SCHEDULED_GIVEAWAY_INFO_EMBED_DESCRIPTION, replacer -> replacer
                                 .set("uuid", giveaway.getUuid())
                                 .set("item", giveaway.getGiveawayItem())
                                 .set("preset_name", giveaway.getPresetName())
                                 .set("winner_amount", giveaway.getWinnerAmount())
                                 .set("start_time", Time.formatAsDateTime(giveaway.getStartTime()) + " UTC")
-                                .set("end_time", Time.formatAsDateTime(giveaway.getEndTime()) + " UTC")).get())
-                        .setFooter(this.langFor(server, Text.GENERIC_EMBED_FOOTER).get())
+                                .set("end_time", Time.formatAsDateTime(giveaway.getEndTime()) + " UTC")).toString())
+                        .setFooter(this.langFor(server, Text.GENERIC_EMBED_FOOTER).toString())
                         .setColor(this.palette.primary())
                         .build()
         ).queue();

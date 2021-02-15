@@ -5,9 +5,9 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import pink.zak.giveawaybot.discord.GiveawayBot;
 import pink.zak.giveawaybot.discord.data.cache.UserCache;
-import pink.zak.giveawaybot.discord.lang.Text;
 import pink.zak.giveawaybot.discord.data.models.Server;
 import pink.zak.giveawaybot.discord.data.models.User;
+import pink.zak.giveawaybot.discord.lang.Text;
 import pink.zak.giveawaybot.discord.service.message.PageableEmbedMenu;
 
 import java.util.List;
@@ -43,12 +43,12 @@ public class BanListMenu extends PageableEmbedMenu {
             }
         }
         return new EmbedBuilder()
-                .setTitle(this.languageRegistry.get(super.server, Text.BAN_LIST_EMBED_TITLE).get())
+                .setTitle(this.languageRegistry.get(super.server, Text.BAN_LIST_EMBED_TITLE).toString())
                 .setDescription(description.toString())
                 .setFooter(this.languageRegistry.get(super.server, Text.BAN_LIST_FOOTER, replacer -> replacer
                         .set("page", page)
                         .set("max_page", super.maxPage)
-                        .set("total", this.bannedUsers.size())).get())
+                        .set("total", this.bannedUsers.size())).toString())
                 .setColor(super.palette.primary())
                 .build();
     }

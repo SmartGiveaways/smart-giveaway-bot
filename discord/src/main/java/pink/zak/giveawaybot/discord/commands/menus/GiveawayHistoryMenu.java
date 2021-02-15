@@ -10,6 +10,7 @@ import pink.zak.giveawaybot.discord.service.message.PageableEmbedMenu;
 import pink.zak.giveawaybot.discord.service.time.Time;
 
 import java.util.List;
+import java.util.StringJoiner;
 
 public class GiveawayHistoryMenu extends PageableEmbedMenu {
     private final List<PartialFinishedGiveaway> finishedGiveaways;
@@ -23,13 +24,13 @@ public class GiveawayHistoryMenu extends PageableEmbedMenu {
 
     @Override
     public MessageEmbed createPage(int page) {
-        StringBuilder description = new StringBuilder();
+        StringJoiner description = new StringJoiner("\n");
         if (this.finishedGiveaways.isEmpty()) {
-            description.append(this.languageRegistry.get(super.server, Text.GIVEAWAY_HISTORY_NO_HISTORY));
+            description.add(this.languageRegistry.get(super.server, Text.GIVEAWAY_HISTORY_NO_HISTORY).toString());
         } else {
             for (int i = (page - 1) * 10; i < this.finishedGiveaways.size() && i < page * 10; i++) {
                 PartialFinishedGiveaway giveaway = this.finishedGiveaways.get(i);
-                description.append(
+                description.add(
                         super.languageRegistry.get(super.server, Text.GIVEAWAY_HISTORY_EMBED_LINE, replacer -> replacer
                                 .set("item", giveaway.getLinkedGiveawayItem())
                                 .set("time", Time.formatAsDateTime(giveaway.getEndTime()) + " UTC")
@@ -38,12 +39,12 @@ public class GiveawayHistoryMenu extends PageableEmbedMenu {
             }
         }
         return new EmbedBuilder()
-                .setTitle(this.languageRegistry.get(super.server, Text.GIVEAWAY_HISTORY_EMBED_TITLE).get())
+                .setTitle(this.languageRegistry.get(super.server, Text.GIVEAWAY_HISTORY_EMBED_TITLE).toString())
                 .setDescription(description.toString())
                 .setFooter(this.languageRegistry.get(super.server, Text.GIVEAWAY_HISTORY_EMBED_FOOTER, replacer -> replacer
                         .set("page", page)
                         .set("max_page", super.maxPage)
-                        .set("total", this.finishedGiveaways.size())).get())
+                        .set("total", this.finishedGiveaways.size())).toString())
                 .setColor(super.palette.primary())
                 .build();
     }

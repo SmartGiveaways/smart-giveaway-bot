@@ -11,17 +11,16 @@ import net.dv8tion.jda.api.sharding.ShardManager;
 import pink.zak.giveawaybot.discord.GiveawayBot;
 import pink.zak.giveawaybot.discord.controllers.GiveawayController;
 import pink.zak.giveawaybot.discord.data.Defaults;
-import pink.zak.giveawaybot.discord.enums.Setting;
-import pink.zak.giveawaybot.discord.lang.LanguageRegistry;
-import pink.zak.giveawaybot.discord.lang.Text;
 import pink.zak.giveawaybot.discord.data.models.Preset;
 import pink.zak.giveawaybot.discord.data.models.Server;
 import pink.zak.giveawaybot.discord.data.models.giveaway.CurrentGiveaway;
 import pink.zak.giveawaybot.discord.data.models.giveaway.RichGiveaway;
+import pink.zak.giveawaybot.discord.enums.Setting;
+import pink.zak.giveawaybot.discord.lang.LanguageRegistry;
+import pink.zak.giveawaybot.discord.lang.Text;
 import pink.zak.giveawaybot.discord.service.bot.JdaBot;
 import pink.zak.giveawaybot.discord.service.colour.Palette;
 import pink.zak.giveawaybot.discord.service.text.Replace;
-import pink.zak.giveawaybot.discord.service.types.UserUtils;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -53,9 +52,9 @@ public class MessageStep {
         server.getActiveGiveaways().remove(giveaway.getMessageId());
         message.editMessage(new EmbedBuilder()
                 .setColor(this.palette.success())
-                .setTitle(this.languageRegistry.get(server, Text.GIVEAWAY_EMBED_TITLE, replacer -> replacer.set("item", giveaway.getGiveawayItem())).get())
-                .setDescription(this.languageRegistry.get(server, Text.GIVEAWAY_FINISHED_EMBED_DESCRIPTION_NO_WINNERS).get())
-                .setFooter(this.languageRegistry.get(server, Text.GIVEAWAY_FINISHED_EMBED_FOOTER_NO_WINNERS).get()).build()).queue();
+                .setTitle(this.languageRegistry.get(server, Text.GIVEAWAY_EMBED_TITLE, replacer -> replacer.set("item", giveaway.getGiveawayItem())).toString())
+                .setDescription(this.languageRegistry.get(server, Text.GIVEAWAY_FINISHED_EMBED_DESCRIPTION_NO_WINNERS).toString())
+                .setFooter(this.languageRegistry.get(server, Text.GIVEAWAY_FINISHED_EMBED_FOOTER_NO_WINNERS).toString()).build()).queue();
     }
 
     public void handleFinishedMessages(Server server, RichGiveaway giveaway, Message message, Set<Long> winners, BigInteger totalEntries) {
@@ -70,11 +69,11 @@ public class MessageStep {
         String description = descriptionBuilder.toString();
         message.editMessage(new EmbedBuilder()
                 .setColor(this.palette.success())
-                .setTitle(this.languageRegistry.get(server, Text.GIVEAWAY_EMBED_TITLE, replacer -> replacer.set("item", giveaway.getGiveawayItem())).get())
+                .setTitle(this.languageRegistry.get(server, Text.GIVEAWAY_EMBED_TITLE, replacer -> replacer.set("item", giveaway.getGiveawayItem())).toString())
                 .setDescription(this.languageRegistry.get(server, winners.size() > 1 ? Text.GIVEAWAY_FINISHED_EMBED_DESCRIPTION_PLURAL : Text.GIVEAWAY_FINISHED_EMBED_DESCRIPTION_SINGULAR,
-                        replacer -> replacer.set("winners", description)).get())
+                        replacer -> replacer.set("winners", description)).toString())
                 .setFooter(this.languageRegistry.get(server, winners.size() > 1 ? Text.GIVEAWAY_FINISHED_EMBED_FOOTER_PLURAL : Text.GIVEAWAY_FINISHED_EMBED_FOOTER_SINGULAR,
-                        replacer -> replacer.set("winner-count", winners.size()).set("entries", totalEntries)).get())
+                        replacer -> replacer.set("winner-count", winners.size()).set("entries", totalEntries)).toString())
                 .build()).queue(sentMessage -> {
             // Here so only if the message is sent is the giveaway deleted
             if (giveaway instanceof CurrentGiveaway currentGiveaway) {
@@ -155,14 +154,14 @@ public class MessageStep {
         Replace baseReplace = replacer -> replacer.set("item", giveaway.getGiveawayItem()).set("message-link", giveaway.getMessageLink());
         String message;
         if (winnerEntries.size() == 1) {
-            message = this.languageRegistry.get(server, Text.GIVEAWAY_FINISHED_WINNER_MESSAGE).replace(replacer -> replacer.set("winner", winnerEntries.get(0)).addReplaces(baseReplace)).get();
+            message = this.languageRegistry.get(server, Text.GIVEAWAY_FINISHED_WINNER_MESSAGE).replace(replacer -> replacer.set("winner", winnerEntries.get(0)).addReplaces(baseReplace)).toString();
         } else {
             int lastIndex = winnerEntries.size() - 1;
             String endEntry = winnerEntries.get(lastIndex);
             winnerEntries.remove(lastIndex);
 
             String winnerSection = String.join(", ", winnerEntries);
-            message = this.languageRegistry.get(server, Text.GIVEAWAY_FINISHED_WINNERS_MESSAGE).replace(replacer -> replacer.set("winners", winnerSection).set("last-winner", endEntry).addReplaces(baseReplace)).get();
+            message = this.languageRegistry.get(server, Text.GIVEAWAY_FINISHED_WINNERS_MESSAGE).replace(replacer -> replacer.set("winners", winnerSection).set("last-winner", endEntry).addReplaces(baseReplace)).toString();
         }
         channel.sendMessage(message).queue();
     }
