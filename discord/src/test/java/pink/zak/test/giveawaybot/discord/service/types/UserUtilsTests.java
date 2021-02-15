@@ -15,6 +15,5 @@ class UserUtilsTests {
         // erroneous
         assertEquals(-1, UserUtils.parseIdInput("<@!aaaaaaaaaaaaaaaaaa>"));
         assertEquals(-1, UserUtils.parseIdInput("<@!340980623504257 8444>"));
-        assertEquals(-1, UserUtils.parseIdInput("<@!3409806235042578444>"));
     }
 }

@@ -31,21 +31,41 @@ public class UserUtils {
     }
 
     public long parseIdInput(String input) {
-        if (input.contains(" ")) {
+        if (input.contains(" ") || input.length() < 18 || input.length() > 26)
             return -1;
-        }
-        try {
-            String toParse;
-            if (input.length() == 18) {
-                toParse = input;
-            } else if (input.length() == 21) {
-                toParse = input.substring(2, 20);
-            } else if (input.length() == 22) {
-                toParse = input.substring(3, 21);
+        String toParseNew;
+        char firstChar = input.charAt(0);
+        if (firstChar == '<') {
+            int startIndex;
+            char secondChar = input.charAt(1);
+            if (secondChar == '#') {
+                startIndex = 2;
+            } else if (secondChar == '@') {
+                char thirdChar = input.charAt(2);
+                if (thirdChar == '!' || thirdChar == '&')
+                    startIndex = 3;
+                else
+                    startIndex = 2;
             } else {
                 return -1;
             }
-            return Long.parseLong(toParse);
+            int closingPosition = 0;
+            for (int i = 1; i < input.length(); i++) {
+                if (input.charAt(i) == '>')
+                    closingPosition = i;
+            }
+            if (closingPosition == 0)
+                return -1;
+            toParseNew = input.substring(startIndex, closingPosition);
+        } else {
+            toParseNew = input;
+        }
+        for (char character : toParseNew.toCharArray()) {
+            if (!Character.isDigit(character))
+                return -1;
+        }
+        try {
+            return Long.parseLong(toParseNew);
         } catch (NumberFormatException ex) {
             return -1;
         }
