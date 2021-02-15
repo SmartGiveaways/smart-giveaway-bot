@@ -6,6 +6,7 @@ import lombok.experimental.UtilityClass;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
+import org.jetbrains.annotations.Nullable;
 import pink.zak.giveawaybot.discord.data.Defaults;
 import pink.zak.giveawaybot.discord.data.models.Server;
 import pink.zak.giveawaybot.discord.lang.LanguageRegistry;
@@ -36,27 +37,9 @@ public class UserUtils {
         String toParseNew;
         char firstChar = input.charAt(0);
         if (firstChar == '<') {
-            int startIndex;
-            char secondChar = input.charAt(1);
-            if (secondChar == '#') {
-                startIndex = 2;
-            } else if (secondChar == '@') {
-                char thirdChar = input.charAt(2);
-                if (thirdChar == '!' || thirdChar == '&')
-                    startIndex = 3;
-                else
-                    startIndex = 2;
-            } else {
+            toParseNew = parseEnclosedId(input);
+            if (toParseNew == null)
                 return -1;
-            }
-            int closingPosition = 0;
-            for (int i = 1; i < input.length(); i++) {
-                if (input.charAt(i) == '>')
-                    closingPosition = i;
-            }
-            if (closingPosition == 0)
-                return -1;
-            toParseNew = input.substring(startIndex, closingPosition);
         } else {
             toParseNew = input;
         }
@@ -69,5 +52,36 @@ public class UserUtils {
         } catch (NumberFormatException ex) {
             return -1;
         }
+    }
+
+    /**
+     * Parses an ID enclosed in <> where it's know that it starts with <
+     *
+     * @param input Input of a possibly enclosed ID already partially sanitised.
+     * @return The parsed ID or null if not legitimately enclosed
+     */
+    @Nullable
+    private String parseEnclosedId(String input) {
+        int startIndex;
+        char secondChar = input.charAt(1);
+        if (secondChar == '#') {
+            startIndex = 2;
+        } else if (secondChar == '@') {
+            char thirdChar = input.charAt(2);
+            if (thirdChar == '!' || thirdChar == '&')
+                startIndex = 3;
+            else
+                startIndex = 2;
+        } else {
+            return null;
+        }
+        int closingPosition = 0;
+        for (int i = 1; i < input.length(); i++) {
+            if (input.charAt(i) == '>')
+                closingPosition = i;
+        }
+        if (closingPosition == 0)
+            return null;
+        return input.substring(startIndex, closingPosition);
     }
 }

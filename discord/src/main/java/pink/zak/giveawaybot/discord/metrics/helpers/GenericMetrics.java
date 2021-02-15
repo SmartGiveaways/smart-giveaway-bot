@@ -4,6 +4,7 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.utils.cache.CacheView;
 import pink.zak.giveawaybot.discord.GiveawayBot;
+import pink.zak.giveawaybot.discord.service.bot.JdaBot;
 import pink.zak.giveawaybot.discord.service.cache.singular.CachedValue;
 
 import java.util.Optional;
@@ -46,7 +47,7 @@ public class GenericMetrics {
             if (count.isPresent()) {
                 return count.get();
             }
-            GiveawayBot.logger.warn("Could not get guild count. Optional not present.");
+            JdaBot.logger.warn("Could not get guild count. Optional not present.");
             return 0L;
         });
         this.users = new CachedValue<>(TimeUnit.SECONDS, 30, () -> {

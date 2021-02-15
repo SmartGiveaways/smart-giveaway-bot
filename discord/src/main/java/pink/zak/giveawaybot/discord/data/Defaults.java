@@ -54,14 +54,6 @@ public class Defaults {
                 .build();
     }
 
-    public Preset getDefaultPreset() {
-        return defaultPreset;
-    }
-
-    public Permission[] getRequiredPermissions() {
-        return requiredPermissions;
-    }
-
     public Palette getPalette() {
         return this.palette;
     }
