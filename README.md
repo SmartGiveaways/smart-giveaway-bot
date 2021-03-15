@@ -19,7 +19,7 @@ Invite SmartGiveaways to your server in one click -> [here](https://smartgiveawa
 If you have a bug or suggestion please make a new issue right [here](https://github.com/SmartGiveaways/smart-giveaway-bot/issues) on GitHub and don't be sad if your suggestion is denied, there are lots of reasons and we'll try to explain why.
 
 ## Development
-SmartGiveaway is actively maintained, has new features added and bugs fixed. We welcome pull requests and direct fixes from the community here on GitHub but please,  don't make low quality or spammy pull requests. Make them at least a bit contentful.
+SmartGiveaway is not currently actively maintained, but should be mostly stable. We welcome pull requests and direct fixes from the community here on GitHub but please, don't make low quality or spammy pull requests. Make them at least a bit contentful.
 
 ## Da license bro
 Pwease abide by the LGPL-2.1 license for this project and bear in mind that this still applies if you're self hosting the bot. If you're on GitHub, click [here](https://github.com/SmartGiveaways/smart-giveaway-bot/blob/main/LICENSE) and GitHub will display some important points of the license. This is not legal advice.
