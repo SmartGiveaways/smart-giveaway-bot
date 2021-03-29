@@ -29,7 +29,7 @@ class ReactionContainerTests {
     @Test
     void testFromUnknown() {
         FakeReactionGuild guild = new FakeReactionGuild();
-        Emote emote = new EmoteImpl(774238713025921045L, guild, true).setName("communism");
+        Emote emote = new EmoteImpl(774238713025921045L, guild).setName("communism");
         SnowflakeCacheViewImpl<Emote> emoteView = ((SnowflakeCacheViewImpl<Emote>) guild.getEmoteCache());
         try (UnlockHook hook = emoteView.writeLock()) {
             emoteView.getMap().put(774238713025921045L, emote);
