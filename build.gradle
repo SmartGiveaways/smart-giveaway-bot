@@ -42,8 +42,8 @@ allprojects {
         implementation("org.mongodb:mongo-java-driver:3.12.8")
         implementation("org.mongojack:mongojack:4.0.2")
 
-        compileOnly("org.projectlombok:lombok:1.18.18")
-        annotationProcessor("org.projectlombok:lombok:1.18.16")
+        compileOnly("org.projectlombok:lombok:1.18.20")
+        annotationProcessor("org.projectlombok:lombok:1.18.20")
         testImplementation("org.projectlombok:lombok:1.18.16")
         testAnnotationProcessor("org.projectlombok:lombok:1.18.16")
 
