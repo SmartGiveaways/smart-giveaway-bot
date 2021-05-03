@@ -33,13 +33,13 @@ jar {
 
 dependencies {
     compileOnly project(":discord")
-    compileOnly("net.dv8tion:JDA:4.2.1_253") { exclude module: "opus-java" }
+    compileOnly("net.dv8tion:JDA:4.2.1_262") { exclude module: "opus-java" }
 
     implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("io.jsonwebtoken:jjwt:0.9.1")
     implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation("org.springdoc:springdoc-openapi-ui:1.5.6")
+    implementation("org.springdoc:springdoc-openapi-ui:1.5.8")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
