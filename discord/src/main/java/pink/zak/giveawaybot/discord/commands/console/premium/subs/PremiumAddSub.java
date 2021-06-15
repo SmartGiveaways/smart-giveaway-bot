@@ -31,6 +31,7 @@ public class PremiumAddSub extends ConsoleSubCommand {
         }
         server.addPremiumTime(milliseconds);
         JdaBot.logger.info("{} {}ms to server's expiry", milliseconds > 0 ? "Adding" : "Removing", milliseconds);
-        JdaBot.logger.info("The server {}'s premium will now expire in {}", server.getId(), Time.format(server.getTimeToPremiumExpiry()));
+        long timeToExpire = Time.format(server.getTimeToPremiumExpiry());
+        JdaBot.logger.info("The server {}'s premium will now expire in {}", server.getId(), timeToExpire);
     }
 }
