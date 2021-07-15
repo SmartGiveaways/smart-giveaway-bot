@@ -5,10 +5,3 @@ updates:
   schedule:
     interval: weekly
   open-pull-requests-limit: 10
-  ignore:
-  - dependency-name: org.springframework.boot
-    versions:
-    - 2.4.5
-  - dependency-name: com.influxdb:influxdb-client-java
-    versions:
-    - 2.0.0
