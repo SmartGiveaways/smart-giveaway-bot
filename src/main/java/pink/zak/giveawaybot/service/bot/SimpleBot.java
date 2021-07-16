@@ -40,7 +40,7 @@ public interface SimpleBot {
 
     void registerListeners(@NotNull Object... listeners);
 
-    void unRegisterListeners(@NotNull Object... listeners);
+    void deregisterListeners(@NotNull Object... listeners);
 
     boolean isConnected();
 

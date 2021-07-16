@@ -143,7 +143,7 @@ public abstract class JdaBot implements SimpleBot {
     }
 
     @Override
-    public void unRegisterListeners(@NotNull Object... listeners) {
+    public void deregisterListeners(@NotNull Object... listeners) {
         for (Object listener : listeners) {
             if (listener instanceof GiveawayMessageListener messageListener) {
                 this.messageEventRegistry.removeListener(messageListener);

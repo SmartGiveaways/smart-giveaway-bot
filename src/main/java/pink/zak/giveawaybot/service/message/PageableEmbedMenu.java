@@ -86,6 +86,6 @@ public abstract class PageableEmbedMenu extends PageableMenu implements Pageable
         if (this.scheduledFuture != null) {
             this.scheduledFuture.cancel(false);
         }
-        this.scheduledFuture = this.bot.getThreadManager().getScheduler().schedule(() -> this.bot.unRegisterListeners(this), 1, TimeUnit.MINUTES);
+        this.scheduledFuture = this.bot.getThreadManager().getScheduler().schedule(() -> this.bot.deregisterListeners(this), 1, TimeUnit.MINUTES);
     }
 }
