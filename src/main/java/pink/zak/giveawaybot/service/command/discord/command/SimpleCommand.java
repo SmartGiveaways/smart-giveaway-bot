@@ -7,7 +7,6 @@ import pink.zak.giveawaybot.GiveawayBot;
 
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public abstract class SimpleCommand extends Command {
     private final String commandId;
@@ -31,12 +30,11 @@ public abstract class SimpleCommand extends Command {
     public void setSubCommands(Set<SubCommand> subCommands) {
         Map<String, SubCommand> subCommandMap = Maps.newHashMap();
         for (SubCommand subCommand : subCommands)
-            subCommandMap.put(subCommand.getSubCommandId(), subCommand);
+            if (subCommand.getSubCommandGroupId() != null)
+                subCommandMap.put(subCommand.getSubCommandGroupId() + "/" + subCommand.getSubCommandId(), subCommand);
+            else
+                subCommandMap.put(subCommand.getSubCommandId(), subCommand);
         this.subCommands = subCommandMap;
-
-        this.commandData.addSubcommands(subCommands.stream()
-                .map(SubCommand::getSubCommandData)
-                .collect(Collectors.toSet()));
     }
 
     public void setSubCommands(SubCommand... subCommands) {

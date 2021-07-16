@@ -35,7 +35,7 @@ public abstract class SimpleHelpCommand extends SimpleCommand implements Reloada
 
     @Override
     public void onExecute(Member sender, Server server, SlashCommandEvent event) {
-        event.getChannel().sendMessageEmbeds(this.languageMessages.get(server.getLanguage())).queue();
+        event.replyEmbeds(this.languageMessages.get(server.getLanguage())).queue();
     }
 
     public void setupMessages(Text title, Text footer, Text description, Function<Language, Replace> replace) {

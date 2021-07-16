@@ -4,6 +4,7 @@ import com.google.common.collect.Maps;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.data.models.Server;
@@ -19,15 +20,14 @@ public class ListLanguagesSub extends SubCommand {
     private final Map<String, MessageEmbed> messageEmbeds = Maps.newHashMap();
 
     public ListLanguagesSub(GiveawayBot bot) {
-        super(bot, true, false, false);
-        this.addFlatWithAliases("languages", "language", "lang", "langs");
+        super(bot, "language", "list", false, false);
 
         this.buildMessages(bot.getDefaults().getPalette());
     }
 
     @Override
-    public void onExecute(Member sender, Server server, GuildMessageReceivedEvent event, List<String> args) {
-        event.getChannel().sendMessage(this.messageEmbeds.get(server.getLanguage())).queue();
+    public void onExecute(Member sender, Server server, SlashCommandEvent event) {
+        event.replyEmbeds(this.messageEmbeds.get(server.getLanguage())).queue();
     }
 
     private void buildMessages(Palette palette) {
@@ -35,8 +35,8 @@ public class ListLanguagesSub extends SubCommand {
         for (Language language : this.languageRegistry.languageMap().values()) {
             description.append(language.getFlag())
                     .append(" ").append(language.getName())
-                    .append(" `(").append(language.getIdentifier()).append(")` - **")
-                    .append(language.getCoverage()).append("%**.");
+                    .append(" - **")
+                    .append(language.getCoverage()).append("% coverage**");
         }
         for (Language language : this.languageRegistry.languageMap().values()) {
             EmbedBuilder embedBuilder = new EmbedBuilder()

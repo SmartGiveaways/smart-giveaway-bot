@@ -107,13 +107,18 @@ public class DiscordCommandBase extends CommandBackend implements SlashCommandLi
                 return;
             }
             String subCommandName = event.getSubcommandName();
+            String subCommandGroup = event.getSubcommandGroup();
             if (subCommandName == null) {
                 this.executeCommand(command, sender, server, event);
                 return;
             }
+
+            if (subCommandGroup != null)
+                subCommandName = subCommandGroup + "/" + subCommandName;
+
             SubCommand subCommand = command.getSubCommands().get(subCommandName);
             if (subCommand == null) {
-                JdaBot.LOGGER.error("SubCommand not found with ID {} and path {}", event.getSubcommandName(), event.getCommandPath());
+                JdaBot.LOGGER.error("SubCommand not found with ID {} and path {}", subCommandName, event.getCommandPath());
                 return;
             }
             if (!server.isPremium() && subCommand.requiresPremium()) {
