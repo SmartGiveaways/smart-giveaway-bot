@@ -1,0 +1,21 @@
+package pink.zak.giveawaybot.service.command.global;
+
+import com.google.common.collect.Lists;
+import lombok.experimental.UtilityClass;
+
+import java.util.List;
+
+@UtilityClass
+public class SubCommandUtils {
+
+    public static String[] getEnd(int argSize, List<String> arguments) {
+        List<String> newList = Lists.newArrayList();
+        for (int i = 0; i < arguments.size(); i++) {
+            if (i < argSize - 1) {
+                continue;
+            }
+            newList.add(arguments.get(i));
+        }
+        return newList.toArray(new String[]{});
+    }
+}

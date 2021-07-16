@@ -1,0 +1,38 @@
+package pink.zak.giveawaybot.listener;
+
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import pink.zak.giveawaybot.GiveawayBot;
+import pink.zak.giveawaybot.data.cache.ServerCache;
+import pink.zak.giveawaybot.data.models.Server;
+import pink.zak.giveawaybot.lang.LanguageHelper;
+import pink.zak.giveawaybot.lang.LanguageRegistry;
+import pink.zak.giveawaybot.lang.Text;
+
+/**
+ * When the bot joins a guild
+ */
+public class GuildJoinListener extends ListenerAdapter {
+    private final ServerCache serverCache;
+    private final LanguageRegistry languageRegistry;
+
+    public GuildJoinListener(GiveawayBot bot) {
+        this.serverCache = bot.getServerCache();
+        this.languageRegistry = bot.getLanguageRegistry();
+    }
+
+    @Override
+    public void onGuildJoin(GuildJoinEvent event) {
+        Guild guild = event.getGuild();
+        TextChannel defaultChannel = guild.getDefaultChannel();
+        Server server = this.serverCache.getOrInitialise(guild.getIdLong(), LanguageHelper.localeToId(guild.getLocale()));
+
+        if (defaultChannel != null) {
+            this.languageRegistry.get(server, Text.NEW_GUILD_JOINED, replacer -> replacer
+                    .set("language", this.languageRegistry.getLanguage(server.getLanguage()).getName())
+            ).to(defaultChannel);
+        }
+    }
+}

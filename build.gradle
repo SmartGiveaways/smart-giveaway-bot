@@ -1,108 +1,46 @@
-buildscript {
-    repositories {
-        jcenter()
-    }
-
-    dependencies {
-        classpath "com.github.jengelman.gradle.plugins:shadow:6.1.0"
-    }
-}
-
 plugins {
     id("org.sonarqube") version "3.3"
     id("java")
     id("com.github.johnrengelman.shadow") version "7.0.0"
-    // Spring
-    id("org.springframework.boot") version "2.5.2"
-    id("io.spring.dependency-management") version "1.0.11.RELEASE"
     id("jacoco")
+    id("io.freefair.lombok") version "6.0.0-m2"
 }
 
 group "pink.zak.giveawaybot"
 version "0.1.0"
 
-sourceCompatibility = JavaVersion.VERSION_15
-targetCompatibility = JavaVersion.VERSION_15
+sourceCompatibility = JavaVersion.VERSION_16
+targetCompatibility = JavaVersion.VERSION_16
 
-allprojects {
-    apply plugin: 'java'
-    apply plugin: 'jacoco'
-
-    repositories {
-        mavenCentral()
-        mavenLocal()
-        maven { url("https://m2.dv8tion.net/releases") }
-        maven { url("https://repo.codemc.org/repository/maven-public/") }
-        maven { url("https://oss.sonatype.org/content/repositories/snapshots/") }
-        maven { url("https://jitpack.io") }
-    }
-
-    dependencies {
-        implementation("com.google.guava:guava:30.1.1-jre")
-        implementation("org.mongodb:mongo-java-driver:3.12.8")
-        implementation("org.mongojack:mongojack:4.2.0")
-
-        compileOnly("org.projectlombok:lombok:1.18.20")
-        annotationProcessor("org.projectlombok:lombok:1.18.20")
-        testImplementation("org.projectlombok:lombok:1.18.16")
-        testAnnotationProcessor("org.projectlombok:lombok:1.18.16")
-
-        testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.2")
-        testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.2")
-        testImplementation("org.assertj:assertj-core:3.20.2")
-        testImplementation("org.awaitility:awaitility:4.0.3")
-    }
-
-    tasks.withType(JavaCompile).all {
-        options.compilerArgs += ["--enable-preview"]
-    }
-
-
-    tasks.withType(Test).configureEach {
-        useJUnitPlatform()
-        jvmArgs(['--enable-preview'])
-    }
-
-    jacocoTestReport {
-        reports {
-            xml.enabled(true)
-            html.destination file("${buildDir}/reports/jacoco")
-        }
-        dependsOn test
-    }
+repositories {
+    mavenCentral()
+    mavenLocal()
+    maven { url("https://m2.dv8tion.net/releases") }
+    maven { url("https://repo.codemc.org/repository/maven-public/") }
+    maven { url("https://oss.sonatype.org/content/repositories/snapshots/") }
+    maven { url("https://jitpack.io") }
+    maven { url("https://zoidberg.ukp.informatik.tu-darmstadt.de/artifactory/public-releases/") } // trove
 }
 
 dependencies {
-    implementation project(":api")
-    implementation project(":discord")
-    implementation("org.springframework.boot:spring-boot-starter-web")
-}
+    implementation("net.dv8tion:JDA:4.2.1_262") { exclude module: "opus-java" }
+    implementation("com.timvisee:yamlwrapper:1.2.0")
+    implementation("com.vdurmont:emoji-java:5.1.1")
 
-tasks.register("codeCoverageReport", JacocoReport) {
-    // If a subproject applies the 'jacoco' plugin, add the result it to the report
-    subprojects { subproject ->
-        subproject.plugins.withType(JacocoPlugin).configureEach {
-            subproject.tasks.matching({ t -> t.extensions.findByType(JacocoTaskExtension) }).configureEach { testTask ->
-                sourceSets subproject.sourceSets.main
-                executionData fileTree(project.rootDir.absolutePath).include("**/build/jacoco/*.exec")
-                //executionData(testTask)
+    implementation("ch.qos.logback:logback-classic:1.2.3")
+    implementation("com.github.ZakShearman:influx-metrics:1.1.0")
+    implementation("com.influxdb:influxdb-client-java:1.15.0")
+    implementation("me.tongfei:progressbar:0.9.1")
 
-            }
-        }
-    }
+    implementation("com.google.guava:guava:30.1.1-jre")
+    implementation("org.mongodb:mongo-java-driver:3.12.8")
+    implementation("org.mongojack:mongojack:4.2.0")
 
-    reports {
-        // SonarQube usage
-        xml.enabled true
-
-        // User usage
-        html.enabled true
-    }
-}
-
-// Make sure test is run for subprojects before report is generated
-codeCoverageReport.dependsOn {
-    subprojects*.test
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.1")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.1")
+    testImplementation("org.assertj:assertj-core:3.19.0")
+    testImplementation("org.awaitility:awaitility:4.0.3")
+    testImplementation("gnu.trove:trove:3.0.3")
 }
 
 shadowJar {
@@ -120,6 +58,19 @@ sonarqube {
         property "sonar.projectKey", "SmartGiveaways_smart-giveaway-bot"
         property "sonar.organization", "smartgiveaways"
         property "sonar.host.url", "https://sonarcloud.io"
+    }
+}
+
+test {
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    dependsOn test
+    reports {
+        xml.required = false
+        csv.required = false
     }
 }
 
