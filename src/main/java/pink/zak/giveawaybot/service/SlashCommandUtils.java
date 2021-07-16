@@ -6,6 +6,7 @@ import lombok.experimental.UtilityClass;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.privileges.CommandPrivilege;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.data.models.Server;
@@ -19,6 +20,10 @@ import java.util.stream.Collectors;
 
 @UtilityClass
 public class SlashCommandUtils {
+
+    public static boolean hasOption(SlashCommandEvent event, String option) {
+        return event.getOptions().stream().anyMatch(optionMapping -> optionMapping.getName().equals(option));
+    }
 
     public static void updatePrivileges(Guild guild, GiveawayBot bot) {
         Server server = bot.getServerCache().get(guild.getIdLong());

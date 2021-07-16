@@ -8,13 +8,18 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import pink.zak.giveawaybot.commands.console.HeapDumpCommand;
+import pink.zak.giveawaybot.commands.console.HelpCommand;
 import pink.zak.giveawaybot.commands.console.ReloadCommand;
 import pink.zak.giveawaybot.commands.console.StopCommand;
+import pink.zak.giveawaybot.commands.console.premium.PremiumCommand;
 import pink.zak.giveawaybot.commands.console.stats.StatsCommand;
 import pink.zak.giveawaybot.commands.console.unload.UnloadCommand;
 import pink.zak.giveawaybot.commands.discord.about.BotAboutCommand;
 import pink.zak.giveawaybot.commands.discord.about.TechInfoCommand;
 import pink.zak.giveawaybot.commands.discord.admin.AdminCommand;
+import pink.zak.giveawaybot.commands.discord.ban.BanCommand;
+import pink.zak.giveawaybot.commands.discord.ban.BanListCommand;
+import pink.zak.giveawaybot.commands.discord.ban.UnbanCommand;
 import pink.zak.giveawaybot.controllers.GiveawayController;
 import pink.zak.giveawaybot.controllers.ScheduledGiveawayController;
 import pink.zak.giveawaybot.data.Defaults;
@@ -137,11 +142,11 @@ public class GiveawayBot extends JdaBot {
         this.registerCommands(
                 new BotAboutCommand(this),
                 new TechInfoCommand(this),
-                new AdminCommand(this)
-                /*new AdminCommand(this),
+                new AdminCommand(this),
                 new BanCommand(this),
-                new UnbanCommand(this),
-                new EntriesCommand(this),
+                new BanListCommand(this),
+                new UnbanCommand(this)
+                /*new EntriesCommand(this),
                 new GiveawayCommand(this),
                 new HelpCommand(this),
                 new PremiumCommand(this),

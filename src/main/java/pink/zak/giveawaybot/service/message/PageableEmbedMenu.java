@@ -4,6 +4,7 @@ import com.google.common.collect.Maps;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.data.models.Server;
@@ -43,12 +44,26 @@ public abstract class PageableEmbedMenu extends PageableMenu implements Pageable
     public void sendInitialMessage(TextChannel channel) {
         MessageEmbed embed = this.createPage(super.currentPage.get());
         this.cachedPages.put(super.currentPage.get(), embed);
-        channel.sendMessage(embed).queue(sentMessage -> {
+        channel.sendMessageEmbeds(embed).queue(sentMessage -> {
             if (super.maxPage > 1) {
                 sentMessage.addReaction(BotConstants.BACK_ARROW).queue();
                 sentMessage.addReaction(BotConstants.FORWARD_ARROW).queue();
             }
             this.message = sentMessage;
+            this.scheduleDeletion();
+        });
+    }
+
+    public void sendInitialMessage(SlashCommandEvent event) {
+        MessageEmbed embed = this.createPage(super.currentPage.get());
+        this.cachedPages.put(super.currentPage.get(), embed);
+        event.replyEmbeds(embed).queue(sentMessage -> {
+            if (super.maxPage > 1) {
+                // todo
+                // sentMessage.addReaction(BotConstants.BACK_ARROW).queue();
+                // sentMessage.addReaction(BotConstants.FORWARD_ARROW).queue();
+            }
+            // this.message = sentMessage;
             this.scheduleDeletion();
         });
     }
