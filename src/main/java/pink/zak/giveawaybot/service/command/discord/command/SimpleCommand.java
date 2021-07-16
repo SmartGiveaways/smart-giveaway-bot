@@ -9,18 +9,20 @@ import java.util.Map;
 import java.util.Set;
 
 public abstract class SimpleCommand extends Command {
-    private final String commandId;
+    private final String name;
     private final CommandData commandData;
     private Map<String, SubCommand> subCommands = Maps.newHashMap();
 
-    protected SimpleCommand(GiveawayBot bot, String commandId, boolean manager, boolean premium) {
+    private net.dv8tion.jda.api.interactions.commands.Command command;
+
+    protected SimpleCommand(GiveawayBot bot, String name, boolean manager, boolean premium) {
         super(bot, manager, premium);
-        this.commandId = commandId;
+        this.name = name;
         this.commandData = this.createCommandData();
     }
 
-    public String getCommandId() {
-        return this.commandId;
+    public String getName() {
+        return this.name;
     }
 
     public Map<String, SubCommand> getSubCommands() {
@@ -43,6 +45,14 @@ public abstract class SimpleCommand extends Command {
 
     public CommandData getCommandData() {
         return this.commandData;
+    }
+
+    public net.dv8tion.jda.api.interactions.commands.Command getCommand() {
+        return this.command;
+    }
+
+    public void setCommand(net.dv8tion.jda.api.interactions.commands.Command command) {
+        this.command = command;
     }
 
     protected abstract CommandData createCommandData();

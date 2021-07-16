@@ -10,7 +10,6 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.data.Defaults;
-import pink.zak.giveawaybot.data.cache.ServerCache;
 import pink.zak.giveawaybot.data.models.Server;
 import pink.zak.giveawaybot.lang.LanguageRegistry;
 import pink.zak.giveawaybot.lang.Text;
@@ -51,7 +50,7 @@ public class DiscordCommandBase extends CommandBackend implements SlashCommandLi
     }
 
     public void registerCommand(SimpleCommand command) {
-        this.commands.put(command.getCommandId(), command);
+        this.commands.put(command.getName(), command);
     }
 
     public void init() {
@@ -68,8 +67,9 @@ public class DiscordCommandBase extends CommandBackend implements SlashCommandLi
 
         commands.forEach(command -> {
             SimpleCommand matchedCommand = this.commands.get(command.getName());
+            matchedCommand.setCommand(command);
             this.slashCommands.put(command.getIdLong(), matchedCommand);
-            JdaBot.LOGGER.info("Bound command {} to ID {}", matchedCommand.getCommandId(), command.getIdLong());
+            JdaBot.LOGGER.info("Bound command {} to ID {}", matchedCommand.getName(), command.getIdLong());
         });
     }
 

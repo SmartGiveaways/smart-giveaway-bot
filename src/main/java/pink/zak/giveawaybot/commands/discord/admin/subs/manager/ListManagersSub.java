@@ -3,20 +3,18 @@ package pink.zak.giveawaybot.commands.discord.admin.subs.manager;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.data.models.Server;
 import pink.zak.giveawaybot.lang.Text;
 import pink.zak.giveawaybot.service.colour.Palette;
+import pink.zak.giveawaybot.service.command.discord.command.SimpleCommand;
 import pink.zak.giveawaybot.service.command.discord.command.SubCommand;
-
-import java.util.List;
 
 public class ListManagersSub extends SubCommand {
     private final Palette palette;
 
-    public ListManagersSub(GiveawayBot bot) {
-        super(bot, "manager", "list", false, false);
+    public ListManagersSub(GiveawayBot bot, SimpleCommand parent) {
+        super(bot, parent, "manager", "list", false, false);
 
         this.palette = bot.getDefaults().getPalette();
     }
@@ -32,10 +30,10 @@ public class ListManagersSub extends SubCommand {
             descriptionBuilder.append("<@&").append(roleId).append(">\n");
         }
         event.replyEmbeds(new EmbedBuilder()
-                .setTitle(this.langFor(server, Text.ADMIN_MANAGER_LIST_TITLE).toString())
-                .setFooter(this.langFor(server, Text.GENERIC_EMBED_FOOTER).toString())
-                .setColor(this.palette.primary())
-                .setDescription(descriptionBuilder.toString())
-                .build()).queue();
+            .setTitle(this.langFor(server, Text.ADMIN_MANAGER_LIST_TITLE).toString())
+            .setFooter(this.langFor(server, Text.GENERIC_EMBED_FOOTER).toString())
+            .setColor(this.palette.primary())
+            .setDescription(descriptionBuilder.toString())
+            .build()).queue();
     }
 }

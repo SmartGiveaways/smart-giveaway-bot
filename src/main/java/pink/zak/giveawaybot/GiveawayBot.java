@@ -29,6 +29,7 @@ import pink.zak.giveawaybot.data.storage.finishedgiveaway.FullFinishedGiveawaySt
 import pink.zak.giveawaybot.lang.LanguageRegistry;
 import pink.zak.giveawaybot.listener.GiveawayDeletionListener;
 import pink.zak.giveawaybot.listener.GuildJoinListener;
+import pink.zak.giveawaybot.listener.PermissionUpdateListener;
 import pink.zak.giveawaybot.listener.ReactionAddListener;
 import pink.zak.giveawaybot.listener.message.MessageSendListener;
 import pink.zak.giveawaybot.metrics.MetricsLogger;
@@ -165,6 +166,7 @@ public class GiveawayBot extends JdaBot {
                 new MessageSendListener(this),
                 new GiveawayDeletionListener(this),
                 new GuildJoinListener(this),
+                new PermissionUpdateListener(this),
                 new ReactionAddListener(this)
         );
         this.getShardManager().setPresence(OnlineStatus.ONLINE, Activity.playing("smartgiveaways.xyz"));

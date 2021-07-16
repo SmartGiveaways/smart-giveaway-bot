@@ -3,18 +3,16 @@ package pink.zak.giveawaybot.commands.discord.admin.subs.manager;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.data.models.Server;
 import pink.zak.giveawaybot.lang.Text;
+import pink.zak.giveawaybot.service.command.discord.command.SimpleCommand;
 import pink.zak.giveawaybot.service.command.discord.command.SubCommand;
-
-import java.util.List;
 
 public class ManagerRemoveSub extends SubCommand {
 
-    public ManagerRemoveSub(GiveawayBot bot) {
-        super(bot, "manager", "remove", false, false);
+    public ManagerRemoveSub(GiveawayBot bot, SimpleCommand parent) {
+        super(bot, parent, "manager", "remove", false, false);
     }
 
     @Override
