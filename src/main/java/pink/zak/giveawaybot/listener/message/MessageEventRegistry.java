@@ -19,7 +19,7 @@ public class MessageEventRegistry extends ListenerAdapter {
         }
         Server server = this.serverCache.get(event.getGuild().getIdLong());
         for (GiveawayMessageListener listener : this.listeners) {
-            listener.onExecute(server, event);
+            listener.onMessageReceived(server, event);
         }
     }
 

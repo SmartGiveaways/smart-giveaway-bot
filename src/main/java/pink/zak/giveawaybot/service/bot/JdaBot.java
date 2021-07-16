@@ -13,6 +13,8 @@ import pink.zak.giveawaybot.listener.message.GiveawayMessageListener;
 import pink.zak.giveawaybot.listener.message.MessageEventRegistry;
 import pink.zak.giveawaybot.listener.reaction.pageable.PageableReactionEventRegistry;
 import pink.zak.giveawaybot.listener.reaction.pageable.PageableReactionListener;
+import pink.zak.giveawaybot.listener.slash.SlashCommandEventRegistry;
+import pink.zak.giveawaybot.listener.slash.SlashCommandListener;
 import pink.zak.giveawaybot.service.command.console.ConsoleCommandBase;
 import pink.zak.giveawaybot.service.command.console.command.ConsoleBaseCommand;
 import pink.zak.giveawaybot.service.command.discord.DiscordCommandBase;
@@ -36,8 +38,9 @@ import java.util.function.UnaryOperator;
 public abstract class JdaBot implements SimpleBot {
     public static final Logger LOGGER = JDALogger.getLog(GiveawayBot.class);
     protected final MessageEventRegistry messageEventRegistry = new MessageEventRegistry();
+    protected final PageableReactionEventRegistry pageableReactionEventRegistry = new PageableReactionEventRegistry();
+    protected final SlashCommandEventRegistry slashCommandEventRegistry = new SlashCommandEventRegistry();
     protected final StorageSettings storageSettings;
-    private final PageableReactionEventRegistry pageableReactionEventRegistry = new PageableReactionEventRegistry();
     private final BackendFactory backendFactory;
     private final ConfigStore configStore;
     private final Path basePath;
@@ -46,7 +49,6 @@ public abstract class JdaBot implements SimpleBot {
     private boolean initialized;
     private DiscordCommandBase discordCommandBase;
     private ConsoleCommandBase consoleCommandBase;
-    private String prefix;
     private ShardManager shardManager;
 
     private ReadyListener readyListener;
@@ -75,7 +77,7 @@ public abstract class JdaBot implements SimpleBot {
 
     @SneakyThrows
     @Override
-    public void initialize(GiveawayBot bot, String token, String prefix, Set<GatewayIntent> intents, UnaryOperator<DefaultShardManagerBuilder> jdaOperator) {
+    public void initialize(GiveawayBot bot, String token, Set<GatewayIntent> intents, UnaryOperator<DefaultShardManagerBuilder> jdaOperator) {
         if (this.shardManager == null) {
             try {
                 DefaultShardManagerBuilder builder = DefaultShardManagerBuilder.createDefault(token)
@@ -89,16 +91,20 @@ public abstract class JdaBot implements SimpleBot {
                 LOGGER.error("Unable to log into Discord, the following error occurred:", e);
             }
         }
-        this.buildVariables(bot, prefix);
+        this.buildVariables(bot);
     }
 
-    public void buildVariables(GiveawayBot bot, String prefix) {
-        this.prefix = prefix;
+    public void buildVariables(GiveawayBot bot) {
         this.consoleCommandBase = new ConsoleCommandBase(bot);
         this.discordCommandBase = new DiscordCommandBase(bot);
-        this.shardManager.addEventListener(this.messageEventRegistry);
-        this.shardManager.addEventListener(this.pageableReactionEventRegistry);
-        this.messageEventRegistry.addListener(this.discordCommandBase);
+        this.shardManager.addEventListener(
+                this.messageEventRegistry,
+                this.pageableReactionEventRegistry,
+                this.slashCommandEventRegistry
+        );
+        this.registerListeners(
+                this.discordCommandBase
+        );
         this.startConsoleThread();
 
         this.initialized = true;
@@ -106,8 +112,8 @@ public abstract class JdaBot implements SimpleBot {
     }
 
     @Override
-    public void initialize(GiveawayBot bot, String token, String prefix, Set<GatewayIntent> intents) {
-        this.initialize(bot, token, prefix, intents, jdaBuilder -> jdaBuilder);
+    public void initialize(GiveawayBot bot, String token, Set<GatewayIntent> intents) {
+        this.initialize(bot, token, intents, jdaBuilder -> jdaBuilder);
     }
 
     @Override
@@ -136,6 +142,8 @@ public abstract class JdaBot implements SimpleBot {
                 this.messageEventRegistry.addListener(messageListener);
             } else if (listener instanceof PageableReactionListener reactionListener) {
                 this.pageableReactionEventRegistry.addListener(reactionListener);
+            } else if (listener instanceof SlashCommandListener slashCommandListener) {
+                this.slashCommandEventRegistry.addListener(slashCommandListener);
             } else {
                 this.shardManager.addEventListener(listener);
             }
@@ -149,6 +157,8 @@ public abstract class JdaBot implements SimpleBot {
                 this.messageEventRegistry.removeListener(messageListener);
             } else if (listener instanceof PageableReactionListener reactionListener) {
                 this.pageableReactionEventRegistry.removeListener(reactionListener);
+            } else if (listener instanceof SlashCommandListener slashCommandListener) {
+                this.slashCommandEventRegistry.removeListener(slashCommandListener);
             } else {
                 this.shardManager.removeEventListener(listener);
             }
@@ -195,11 +205,6 @@ public abstract class JdaBot implements SimpleBot {
     @Override
     public Path getBasePath() {
         return this.basePath;
-    }
-
-    @Override
-    public String getPrefix() {
-        return this.prefix;
     }
 
     @Override

@@ -28,9 +28,9 @@ public interface SimpleBot {
 
     void buildJdaEarly(String token, Set<GatewayIntent> intents, UnaryOperator<DefaultShardManagerBuilder> jdaOperator);
 
-    void initialize(GiveawayBot bot, String token, String prefix, Set<GatewayIntent> intents, UnaryOperator<DefaultShardManagerBuilder> jdaOperator);
+    void initialize(GiveawayBot bot, String token, Set<GatewayIntent> intents, UnaryOperator<DefaultShardManagerBuilder> jdaOperator);
 
-    void initialize(GiveawayBot bot, String token, String prefix, Set<GatewayIntent> intents);
+    void initialize(GiveawayBot bot, String token, Set<GatewayIntent> intents);
 
     void registerRegistries(Registry... registries);
 
@@ -53,8 +53,6 @@ public interface SimpleBot {
     BackendFactory getBackendFactory();
 
     Path getBasePath();
-
-    String getPrefix();
 
     DiscordCommandBase getDiscordCommandBase();
 

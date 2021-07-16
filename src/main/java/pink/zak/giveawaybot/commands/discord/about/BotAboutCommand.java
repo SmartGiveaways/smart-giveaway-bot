@@ -3,10 +3,10 @@ package pink.zak.giveawaybot.commands.discord.about;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import pink.zak.giveawaybot.GiveawayBot;
-import pink.zak.giveawaybot.commands.discord.about.subs.NerdSub;
 import pink.zak.giveawaybot.data.cache.GiveawayCache;
 import pink.zak.giveawaybot.data.models.Server;
 import pink.zak.giveawaybot.lang.Text;
@@ -15,8 +15,6 @@ import pink.zak.giveawaybot.metrics.helpers.LatencyMonitor;
 import pink.zak.giveawaybot.service.colour.Palette;
 import pink.zak.giveawaybot.service.command.discord.command.SimpleCommand;
 import pink.zak.giveawaybot.service.time.Time;
-
-import java.util.List;
 
 public class BotAboutCommand extends SimpleCommand {
     private final MetricsLogger metricsLogger;
@@ -27,11 +25,7 @@ public class BotAboutCommand extends SimpleCommand {
     private final Palette palette;
 
     public BotAboutCommand(GiveawayBot bot) {
-        super(bot, "babout", false, false);
-        this.setAliases("binfo", "gabout", "ginfo", "whatthisbotdo");
-        this.setSubCommands(
-                new NerdSub(bot)
-        );
+        super(bot, "botinfo", false, false);
 
         this.metricsLogger = bot.getMetricsLogger();
         this.giveawayCache = bot.getGiveawayCache();
@@ -42,9 +36,9 @@ public class BotAboutCommand extends SimpleCommand {
     }
 
     @Override
-    public void onExecute(Member sender, Server server, GuildMessageReceivedEvent event, List<String> args) {
+    public void onExecute(Member sender, Server server, SlashCommandEvent event) {
         JDA jda = event.getJDA();
-        event.getChannel().sendMessage(new EmbedBuilder()
+        event.replyEmbeds(new EmbedBuilder()
                 .setTitle(super.languageRegistry.get(server, Text.ABOUT_EMBED_TITLE).toString())
                 .setFooter(super.languageRegistry.get(server, Text.GENERIC_EMBED_FOOTER).toString())
                 .setColor(this.palette.primary())
@@ -58,5 +52,10 @@ public class BotAboutCommand extends SimpleCommand {
                         .set("last_shard_ping_update", Time.format(System.currentTimeMillis() - this.latencyMonitor.getShardTestTimes().get(jda))))
                         .toString())
                 .build()).queue();
+    }
+
+    @Override
+    public CommandData createCommandData() {
+        return new CommandData("botinfo", "Get basic bot information");
     }
 }

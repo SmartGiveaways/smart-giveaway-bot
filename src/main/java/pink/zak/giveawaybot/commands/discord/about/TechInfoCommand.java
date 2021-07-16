@@ -1,9 +1,11 @@
-package pink.zak.giveawaybot.commands.discord.about.subs;
+package pink.zak.giveawaybot.commands.discord.about;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
+import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.data.cache.GiveawayCache;
 import pink.zak.giveawaybot.data.models.Server;
@@ -12,22 +14,20 @@ import pink.zak.giveawaybot.metrics.helpers.GenericMetrics;
 import pink.zak.giveawaybot.metrics.helpers.LatencyMonitor;
 import pink.zak.giveawaybot.service.cache.singular.CachedValue;
 import pink.zak.giveawaybot.service.colour.Palette;
-import pink.zak.giveawaybot.service.command.discord.command.SubCommand;
+import pink.zak.giveawaybot.service.command.discord.command.SimpleCommand;
 import pink.zak.giveawaybot.service.time.Time;
 
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class NerdSub extends SubCommand {
+public class TechInfoCommand extends SimpleCommand {
     private final GenericMetrics genericMetrics;
     private final LatencyMonitor latencyMonitor;
     private final GiveawayCache giveawayCache;
     private final Palette palette;
     private final CachedValue<Long> historicalGiveaways;
 
-    public NerdSub(GiveawayBot bot) {
-        super(bot, false, false, false);
-        this.addFlatWithAliases("nerd", "nerds");
+    public TechInfoCommand(GiveawayBot bot) {
+        super(bot, "techinfo", false, false);
 
         this.genericMetrics = bot.getMetricsLogger().getGenericMetrics();
         this.latencyMonitor = bot.getLatencyMonitor();
@@ -37,9 +37,9 @@ public class NerdSub extends SubCommand {
     }
 
     @Override
-    public void onExecute(Member sender, Server server, GuildMessageReceivedEvent event, List<String> args) {
+    public void onExecute(Member sender, Server server, SlashCommandEvent event) {
         JDA jda = event.getJDA();
-        event.getChannel().sendMessage(new EmbedBuilder()
+        event.replyEmbeds(new EmbedBuilder()
                 .setColor(this.palette.primary())
                 .setFooter(this.langFor(server, Text.GENERIC_EMBED_FOOTER).toString())
                 .addField("**Uptime**", Time.format(this.genericMetrics.getUptime()), true)
@@ -55,5 +55,10 @@ public class NerdSub extends SubCommand {
                 .addField("", "[Discord](https://discord.gg/aS4PebKZpe)", true)
                 .addField("", "[Code Reports](https://app.codacy.com/gh/SmartGiveaways/smart-giveaway-bot/dashboard)", true)
                 .build()).queue();
+    }
+
+    @Override
+    public CommandData createCommandData() {
+        return new CommandData("techinfo", "Get nerdy information about the bot");
     }
 }

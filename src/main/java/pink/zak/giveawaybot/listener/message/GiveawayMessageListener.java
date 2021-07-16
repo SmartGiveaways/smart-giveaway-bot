@@ -5,5 +5,5 @@ import pink.zak.giveawaybot.data.models.Server;
 
 public interface GiveawayMessageListener {
 
-    void onExecute(Server server, GuildMessageReceivedEvent event);
+    void onMessageReceived(Server server, GuildMessageReceivedEvent event);
 }

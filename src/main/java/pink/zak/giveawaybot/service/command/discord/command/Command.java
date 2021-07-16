@@ -1,6 +1,7 @@
 package pink.zak.giveawaybot.service.command.discord.command;
 
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.data.models.Server;
@@ -23,10 +24,10 @@ public abstract class Command {
         this.requiresPremium = premium;
     }
 
-    public abstract void onExecute(Member sender, Server server, GuildMessageReceivedEvent event, List<String> args);
+    public abstract void onExecute(Member sender, Server server, SlashCommandEvent event);
 
-    public void middleMan(Member sender, Server server, GuildMessageReceivedEvent event, List<String> args) {
-        this.onExecute(sender, server, event, args);
+    public void middleMan(Member sender, Server server, SlashCommandEvent event) {
+        this.onExecute(sender, server, event);
     }
 
     public boolean requiresManager() {

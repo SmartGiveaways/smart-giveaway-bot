@@ -14,7 +14,7 @@ public class MessageSendListener implements GiveawayMessageListener {
     }
 
     @Override
-    public void onExecute(Server server, GuildMessageReceivedEvent event) {
+    public void onMessageReceived(Server server, GuildMessageReceivedEvent event) {
         this.entryPipeline.process(EntryType.MESSAGES, server, event.getAuthor().getIdLong());
     }
 }

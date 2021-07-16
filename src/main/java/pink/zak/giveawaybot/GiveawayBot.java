@@ -13,14 +13,7 @@ import pink.zak.giveawaybot.commands.console.StopCommand;
 import pink.zak.giveawaybot.commands.console.stats.StatsCommand;
 import pink.zak.giveawaybot.commands.console.unload.UnloadCommand;
 import pink.zak.giveawaybot.commands.discord.about.BotAboutCommand;
-import pink.zak.giveawaybot.commands.discord.admin.AdminCommand;
-import pink.zak.giveawaybot.commands.discord.ban.BanCommand;
-import pink.zak.giveawaybot.commands.discord.ban.UnbanCommand;
-import pink.zak.giveawaybot.commands.discord.entries.EntriesCommand;
-import pink.zak.giveawaybot.commands.discord.giveaway.GiveawayCommand;
-import pink.zak.giveawaybot.commands.discord.help.HelpCommand;
-import pink.zak.giveawaybot.commands.discord.premium.PremiumCommand;
-import pink.zak.giveawaybot.commands.discord.preset.PresetCommand;
+import pink.zak.giveawaybot.commands.discord.about.TechInfoCommand;
 import pink.zak.giveawaybot.controllers.GiveawayController;
 import pink.zak.giveawaybot.controllers.ScheduledGiveawayController;
 import pink.zak.giveawaybot.data.Defaults;
@@ -80,7 +73,9 @@ public class GiveawayBot extends JdaBot {
 
     private static boolean locked = false;
 
-    public static boolean isLocked() { return locked; }
+    public static boolean isLocked() {
+        return locked;
+    }
 
     public GiveawayBot(UnaryOperator<Path> path) {
         super(path);
@@ -121,7 +116,7 @@ public class GiveawayBot extends JdaBot {
         this.metricsLogger = new MetricsLogger(this);
         this.entryPipeline = new EntryPipeline(this);
 
-        super.buildVariables(this, settings.string("prefix"));
+        super.buildVariables(this);
 
         Runtime.getRuntime().addShutdownHook(new ShutdownHook(this));
     }
@@ -132,21 +127,25 @@ public class GiveawayBot extends JdaBot {
         this.closeIfPingUnusable();
 
         this.getShardManager().setPresence(OnlineStatus.IDLE, Activity.playing("Loading...."));
+
         this.giveawayController = new GiveawayController(this); // Makes use of JDA, retrieving messages
         this.scheduledGiveawayController = new ScheduledGiveawayController(this); // Makes use of JDA, retrieving messages
         this.metricsLogger.checkAndStart(this);
 
         this.registerCommands(
                 new BotAboutCommand(this),
-                new AdminCommand(this),
+                new TechInfoCommand(this)
+                /*new AdminCommand(this),
                 new BanCommand(this),
                 new UnbanCommand(this),
                 new EntriesCommand(this),
                 new GiveawayCommand(this),
                 new HelpCommand(this),
                 new PremiumCommand(this),
-                new PresetCommand(this)
+                new PresetCommand(this)*/
         );
+        this.getDiscordCommandBase().init();
+
         this.registerConsoleCommands(
                 new pink.zak.giveawaybot.commands.console.premium.PremiumCommand(this),
                 new StatsCommand(this),
@@ -158,6 +157,7 @@ public class GiveawayBot extends JdaBot {
         );
 
         this.messageEventRegistry.setServerCache(this.serverCache);
+        this.slashCommandEventRegistry.setServerCache(this.serverCache);
         this.registerListeners(
                 this.latencyMonitor,
                 new MessageSendListener(this),
@@ -171,7 +171,7 @@ public class GiveawayBot extends JdaBot {
 
     public void reload() {
         this.languageRegistry.reloadLanguages(this);
-        for (Command command : this.getDiscordCommandBase().getCommands()) {
+        for (Command command : this.getDiscordCommandBase().getCommands().values()) {
             if (command instanceof Reloadable reloadableCommand) {
                 reloadableCommand.reload(this);
             }

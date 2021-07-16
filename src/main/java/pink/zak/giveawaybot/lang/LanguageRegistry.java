@@ -7,6 +7,7 @@ import com.timvisee.yamlwrapper.YamlConfiguration;
 import lombok.SneakyThrows;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import pink.zak.giveawaybot.data.models.Server;
 import pink.zak.giveawaybot.lang.model.Language;
 import pink.zak.giveawaybot.service.BotConstants;
@@ -151,6 +152,10 @@ public class LanguageRegistry {
 
         public void to(MessageChannel channel) {
             channel.sendMessage(this.message).queue();
+        }
+
+        public void to(SlashCommandEvent event) {
+            event.reply(this.message).queue();
         }
 
         public void to(MessageChannel channel, Consumer<Message> messageConsumer) {
