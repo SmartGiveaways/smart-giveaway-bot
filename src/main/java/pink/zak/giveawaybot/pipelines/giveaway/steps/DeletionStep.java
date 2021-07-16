@@ -49,7 +49,7 @@ public class DeletionStep {
             this.scheduledFutures.remove(giveaway);
         }
         server.getActiveGiveaways().remove(messageId);
-        JdaBot.logger.debug("Removing giveaway from server {}  :  {}", giveaway.getServerId(), messageId);
+        JdaBot.LOGGER.debug("Removing giveaway from server {}  :  {}", giveaway.getServerId(), messageId);
         UserCache userCache = server.getUserCache();
         for (long enteredId : giveaway.getEnteredUsers()) {
             userCache.get(enteredId).getEntries().remove(messageId);

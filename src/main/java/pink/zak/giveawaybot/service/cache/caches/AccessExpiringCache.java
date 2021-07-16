@@ -48,7 +48,7 @@ public class AccessExpiringCache<K, V> extends Cache<K, V> {
             }
             return retrieved;
         }).exceptionally(ex -> {
-            JdaBot.logger.error("", ex);
+            JdaBot.LOGGER.error("", ex);
             return null;
         });
     }

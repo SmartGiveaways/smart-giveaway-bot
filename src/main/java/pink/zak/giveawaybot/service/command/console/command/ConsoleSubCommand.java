@@ -115,12 +115,12 @@ public abstract class ConsoleSubCommand extends ConsoleCommand {
     protected Server parseServerInput(List<String> args, int index) {
         long serverId = this.parseArgument(args, index);
         if (serverId == -1) {
-            JdaBot.logger.error("Input is not a long ({})", args.get(1));
+            JdaBot.LOGGER.error("Input is not a long ({})", args.get(1));
             return null;
         }
         Server server = this.serverCache.get(serverId);
         if (server == null) {
-            JdaBot.logger.error("Could not find a server with the ID {}", serverId);
+            JdaBot.LOGGER.error("Could not find a server with the ID {}", serverId);
         }
         return server;
     }

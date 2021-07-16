@@ -41,7 +41,7 @@ public class WriteExpiringCache<K, V> extends Cache<K, V> {
     public CompletableFuture<V> getAsync(K key, ThreadFunction threadFunction) {
         return super.getAsync(key, threadFunction).thenApply(retrieved -> this.getAndCheck(key, retrieved))
                 .exceptionally(ex -> {
-                    JdaBot.logger.error("", ex);
+                    JdaBot.LOGGER.error("", ex);
                     return null;
                 });
     }

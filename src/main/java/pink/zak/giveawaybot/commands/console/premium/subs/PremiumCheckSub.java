@@ -23,14 +23,14 @@ public class PremiumCheckSub extends ConsoleSubCommand {
         if (server == null) {
             return;
         }
-        JdaBot.logger.info("-- [ Premium Info For {} ] --", server.getId());
+        JdaBot.LOGGER.info("-- [ Premium Info For {} ] --", server.getId());
         if (server.isPremium()) {
-            JdaBot.logger.info("Has Premium: Yes");
-            JdaBot.logger.info("Expires In: {}", Time.format(server.getTimeToPremiumExpiry()));
+            JdaBot.LOGGER.info("Has Premium: Yes");
+            JdaBot.LOGGER.info("Expires In: {}", Time.format(server.getTimeToPremiumExpiry()));
         } else {
-            JdaBot.logger.info("Has Premium: No");
-            JdaBot.logger.info("Expired: {}", server.getPremiumExpiry() == -1 ? "has never had premium" : Time.format(-server.getTimeToPremiumExpiry()) + " ago");
+            JdaBot.LOGGER.info("Has Premium: No");
+            JdaBot.LOGGER.info("Expired: {}", server.getPremiumExpiry() == -1 ? "has never had premium" : Time.format(-server.getTimeToPremiumExpiry()) + " ago");
         }
-        JdaBot.logger.info("---------------------------------------------");
+        JdaBot.LOGGER.info("---------------------------------------------");
     }
 }

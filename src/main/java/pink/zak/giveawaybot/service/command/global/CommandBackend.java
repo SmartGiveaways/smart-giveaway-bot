@@ -47,7 +47,7 @@ public abstract class CommandBackend {
                         return guild.retrieveMemberById(userId).complete();
                     } catch (ErrorResponseException ex) {
                         if (ex.getErrorResponse() != ErrorResponse.UNKNOWN_USER && ex.getErrorResponse() != ErrorResponse.UNKNOWN_MEMBER) {
-                            JdaBot.logger.error("Error parsing MEMBER type from command. Input {}", userId, ex);
+                            JdaBot.LOGGER.error("Error parsing MEMBER type from command. Input {}", userId, ex);
                         }
                         return null;
                     }
@@ -61,7 +61,7 @@ public abstract class CommandBackend {
                         return this.bot.getShardManager().retrieveUserById(userId).complete();
                     } catch (ErrorResponseException ex) {
                         if (ex.getErrorResponse() != ErrorResponse.UNKNOWN_USER) {
-                            JdaBot.logger.error("Error parsing MEMBER type from command. Input {}", userId, ex);
+                            JdaBot.LOGGER.error("Error parsing MEMBER type from command. Input {}", userId, ex);
                         }
                         return null;
                     }

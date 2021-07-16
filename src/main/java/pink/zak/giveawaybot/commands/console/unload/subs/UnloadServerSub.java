@@ -22,14 +22,14 @@ public class UnloadServerSub extends ConsoleSubCommand {
     public void onExecute(List<String> args) {
         long serverId = this.parseArgument(args, 1);
         if (serverId == -1) {
-            JdaBot.logger.error("Input is not a long ({})", args.get(1));
+            JdaBot.LOGGER.error("Input is not a long ({})", args.get(1));
             return;
         }
         if (!this.serverCache.contains(serverId)) {
-            JdaBot.logger.error("The server {} is not cached", serverId);
+            JdaBot.LOGGER.error("The server {} is not cached", serverId);
             return;
         }
-        JdaBot.logger.warn("Invalidating {}", serverId);
+        JdaBot.LOGGER.warn("Invalidating {}", serverId);
         this.serverCache.invalidate(serverId);
     }
 }

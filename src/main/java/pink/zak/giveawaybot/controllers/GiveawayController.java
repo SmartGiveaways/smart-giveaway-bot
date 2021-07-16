@@ -125,7 +125,7 @@ public class GiveawayController {
             this.startGiveawayTimer(giveaway);
             return ImmutablePair.of(giveaway, ReturnCode.SUCCESS);
         } catch (RateLimitedException ex) {
-            JdaBot.logger.error("", ex);
+            JdaBot.LOGGER.error("", ex);
             return ImmutablePair.of(null, ReturnCode.RATE_LIMIT_FAILURE);
         } catch (InsufficientPermissionException ex) {
             return ImmutablePair.of(null, ReturnCode.PERMISSIONS_FAILURE);
@@ -189,7 +189,7 @@ public class GiveawayController {
                 this.giveawayCache.addGiveaway(giveaway);
                 this.startGiveawayTimer(giveaway);
             }
-            JdaBot.logger.info("Loaded {} giveaways in {} milliseconds", this.giveawayCache.size(), System.currentTimeMillis() - loadStartTime);
+            JdaBot.LOGGER.info("Loaded {} giveaways in {} milliseconds", this.giveawayCache.size(), System.currentTimeMillis() - loadStartTime);
         });
     }
 
@@ -198,7 +198,7 @@ public class GiveawayController {
         LatencyMonitor latencyMonitor = this.bot.getLatencyMonitor();
         this.threadManager.getScheduler().scheduleAtFixedRate(() -> {
             if (GiveawayBot.isLocked()) {
-                JdaBot.logger.warn("Bot was locked so did not update giveaways");
+                JdaBot.LOGGER.warn("Bot was locked so did not update giveaways");
                 return;
             }
             counter.getAndIncrement();
@@ -210,7 +210,7 @@ public class GiveawayController {
                 ) continue;
                 Guild guild = this.bot.getShardManager().getGuildById(giveaway.getServerId());
                 if (guild == null) {
-                    JdaBot.logger.warn("Could not get guild ID {}", giveaway.getServerId());
+                    JdaBot.LOGGER.warn("Could not get guild ID {}", giveaway.getServerId());
                     continue;
                 }
                 JDA jda = guild.getJDA();
@@ -234,7 +234,7 @@ public class GiveawayController {
         for (Map.Entry<JDA, Map<Server, Set<CurrentGiveaway>>> entry : giveaways.entrySet()) {
             JDA jda = entry.getKey();
             if (!latencyMonitor.isLatencyUsable(jda)) {
-                JdaBot.logger.warn("Did not update giveaways for shard {} as latency was not usable.", jda.getShardInfo().getShardId());
+                JdaBot.LOGGER.warn("Did not update giveaways for shard {} as latency was not usable.", jda.getShardInfo().getShardId());
                 continue;
             }
             for (Map.Entry<Server, Set<CurrentGiveaway>> innerEntry : entry.getValue().entrySet()) {
@@ -248,7 +248,7 @@ public class GiveawayController {
             try {
                 Message message = this.getGiveawayMessage(giveaway);
                 if (message == null) {
-                    JdaBot.logger.warn("Giveaway did not delete correctly or the discord api is dying ({} in server {}).", giveaway.getMessageId(), giveaway.getServerId());
+                    JdaBot.LOGGER.warn("Giveaway did not delete correctly or the discord api is dying ({} in server {}).", giveaway.getMessageId(), giveaway.getServerId());
                     continue;
                 }
                 Preset preset = giveaway.getPresetName().equals("default") ? this.defaultPreset : server.getPreset(giveaway.getPresetName());
@@ -262,7 +262,7 @@ public class GiveawayController {
                             .build()).queue();
                 }
             } catch (Exception ex) {
-                JdaBot.logger.error("Error with giveaway message (updateGiveaways)", ex);
+                JdaBot.LOGGER.error("Error with giveaway message (updateGiveaways)", ex);
             }
         }
     }
@@ -291,7 +291,7 @@ public class GiveawayController {
     private void startGiveawayTimer(CurrentGiveaway giveaway) {
         if (!GiveawayBot.isLocked()) {
             this.scheduledFutures.put(giveaway, this.threadManager.getScheduler().schedule(() -> {
-                JdaBot.logger.debug("Giveaway {} expired", giveaway.getMessageId());
+                JdaBot.LOGGER.debug("Giveaway {} expired", giveaway.getMessageId());
                 this.giveawayPipeline.endGiveaway(giveaway);
                 return null;
             }, giveaway.getTimeToExpiry(), TimeUnit.MILLISECONDS));

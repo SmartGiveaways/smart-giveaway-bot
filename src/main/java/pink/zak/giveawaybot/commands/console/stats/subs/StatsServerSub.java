@@ -33,13 +33,13 @@ public class StatsServerSub extends ConsoleSubCommand {
                     .append(Time.format(-server.getTimeToPremiumExpiry()))
                     .append(" ago.");
         }
-        JdaBot.logger.info("-- [ Stats Info For {} ] --", server.getId());
-        JdaBot.logger.info(expiresMessage.toString(), server.getId());
-        JdaBot.logger.info("Loaded Users: {}", server.getUserCache().size());
-        JdaBot.logger.info("Giveaway Count: {}", server.getActiveGiveaways().size());
-        JdaBot.logger.info("Scheduled Giveaway Count: {}", server.getScheduledGiveaways().size());
-        JdaBot.logger.info("Preset Count: {}", server.getPresets().size());
-        JdaBot.logger.info("Ban Count: {}", server.getBannedUsers().size());
-        JdaBot.logger.info("-------------------------------------------");
+        JdaBot.LOGGER.info("-- [ Stats Info For {} ] --", server.getId());
+        JdaBot.LOGGER.info(expiresMessage.toString(), server.getId());
+        JdaBot.LOGGER.info("Loaded Users: {}", server.getUserCache().size());
+        JdaBot.LOGGER.info("Giveaway Count: {}", server.getActiveGiveaways().size());
+        JdaBot.LOGGER.info("Scheduled Giveaway Count: {}", server.getScheduledGiveaways().size());
+        JdaBot.LOGGER.info("Preset Count: {}", server.getPresets().size());
+        JdaBot.LOGGER.info("Ban Count: {}", server.getBannedUsers().size());
+        JdaBot.LOGGER.info("-------------------------------------------");
     }
 }

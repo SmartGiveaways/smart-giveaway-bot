@@ -48,7 +48,7 @@ public class GiveawayCmdUtils {
             case SUCCESS -> this.lang.get(server, Text.GIVEAWAY_SCHEDULED, replacer -> replacer
                     .set("channel", giveawayChannel.getAsMention())
                     .set("time", returnedInfo.getKey().getStartFormatted())).to(responseChannel);
-            default -> JdaBot.logger.error("You messed up bad. GiveawayCmdUtils 1");
+            default -> JdaBot.LOGGER.error("You messed up bad. GiveawayCmdUtils 1");
         }
     }
 

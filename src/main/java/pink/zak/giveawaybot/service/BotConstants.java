@@ -20,7 +20,7 @@ public class BotConstants {
         try {
             return InetAddress.getLocalHost().getHostName();
         } catch (UnknownHostException ex) {
-            JdaBot.logger.error("Could not get local hostname", ex);
+            JdaBot.LOGGER.error("Could not get local hostname", ex);
             return "UNKNOWN";
         }
     }

@@ -123,7 +123,7 @@ public class DiscordCommandBase extends CommandBackend implements GiveawayMessag
                 }
             }
         }, this.executor).exceptionally(ex -> {
-            JdaBot.logger.error("Error from CommandBase input {}", rawMessage, ex);
+            JdaBot.LOGGER.error("Error from CommandBase input {}", rawMessage, ex);
             return null;
         });
     }

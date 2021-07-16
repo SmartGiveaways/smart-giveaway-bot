@@ -17,7 +17,7 @@ public class StopCommand extends ConsoleBaseCommand {
         if (this.bot.isInitialized()) {
             System.exit(0);
         } else {
-            JdaBot.logger.error("The bot is not initialized yet.");
+            JdaBot.LOGGER.error("The bot is not initialized yet.");
         }
     }
 }

@@ -94,7 +94,7 @@ public class MessageStep {
         if (preset.getSetting(Setting.DM_WINNERS)) {
             Guild guild = this.shardManager.getGuildById(server.getId());
             if (guild == null) {
-                JdaBot.logger.warn("handleDm server should never be null but is null {} {}", giveaway.getServerId(), giveaway.getMessageId());
+                JdaBot.LOGGER.warn("handleDm server should never be null but is null {} {}", giveaway.getServerId(), giveaway.getMessageId());
                 return;
             }
             for (long winnerId : winners) {
@@ -102,7 +102,7 @@ public class MessageStep {
                 if (user == null) {
                     user = this.shardManager.retrieveUserById(winnerId).complete();
                     if (user == null) {
-                        JdaBot.logger.warn("handleDm user should never be null but is null {} {} {}", giveaway.getServerId(), giveaway.getMessageId(), winnerId);
+                        JdaBot.LOGGER.warn("handleDm user should never be null but is null {} {} {}", giveaway.getServerId(), giveaway.getMessageId(), winnerId);
                     }
                     continue;
                 }

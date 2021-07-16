@@ -78,7 +78,6 @@ public class GiveawayBot extends JdaBot {
     private Defaults defaults;
     private EntryPipeline entryPipeline;
 
-    public static GiveawayBot apiInstance;
     private static boolean locked = false;
 
     public static boolean isLocked() { return locked; }
@@ -124,7 +123,6 @@ public class GiveawayBot extends JdaBot {
 
         super.buildVariables(this, settings.string("prefix"));
 
-        GiveawayBot.setApiInstance(this);
         Runtime.getRuntime().addShutdownHook(new ShutdownHook(this));
     }
 
@@ -168,7 +166,7 @@ public class GiveawayBot extends JdaBot {
                 new ReactionAddListener(this)
         );
         this.getShardManager().setPresence(OnlineStatus.ONLINE, Activity.playing("smartgiveaways.xyz"));
-        logger.info("Finished startup. The bot is now fully registered.");
+        LOGGER.info("Finished startup. The bot is now fully registered.");
     }
 
     public void reload() {
@@ -183,7 +181,7 @@ public class GiveawayBot extends JdaBot {
     @Override
     public void unload() {
         locked = true;
-        logger.info("Shutting down....");
+        LOGGER.info("Shutting down....");
         new ShutdownHelper(this).shutdown();
         this.mongoConnectionFactory.close();
         this.threadManager.shutdownPools();
@@ -196,10 +194,10 @@ public class GiveawayBot extends JdaBot {
         }
         for (int i = 1; i <= 10; i++) {
             if (this.latencyMonitor.getAverageLatency() < 4000) {
-                logger.info("Successfully tested latency on attempt no. {}", i);
+                LOGGER.info("Successfully tested latency on attempt no. {}", i);
                 return;
             }
-            logger.error("Failed testing latency on attempt no. {}", i);
+            LOGGER.error("Failed testing latency on attempt no. {}", i);
             Thread.sleep(1000);
             if (i == 5) {
                 System.exit(4);
@@ -219,10 +217,6 @@ public class GiveawayBot extends JdaBot {
         this.storageSettings.setUsername(settings.string("mongo-username"));
         this.storageSettings.setPassword(settings.string("mongo-password"));
         this.mongoConnectionFactory = new MongoConnectionFactoryImpl(this.getStorageSettings());
-    }
-
-    private static void setApiInstance(GiveawayBot apiInstance) {
-        GiveawayBot.apiInstance = apiInstance;
     }
 
     public Defaults getDefaults() {

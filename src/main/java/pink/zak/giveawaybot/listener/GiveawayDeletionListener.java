@@ -35,7 +35,7 @@ public class GiveawayDeletionListener extends ListenerAdapter {
     public void onGuildMessageDelete(GuildMessageDeleteEvent event) {
         this.giveawayCache.getAsync(event.getMessageIdLong(), ThreadFunction.GENERAL).thenAccept(giveaway -> {
             if (giveaway != null) {
-                JdaBot.logger.info("Giveaway {} in server {} was deleted", giveaway.getMessageId(), giveaway.getServerId());
+                JdaBot.LOGGER.info("Giveaway {} in server {} was deleted", giveaway.getMessageId(), giveaway.getServerId());
                 this.deletionStep.delete(giveaway);
             }
         });

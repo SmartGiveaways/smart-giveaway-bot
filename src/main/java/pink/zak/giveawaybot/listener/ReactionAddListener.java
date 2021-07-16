@@ -66,7 +66,7 @@ public class ReactionAddListener extends ListenerAdapter {
             user.getEntries().put(giveaway.getMessageId(), this.baseMap.clone());
             this.entryCount.incrementAndGet();
         }).exceptionally(ex -> {
-            JdaBot.logger.error("Error in ReactionAddListener point A", ex);
+            JdaBot.LOGGER.error("Error in ReactionAddListener point A", ex);
             return null;
         });
     }

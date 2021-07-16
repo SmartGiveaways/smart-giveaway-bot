@@ -36,10 +36,10 @@ public class StatsCommand extends ConsoleBaseCommand {
         for (Server server : this.serverCache.getMap().values()) {
             loadedUsers += server.getUserCache().size();
         }
-        JdaBot.logger.info("stats <server-id>\n");
-        JdaBot.logger.info("Loaded Users: {}", loadedUsers);
-        JdaBot.logger.info("Loaded Servers: {}", loadedServers);
-        JdaBot.logger.info("Current Giveaways: {}", currentGiveaways);
-        JdaBot.logger.info("Loaded Finished Giveaways: {}", loadedFinishedGiveaways);
+        JdaBot.LOGGER.info("stats <server-id>\n");
+        JdaBot.LOGGER.info("Loaded Users: {}", loadedUsers);
+        JdaBot.LOGGER.info("Loaded Servers: {}", loadedServers);
+        JdaBot.LOGGER.info("Current Giveaways: {}", currentGiveaways);
+        JdaBot.LOGGER.info("Loaded Finished Giveaways: {}", loadedFinishedGiveaways);
     }
 }

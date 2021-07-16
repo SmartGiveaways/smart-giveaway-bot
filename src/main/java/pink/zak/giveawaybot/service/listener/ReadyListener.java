@@ -18,7 +18,7 @@ public class ReadyListener extends ListenerAdapter {
     }
 
     public void setRequiredShards(int requiredShards) {
-        JdaBot.logger.info("Set required shards to {}", requiredShards);
+        JdaBot.LOGGER.info("Set required shards to {}", requiredShards);
         this.requiredShards = requiredShards;
         if (this.countedShards.get() > this.requiredShards && this.bot.isInitialized()) {
             this.bot.onConnect();
@@ -37,11 +37,11 @@ public class ReadyListener extends ListenerAdapter {
             return;
         }
         int shard = this.countedShards.incrementAndGet();
-        JdaBot.logger.info("ReadyEvent called. Shard {}/{}", shard, this.requiredShards);
+        JdaBot.LOGGER.info("ReadyEvent called. Shard {}/{}", shard, this.requiredShards);
         if (shard < this.requiredShards) {
             return;
         }
-        JdaBot.logger.info("All shards are up! Calling onConnect");
+        JdaBot.LOGGER.info("All shards are up! Calling onConnect");
         this.bot.setConnected(true);
         if (this.bot.isInitialized()) {
             this.bot.onConnect();

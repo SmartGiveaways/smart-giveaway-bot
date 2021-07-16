@@ -26,12 +26,12 @@ public class PremiumAddSub extends ConsoleSubCommand {
         String timeInput = this.parseArgument(args, 2);
         long milliseconds = Time.parse(this.parseArgument(args, 2));
         if (milliseconds == -1) {
-            JdaBot.logger.error("Could not parse time input ({})", timeInput);
+            JdaBot.LOGGER.error("Could not parse time input ({})", timeInput);
             return;
         }
         server.addPremiumTime(milliseconds);
-        JdaBot.logger.info("{} {}ms to server's expiry", milliseconds > 0 ? "Adding" : "Removing", milliseconds);
+        JdaBot.LOGGER.info("{} {}ms to server's expiry", milliseconds > 0 ? "Adding" : "Removing", milliseconds);
         String timeToExpire = Time.format(server.getTimeToPremiumExpiry());
-        JdaBot.logger.info("The server {}'s premium will now expire in {}", server.getId(), timeToExpire);
+        JdaBot.LOGGER.info("The server {}'s premium will now expire in {}", server.getId(), timeToExpire);
     }
 }

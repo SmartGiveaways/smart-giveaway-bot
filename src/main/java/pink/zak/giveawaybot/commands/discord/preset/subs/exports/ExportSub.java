@@ -53,9 +53,9 @@ public class ExportSub extends SubCommand {
 
         try (InputStream inputStream = new ByteArrayInputStream(jsonObject.toString().getBytes(StandardCharsets.UTF_8))) {
             channel.sendMessage(this.langFor(server, Text.PRESET_EXPORTED_SINGLE, replacer -> replacer
-                    .set("preset", preset.getName())).toString()).addFile(inputStream, fileName).queue(message -> {}, ex -> JdaBot.logger.error("Error sending exported preset", ex));
+                    .set("preset", preset.getName())).toString()).addFile(inputStream, fileName).queue(message -> {}, ex -> JdaBot.LOGGER.error("Error sending exported preset", ex));
         } catch (IOException ex) {
-            JdaBot.logger.error("Error exporting preset", ex);
+            JdaBot.LOGGER.error("Error exporting preset", ex);
         }
     }
 }

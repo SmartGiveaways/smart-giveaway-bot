@@ -82,7 +82,7 @@ public class ImportCmdUtils extends ListenerAdapter {
                 }
             }
         }).exceptionally(ex -> {
-            JdaBot.logger.error("Error parsing attachment", ex);
+            JdaBot.LOGGER.error("Error parsing attachment", ex);
             return null;
         });
     }

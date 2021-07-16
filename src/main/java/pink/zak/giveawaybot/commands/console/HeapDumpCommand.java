@@ -25,6 +25,6 @@ public class HeapDumpCommand extends ConsoleBaseCommand {
         ManagementFactory.newPlatformMXBeanProxy(ManagementFactory.getPlatformMBeanServer(),
                 "com.sun.management:type=HotSpotDiagnostic", HotSpotDiagnosticMXBean.class)
                 .dumpHeap(fileName, true);
-        JdaBot.logger.info("Created your heap dump called {} in {}ms", fileName, System.currentTimeMillis() - startTime);
+        JdaBot.LOGGER.info("Created your heap dump called {} in {}ms", fileName, System.currentTimeMillis() - startTime);
     }
 }

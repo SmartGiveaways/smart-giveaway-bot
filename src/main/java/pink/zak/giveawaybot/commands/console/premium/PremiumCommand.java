@@ -21,7 +21,7 @@ public class PremiumCommand extends ConsoleBaseCommand {
 
     @Override
     public void onExecute(List<String> args) {
-        JdaBot.logger.info("premium check <server-id>");
-        JdaBot.logger.info("premium add <server-id> <time>");
+        JdaBot.LOGGER.info("premium check <server-id>");
+        JdaBot.LOGGER.info("premium add <server-id> <time>");
     }
 }

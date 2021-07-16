@@ -33,7 +33,7 @@ public class MetricsLogger {
 
     public void checkAndStart(GiveawayBot bot) {
         if (!bot.getConfig("settings").bool("enable-metrics")) {
-            JdaBot.logger.info("Metrics has not been enabled as it is disabled via configuration.");
+            JdaBot.LOGGER.info("Metrics has not been enabled as it is disabled via configuration.");
             return;
         }
         ScheduledExecutorService scheduler = bot.getThreadManager().getScheduler();

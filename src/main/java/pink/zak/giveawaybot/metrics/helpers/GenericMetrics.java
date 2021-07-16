@@ -47,7 +47,7 @@ public class GenericMetrics {
             if (count.isPresent()) {
                 return count.get();
             }
-            JdaBot.logger.warn("Could not get guild count. Optional not present.");
+            JdaBot.LOGGER.warn("Could not get guild count. Optional not present.");
             return 0L;
         });
         this.users = new CachedValue<>(TimeUnit.SECONDS, 30, () -> {

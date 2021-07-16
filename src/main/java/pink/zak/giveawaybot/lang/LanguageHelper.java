@@ -15,11 +15,11 @@ public class LanguageHelper {
         int coverage = NumberUtils.getPercentage(size, Text.values().length);
         String message = "[Language] " + language.getIdentifier() + " loaded " + size + "/" + Text.values().length + " messages (" + coverage + "% coverage)";
         if (coverage == 100) {
-            JdaBot.logger.info(message);
+            JdaBot.LOGGER.info(message);
         } else if (coverage >= 90) {
-            JdaBot.logger.warn(message);
+            JdaBot.LOGGER.warn(message);
         } else {
-            JdaBot.logger.error(message);
+            JdaBot.LOGGER.error(message);
         }
         return coverage;
     }

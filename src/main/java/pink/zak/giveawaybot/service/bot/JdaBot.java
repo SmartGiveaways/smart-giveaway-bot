@@ -34,7 +34,7 @@ import java.util.Set;
 import java.util.function.UnaryOperator;
 
 public abstract class JdaBot implements SimpleBot {
-    public static final Logger logger = JDALogger.getLog(GiveawayBot.class);
+    public static final Logger LOGGER = JDALogger.getLog(GiveawayBot.class);
     protected final MessageEventRegistry messageEventRegistry = new MessageEventRegistry();
     protected final StorageSettings storageSettings;
     private final PageableReactionEventRegistry pageableReactionEventRegistry = new PageableReactionEventRegistry();
@@ -57,7 +57,7 @@ public abstract class JdaBot implements SimpleBot {
         this.storageSettings = new StorageSettings();
         this.backendFactory = new BackendFactory(this);
         this.configStore = new ConfigStore(this.basePath);
-        logger.info("Base path set to: {}", this.getClass().getProtectionDomain().getCodeSource().getLocation().toURI());
+        LOGGER.info("Base path set to: {}", this.getClass().getProtectionDomain().getCodeSource().getLocation().toURI());
     }
 
     @SneakyThrows
@@ -86,7 +86,7 @@ public abstract class JdaBot implements SimpleBot {
                 jdaOperator.apply(builder);
                 this.shardManager = builder.build();
             } catch (LoginException e) {
-                logger.error("Unable to log into Discord, the following error occurred:", e);
+                LOGGER.error("Unable to log into Discord, the following error occurred:", e);
             }
         }
         this.buildVariables(bot, prefix);
@@ -163,7 +163,7 @@ public abstract class JdaBot implements SimpleBot {
 
     public UncaughtExceptionHandler getExceptionHandler() {
         return (thread, ex) -> {
-            JdaBot.logger.error("Console Exception:", ex);
+            JdaBot.LOGGER.error("Console Exception:", ex);
             this.startConsoleThread();
         };
     }

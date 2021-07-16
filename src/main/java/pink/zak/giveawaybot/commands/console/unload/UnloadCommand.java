@@ -19,6 +19,6 @@ public class UnloadCommand extends ConsoleBaseCommand {
 
     @Override
     public void onExecute(List<String> args) {
-        JdaBot.logger.info("unload <server> <server-id>");
+        JdaBot.LOGGER.info("unload <server> <server-id>");
     }
 }
