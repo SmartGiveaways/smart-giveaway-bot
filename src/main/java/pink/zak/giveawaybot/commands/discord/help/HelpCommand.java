@@ -4,7 +4,9 @@ import com.google.common.collect.Maps;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.data.models.Server;
 import pink.zak.giveawaybot.lang.Text;
@@ -21,15 +23,15 @@ public class HelpCommand extends SimpleCommand implements Reloadable {
     private Map<String, MessageEmbed> fullMessageEmbed = Maps.newHashMap();
 
     public HelpCommand(GiveawayBot bot) {
-        super(bot, "ghelp", false, false);
-        this.setAliases("gh");
+        super(bot, "help", false, false);
 
         this.buildMessages(bot.getDefaults().getPalette());
     }
 
     @Override
-    public void onExecute(Member sender, Server server, GuildMessageReceivedEvent event, List<String> args) {
-        event.getChannel().sendMessage(server.canMemberManage(sender) ? this.fullMessageEmbed.get(server.getLanguage()) : this.limitedMessageEmbed.get(server.getLanguage())).queue();
+    public void onExecute(Member sender, Server server, SlashCommandEvent event) {
+        event.replyEmbeds(server.canMemberManage(sender) ? this.fullMessageEmbed.get(server.getLanguage()) : this.limitedMessageEmbed.get(server.getLanguage()))
+            .setEphemeral(true).queue();
     }
 
     private void buildMessages(Palette palette) {
@@ -49,6 +51,11 @@ public class HelpCommand extends SimpleCommand implements Reloadable {
         }
         this.limitedMessageEmbed = limitedMessages;
         this.fullMessageEmbed = fullMessages;
+    }
+
+    @Override
+    protected CommandData createCommandData() {
+        return new CommandData("help", "Get information and SmartGiveaways");
     }
 
     @Override

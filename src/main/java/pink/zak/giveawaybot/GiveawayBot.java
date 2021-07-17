@@ -149,19 +149,20 @@ public class GiveawayBot extends JdaBot {
                 new BanListCommand(this),
                 new UnbanCommand(this),
                 new GiveawayCommand(this),
-                new EntriesCommand(this)
-                /*new HelpCommand(this),
-                new PremiumCommand(this),
+                new EntriesCommand(this),
+                new pink.zak.giveawaybot.commands.discord.premium.PremiumCommand(this),
+                new pink.zak.giveawaybot.commands.discord.help.HelpCommand(this)
+                /*
                 new PresetCommand(this)*/
         );
         this.getDiscordCommandBase().init();
 
         this.registerConsoleCommands(
-                new pink.zak.giveawaybot.commands.console.premium.PremiumCommand(this),
+                new PremiumCommand(this),
                 new StatsCommand(this),
                 new UnloadCommand(this),
                 new HeapDumpCommand(this),
-                new pink.zak.giveawaybot.commands.console.HelpCommand(this),
+                new HelpCommand(this),
                 new ReloadCommand(this),
                 new StopCommand(this)
         );
