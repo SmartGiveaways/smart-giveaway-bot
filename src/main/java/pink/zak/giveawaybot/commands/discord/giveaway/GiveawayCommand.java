@@ -1,41 +1,77 @@
 package pink.zak.giveawaybot.commands.discord.giveaway;
 
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
+import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
+import net.dv8tion.jda.api.interactions.commands.build.SubcommandGroupData;
 import pink.zak.giveawaybot.GiveawayBot;
+import pink.zak.giveawaybot.commands.discord.giveaway.subs.CreateSub;
 import pink.zak.giveawaybot.commands.discord.giveaway.subs.DeleteSub;
 import pink.zak.giveawaybot.commands.discord.giveaway.subs.HistorySub;
+import pink.zak.giveawaybot.commands.discord.giveaway.subs.InfoSub;
 import pink.zak.giveawaybot.commands.discord.giveaway.subs.ListScheduledSub;
 import pink.zak.giveawaybot.commands.discord.giveaway.subs.ListSub;
 import pink.zak.giveawaybot.commands.discord.giveaway.subs.RerollSub;
-import pink.zak.giveawaybot.commands.discord.giveaway.subs.create.CreateSub;
-import pink.zak.giveawaybot.commands.discord.giveaway.subs.create.CreateWithChannelSub;
-import pink.zak.giveawaybot.commands.discord.giveaway.subs.info.InfoSubLong;
-import pink.zak.giveawaybot.commands.discord.giveaway.subs.info.InfoSubUuid;
-import pink.zak.giveawaybot.commands.discord.giveaway.subs.schedule.ScheduleSub;
-import pink.zak.giveawaybot.commands.discord.giveaway.subs.schedule.ScheduleWithChannelSub;
-import pink.zak.giveawaybot.lang.Text;
-import pink.zak.giveawaybot.service.command.discord.command.SimpleHelpCommand;
+import pink.zak.giveawaybot.commands.discord.giveaway.subs.ScheduleSub;
+import pink.zak.giveawaybot.data.models.Server;
+import pink.zak.giveawaybot.service.command.discord.command.SimpleCommand;
 
-public class GiveawayCommand extends SimpleHelpCommand {
+public class GiveawayCommand extends SimpleCommand {
 
     public GiveawayCommand(GiveawayBot bot) {
-        super(bot, "g", true, false);
+        super(bot, "giveaway", true, false);
         GiveawayCmdUtils cmdUtils = new GiveawayCmdUtils(bot);
-        this.setAliases("giveaway");
 
         this.setSubCommands(
-                new CreateSub(bot, cmdUtils),
-                new CreateWithChannelSub(bot, cmdUtils),
-                new InfoSubLong(bot),
-                new InfoSubUuid(bot),
-                new ScheduleSub(bot, cmdUtils),
-                new ScheduleWithChannelSub(bot, cmdUtils),
-                new DeleteSub(bot, this),
-                new HistorySub(bot),
-                new ListScheduledSub(bot),
-                new ListSub(bot),
-                new RerollSub(bot)
+            new CreateSub(bot, cmdUtils),
+            new DeleteSub(bot),
+            new HistorySub(bot),
+            new InfoSub(bot),
+            new ListScheduledSub(bot),
+            new ListSub(bot),
+            new RerollSub(bot),
+            new ScheduleSub(bot, cmdUtils)
         );
+    }
 
-        this.setupMessages(Text.GIVEAWAY_HELP_EMBED_TITLE, Text.GIVEAWAY_HELP_EMBED_FOOTER, Text.GIVEAWAY_HELP_EMBED_CONTENT);
+    @Override
+    public void onExecute(Member sender, Server server, SlashCommandEvent event) {
+
+    }
+
+    @Override
+    protected CommandData createCommandData() {
+        return new CommandData("giveaway", "SmartGiveaways command")
+            .addSubcommands(
+                new SubcommandData("create", "Create a giveaway")
+                    .addOption(OptionType.STRING, "length", "The length of the giveaway, e.g 7d or 1h", true)
+                    .addOption(OptionType.INTEGER, "winners", "The amount of winners of the giveaway", true)
+                    .addOption(OptionType.STRING, "name", "The name of the giveaway", true)
+                    .addOption(OptionType.STRING, "presetname", "The name of the preset to use. Will use default if not specified.", false)
+                    .addOption(OptionType.CHANNEL, "channel", "The channel to host the giveaway in. Will use this channel if not specified.", false),
+                new SubcommandData("info", "Get info about a giveaway")
+                    .addOption(OptionType.STRING, "giveawayid", "The ID of the giveaway or expired giveaway", true),
+                new SubcommandData("schedule", "Schedule a giveaway")
+                    .addOption(OptionType.STRING, "delay", "The time until the giveaway begins, e.g 7d or 1h", true)
+                    .addOption(OptionType.STRING, "length", "The length of the giveaway, e.g 7d or 1h", true)
+                    .addOption(OptionType.INTEGER, "winners", "The amount of winners of the giveaway", true)
+                    .addOption(OptionType.STRING, "name", "The name of the giveaway", true)
+                    .addOption(OptionType.STRING, "presetname", "The name of the preset to use. Will use default if not specified.", false)
+                    .addOption(OptionType.CHANNEL, "channel", "The channel to host the giveaway in. Will use this channel if not specified.", false),
+                new SubcommandData("delete", "Delete a giveaway")
+                    .addOption(OptionType.STRING, "giveawayid", "The ID of the giveaway", true),
+                new SubcommandData("history", "Get giveaway history"),
+                new SubcommandData("reroll", "Reroll a giveaway's winners")
+                    .addOption(OptionType.INTEGER, "giveawayid", "The ID of the giveaway", true)
+            )
+            .addSubcommandGroups(
+                new SubcommandGroupData("list", "List giveaways")
+                    .addSubcommands(
+                        new SubcommandData("current", "List current giveaways"),
+                        new SubcommandData("scheduled", "List scheduled giveaways")
+                    )
+            );
     }
 }

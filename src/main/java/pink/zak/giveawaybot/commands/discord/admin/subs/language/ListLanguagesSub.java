@@ -18,8 +18,8 @@ import java.util.Map;
 public class ListLanguagesSub extends SubCommand {
     private final Map<String, MessageEmbed> messageEmbeds = Maps.newHashMap();
 
-    public ListLanguagesSub(GiveawayBot bot, SimpleCommand parent) {
-        super(bot, parent, "language", "list", false, false);
+    public ListLanguagesSub(GiveawayBot bot) {
+        super(bot, "language", "list", false, false);
 
         this.buildMessages(bot.getDefaults().getPalette());
     }

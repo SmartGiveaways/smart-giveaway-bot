@@ -11,8 +11,8 @@ import pink.zak.giveawaybot.service.command.discord.command.SubCommand;
 
 public class ManagerRemoveSub extends SubCommand {
 
-    public ManagerRemoveSub(GiveawayBot bot, SimpleCommand parent) {
-        super(bot, parent, "manager", "remove", false, false);
+    public ManagerRemoveSub(GiveawayBot bot) {
+        super(bot, "manager", "remove", false, false);
     }
 
     @Override

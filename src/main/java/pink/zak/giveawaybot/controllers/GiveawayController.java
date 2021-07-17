@@ -92,7 +92,7 @@ public class GiveawayController {
         }
         boolean reactToEnter = preset.getSetting(Setting.ENABLE_REACT_TO_ENTER);
         try {
-            Message message = giveawayChannel.sendMessage(new EmbedBuilder()
+            Message message = giveawayChannel.sendMessageEmbeds(new EmbedBuilder()
                     .setTitle(this.languageRegistry.get(server, Text.GIVEAWAY_EMBED_TITLE, replacer -> replacer.set("item", giveawayItem)).toString())
                     .setDescription(this.languageRegistry.get(server, reactToEnter ? Text.GIVEAWAY_EMBED_DESCRIPTION_REACTION : Text.GIVEAWAY_EMBED_DESCRIPTION_ALL).toString())
                     .setColor(this.palette.primary())

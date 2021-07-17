@@ -13,8 +13,8 @@ import pink.zak.giveawaybot.service.command.discord.command.SubCommand;
 public class SetLanguageSub extends SubCommand {
     private final LanguageRegistry languageRegistry;
 
-    public SetLanguageSub(GiveawayBot bot, SimpleCommand parent) {
-        super(bot, parent, "language", "set", false, false);
+    public SetLanguageSub(GiveawayBot bot) {
+        super(bot, "language", "set", false, false);
 
         this.languageRegistry = bot.getLanguageRegistry();
     }

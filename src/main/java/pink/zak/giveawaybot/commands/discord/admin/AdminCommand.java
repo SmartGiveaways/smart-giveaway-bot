@@ -23,11 +23,11 @@ public class AdminCommand extends SimpleHelpCommand {
         super(bot, "gadmin", true, false);
 
         this.setSubCommands(
-            new ListLanguagesSub(bot, this),
-            new SetLanguageSub(bot, this),
-            new ListManagersSub(bot, this),
-            new ManagerAddSub(bot, this),
-            new ManagerRemoveSub(bot, this)
+            new ListLanguagesSub(bot),
+            new SetLanguageSub(bot),
+            new ListManagersSub(bot),
+            new ManagerAddSub(bot),
+            new ManagerRemoveSub(bot)
         );
         this.setupMessages(Text.ADMIN_EMBED_TITLE, Text.GENERIC_EMBED_FOOTER, Text.ADMIN_EMBED_CONTENT, language -> replacer -> replacer.set("flag", language.getFlag()));
     }

@@ -6,23 +6,17 @@ import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.data.models.Server;
 
 public abstract class SubCommand extends Command {
-    protected final SimpleCommand parent;
-
     private final String subCommandId;
     private final String subCommandGroupId;
 
-    protected SubCommand(GiveawayBot bot, SimpleCommand parent, String subCommandId, boolean manager, boolean premium) {
+    protected SubCommand(GiveawayBot bot, String subCommandId, boolean manager, boolean premium) {
         super(bot, manager, premium);
-        this.parent = parent;
-
         this.subCommandId = subCommandId;
         this.subCommandGroupId = null;
     }
 
-    protected SubCommand(GiveawayBot bot, SimpleCommand parent, String subCommandGroupId, String subCommandId, boolean manager, boolean premium) {
+    protected SubCommand(GiveawayBot bot, String subCommandGroupId, String subCommandId, boolean manager, boolean premium) {
         super(bot, manager, premium);
-        this.parent = parent;
-
         this.subCommandId = subCommandId;
         this.subCommandGroupId = subCommandGroupId;
     }
@@ -33,10 +27,6 @@ public abstract class SubCommand extends Command {
 
     public String getSubCommandGroupId() {
         return this.subCommandGroupId;
-    }
-
-    public SimpleCommand getParent() {
-        return this.parent;
     }
 
     @Override

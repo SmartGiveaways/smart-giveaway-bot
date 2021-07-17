@@ -13,8 +13,8 @@ import pink.zak.giveawaybot.service.command.discord.command.SubCommand;
 public class ListManagersSub extends SubCommand {
     private final Palette palette;
 
-    public ListManagersSub(GiveawayBot bot, SimpleCommand parent) {
-        super(bot, parent, "manager", "list", false, false);
+    public ListManagersSub(GiveawayBot bot) {
+        super(bot, "manager", "list", false, false);
 
         this.palette = bot.getDefaults().getPalette();
     }

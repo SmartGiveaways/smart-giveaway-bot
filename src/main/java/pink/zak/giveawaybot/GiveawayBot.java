@@ -20,6 +20,7 @@ import pink.zak.giveawaybot.commands.discord.admin.AdminCommand;
 import pink.zak.giveawaybot.commands.discord.ban.BanCommand;
 import pink.zak.giveawaybot.commands.discord.ban.BanListCommand;
 import pink.zak.giveawaybot.commands.discord.ban.UnbanCommand;
+import pink.zak.giveawaybot.commands.discord.giveaway.GiveawayCommand;
 import pink.zak.giveawaybot.controllers.GiveawayController;
 import pink.zak.giveawaybot.controllers.ScheduledGiveawayController;
 import pink.zak.giveawaybot.data.Defaults;
@@ -145,9 +146,9 @@ public class GiveawayBot extends JdaBot {
                 new AdminCommand(this),
                 new BanCommand(this),
                 new BanListCommand(this),
-                new UnbanCommand(this)
+                new UnbanCommand(this),
+                new GiveawayCommand(this)
                 /*new EntriesCommand(this),
-                new GiveawayCommand(this),
                 new HelpCommand(this),
                 new PremiumCommand(this),
                 new PresetCommand(this)*/
