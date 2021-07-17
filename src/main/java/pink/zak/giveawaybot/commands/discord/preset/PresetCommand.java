@@ -1,7 +1,5 @@
 package pink.zak.giveawaybot.commands.discord.preset;
 
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
@@ -14,7 +12,6 @@ import pink.zak.giveawaybot.commands.discord.preset.subs.InfoSub;
 import pink.zak.giveawaybot.commands.discord.preset.subs.ListSub;
 import pink.zak.giveawaybot.commands.discord.preset.subs.OptionsSub;
 import pink.zak.giveawaybot.commands.discord.preset.subs.SetOptionSub;
-import pink.zak.giveawaybot.data.models.Server;
 import pink.zak.giveawaybot.enums.Setting;
 import pink.zak.giveawaybot.service.command.discord.command.SimpleCommand;
 

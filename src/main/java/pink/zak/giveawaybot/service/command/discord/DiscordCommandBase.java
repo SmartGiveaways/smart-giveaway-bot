@@ -59,10 +59,10 @@ public class DiscordCommandBase extends CommandBackend implements SlashCommandLi
                 .stream()
                 .map(SimpleCommand::getCommandData)
                 .collect(Collectors.toSet());
-        System.out.println("Created data " + createdData);
+        JdaBot.LOGGER.info("Created data " + createdData);
 
         List<net.dv8tion.jda.api.interactions.commands.Command> commands = this.jda.getGuildById(751886048623067186L).updateCommands().addCommands(createdData).complete();
-        System.out.println("Commands " + commands);
+        JdaBot.LOGGER.info("Commands " + commands);
         //List<net.dv8tion.jda.api.interactions.commands.Command> commands = this.jda.updateCommands().addCommands(createdData).complete();
 
         commands.forEach(command -> {
@@ -78,20 +78,16 @@ public class DiscordCommandBase extends CommandBackend implements SlashCommandLi
         TextChannel channel = event.getTextChannel();
         Member selfMember = event.getGuild().getSelfMember();
         Member sender = event.getMember();
-        System.out.println("1");
         if (sender == null || GiveawayBot.isLocked() || !selfMember.hasPermission(channel, Permission.MESSAGE_WRITE)) {
             return;
         }
-        System.out.println("2");
         if (!this.handleBotPermsCheck(server, channel, selfMember)) {
             return;
         }
-        System.out.println("3");
         if (server == null) {
             this.languageRegistry.fallback(Text.FATAL_ERROR_LOADING_SERVER).to(event);
             return;
         }
-        System.out.println("4");
         CompletableFuture.runAsync(() -> {
             long commandId = event.getCommandIdLong();
             SimpleCommand command = this.slashCommands.get(commandId);

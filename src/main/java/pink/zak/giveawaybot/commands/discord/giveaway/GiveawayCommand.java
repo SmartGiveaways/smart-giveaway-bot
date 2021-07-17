@@ -1,7 +1,5 @@
 package pink.zak.giveawaybot.commands.discord.giveaway;
 
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
@@ -15,7 +13,6 @@ import pink.zak.giveawaybot.commands.discord.giveaway.subs.ListScheduledSub;
 import pink.zak.giveawaybot.commands.discord.giveaway.subs.ListSub;
 import pink.zak.giveawaybot.commands.discord.giveaway.subs.RerollSub;
 import pink.zak.giveawaybot.commands.discord.giveaway.subs.ScheduleSub;
-import pink.zak.giveawaybot.data.models.Server;
 import pink.zak.giveawaybot.service.command.discord.command.SimpleCommand;
 
 public class GiveawayCommand extends SimpleCommand {

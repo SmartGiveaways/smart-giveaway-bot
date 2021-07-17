@@ -76,7 +76,7 @@ public abstract class PageableEmbedMenu extends PageableMenu implements Pageable
             return;
         }
         MessageEmbed embed = this.cachedPages.computeIfAbsent(page, this::createPage);
-        this.message.editMessage(embed).queue();
+        this.message.editMessageEmbeds(embed).queue();
     }
 
     @Override

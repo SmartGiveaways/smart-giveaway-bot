@@ -14,22 +14,16 @@ public class SlashCommandEventRegistry extends ListenerAdapter {
 
     @Override
     public void onSlashCommand(SlashCommandEvent event) {
-        System.out.println("A");
         if (!event.isFromGuild() || this.serverCache == null) {
-            System.out.println("B");
             return;
         }
-        System.out.println("C");
         Server server = this.serverCache.get(event.getGuild().getIdLong());
-        System.out.println("D");
         for (SlashCommandListener listener : this.listeners) {
-            System.out.println("E");
             listener.onSlashCommand(server, event);
         }
     }
 
     public void addListener(SlashCommandListener listener) {
-        System.out.println("Added listener for SlashCommandListener");
         this.listeners.add(listener);
     }
 
