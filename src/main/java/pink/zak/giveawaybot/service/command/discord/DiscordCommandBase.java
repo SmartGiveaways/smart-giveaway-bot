@@ -59,13 +59,13 @@ public class DiscordCommandBase extends CommandBackend implements SlashCommandLi
                 .stream()
                 .map(SimpleCommand::getCommandData)
                 .collect(Collectors.toSet());
-        JdaBot.LOGGER.info("Created data " + createdData);
+        JdaBot.LOGGER.info("Created data {}", createdData);
 
-        List<net.dv8tion.jda.api.interactions.commands.Command> commands = this.jda.getGuildById(751886048623067186L).updateCommands().addCommands(createdData).complete();
-        JdaBot.LOGGER.info("Commands " + commands);
+        List<net.dv8tion.jda.api.interactions.commands.Command> createdCommands = this.jda.getGuildById(751886048623067186L).updateCommands().addCommands(createdData).complete();
+        JdaBot.LOGGER.info("Commands {}", createdCommands);
         //List<net.dv8tion.jda.api.interactions.commands.Command> commands = this.jda.updateCommands().addCommands(createdData).complete();
 
-        commands.forEach(command -> {
+        createdCommands.forEach(command -> {
             SimpleCommand matchedCommand = this.commands.get(command.getName());
             matchedCommand.setCommand(command);
             this.slashCommands.put(command.getIdLong(), matchedCommand);

@@ -21,12 +21,12 @@ public class SetOptionSub extends SubCommand {
         Setting setting = Setting.valueOf(event.getOption("setting").getAsString());
         String inputValue = event.getOption("value").getAsString();
         if (presetName.equalsIgnoreCase("default")) {
-            this.langFor(server, Text.PRESET_CANNOT_MODIFY_DEFAULT).to(event.getChannel());
+            this.langFor(server, Text.PRESET_CANNOT_MODIFY_DEFAULT).to(event);
             return;
         }
         Preset preset = server.getPreset(presetName);
         if (preset == null) {
-            this.langFor(server, Text.COULDNT_FIND_PRESET).to(event.getChannel());
+            this.langFor(server, Text.COULDNT_FIND_PRESET).to(event);
             return;
         }
         if (!setting.checkInputAny(inputValue, event.getGuild())) {

@@ -27,7 +27,7 @@ public class OptionsSub extends SubCommand {
 
     @Override
     public void onExecute(Member sender, Server server, SlashCommandEvent event) {
-        event.getChannel().sendMessageEmbeds(this.optionsList.get(server.getLanguage())).queue();
+        event.replyEmbeds(this.optionsList.get(server.getLanguage())).queue();
     }
 
     private Map<String, MessageEmbed> setupOptionsList() {
