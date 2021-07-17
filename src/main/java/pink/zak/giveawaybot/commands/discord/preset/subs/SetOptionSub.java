@@ -1,7 +1,7 @@
 package pink.zak.giveawaybot.commands.discord.preset.subs;
 
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.data.models.Preset;
 import pink.zak.giveawaybot.data.models.Server;
@@ -9,22 +9,17 @@ import pink.zak.giveawaybot.enums.Setting;
 import pink.zak.giveawaybot.lang.Text;
 import pink.zak.giveawaybot.service.command.discord.command.SubCommand;
 
-import java.util.List;
-
 public class SetOptionSub extends SubCommand {
 
     public SetOptionSub(GiveawayBot bot) {
-        super(bot, true, false, false);
-
-        this.addFlat("set");
-        this.addArgument(String.class); // preset name
-        this.addArgument(String.class);  // Setting name
-        this.addArgument(String.class); // Value
+        super(bot, "set", true, false);
     }
 
     @Override
-    public void onExecute(Member sender, Server server, GuildMessageReceivedEvent event, List<String> args) {
-        String presetName = this.parseArgument(args, event.getGuild(), 1);
+    public void onExecute(Member sender, Server server, SlashCommandEvent event) {
+        String presetName = event.getOption("presetname").getAsString();
+        Setting setting = Setting.valueOf(event.getOption("setting").getAsString());
+        String inputValue = event.getOption("value").getAsString();
         if (presetName.equalsIgnoreCase("default")) {
             this.langFor(server, Text.PRESET_CANNOT_MODIFY_DEFAULT).to(event.getChannel());
             return;
@@ -34,23 +29,16 @@ public class SetOptionSub extends SubCommand {
             this.langFor(server, Text.COULDNT_FIND_PRESET).to(event.getChannel());
             return;
         }
-        String settingName = this.parseArgument(args, event.getGuild(), 2);
-        Setting setting = Setting.match(settingName);
-        if (setting == null) {
-            this.langFor(server, Text.COULDNT_FIND_SETTING).to(event.getChannel());
-            return;
-        }
-        String inputValue = this.parseArgument(args, event.getGuild(), 3);
         if (!setting.checkInputAny(inputValue, event.getGuild())) {
-            this.langFor(server, Text.PRESET_SETTING_INCORRECT_INPUT, replacer -> replacer.set("setting", setting.getPrimaryConfigName())).to(event.getChannel());
+            this.langFor(server, Text.PRESET_SETTING_INCORRECT_INPUT, replacer -> replacer.set("setting", setting.getName())).to(event);
             return;
         }
         Object parsedValue = setting.parseAny(inputValue, event.getGuild());
         if (!setting.checkLimit(server, parsedValue)) {
-            this.langFor(server, setting.getLimitMessage(), replacer -> replacer.set("max", server.isPremium() ? setting.getMaxPremiumValue() : setting.getMaxValue())).to(event.getChannel());
+            this.langFor(server, setting.getLimitMessage(), replacer -> replacer.set("max", server.isPremium() ? setting.getMaxPremiumValue() : setting.getMaxValue())).to(event);
             return;
         }
         preset.setSetting(setting, parsedValue);
-        this.langFor(server, Text.PRESET_SETTING_SET, replacer -> replacer.set("setting", setting.getPrimaryConfigName()).set("value", parsedValue)).to(event.getChannel());
+        this.langFor(server, Text.PRESET_SETTING_SET, replacer -> replacer.set("setting", setting.getName()).set("value", parsedValue)).to(event);
     }
 }
