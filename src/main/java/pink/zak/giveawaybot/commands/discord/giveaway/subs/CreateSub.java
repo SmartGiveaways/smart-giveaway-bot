@@ -2,7 +2,6 @@ package pink.zak.giveawaybot.commands.discord.giveaway.subs;
 
 import net.dv8tion.jda.api.entities.GuildChannel;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import pink.zak.giveawaybot.GiveawayBot;

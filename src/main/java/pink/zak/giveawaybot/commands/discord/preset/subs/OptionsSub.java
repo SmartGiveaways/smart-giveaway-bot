@@ -5,7 +5,6 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.data.models.Server;
 import pink.zak.giveawaybot.enums.Setting;
@@ -14,7 +13,6 @@ import pink.zak.giveawaybot.lang.model.Language;
 import pink.zak.giveawaybot.service.colour.Palette;
 import pink.zak.giveawaybot.service.command.discord.command.SubCommand;
 
-import java.util.List;
 import java.util.Map;
 
 public class OptionsSub extends SubCommand {

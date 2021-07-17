@@ -1,6 +1,5 @@
 package pink.zak.giveawaybot.enums;
 
-import com.google.common.collect.Sets;
 import net.dv8tion.jda.api.entities.Guild;
 import pink.zak.giveawaybot.data.models.Server;
 import pink.zak.giveawaybot.lang.Text;
@@ -8,7 +7,6 @@ import pink.zak.giveawaybot.service.types.BooleanUtils;
 import pink.zak.giveawaybot.service.types.NumberUtils;
 import pink.zak.giveawaybot.service.types.ReactionContainer;
 
-import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Function;

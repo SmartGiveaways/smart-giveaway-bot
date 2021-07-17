@@ -8,8 +8,6 @@ import lombok.SneakyThrows;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
-import net.dv8tion.jda.api.requests.RestAction;
-import net.dv8tion.jda.api.requests.restaction.interactions.ReplyAction;
 import pink.zak.giveawaybot.data.models.Server;
 import pink.zak.giveawaybot.lang.model.Language;
 import pink.zak.giveawaybot.service.BotConstants;

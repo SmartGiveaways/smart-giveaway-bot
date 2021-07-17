@@ -2,8 +2,11 @@ package pink.zak.giveawaybot.service.command.discord.command;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import pink.zak.giveawaybot.GiveawayBot;
+import pink.zak.giveawaybot.data.models.Server;
 
 import java.util.Map;
 import java.util.Set;
@@ -37,6 +40,11 @@ public abstract class SimpleCommand extends Command {
             else
                 subCommandMap.put(subCommand.getSubCommandId(), subCommand);
         this.subCommands = subCommandMap;
+    }
+
+    @Override
+    public void onExecute(Member sender, Server server, SlashCommandEvent event) {
+
     }
 
     public void setSubCommands(SubCommand... subCommands) {

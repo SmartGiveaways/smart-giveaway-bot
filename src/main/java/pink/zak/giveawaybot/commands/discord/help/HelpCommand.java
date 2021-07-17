@@ -5,7 +5,6 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.data.models.Server;
@@ -15,7 +14,6 @@ import pink.zak.giveawaybot.service.colour.Palette;
 import pink.zak.giveawaybot.service.command.discord.command.SimpleCommand;
 import pink.zak.giveawaybot.service.config.Reloadable;
 
-import java.util.List;
 import java.util.Map;
 
 public class HelpCommand extends SimpleCommand implements Reloadable {

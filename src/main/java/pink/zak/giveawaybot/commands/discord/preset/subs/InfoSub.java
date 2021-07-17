@@ -3,7 +3,6 @@ package pink.zak.giveawaybot.commands.discord.preset.subs;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.data.Defaults;
 import pink.zak.giveawaybot.data.models.Preset;
@@ -13,7 +12,6 @@ import pink.zak.giveawaybot.lang.Text;
 import pink.zak.giveawaybot.service.colour.Palette;
 import pink.zak.giveawaybot.service.command.discord.command.SubCommand;
 
-import java.util.List;
 import java.util.Map;
 
 public class InfoSub extends SubCommand {

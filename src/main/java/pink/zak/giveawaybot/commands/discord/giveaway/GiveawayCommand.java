@@ -37,11 +37,6 @@ public class GiveawayCommand extends SimpleCommand {
     }
 
     @Override
-    public void onExecute(Member sender, Server server, SlashCommandEvent event) {
-
-    }
-
-    @Override
     protected CommandData createCommandData() {
         return new CommandData("giveaway", "SmartGiveaways command")
             .addSubcommands(

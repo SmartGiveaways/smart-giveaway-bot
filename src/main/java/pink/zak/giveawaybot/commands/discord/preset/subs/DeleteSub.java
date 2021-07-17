@@ -3,7 +3,6 @@ package pink.zak.giveawaybot.commands.discord.preset.subs;
 import lombok.SneakyThrows;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.data.cache.GiveawayCache;
 import pink.zak.giveawaybot.data.cache.ScheduledGiveawayCache;
@@ -11,7 +10,6 @@ import pink.zak.giveawaybot.data.models.Server;
 import pink.zak.giveawaybot.lang.Text;
 import pink.zak.giveawaybot.service.command.discord.command.SubCommand;
 
-import java.util.List;
 import java.util.UUID;
 
 public class DeleteSub extends SubCommand {

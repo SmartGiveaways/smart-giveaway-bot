@@ -2,14 +2,11 @@ package pink.zak.giveawaybot.service.command.discord.command;
 
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.data.models.Server;
 import pink.zak.giveawaybot.lang.LanguageRegistry;
 import pink.zak.giveawaybot.lang.Text;
 import pink.zak.giveawaybot.service.text.Replace;
-
-import java.util.List;
 
 public abstract class Command {
     protected final GiveawayBot bot;

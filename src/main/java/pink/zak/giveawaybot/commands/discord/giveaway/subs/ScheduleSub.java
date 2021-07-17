@@ -4,17 +4,12 @@ import net.dv8tion.jda.api.entities.GuildChannel;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.commands.discord.giveaway.GiveawayCmdUtils;
 import pink.zak.giveawaybot.data.models.Server;
 import pink.zak.giveawaybot.service.SlashCommandUtils;
 import pink.zak.giveawaybot.service.command.discord.command.SubCommand;
-import pink.zak.giveawaybot.service.command.global.SubCommandUtils;
 import pink.zak.giveawaybot.service.time.Time;
-import pink.zak.giveawaybot.service.types.NumberUtils;
-
-import java.util.List;
 
 public class ScheduleSub extends SubCommand {
     private final GiveawayCmdUtils cmdUtils;

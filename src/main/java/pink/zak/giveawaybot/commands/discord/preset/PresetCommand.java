@@ -41,11 +41,6 @@ public class PresetCommand extends SimpleCommand {
     }
 
     @Override
-    public void onExecute(Member sender, Server server, SlashCommandEvent event) {
-
-    }
-
-    @Override
     protected CommandData createCommandData() {
         return new CommandData("preset", "Preset related commands")
             .addSubcommands(
