@@ -5,8 +5,6 @@ import com.google.common.collect.Sets;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
-import net.dv8tion.jda.api.interactions.InteractionHook;
-import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.Button;
 import net.dv8tion.jda.api.requests.restaction.interactions.ReplyAction;
 import pink.zak.giveawaybot.GiveawayBot;
@@ -27,7 +25,6 @@ public abstract class PageableButtonEmbedMenu extends PageableMenu {
     private final GiveawayBot bot;
 
     private final Map<Integer, MessageEmbed> cachedPages = Maps.newConcurrentMap();
-    private InteractionHook message;
     protected final Server server;
 
     private ScheduledFuture<?> scheduledFuture;
@@ -62,8 +59,6 @@ public abstract class PageableButtonEmbedMenu extends PageableMenu {
             replyAction.addActionRow(this.forwardButton);
 
         replyAction.queue(sentMessage -> {
-            this.message = sentMessage;
-
             if (super.maxPage > 1)
                 this.scheduleDeletion();
         });

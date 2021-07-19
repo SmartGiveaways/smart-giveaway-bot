@@ -8,7 +8,6 @@ import pink.zak.giveawaybot.commands.menus.BanListMenu;
 import pink.zak.giveawaybot.data.models.Server;
 import pink.zak.giveawaybot.service.command.discord.command.SimpleCommand;
 
-// todo use buttons for pageable menus
 public class BanListCommand extends SimpleCommand {
 
     public BanListCommand(GiveawayBot bot) {

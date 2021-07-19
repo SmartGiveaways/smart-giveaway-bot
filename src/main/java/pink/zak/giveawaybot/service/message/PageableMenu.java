@@ -17,20 +17,20 @@ public abstract class PageableMenu {
     public abstract void drawPage(int page);
 
     public int previousPage() {
-        int currentPage = this.currentPage.intValue();
-        if (currentPage <= 1)
-            return currentPage;
+        int initialPage = this.currentPage.intValue();
+        if (initialPage <= 1)
+            return initialPage;
 
         this.drawPage(this.currentPage.decrementAndGet());
-        return currentPage - 1;
+        return initialPage - 1;
     }
 
     public int nextPage() {
-        int currentPage = this.currentPage.intValue();
-        if (currentPage >= this.maxPage)
-            return currentPage;
+        int initialPage = this.currentPage.intValue();
+        if (initialPage >= this.maxPage)
+            return initialPage;
 
         this.drawPage(this.currentPage.incrementAndGet());
-        return currentPage + 1;
+        return initialPage + 1;
     }
 }
