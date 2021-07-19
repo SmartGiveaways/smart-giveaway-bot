@@ -10,12 +10,9 @@ import pink.zak.giveawaybot.lang.model.Language;
 import pink.zak.giveawaybot.service.command.discord.command.SubCommand;
 
 public class SetLanguageSub extends SubCommand {
-    private final LanguageRegistry languageRegistry;
 
     public SetLanguageSub(GiveawayBot bot) {
         super(bot, "language", "set", false, false);
-
-        this.languageRegistry = bot.getLanguageRegistry();
     }
 
     @Override

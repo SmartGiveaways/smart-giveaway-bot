@@ -25,24 +25,25 @@ public class ListSub extends SubCommand {
     @Override
     public void onExecute(Member sender, Server server, SlashCommandEvent event) {
         if (server.getActiveGiveaways().isEmpty()) {
-            this.langFor(server, Text.NO_ACTIVE_GIVEAWAYS).to(event);
+            this.langFor(server, Text.NO_ACTIVE_GIVEAWAYS).to(event, true);
             return;
         }
         StringBuilder descriptionBuilder = new StringBuilder();
         for (long giveawayId : server.getActiveGiveaways()) {
             CurrentGiveaway giveaway = this.giveawayCache.get(giveawayId);
             descriptionBuilder
-                    .append("**")
-                    .append(giveaway.getLinkedGiveawayItem())
-                    .append("** -> (ID: ")
-                    .append(giveaway.getMessageId())
-                    .append(")\n");
+                .append("**")
+                .append(giveaway.getLinkedGiveawayItem())
+                .append("** -> (ID: ")
+                .append(giveaway.getMessageId())
+                .append(")\n");
         }
         event.replyEmbeds(new EmbedBuilder()
-                .setTitle(this.langFor(server, Text.GIVEAWAY_LIST_EMBED_TITLE).toString())
-                .setFooter(this.langFor(server, Text.GENERIC_EMBED_FOOTER).toString())
-                .setDescription(descriptionBuilder.toString())
-                .setColor(this.palette.primary())
-                .build()).queue();
+            .setTitle(this.langFor(server, Text.GIVEAWAY_LIST_EMBED_TITLE).toString())
+            .setFooter(this.langFor(server, Text.GENERIC_EMBED_FOOTER).toString())
+            .setDescription(descriptionBuilder.toString())
+            .setColor(this.palette.primary())
+            .build())
+            .setEphemeral(true).queue();
     }
 }

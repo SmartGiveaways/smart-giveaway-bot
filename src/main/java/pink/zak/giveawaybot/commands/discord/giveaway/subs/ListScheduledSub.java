@@ -27,7 +27,7 @@ public class ListScheduledSub extends SubCommand {
     @Override
     public void onExecute(Member sender, Server server, SlashCommandEvent event) {
         if (server.getScheduledGiveaways().isEmpty()) {
-            this.langFor(server, Text.NO_SCHEDULED_GIVEAWAYS).to(event);
+            this.langFor(server, Text.NO_SCHEDULED_GIVEAWAYS).to(event, true);
             return;
         }
         StringBuilder descriptionBuilder = new StringBuilder();
@@ -47,6 +47,7 @@ public class ListScheduledSub extends SubCommand {
             .setFooter(this.langFor(server, Text.GENERIC_EMBED_FOOTER).toString())
             .setDescription(descriptionBuilder.toString())
             .setColor(this.palette.primary())
-            .build()).queue();
+            .build())
+            .setEphemeral(true).queue();
     }
 }

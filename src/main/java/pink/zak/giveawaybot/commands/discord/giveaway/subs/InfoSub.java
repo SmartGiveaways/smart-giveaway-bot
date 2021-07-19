@@ -45,40 +45,40 @@ public class InfoSub extends SubCommand {
                 longId = Long.parseLong(stringGiveawayId);
             }
         } catch (Exception ex) {
-            this.langFor(server, Text.COULDNT_FIND_GIVEAWAY).to(event);
+            this.langFor(server, Text.COULDNT_FIND_GIVEAWAY).to(event, true);
         }
         if (uuid == null) {
             if (longId < 786066350882488381L) {
-                this.langFor(server, Text.COULDNT_FIND_GIVEAWAY).to(event);
+                this.langFor(server, Text.COULDNT_FIND_GIVEAWAY).to(event, true);
                 return;
             }
             if (server.getFinishedGiveaways().contains(longId)) {
                 FullFinishedGiveaway giveaway = this.finishedGiveawayCache.get(longId);
                 if (giveaway == null) {
-                    this.langFor(server, Text.COULDNT_FIND_GIVEAWAY).to(event);
+                    this.langFor(server, Text.COULDNT_FIND_GIVEAWAY).to(event, true);
                     return;
                 }
                 this.finishedGiveawayMessage(event, server, giveaway);
             } else if (server.getActiveGiveaways().contains(longId)) {
                 CurrentGiveaway giveaway = this.currentGiveawayCache.get(longId);
                 if (giveaway == null) {
-                    this.langFor(server, Text.COULDNT_FIND_GIVEAWAY).to(event);
+                    this.langFor(server, Text.COULDNT_FIND_GIVEAWAY).to(event, true);
                     return;
                 }
                 this.currentGiveawayMessage(event, server, giveaway);
             } else {
-                this.langFor(server, Text.COULDNT_FIND_GIVEAWAY).to(event);
+                this.langFor(server, Text.COULDNT_FIND_GIVEAWAY).to(event, true);
             }
         } else if (server.getScheduledGiveaways().contains(uuid)) {
 
             ScheduledGiveaway giveaway = this.scheduledGiveawayCache.get(uuid);
             if (giveaway == null) {
-                this.langFor(server, Text.COULDNT_FIND_GIVEAWAY).to(event);
+                this.langFor(server, Text.COULDNT_FIND_GIVEAWAY).to(event, true);
                 return;
             }
             this.scheduledGiveawayMessage(event, server, giveaway);
         } else {
-            this.langFor(server, Text.COULDNT_FIND_GIVEAWAY).to(event);
+            this.langFor(server, Text.COULDNT_FIND_GIVEAWAY).to(event, true);
         }
     }
 
@@ -97,7 +97,7 @@ public class InfoSub extends SubCommand {
                 .setFooter(this.langFor(server, Text.GENERIC_EMBED_FOOTER).toString())
                 .setColor(this.palette.primary())
                 .build()
-        ).queue();
+        ).setEphemeral(true).queue();
     }
 
     private void currentGiveawayMessage(SlashCommandEvent event, Server server, CurrentGiveaway giveaway) {
@@ -114,7 +114,7 @@ public class InfoSub extends SubCommand {
                 .setFooter(this.langFor(server, Text.GENERIC_EMBED_FOOTER).toString())
                 .setColor(this.palette.primary())
                 .build()
-        ).queue();
+        ).setEphemeral(true).queue();
     }
 
     private void scheduledGiveawayMessage(SlashCommandEvent event, Server server, ScheduledGiveaway giveaway) {
@@ -130,6 +130,7 @@ public class InfoSub extends SubCommand {
                     .set("end_time", Time.formatAsDateTime(giveaway.getEndTime()) + " UTC")).toString())
                 .setFooter(this.langFor(server, Text.GENERIC_EMBED_FOOTER).toString())
                 .setColor(this.palette.primary())
-                .build()).queue();
+                .build()
+        ).setEphemeral(true).queue();
     }
 }

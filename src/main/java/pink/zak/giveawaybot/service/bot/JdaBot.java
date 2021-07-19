@@ -9,10 +9,9 @@ import net.dv8tion.jda.internal.utils.JDALogger;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import pink.zak.giveawaybot.GiveawayBot;
+import pink.zak.giveawaybot.listener.button.ButtonRegistry;
 import pink.zak.giveawaybot.listener.message.GiveawayMessageListener;
 import pink.zak.giveawaybot.listener.message.MessageEventRegistry;
-import pink.zak.giveawaybot.listener.reaction.pageable.PageableReactionEventRegistry;
-import pink.zak.giveawaybot.listener.reaction.pageable.PageableReactionListener;
 import pink.zak.giveawaybot.listener.slash.SlashCommandEventRegistry;
 import pink.zak.giveawaybot.listener.slash.SlashCommandListener;
 import pink.zak.giveawaybot.service.command.console.ConsoleCommandBase;
@@ -38,8 +37,8 @@ import java.util.function.UnaryOperator;
 public abstract class JdaBot implements SimpleBot {
     public static final Logger LOGGER = JDALogger.getLog(GiveawayBot.class);
     protected final MessageEventRegistry messageEventRegistry = new MessageEventRegistry();
-    protected final PageableReactionEventRegistry pageableReactionEventRegistry = new PageableReactionEventRegistry();
     protected final SlashCommandEventRegistry slashCommandEventRegistry = new SlashCommandEventRegistry();
+    protected final ButtonRegistry buttonRegistry = new ButtonRegistry();
     protected final StorageSettings storageSettings;
     private final BackendFactory backendFactory;
     private final ConfigStore configStore;
@@ -99,8 +98,8 @@ public abstract class JdaBot implements SimpleBot {
         this.discordCommandBase = new DiscordCommandBase(bot);
         this.shardManager.addEventListener(
                 this.messageEventRegistry,
-                this.pageableReactionEventRegistry,
-                this.slashCommandEventRegistry
+                this.slashCommandEventRegistry,
+            this.buttonRegistry
         );
         this.registerListeners(
                 this.discordCommandBase
@@ -140,8 +139,6 @@ public abstract class JdaBot implements SimpleBot {
         for (Object listener : listeners) {
             if (listener instanceof GiveawayMessageListener messageListener) {
                 this.messageEventRegistry.addListener(messageListener);
-            } else if (listener instanceof PageableReactionListener reactionListener) {
-                this.pageableReactionEventRegistry.addListener(reactionListener);
             } else if (listener instanceof SlashCommandListener slashCommandListener) {
                 this.slashCommandEventRegistry.addListener(slashCommandListener);
             } else {
@@ -155,8 +152,6 @@ public abstract class JdaBot implements SimpleBot {
         for (Object listener : listeners) {
             if (listener instanceof GiveawayMessageListener messageListener) {
                 this.messageEventRegistry.removeListener(messageListener);
-            } else if (listener instanceof PageableReactionListener reactionListener) {
-                this.pageableReactionEventRegistry.removeListener(reactionListener);
             } else if (listener instanceof SlashCommandListener slashCommandListener) {
                 this.slashCommandEventRegistry.removeListener(slashCommandListener);
             } else {
@@ -205,6 +200,11 @@ public abstract class JdaBot implements SimpleBot {
     @Override
     public Path getBasePath() {
         return this.basePath;
+    }
+
+    @Override
+    public ButtonRegistry getButtonRegistry() {
+        return this.buttonRegistry;
     }
 
     @Override

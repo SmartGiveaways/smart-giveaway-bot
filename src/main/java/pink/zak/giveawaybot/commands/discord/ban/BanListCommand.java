@@ -17,7 +17,7 @@ public class BanListCommand extends SimpleCommand {
 
     @Override
     public void onExecute(Member sender, Server server, SlashCommandEvent event) {
-        new BanListMenu(super.bot, server).sendInitialMessage(event);
+        new BanListMenu(super.bot, server).sendInitialMessage(event, true);
     }
 
     @Override

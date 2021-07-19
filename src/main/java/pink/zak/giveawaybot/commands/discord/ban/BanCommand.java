@@ -26,7 +26,7 @@ public class BanCommand extends SimpleCommand {
             return;
         }
         User user = server.getUserCache().get(target.getIdLong());
-        String userPlaceholder = target.getUser().getAsTag();
+        String userPlaceholder = target.getUser().getAsMention();
         if (user.isBanned()) {
             this.langFor(server, Text.TARGET_ALREADY_BANNED, replacer -> replacer.set("target", userPlaceholder)).to(event, true);
             return;

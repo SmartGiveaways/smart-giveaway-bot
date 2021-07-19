@@ -81,7 +81,7 @@ public class DiscordCommandBase extends CommandBackend implements SlashCommandLi
         if (sender == null || GiveawayBot.isLocked() || !selfMember.hasPermission(channel, Permission.MESSAGE_WRITE)) {
             return;
         }
-        if (!this.handleBotPermsCheck(server, channel, selfMember)) {
+        if (!this.handleBotPermsCheck(server, channel, selfMember, event)) {
             return;
         }
         if (server == null) {
@@ -133,9 +133,9 @@ public class DiscordCommandBase extends CommandBackend implements SlashCommandLi
     /**
      * @return whether the bot has perms and can proceed
      */
-    private boolean handleBotPermsCheck(Server server, TextChannel channel, Member selfMember) {
-        if (!selfMember.hasPermission(channel, this.requiredPermissions)) {
-            UserUtils.sendMissingPermsMessage(this.languageRegistry, server, selfMember, channel, channel);
+    private boolean handleBotPermsCheck(Server server, TextChannel channel, Member selfMember, SlashCommandEvent event) {
+        if (!selfMember.hasPermission(Permission.ADMINISTRATOR) && !selfMember.hasPermission(channel, this.requiredPermissions)) {
+            UserUtils.sendMissingPermsMessage(this.languageRegistry, server, selfMember, channel, event);
             return false;
         }
         return true;

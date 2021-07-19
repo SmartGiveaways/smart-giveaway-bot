@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.jetbrains.annotations.NotNull;
 import pink.zak.giveawaybot.GiveawayBot;
+import pink.zak.giveawaybot.listener.button.ButtonRegistry;
 import pink.zak.giveawaybot.service.command.console.ConsoleCommandBase;
 import pink.zak.giveawaybot.service.command.console.command.ConsoleBaseCommand;
 import pink.zak.giveawaybot.service.command.discord.DiscordCommandBase;
@@ -53,6 +54,8 @@ public interface SimpleBot {
     BackendFactory getBackendFactory();
 
     Path getBasePath();
+
+    ButtonRegistry getButtonRegistry();
 
     DiscordCommandBase getDiscordCommandBase();
 

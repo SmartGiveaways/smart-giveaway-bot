@@ -17,19 +17,19 @@ public class BanCmdUtils {
 
     public boolean handleAndIsNotEligible(Server server, Member sender, Member target, SlashCommandEvent event) {
         if (target == null) {
-            this.languageRegistry.get(server, Text.COULDNT_FIND_MEMBER).to(event);
+            this.languageRegistry.get(server, Text.COULDNT_FIND_MEMBER).to(event, true);
             return true;
         }
         if (target.getUser().isBot() && event.getGuild().getSelfMember().equals(target)) {
-            this.languageRegistry.get(server, Text.CANNOT_BAN_THE_BOT).to(event);
+            this.languageRegistry.get(server, Text.CANNOT_BAN_THE_BOT).to(event, true);
             return true;
         }
         if (target.getIdLong() == sender.getIdLong()) {
-            this.languageRegistry.get(server, Text.CANNOT_BAN_SELF).to(event);
+            this.languageRegistry.get(server, Text.CANNOT_BAN_SELF).to(event, true);
             return true;
         }
         if (server.canMemberManage(target)) {
-            this.languageRegistry.get(server, Text.NOT_ENOUGH_PERMISSIONS_BAN, replacer -> replacer.set("target", target.getAsMention())).to(event);
+            this.languageRegistry.get(server, Text.NOT_ENOUGH_PERMISSIONS_BAN, replacer -> replacer.set("target", target.getAsMention())).to(event, true);
             return true;
         }
         return false;

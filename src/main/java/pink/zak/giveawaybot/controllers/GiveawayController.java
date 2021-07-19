@@ -5,7 +5,9 @@ import com.google.common.collect.Sets;
 import lombok.SneakyThrows;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageReaction;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -83,7 +85,8 @@ public class GiveawayController {
         if (server.getActiveGiveaways().size() >= (server.isPremium() ? 10000 : 5)) {
             return ImmutablePair.of(null, ReturnCode.GIVEAWAY_LIMIT_FAILURE);
         }
-        if (!giveawayChannel.getGuild().getSelfMember().hasPermission(giveawayChannel, Defaults.requiredPermissions)) {
+        Member selfMember = giveawayChannel.getGuild().getSelfMember();
+        if (!selfMember.hasPermission(Permission.ADMINISTRATOR) && !selfMember.hasPermission(giveawayChannel, Defaults.requiredPermissions)) {
             return ImmutablePair.of(null, ReturnCode.PERMISSIONS_FAILURE);
         }
         Preset preset = presetName.equalsIgnoreCase("default") ? this.defaultPreset : server.getPreset(presetName);

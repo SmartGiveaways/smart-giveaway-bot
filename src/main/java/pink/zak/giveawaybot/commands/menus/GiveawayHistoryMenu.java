@@ -6,18 +6,17 @@ import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.data.models.Server;
 import pink.zak.giveawaybot.data.models.giveaway.finished.PartialFinishedGiveaway;
 import pink.zak.giveawaybot.lang.Text;
-import pink.zak.giveawaybot.service.message.PageableEmbedMenu;
+import pink.zak.giveawaybot.service.message.PageableButtonEmbedMenu;
 import pink.zak.giveawaybot.service.time.Time;
 
 import java.util.List;
 import java.util.StringJoiner;
 
-public class GiveawayHistoryMenu extends PageableEmbedMenu {
+public class GiveawayHistoryMenu extends PageableButtonEmbedMenu {
     private final List<PartialFinishedGiveaway> finishedGiveaways;
 
     public GiveawayHistoryMenu(GiveawayBot bot, Server server) {
-        super(bot, server, true);
-        super.cooldown = 500;
+        super(bot, server);
         this.finishedGiveaways = bot.getFinishedGiveawayCache().getAllPartial(server);
         super.maxPage = (int) Math.ceil(this.finishedGiveaways.size() / 10.0);
     }

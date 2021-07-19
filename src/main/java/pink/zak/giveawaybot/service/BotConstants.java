@@ -1,6 +1,7 @@
 package pink.zak.giveawaybot.service;
 
 import lombok.experimental.UtilityClass;
+import net.dv8tion.jda.api.entities.Emoji;
 import pink.zak.giveawaybot.service.bot.JdaBot;
 import pink.zak.giveawaybot.service.text.Replace;
 
@@ -15,6 +16,9 @@ public class BotConstants {
 
     public static final String BACK_ARROW = "\u2B05";
     public static final String FORWARD_ARROW = "\u27A1";
+
+    public static final Emoji BACK_EMOJI = Emoji.fromUnicode("\u2B05");
+    public static final Emoji FORWARD_EMOJI = Emoji.fromUnicode("\u27A1");
 
     private static String getInitDeviceName() {
         try {

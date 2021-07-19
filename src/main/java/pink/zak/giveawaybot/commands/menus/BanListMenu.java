@@ -8,17 +8,17 @@ import pink.zak.giveawaybot.data.cache.UserCache;
 import pink.zak.giveawaybot.data.models.Server;
 import pink.zak.giveawaybot.data.models.User;
 import pink.zak.giveawaybot.lang.Text;
-import pink.zak.giveawaybot.service.message.PageableEmbedMenu;
+import pink.zak.giveawaybot.service.message.PageableButtonEmbedMenu;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
-public class BanListMenu extends PageableEmbedMenu {
+public class BanListMenu extends PageableButtonEmbedMenu {
     private final List<User> bannedUsers = Lists.newArrayList();
 
     public BanListMenu(GiveawayBot bot, Server server) {
-        super(bot, server, true);
+        super(bot, server);
         UserCache userCache = server.getUserCache();
         CompletableFuture.allOf(server.getBannedUsers().stream()
                 .map(id -> userCache.getUserAsync(id).thenApply(this.bannedUsers::add))

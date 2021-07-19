@@ -15,6 +15,6 @@ public class HistorySub extends SubCommand {
 
     @Override
     public void onExecute(Member sender, Server server, SlashCommandEvent event) {
-        new GiveawayHistoryMenu(super.bot, server).sendInitialMessage(event);
+        new GiveawayHistoryMenu(super.bot, server).sendInitialMessage(event, true);
     }
 }
