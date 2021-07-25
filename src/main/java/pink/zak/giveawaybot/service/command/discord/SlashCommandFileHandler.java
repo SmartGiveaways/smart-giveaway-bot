@@ -10,7 +10,7 @@ import com.google.gson.JsonParser;
 import lombok.experimental.UtilityClass;
 import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.utils.data.DataObject;
-import pink.zak.giveawaybot.GiveawayBot;
+import pink.zak.giveawaybot.service.bot.JdaBot;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -48,9 +48,9 @@ public class SlashCommandFileHandler {
             try {
                 boolean created = path.toFile().createNewFile();
                 if (!created)
-                    GiveawayBot.LOGGER.warn("Could not create command-data.json because the file already exists ???");
+                    JdaBot.LOGGER.warn("Could not create command-data.json because the file already exists ???");
             } catch (IOException ex) {
-                ex.printStackTrace();
+                JdaBot.LOGGER.error("Error creating slash command file", ex);
             }
         }
 
@@ -63,8 +63,8 @@ public class SlashCommandFileHandler {
                 jsonArray.add(createCommandObject(command));
             json.add("", jsonArray);
             gson.toJson(json, writer);
-        } catch (IOException exception) {
-            exception.printStackTrace();
+        } catch (IOException ex) {
+            JdaBot.LOGGER.error("Error writing slash commands", ex);
         }
     }
 
