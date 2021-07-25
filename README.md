@@ -1,6 +1,8 @@
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=SmartGiveaways_smart-giveaway-bot&metric=alert_status)](https://sonarcloud.io/dashboard?id=SmartGiveaways_smart-giveaway-bot)
-![project-license](https://img.shields.io/github/license/SmartGiveaways/smart-giveaway-bot)
-[![discord-widget](https://discord.com/api/guilds/751886048623067186/widget.png)](https://discord.gg/aS4PebKZpe)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=SmartGiveaways_smart-giveaway-bot&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=SmartGiveaways_smart-giveaway-bot)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=SmartGiveaways_smart-giveaway-bot&metric=ncloc)](https://sonarcloud.io/dashboard?id=SmartGiveaways_smart-giveaway-bot)
+![Project License](https://img.shields.io/github/license/SmartGiveaways/smart-giveaway-bot)
+[![Discord](https://discord.com/api/guilds/751886048623067186/widget.png)](https://discord.gg/aS4PebKZpe)
 
 # Smart Giveaway Bot
 
@@ -8,8 +10,9 @@
 - Take control over your giveaways with the ability to ban & shadowban users.
 - (WIP) Control your giveaways via an easy web interface
   
-![Example One](https://zak.pink/2020/12/Selfish-Ichthyostega-10753.png)<br/>
-![Example Two](https://zak.pink/2020/11/Foolhardy-Africancivet-9917.png)
+![Example One](https://zak.pink/2021/07/Detached-Asianpiedstarling-12629.png)
+<br/>
+![Example Two](https://zak.pink/2021/07/Arrogant-Wryneck-12630.png)
   
 ## Welcome us in
 Invite SmartGiveaways to your server in one click -> [here](https://smartgiveaways.xyz/invite)
@@ -30,7 +33,7 @@ No support is officially provided for self hosting but if you have issues direct
 - Some basic experience in how a discord bot works, hopefully some basic java experience as well.
 - A decent processor, 1 core will do for nearly everyone.
 - At least 50MB RAM (we'd hope a bit more, varies on what JDK you use)
-- Java 14 (or 15) / Control over JVM arguments (--enable-preview on)
+- Java 16+ / Control over JVM arguments (--enable-preview on)
 - MongoDB
 - InfluxDB v2 (Optional, used for [metrics](https://zak.pink/2020/11/Narrow-Minded-Lacewing-9912.png))
 - Us telling you that you **must** manually copy **all** the resource files (including lang).
