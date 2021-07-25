@@ -7,10 +7,10 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import net.dv8tion.jda.api.JDA;
+import lombok.experimental.UtilityClass;
 import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.utils.data.DataObject;
-import net.dv8tion.jda.internal.JDAImpl;
+import pink.zak.giveawaybot.GiveawayBot;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -19,9 +19,9 @@ import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
-import java.util.Map;
 import java.util.Set;
 
+@UtilityClass
 public class SlashCommandFileHandler {
 
     public static Set<SlashCommandInfo> loadSlashCommands(Path basePath) {
@@ -36,8 +36,7 @@ public class SlashCommandFileHandler {
 
         Set<SlashCommandInfo> commands = Sets.newHashSet();
         for (JsonElement element : jsonObject.get("").getAsJsonArray()) {
-            JsonObject commandObject = element.getAsJsonObject();
-            DataObject dataObject = DataObject.fromJson(commandObject.toString()); // todo unnecessary
+            DataObject dataObject = DataObject.fromJson(element.toString());
             commands.add(new SlashCommandInfo(dataObject));
         }
         return commands;
@@ -47,13 +46,15 @@ public class SlashCommandFileHandler {
         Path path = basePath.resolve("command-data.json");
         if (!Files.exists(path)) {
             try {
-                path.toFile().createNewFile();
+                boolean created = path.toFile().createNewFile();
+                if (!created)
+                    GiveawayBot.LOGGER.warn("Could not create command-data.json because the file already exists ???");
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
         }
 
-        try (Writer writer = Files.newBufferedWriter(path)){
+        try (Writer writer = Files.newBufferedWriter(path)) {
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             JsonObject json = new JsonObject();
 
