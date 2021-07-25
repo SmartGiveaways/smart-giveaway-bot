@@ -155,7 +155,7 @@ public class GiveawayBot extends JdaBot {
                 new pink.zak.giveawaybot.commands.discord.help.HelpCommand(this),
                 new PresetCommand(this)
         );
-        this.getDiscordCommandBase().init();
+        this.getDiscordCommandBase().init(this.getBasePath());
 
         this.registerConsoleCommands(
                 new PremiumCommand(this),

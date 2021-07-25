@@ -58,7 +58,7 @@ public abstract class JdaBot implements SimpleBot {
         this.storageSettings = new StorageSettings();
         this.backendFactory = new BackendFactory(this);
         this.configStore = new ConfigStore(this.basePath);
-        LOGGER.info("Base path set to: {}", this.getClass().getProtectionDomain().getCodeSource().getLocation().toURI());
+        LOGGER.info("Base path set to: {}", this.basePath.toAbsolutePath());
     }
 
     @SneakyThrows

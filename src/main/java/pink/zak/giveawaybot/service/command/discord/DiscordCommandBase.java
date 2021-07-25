@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
+import net.dv8tion.jda.internal.JDAImpl;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.data.Defaults;
 import pink.zak.giveawaybot.data.models.Server;
@@ -22,6 +23,7 @@ import pink.zak.giveawaybot.service.command.global.CommandBackend;
 import pink.zak.giveawaybot.service.types.UserUtils;
 import pink.zak.giveawaybot.threads.ThreadFunction;
 
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -53,24 +55,39 @@ public class DiscordCommandBase extends CommandBackend implements SlashCommandLi
         this.commands.put(command.getName(), command);
     }
 
-    public void init() {
+    public void init(Path basePath) {
         // load existing commands so we dont have to update every time
-        Set<CommandData> createdData = this.commands.values()
+        Set<SlashCommandFileHandler.SlashCommandInfo> loadedCommands = SlashCommandFileHandler.loadSlashCommands(basePath);
+
+        if (loadedCommands == null) {
+            Set<CommandData> createdData = this.commands.values()
                 .stream()
                 .map(SimpleCommand::getCommandData)
                 .collect(Collectors.toSet());
-        JdaBot.LOGGER.info("Created data {}", createdData);
+            JdaBot.LOGGER.info("Created data {}", createdData);
 
-        List<net.dv8tion.jda.api.interactions.commands.Command> createdCommands = this.jda.getGuildById(751886048623067186L).updateCommands().addCommands(createdData).complete();
-        JdaBot.LOGGER.info("Commands {}", createdCommands);
-        //List<net.dv8tion.jda.api.interactions.commands.Command> commands = this.jda.updateCommands().addCommands(createdData).complete();
+            // Use this commented line for testing new slash commands on a guild
+            //List<net.dv8tion.jda.api.interactions.commands.Command> createdCommands = this.jda.getGuildById(751886048623067186L).updateCommands().addCommands(createdData).complete();
+            List<net.dv8tion.jda.api.interactions.commands.Command> createdCommands = this.jda.updateCommands().addCommands(createdData).complete();
+            JdaBot.LOGGER.info("Created Commands {}", createdCommands);
 
-        createdCommands.forEach(command -> {
-            SimpleCommand matchedCommand = this.commands.get(command.getName());
-            matchedCommand.setCommand(command);
-            this.slashCommands.put(command.getIdLong(), matchedCommand);
-            JdaBot.LOGGER.info("Bound command {} to ID {}", matchedCommand.getName(), command.getIdLong());
-        });
+            createdCommands.forEach(command -> {
+                SimpleCommand matchedCommand = this.commands.get(command.getName());
+                matchedCommand.setCommand(command);
+                this.slashCommands.put(command.getIdLong(), matchedCommand);
+                JdaBot.LOGGER.info("Bound created command {} to ID {}", matchedCommand.getName(), command.getIdLong());
+            });
+
+            SlashCommandFileHandler.saveSlashCommands(basePath, createdCommands);
+        } else {
+            JdaBot.LOGGER.info("Loaded Commands {}", loadedCommands);
+            for (SlashCommandFileHandler.SlashCommandInfo commandInfo : loadedCommands) {
+                SimpleCommand command = this.commands.get(commandInfo.getName());
+                this.slashCommands.put(commandInfo.getId(), command);
+                command.setCommand(new net.dv8tion.jda.api.interactions.commands.Command((JDAImpl) this.jda, null, commandInfo.getDataObject()));
+                JdaBot.LOGGER.info("Bound loaded command {} to ID {}", commandInfo.getName(), commandInfo.getId());
+            }
+        }
     }
 
     @Override
