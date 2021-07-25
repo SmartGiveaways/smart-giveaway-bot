@@ -14,8 +14,8 @@ import pink.zak.giveawaybot.commands.console.StopCommand;
 import pink.zak.giveawaybot.commands.console.premium.PremiumCommand;
 import pink.zak.giveawaybot.commands.console.stats.StatsCommand;
 import pink.zak.giveawaybot.commands.console.unload.UnloadCommand;
-import pink.zak.giveawaybot.commands.discord.about.BotAboutCommand;
-import pink.zak.giveawaybot.commands.discord.about.TechInfoCommand;
+import pink.zak.giveawaybot.commands.discord.info.BotInfoCommand;
+import pink.zak.giveawaybot.commands.discord.info.TechInfoCommand;
 import pink.zak.giveawaybot.commands.discord.admin.AdminCommand;
 import pink.zak.giveawaybot.commands.discord.ban.BanCommand;
 import pink.zak.giveawaybot.commands.discord.ban.BanListCommand;
@@ -143,7 +143,7 @@ public class GiveawayBot extends JdaBot {
         this.metricsLogger.checkAndStart(this);
 
         this.registerCommands(
-                new BotAboutCommand(this),
+                new BotInfoCommand(this),
                 new TechInfoCommand(this),
                 new AdminCommand(this),
                 new BanCommand(this),

@@ -1,4 +1,4 @@
-package pink.zak.giveawaybot.commands.discord.about;
+package pink.zak.giveawaybot.commands.discord.info;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
@@ -46,13 +46,13 @@ public class TechInfoCommand extends SimpleCommand {
                 .addField("**Users**", String.valueOf(this.genericMetrics.getUsers()), true)
                 .addField("**Current Giveaways**", String.valueOf(this.giveawayCache.size()), true)
                 .addField("**Finished Giveaways**", String.valueOf(this.historicalGiveaways.get()), true)
-                .addField("**Shard**", jda.getShardInfo().getShardId() + "/" + (jda.getShardManager().getShardsTotal() - 1), true)
+                .addField("**Shard**", jda.getShardInfo().getShardId() + 1 + "/" + (jda.getShardManager().getShardsTotal()), true)
                 .addField("**Shard Ping**", this.latencyMonitor.getLastTiming(jda) + "ms", true)
                 .addField("**Average Shard Ping**", this.latencyMonitor.getAverageLatency() + "ms", true)
                 .addBlankField(false)
                 .addField("", "[GitHub](https://github.com/SmartGiveaways/smart-giveaway-bot)", true)
                 .addField("", "[Discord](https://discord.gg/aS4PebKZpe)", true)
-                .addField("", "[Code Reports](https://app.codacy.com/gh/SmartGiveaways/smart-giveaway-bot/dashboard)", true)
+                .addField("", "[Code Reports](https://sonarcloud.io/dashboard?id=SmartGiveaways_smart-giveaway-bot)", true)
                 .build()).queue();
     }
 

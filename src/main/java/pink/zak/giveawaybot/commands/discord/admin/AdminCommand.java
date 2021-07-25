@@ -33,7 +33,6 @@ public class AdminCommand extends SimpleCommand {
     @Override
     protected CommandData createCommandData() {
         return new CommandData("gadmin", "Manage SmartGiveaways server settings")
-            .setDefaultEnabled(false)
             .addSubcommandGroups(
                 new SubcommandGroupData("language", "Language server settings")
                     .addSubcommands(

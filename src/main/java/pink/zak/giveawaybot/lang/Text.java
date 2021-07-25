@@ -6,16 +6,13 @@ public enum Text {
     BOT_MISSING_PERMISSIONS_SPECIFIC,
     NO_PERMISSION,
     COULDNT_FIND_MEMBER,
-    COULDNT_FIND_ROLE,
     COULDNT_FIND_CHANNEL,
     COULDNT_FIND_GIVEAWAY,
     COULDNT_FIND_SCHEDULED_GIVEAWAY,
     COULDNT_FIND_PRESET,
-    COULDNT_FIND_SETTING,
     NO_ACTIVE_GIVEAWAYS,
     NO_SCHEDULED_GIVEAWAYS,
     FATAL_ERROR_LOADING_SERVER,
-    GENERIC_COMMAND_USAGE_EXAMPLE,
     GENERIC_FAILURE,
     GENERIC_EMBED_FOOTER,
     COMMAND_REQUIRES_PREMIUM,
@@ -49,9 +46,6 @@ public enum Text {
 
 
     // Applies to >gadmin commands
-    ADMIN_EMBED_TITLE,
-    ADMIN_EMBED_CONTENT,
-
     ADMIN_LIST_LANGUAGES_EMBED_TITLE,
     ADMIN_LIST_LANGUAGES_EMBED_FOOTER,
     ADMIN_LANGUAGE_NOT_FOUND,
@@ -74,16 +68,12 @@ public enum Text {
 
 
     // Applies to >gban
-    BAN_EMBED_TITLE,
-    BAN_EMBED_CONTENT,
     TARGET_ALREADY_BANNED,
-    CANNOT_BAN_IS_SHADOW_BANNED, // You cannot ban someone normally if they are shadowbanned
     BANNED_SUCCESSFULLY,
 
 
     // Applies to >gban -s
     TARGET_ALREADY_SHADOW_BANNED,
-    CANNOT_BAN_IS_BANNED, // You cannot shadowban someone if they are banned normally.
     SHADOW_BANNED_SUCCESSFULLY,
 
     // Applies to >gban list
@@ -94,7 +84,6 @@ public enum Text {
     BAN_LIST_SHADOW_BANNED,
 
     // Applies to >gunban
-    UNBAN_HELP,
     CANNOT_UNBAN_SELF,
     UNBAN_NOT_BANNED,
     SHADOW_UNBANNED,
@@ -112,10 +101,6 @@ public enum Text {
 
 
     // Applies to >giveaway commands
-    GIVEAWAY_HELP_EMBED_TITLE,
-    GIVEAWAY_HELP_EMBED_FOOTER,
-    GIVEAWAY_HELP_EMBED_CONTENT,
-    //
     GIVEAWAY_LIST_EMBED_TITLE,
     // creating - create sub,
     GIVEAWAY_LIMIT_FAILURE,
@@ -171,8 +156,6 @@ public enum Text {
     PREMIUM_EMBED_DESCRIPTION_NOT_PURCHASED,
 
     // Applies to >preset commands
-    PRESET_EMBED_TITLE,
-    PRESET_EMBED_CONTENT,
     // list sub
     PRESET_LIST_EMBED_TITLE,
     PRESET_LIST_DEFAULT_ENTRY,

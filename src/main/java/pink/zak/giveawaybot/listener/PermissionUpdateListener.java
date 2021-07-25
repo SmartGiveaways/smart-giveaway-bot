@@ -5,7 +5,6 @@ import net.dv8tion.jda.api.events.role.update.RoleUpdatePermissionsEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 import pink.zak.giveawaybot.GiveawayBot;
-import pink.zak.giveawaybot.service.SlashCommandUtils;
 
 public class PermissionUpdateListener extends ListenerAdapter {
     private final GiveawayBot bot;
@@ -20,7 +19,7 @@ public class PermissionUpdateListener extends ListenerAdapter {
             (!event.getOldPermissions().contains(Permission.ADMINISTRATOR) && event.getNewPermissions().contains(Permission.ADMINISTRATOR))
                 || (event.getOldPermissions().contains(Permission.ADMINISTRATOR) && !event.getNewPermissions().contains(Permission.ADMINISTRATOR))
         ) {
-            SlashCommandUtils.updatePrivileges(event.getGuild(), this.bot);
+            // SlashCommandUtils.updatePrivileges(event.getGuild(), this.bot); // todo can this be used effectively?
         }
     }
 }

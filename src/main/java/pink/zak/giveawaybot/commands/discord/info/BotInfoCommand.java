@@ -1,4 +1,4 @@
-package pink.zak.giveawaybot.commands.discord.about;
+package pink.zak.giveawaybot.commands.discord.info;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
@@ -16,7 +16,7 @@ import pink.zak.giveawaybot.service.colour.Palette;
 import pink.zak.giveawaybot.service.command.discord.command.SimpleCommand;
 import pink.zak.giveawaybot.service.time.Time;
 
-public class BotAboutCommand extends SimpleCommand {
+public class BotInfoCommand extends SimpleCommand {
     private final MetricsLogger metricsLogger;
     private final GiveawayCache giveawayCache;
     private final LatencyMonitor latencyMonitor;
@@ -24,7 +24,7 @@ public class BotAboutCommand extends SimpleCommand {
 
     private final Palette palette;
 
-    public BotAboutCommand(GiveawayBot bot) {
+    public BotInfoCommand(GiveawayBot bot) {
         super(bot, "botinfo", false, false);
 
         this.metricsLogger = bot.getMetricsLogger();
@@ -46,8 +46,8 @@ public class BotAboutCommand extends SimpleCommand {
                         .set("servers", this.metricsLogger.getGuildCount())
                         .set("users", this.metricsLogger.getGenericMetrics().getUsers())
                         .set("active_giveaways", this.giveawayCache.size())
-                        .set("shard", jda.getShardInfo().getShardId())
-                        .set("total_shards", this.shardManager.getShardsTotal() - 1)
+                        .set("shard", jda.getShardInfo().getShardId() + 1)
+                        .set("total_shards", this.shardManager.getShardsTotal())
                         .set("shard_ping", this.latencyMonitor.getLastTiming(jda))
                         .set("last_shard_ping_update", Time.format(System.currentTimeMillis() - this.latencyMonitor.getShardTestTimes().get(jda))))
                         .toString())

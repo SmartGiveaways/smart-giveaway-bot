@@ -1,4 +1,3 @@
-[![codacy-rating](https://app.codacy.com/project/badge/Grade/623f090b77d94b26861915bac0db5309)](https://app.codacy.com/gh/SmartGiveaways/smart-giveaway-bot/dashboard)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=SmartGiveaways_smart-giveaway-bot&metric=alert_status)](https://sonarcloud.io/dashboard?id=SmartGiveaways_smart-giveaway-bot)
 ![project-license](https://img.shields.io/github/license/SmartGiveaways/smart-giveaway-bot)
 [![discord-widget](https://discord.com/api/guilds/751886048623067186/widget.png)](https://discord.gg/aS4PebKZpe)

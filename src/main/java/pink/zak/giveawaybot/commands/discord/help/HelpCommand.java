@@ -40,7 +40,6 @@ public class HelpCommand extends SimpleCommand implements Reloadable {
                     .setTitle(language.getValue(Text.HELP_EMBED_TITLE).toString())
                     .setFooter(language.getValue(Text.HELP_EMBED_FOOTER).toString())
                     .setColor(palette.primary())
-                    .setDescription(language.getValue(Text.GENERIC_COMMAND_USAGE_EXAMPLE).replace(replacer -> replacer.set("command", "command")).toString())
                     .addField("General Commands", language.getValue(Text.HELP_LIMITED_SECTION).toString(), false);
             limitedMessages.put(language.getIdentifier(), embedBuilder.build());
             embedBuilder.addField("Admin Commands",

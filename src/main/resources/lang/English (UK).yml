@@ -10,29 +10,25 @@ values:
   bot-missing-permissions-specific: ":x: The bot is missing the following permissions: %permission%"
   no-permission: ":x: No permission. You must have admin or one of your roles must be a manager (`>gadmin role add @Role`)"
   couldnt-find-member: ":x: Couldn't find that member :worried:"
-  couldnt-find-role: ":x: Could not find that role ;("
   couldnt-find-channel: ":x: The specified channel could not be found. Make sure the bot can access it."
   couldnt-find-giveaway: ":x: Could not find a giveaway with that ID. Make sure the giveaway is finished and you're using the message ID."
   couldnt-find-scheduled-giveaway: ":x: Could not find a scheduled giveaway with that UUID. Use `>g list scheduled` to list scheduled giveaways."
   couldnt-find-preset: ":x: Could not find that preset."
-  couldnt-find-setting: ":x: Could not find that setting. Use `>preset settings` if you're unsure."
   no-active-giveaways: ":x: There are no active giveaways in this server."
   no-scheduled-giveaways: ":x: There are no scheduled giveaways in this server."
   fatal-error-loading-server: ":warning: There was a fatal error loading your server. Please join the support discord at <https://discord.gg/ancjpjEEPX> and scream at Zak."
-  generic-command-usage-example: "`>%command% <required> [optional]`\n\n"
   generic-failure: ":x: Something went wrong. Please try again in a few minutes."
   generic-embed-footer: "SmartGiveaways v%version% - https://docs.sgs.pink/"
   command-requires-premium: "This command requires premium. Donate here <https://sgs.pink/premium>."
 
   new-guild-joined: ":tada: Thank you for inviting SmartGiveaways. Below is some useful information:\n
                       \n
-                      Help command: `>ghelp`\n
-                      Giveaway command help: `>g help`\n
+                      Help command: `/help`\n
                       Documentation: <https://docs.sgs.pink/>\n
                       \n
                       *PS we've set your language to %language%*"
 
-  # giveaway messages
+  # /giveaway messages
   giveaway-embed-title: "Giveaway: %item%"
   giveaway-embed-footer-singular: "Ends in %time% with 1 winner"
   giveaway-embed-footer-plural: "Ends in %time% with %winner-count% winners"
@@ -52,7 +48,7 @@ values:
   giveaway-finished-winners-message: "Congratulations to %winners% and %last-winner% for winning **%item%**\n%message-link%"
   giveaway-finished-winner-dm: "Congratulations! You won the giveaway for **%item%** in **%server-name%**"
 
-  # >gabout command messages
+  # /ginfo command messages
   about-embed-title: "About SmartGiveaways"
   about-embed-content: ":ballot_box: [Vote (Click)](https://www.youtube.com/watch?v=dQw4w9WgXcQ)\n
                         <:discord:790985028732452924> [Discord (Click)](https://discord.gg/aS4PebKZpe)\n
@@ -64,14 +60,7 @@ values:
                         :timer: %shard_ping%ms shard ping (updated %last_shard_ping_update% ago)
                         "
 
-  # >gadmin command messages
-  admin-embed-title: "Admin Command Help"
-  # Dear editors. Make sure to change flag_gb to the flag of the country that this language represents, or something similar and appropriate.
-  admin-embed-content: "<:roleslist:790995048882896916> >gadmin roles - List manager roles\n
-                        <:rolesedit:790991442759516191> >gadmin role <add/remove> <role> - Add or remove a manager role\n
-                        :globe_with_meridians: >gadmin languages - List the available languages\n
-                        %flag% >gadmin language <language> - Set the server language"
-
+  # /gadmin command messages
   admin-list-languages-embed-title: "Available Languages"
   admin-list-languages-embed-footer: "Use >gadmin language <language> to set the language"
   admin-language-not-found: "Could not find that language. Use >gadmin languages to list the available languages."
@@ -86,23 +75,17 @@ values:
   admin-manager-role-added: ":white_check_mark: %name% is now a manager role."
   admin-manager-role-removed: ":white_check_mark: %name% is no longer a manager role."
 
-  # General ban command messages
+  # /ban (general) command messages
   cannot-ban-self: ":x: You can't ban yourself, dummy."
   cannot-ban-the-bot: ":cry:"
   not-enough-permissions-ban: ":x: You're not high enough in the god complex to ban %target%"
 
-  # >gban command messages
-  ban-embed-title: "Ban Command Help"
-  ban-embed-content: ">gban -s <user> - Silently bans a user\n
-                        >gban <user>\n
-                        >gban list\n"
+  # /ban (non silent) command messages
   target-already-banned: ":x: %target% is already banned."
-  cannot-ban-is-shadow-banned: ":x: %target% is shadowbanned. Unban them first if you want to overwrite this."
   banned-successfully: ":white_check_mark: banned %target%"
 
-  # >gban -s command messages
+  # /ban (silent) command messages
   target-already-shadow-banned: ":x: %target% is already shadowbanned."
-  cannot-ban-is-banned: ":x: %target% is banned. Unban them first to overwrite with a shadowban."
   shadow-banned-successfully: ":white_check_mark: shadowbanned %target%."
 
   ban-list-embed-title: "Banned Users"
@@ -111,14 +94,13 @@ values:
   ban-list-banned: "banned"
   ban-list-shadow-banned: "shadowbanned"
 
-  # >gunban command messages
-  unban-help: ">gunban <user> - Unbans a user"
+  # /unban command messages
   cannot-unban-self: ":x: Oi, get someone else to do it for you."
   unban-not-banned: ":x: Slight problem... %target% is not banned or shadowbanned. You only pardon the guilty."
   shadow-unbanned: ":white_check_mark: %target% is no longer shadowbanned."
   unbanned: ":white_check_mark: %target% is no longer banned."
 
-  # >entries command messages
+  # /entries command messages
   self-banned-from-giveaways: ":x: You are banned from giveaways."
   target-banned-from-giveaways: ":x: %target% is banned from giveaways."
   self-not-entered: ":x: You are not entered into any giveaways."
@@ -127,16 +109,7 @@ values:
   entries-embed-giveaway-line: "**%item%** -> %entries% entry.\n"
   entries-embed-giveaway-line-plural: "**%item%** -> %entries% entries.\n"
 
-  # >giveaway command messages
-  giveaway-help-embed-title: "Giveaway Command Help"
-  giveaway-help-embed-footer: "Want all commands? See >ghelp or go to https://docs.sgs.pink/commands"
-  giveaway-help-embed-content: "<a:loading1:788070036635779072> >g schedule <preset> <delay> <length> [channel] <winner amount> <item/topic>\n
-                            <a:tada1:788070725755600957> >g create <preset> <length> [channel] <winner amount> <item/topic>\n
-                            :newspaper: >g list [scheduled]\n
-                            :notepad_spiral: >g info <id/uuid>\n
-                            :wastebasket: >g delete <message id>\n
-                            :game_die: >g reroll <message id> [user] (WIP not done)\n
-                            :information_source: **>ghelp to see all commands**\n"
+  # /giveaway command messages
   giveaway-list-embed-title: "Current Giveaways"
   giveaway-limit-failure: ":x: Your guild has reached the maximum number of 5 giveaways."
   giveaway-limit-failure-premium: ":x: Your guild has reached the maximum number of 10 premium giveaways."
@@ -198,17 +171,20 @@ values:
   reroll-one-winner: "Your new winner is %winner%"
   reroll-multiple-winners: "Your new winners are %winners% and %final-winner%"
 
-  # >ghelp command messages
+  # /help command messages
   help-embed-title: "SmartGiveaways Help"
-  help-embed-footer: "For more commands visit https://sgs.pink/commands"
-  help-limited-section: ":tickets: >entries"
-  help-admin-section: ":tada: >giveaway - Manage Giveaways\n
-                        :level_slider: >preset - Manage presets\n
-                        :gear: >gadmin - Manage manager roles + languages\n
-                        :hammer: >gban [-s] <user> - Bans or shadowbans a user from giveaways.\n
-                        :angel: >gunban <user> - Removes a user's ban or shadowban."
+  help-embed-footer: "For more info visit https://sgs.pink/commands"
+  help-limited-section: "**/entries** - View your entries into current giveaways"
+  help-admin-section: "**/giveaway** - Manage Giveaways\n\n
+                        **/preset** - Manage presets\n\n
+                        **/gadmin** - Manage manager roles + languages\n\n
+                        **/ban** - Ban or shadowban a user from giveaways.\n
+                        **/banlist** - View banned users.\n
+                        **/unban** - Remove a user's ban or shadowban.\n\n
+                        **/premium** - View info about premium or your current subscription\n\n
+                        **/techinfo** - View info about the bot's status"
 
-  # >premium command messages
+  # /premium command messages
   premium-embed-title: "Premium Status"
   premium-embed-footer: "Purchase or renew premium here: https://sgs.pink/premium" # It will have the default footer if they have purchased.
   premium-embed-description-purchased: "Your premium expires in %expiry%\n
@@ -223,14 +199,7 @@ values:
 
                                             For more information click [here](https://smartgiveaways.xyz/premium)"
 
-  # >preset command messages
-  preset-embed-title: "Preset Command Help"
-  preset-embed-content: ">preset settings - View all available settings\n
-                          >preset settings <preset> - View the settings of a preset\n
-                          >preset list\n
-                          >preset create <name>\n
-                          >preset delete <name>\n
-                          >preset set <preset> <setting> <value>"
+  # /preset command messages
   # list sub
   preset-list-embed-title: "Current Presets (**%preset-count%**)"
   preset-list-default-entry: "default - this preset cannot be removed"
