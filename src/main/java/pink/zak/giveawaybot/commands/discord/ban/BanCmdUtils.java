@@ -1,7 +1,7 @@
 package pink.zak.giveawaybot.commands.discord.ban;
 
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.data.models.Server;
 import pink.zak.giveawaybot.lang.LanguageRegistry;
@@ -15,21 +15,21 @@ public class BanCmdUtils {
         this.languageRegistry = bot.getLanguageRegistry();
     }
 
-    public boolean handleAndIsNotEligible(Server server, Member sender, Member target, TextChannel textChannel) {
+    public boolean handleAndIsNotEligible(Server server, Member sender, Member target, SlashCommandEvent event) {
         if (target == null) {
-            this.languageRegistry.get(server, Text.COULDNT_FIND_MEMBER).to(textChannel);
+            this.languageRegistry.get(server, Text.COULDNT_FIND_MEMBER).to(event, true);
             return true;
         }
-        if (target.getUser().isBot() && textChannel.getGuild().getSelfMember().equals(target)) {
-            this.languageRegistry.get(server, Text.CANNOT_BAN_THE_BOT).to(textChannel);
+        if (target.getUser().isBot() && event.getGuild().getSelfMember().equals(target)) {
+            this.languageRegistry.get(server, Text.CANNOT_BAN_THE_BOT).to(event, true);
             return true;
         }
         if (target.getIdLong() == sender.getIdLong()) {
-            this.languageRegistry.get(server, Text.CANNOT_BAN_SELF).to(textChannel);
+            this.languageRegistry.get(server, Text.CANNOT_BAN_SELF).to(event, true);
             return true;
         }
         if (server.canMemberManage(target)) {
-            this.languageRegistry.get(server, Text.NOT_ENOUGH_PERMISSIONS_BAN, replacer -> replacer.set("target", target.getAsMention())).to(textChannel);
+            this.languageRegistry.get(server, Text.NOT_ENOUGH_PERMISSIONS_BAN, replacer -> replacer.set("target", target.getAsMention())).to(event, true);
             return true;
         }
         return false;

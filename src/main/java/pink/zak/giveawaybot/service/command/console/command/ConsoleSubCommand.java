@@ -15,7 +15,7 @@ import java.util.function.Predicate;
 public abstract class ConsoleSubCommand extends ConsoleCommand {
     private final boolean endless;
     private final ServerCache serverCache;
-    private List<Argument<?>> arguments = Lists.newArrayList();
+    private final List<Argument<?>> arguments = Lists.newArrayList();
 
     protected ConsoleSubCommand(@Nullable GiveawayBot bot, ServerCache serverCache, boolean endless) {
         super(bot);

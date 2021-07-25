@@ -6,6 +6,7 @@ import lombok.experimental.UtilityClass;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import org.jetbrains.annotations.Nullable;
 import pink.zak.giveawaybot.data.Defaults;
 import pink.zak.giveawaybot.data.models.Server;
@@ -29,6 +30,12 @@ public class UserUtils {
         ImmutablePair<ImmutableSet<Permission>, String> permissionPair = UserUtils.getMissingPerms(selfMember, checkChannel);
         languageRegistry.get(server, permissionPair.getKey().size() > 1 ? Text.BOT_MISSING_PERMISSIONS_SPECIFIC : Text.BOT_MISSING_PERMISSION_SPECIFIC,
                 replacer -> replacer.set("permission", permissionPair.getValue())).to(responseChannel);
+    }
+
+    public void sendMissingPermsMessage(LanguageRegistry languageRegistry, Server server, Member selfMember, TextChannel checkChannel, SlashCommandEvent event) {
+        ImmutablePair<ImmutableSet<Permission>, String> permissionPair = UserUtils.getMissingPerms(selfMember, checkChannel);
+        languageRegistry.get(server, permissionPair.getKey().size() > 1 ? Text.BOT_MISSING_PERMISSIONS_SPECIFIC : Text.BOT_MISSING_PERMISSION_SPECIFIC,
+                replacer -> replacer.set("permission", permissionPair.getValue())).to(event);
     }
 
     public long parseIdInput(String input) {

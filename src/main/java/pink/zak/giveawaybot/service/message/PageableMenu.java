@@ -4,8 +4,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class PageableMenu {
     protected final AtomicInteger currentPage;
-    protected long cooldown;
-    private long lastChange = System.currentTimeMillis();
     protected int maxPage = Integer.MAX_VALUE;
 
     protected PageableMenu(int startPage) {
@@ -14,24 +12,25 @@ public abstract class PageableMenu {
 
     protected PageableMenu() {
         this.currentPage = new AtomicInteger(1);
-        this.cooldown = 0;
     }
 
     public abstract void drawPage(int page);
 
-    public void previousPage() {
-        if (this.currentPage.intValue() <= 1 || (this.lastChange + this.cooldown) > System.currentTimeMillis()) {
-            return;
-        }
-        this.lastChange = System.currentTimeMillis();
+    public int previousPage() {
+        int initialPage = this.currentPage.intValue();
+        if (initialPage <= 1)
+            return initialPage;
+
         this.drawPage(this.currentPage.decrementAndGet());
+        return initialPage - 1;
     }
 
-    public void nextPage() {
-        if (this.currentPage.get() >= this.maxPage || (this.lastChange + this.cooldown) > System.currentTimeMillis()) {
-            return;
-        }
-        this.lastChange = System.currentTimeMillis();
+    public int nextPage() {
+        int initialPage = this.currentPage.intValue();
+        if (initialPage >= this.maxPage)
+            return initialPage;
+
         this.drawPage(this.currentPage.incrementAndGet());
+        return initialPage + 1;
     }
 }

@@ -1,50 +1,67 @@
 package pink.zak.giveawaybot.service.command.discord.command;
 
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import pink.zak.giveawaybot.GiveawayBot;
+import pink.zak.giveawaybot.data.models.Server;
 
-import java.util.Arrays;
+import java.util.Map;
 import java.util.Set;
 
 public abstract class SimpleCommand extends Command {
-    private final String command;
-    private Set<String> aliases = Sets.newHashSet();
-    private Set<SubCommand> subCommands = Sets.newLinkedHashSet();
+    private final String name;
+    private final CommandData commandData;
+    private Map<String, SubCommand> subCommands = Maps.newHashMap();
 
-    protected SimpleCommand(GiveawayBot bot, String command, boolean manager, boolean premium) {
+    private net.dv8tion.jda.api.interactions.commands.Command command;
+
+    protected SimpleCommand(GiveawayBot bot, String name, boolean manager, boolean premium) {
         super(bot, manager, premium);
-        this.command = command;
+        this.name = name;
+        this.commandData = this.createCommandData();
     }
 
-    public String getCommand() {
-        return this.command;
+    public String getName() {
+        return this.name;
     }
 
-    public Set<SubCommand> getSubCommands() {
+    public Map<String, SubCommand> getSubCommands() {
         return this.subCommands;
     }
 
     public void setSubCommands(Set<SubCommand> subCommands) {
-        this.subCommands = subCommands;
+        Map<String, SubCommand> subCommandMap = Maps.newHashMap();
+        for (SubCommand subCommand : subCommands)
+            if (subCommand.getSubCommandGroupId() != null)
+                subCommandMap.put(subCommand.getSubCommandGroupId() + "/" + subCommand.getSubCommandId(), subCommand);
+            else
+                subCommandMap.put(subCommand.getSubCommandId(), subCommand);
+        this.subCommands = subCommandMap;
     }
 
-    protected void setSubCommands(SubCommand... subCommands) {
-        this.subCommands.addAll(Arrays.asList(subCommands));
+    @Override
+    public void onExecute(Member sender, Server server, SlashCommandEvent event) {
+
     }
 
-    public Set<String> getAliases() {
-        return this.aliases;
+    public void setSubCommands(SubCommand... subCommands) {
+        this.setSubCommands(Sets.newHashSet(subCommands));
     }
 
-    public void setAliases(Set<String> aliases) {
-        this.aliases = aliases;
+    public CommandData getCommandData() {
+        return this.commandData;
     }
 
-    public void setAliases(String... aliases) {
-        this.aliases.addAll(Arrays.asList(aliases));
+    public net.dv8tion.jda.api.interactions.commands.Command getCommand() {
+        return this.command;
     }
 
-    public boolean doesCommandMatch(String command) {
-        return this.command.equalsIgnoreCase(command) || this.aliases.contains(command);
+    public void setCommand(net.dv8tion.jda.api.interactions.commands.Command command) {
+        this.command = command;
     }
+
+    protected abstract CommandData createCommandData();
 }

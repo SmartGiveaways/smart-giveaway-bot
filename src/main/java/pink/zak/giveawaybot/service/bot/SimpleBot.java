@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.jetbrains.annotations.NotNull;
 import pink.zak.giveawaybot.GiveawayBot;
+import pink.zak.giveawaybot.listener.button.ButtonRegistry;
 import pink.zak.giveawaybot.service.command.console.ConsoleCommandBase;
 import pink.zak.giveawaybot.service.command.console.command.ConsoleBaseCommand;
 import pink.zak.giveawaybot.service.command.discord.DiscordCommandBase;
@@ -28,9 +29,9 @@ public interface SimpleBot {
 
     void buildJdaEarly(String token, Set<GatewayIntent> intents, UnaryOperator<DefaultShardManagerBuilder> jdaOperator);
 
-    void initialize(GiveawayBot bot, String token, String prefix, Set<GatewayIntent> intents, UnaryOperator<DefaultShardManagerBuilder> jdaOperator);
+    void initialize(GiveawayBot bot, String token, Set<GatewayIntent> intents, UnaryOperator<DefaultShardManagerBuilder> jdaOperator);
 
-    void initialize(GiveawayBot bot, String token, String prefix, Set<GatewayIntent> intents);
+    void initialize(GiveawayBot bot, String token, Set<GatewayIntent> intents);
 
     void registerRegistries(Registry... registries);
 
@@ -54,7 +55,7 @@ public interface SimpleBot {
 
     Path getBasePath();
 
-    String getPrefix();
+    ButtonRegistry getButtonRegistry();
 
     DiscordCommandBase getDiscordCommandBase();
 

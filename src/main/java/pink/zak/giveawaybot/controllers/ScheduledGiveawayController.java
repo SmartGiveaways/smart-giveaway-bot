@@ -2,7 +2,9 @@ package pink.zak.giveawaybot.controllers;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import pink.zak.giveawaybot.GiveawayBot;
@@ -42,7 +44,8 @@ public class ScheduledGiveawayController {
         if (server.getScheduledGiveaways().size() >= 10) {
             return ImmutablePair.of(null, ReturnCode.GIVEAWAY_LIMIT_FAILURE);
         }
-        if (!giveawayChannel.getGuild().getSelfMember().hasPermission(giveawayChannel, Defaults.requiredPermissions)) {
+        Member selfMember = giveawayChannel.getGuild().getSelfMember();
+        if (!selfMember.hasPermission(Permission.ADMINISTRATOR) && !selfMember.hasPermission(giveawayChannel, Defaults.requiredPermissions)) {
             return ImmutablePair.of(null, ReturnCode.PERMISSIONS_FAILURE);
         }
         if (!presetName.equalsIgnoreCase("default") && server.getPreset(presetName) == null) {

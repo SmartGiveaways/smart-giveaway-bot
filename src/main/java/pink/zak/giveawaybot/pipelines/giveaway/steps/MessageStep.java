@@ -50,7 +50,7 @@ public class MessageStep {
 
     public void sendEmptyMessage(CurrentGiveaway giveaway, Server server, Message message) {
         server.getActiveGiveaways().remove(giveaway.getMessageId());
-        message.editMessage(new EmbedBuilder()
+        message.editMessageEmbeds(new EmbedBuilder()
                 .setColor(this.palette.success())
                 .setTitle(this.languageRegistry.get(server, Text.GIVEAWAY_EMBED_TITLE, replacer -> replacer.set("item", giveaway.getGiveawayItem())).toString())
                 .setDescription(this.languageRegistry.get(server, Text.GIVEAWAY_FINISHED_EMBED_DESCRIPTION_NO_WINNERS).toString())
@@ -67,7 +67,7 @@ public class MessageStep {
             descriptionBuilder.append("<@").append(winnerId).append(">\n");
         }
         String description = descriptionBuilder.toString();
-        message.editMessage(new EmbedBuilder()
+        message.editMessageEmbeds(new EmbedBuilder()
                 .setColor(this.palette.success())
                 .setTitle(this.languageRegistry.get(server, Text.GIVEAWAY_EMBED_TITLE, replacer -> replacer.set("item", giveaway.getGiveawayItem())).toString())
                 .setDescription(this.languageRegistry.get(server, winners.size() > 1 ? Text.GIVEAWAY_FINISHED_EMBED_DESCRIPTION_PLURAL : Text.GIVEAWAY_FINISHED_EMBED_DESCRIPTION_SINGULAR,

@@ -5,7 +5,9 @@ import com.google.common.collect.Sets;
 import lombok.SneakyThrows;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageReaction;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -83,7 +85,8 @@ public class GiveawayController {
         if (server.getActiveGiveaways().size() >= (server.isPremium() ? 10000 : 5)) {
             return ImmutablePair.of(null, ReturnCode.GIVEAWAY_LIMIT_FAILURE);
         }
-        if (!giveawayChannel.getGuild().getSelfMember().hasPermission(giveawayChannel, Defaults.requiredPermissions)) {
+        Member selfMember = giveawayChannel.getGuild().getSelfMember();
+        if (!selfMember.hasPermission(Permission.ADMINISTRATOR) && !selfMember.hasPermission(giveawayChannel, Defaults.requiredPermissions)) {
             return ImmutablePair.of(null, ReturnCode.PERMISSIONS_FAILURE);
         }
         Preset preset = presetName.equalsIgnoreCase("default") ? this.defaultPreset : server.getPreset(presetName);
@@ -92,7 +95,7 @@ public class GiveawayController {
         }
         boolean reactToEnter = preset.getSetting(Setting.ENABLE_REACT_TO_ENTER);
         try {
-            Message message = giveawayChannel.sendMessage(new EmbedBuilder()
+            Message message = giveawayChannel.sendMessageEmbeds(new EmbedBuilder()
                     .setTitle(this.languageRegistry.get(server, Text.GIVEAWAY_EMBED_TITLE, replacer -> replacer.set("item", giveawayItem)).toString())
                     .setDescription(this.languageRegistry.get(server, reactToEnter ? Text.GIVEAWAY_EMBED_DESCRIPTION_REACTION : Text.GIVEAWAY_EMBED_DESCRIPTION_ALL).toString())
                     .setColor(this.palette.primary())
@@ -254,7 +257,7 @@ public class GiveawayController {
                 Preset preset = giveaway.getPresetName().equals("default") ? this.defaultPreset : server.getPreset(giveaway.getPresetName());
                 boolean reactToEnter = preset.getSetting(Setting.ENABLE_REACT_TO_ENTER);
                 if (!GiveawayBot.isLocked()) {
-                    message.editMessage(new EmbedBuilder()
+                    message.editMessageEmbeds(new EmbedBuilder()
                             .setTitle(this.languageRegistry.get(server, Text.GIVEAWAY_EMBED_TITLE, replacer -> replacer.set("item", giveaway.getGiveawayItem())).toString())
                             .setDescription(this.languageRegistry.get(server, reactToEnter ? Text.GIVEAWAY_EMBED_DESCRIPTION_REACTION : Text.GIVEAWAY_EMBED_DESCRIPTION_ALL).toString())
                             .setColor(this.palette.primary())
