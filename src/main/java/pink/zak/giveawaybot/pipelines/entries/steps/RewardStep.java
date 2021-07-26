@@ -27,6 +27,7 @@ public class RewardStep {
     }
 
     private void add(EntryType entryType, EnumMap<EntryType, AtomicInteger> entries, int amount) {
+        System.out.println("Adding entry type " + entryType + " with amount " + amount + " to entries " + entryType);
         this.entryCount.updateAndGet(current -> current + amount);
         if (entries.containsKey(entryType)) {
             entries.get(entryType).addAndGet(amount);

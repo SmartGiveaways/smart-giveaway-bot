@@ -5,6 +5,7 @@ import pink.zak.giveawaybot.service.storage.mongo.MongoStorage;
 import pink.zak.giveawaybot.threads.ThreadFunction;
 import pink.zak.giveawaybot.threads.ThreadManager;
 
+import java.util.Collection;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -59,6 +60,10 @@ public class Cache<K, V> {
 
     public CompletableFuture<V> getAsync(K key, ThreadFunction threadFunction) {
         return CompletableFuture.supplyAsync(() -> this.get(key), this.threadManager.getAsyncExecutor(threadFunction));
+    }
+
+    public Collection<V> getAll() {
+        return this.cacheMap.values();
     }
 
     public V set(K key, V value) {

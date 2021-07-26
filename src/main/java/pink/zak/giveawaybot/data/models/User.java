@@ -70,4 +70,15 @@ public class User {
     public ConcurrentMap<Long, EnumMap<EntryType, AtomicInteger>> getEntries() {
         return this.entries;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+            "id=" + this.id +
+            ", serverId=" + this.serverId +
+            ", entries=" + this.entries +
+            ", banned=" + this.banned +
+            ", shadowBanned=" + this.shadowBanned +
+            '}';
+    }
 }

@@ -35,7 +35,6 @@ public class ReactionAddListener extends ListenerAdapter {
 
         this.baseMap = Maps.newEnumMap(EntryType.class);
         this.baseMap.put(EntryType.REACTION, new AtomicInteger(1));
-
     }
 
     @Override
