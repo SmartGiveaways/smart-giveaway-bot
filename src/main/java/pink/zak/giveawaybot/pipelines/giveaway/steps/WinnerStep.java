@@ -22,7 +22,7 @@ public class WinnerStep {
         this.messageStep = messageStep;
     }
 
-    public void actOnWinners(Server server, CurrentGiveaway giveaway, Message message, List<Long> enteredUsers, BigInteger totalEntries, Map<Long, BigInteger> userEntries) {
+    public void actOnWinners(Server server, CurrentGiveaway giveaway, Message message, List<Long> enteredUsers, BigInteger totalEntries, Map<Long, Integer> userEntries) {
         int winnerAmount = giveaway.getWinnerAmount();
         if (userEntries.size() <= winnerAmount) {
             this.messageStep.handleFinishedMessages(server, giveaway, message, userEntries.keySet(), totalEntries, userEntries, true);
@@ -32,13 +32,13 @@ public class WinnerStep {
         this.messageStep.handleFinishedMessages(server, giveaway, message, winners, totalEntries, userEntries, true);
     }
 
-    private Set<Long> generateWinners(int winnerAmount, List<Long> enteredUsers, BigInteger totalEntries, Map<Long, BigInteger> userEntries) {
+    private Set<Long> generateWinners(int winnerAmount, List<Long> enteredUsers, BigInteger totalEntries, Map<Long, Integer> userEntries) {
         Set<Long> winners = Sets.newHashSet();
         BigInteger currentTotalEntries = totalEntries;
         for (int i = 1; i <= winnerAmount; i++) { // For each winner to be generated
             BigInteger decreasingRandom = NumberUtils.getRandomBigInteger(currentTotalEntries);
             for (long userId : enteredUsers) {
-                BigInteger entries = userEntries.get(userId);
+                BigInteger entries = BigInteger.valueOf(userEntries.get(userId));
                 decreasingRandom = decreasingRandom.subtract(entries);
                 if (decreasingRandom.compareTo(BigInteger.ONE) < 0) {
                     winners.add(userId);

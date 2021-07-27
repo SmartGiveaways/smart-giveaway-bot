@@ -1,9 +1,12 @@
 package pink.zak.giveawaybot.data.storage;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.google.common.collect.Sets;
+import com.mongodb.BasicDBObject;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.sharding.ShardManager;
+import org.bson.Document;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.data.models.Preset;
 import pink.zak.giveawaybot.data.models.Server;
@@ -13,35 +16,38 @@ import pink.zak.giveawaybot.service.storage.mongo.MongoSerializer;
 import pink.zak.giveawaybot.service.storage.mongo.MongoStorage;
 
 import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentSkipListMap;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 public class ServerStorage extends MongoStorage<Long, Server> {
     private final GiveawayBot bot;
-    private final Gson gson = new Gson();
+    private final ShardManager shardManager;
 
     public ServerStorage(GiveawayBot bot) {
         super(bot.getThreadManager(), bot.getMongoConnectionFactory(), "server-settings", "_id");
         this.bot = bot;
+        this.shardManager = bot.getShardManager();
     }
 
     @Override
     public MongoSerializer<Server> serializer() {
         return (server, document) -> {
             document.put("_id", server.getId());
-            document.put("presets", this.gson.toJson(this.serializePresets(server.getPresets())));
-            document.put("activeGiveaways", this.gson.toJson(server.getActiveGiveaways()));
-            document.put("finishedGiveaways", this.gson.toJson(server.getFinishedGiveaways()));
-            document.put("scheduledGiveaways", this.gson.toJson(server.getScheduledGiveaways()));
-            document.put("managerRoles", this.gson.toJson(server.getManagerRoles()));
-            document.put("bannedUsers", this.gson.toJson(server.getBannedUsers()));
+            if (!server.getPresets().isEmpty())
+                document.put("presets", this.createPresets(server));
+            if (!server.getActiveGiveaways().isEmpty())
+                document.put("activeGiveaways", server.getActiveGiveaways());
+            if (!server.getFinishedGiveaways().isEmpty())
+                document.put("finishedGiveaways", server.getFinishedGiveaways());
+            if (!server.getScheduledGiveaways().isEmpty())
+                document.put("scheduledGiveaways", server.getScheduledGiveaways());
+            if (!server.getManagerRoles().isEmpty())
+                document.put("managerRoles", server.getManagerRoles());
+            if (!server.getBannedUsers().isEmpty())
+                document.put("bannedUsers", server.getBannedUsers());
             document.put("premium", server.getPremiumExpiry());
             document.put("language", server.getLanguage());
             return document;
@@ -52,12 +58,12 @@ public class ServerStorage extends MongoStorage<Long, Server> {
     public MongoDeserializer<Server> deserializer() {
         return document -> {
             long id = document.getLong("_id");
-            Map<String, Preset> presets = this.deserializePresets(id, this.gson.fromJson(document.getString("presets"), new TypeToken<ConcurrentHashMap<String, HashMap<Setting, String>>>() {}.getType()));
-            List<Long> activeGiveaways = this.gson.fromJson(document.getString("activeGiveaways"), new TypeToken<CopyOnWriteArrayList<Long>>() {}.getType());
-            List<Long> finishedGiveaways = this.gson.fromJson(document.getString("finishedGiveaways"), new TypeToken<CopyOnWriteArrayList<Long>>() {}.getType());
-            List<UUID> scheduledGiveaways = this.gson.fromJson(document.getString("scheduledGiveaways"), new TypeToken<CopyOnWriteArrayList<UUID>>() {}.getType());
-            List<Long> bannedUsers = this.gson.fromJson(document.getString("bannedUsers"), new TypeToken<CopyOnWriteArrayList<Long>>() {}.getType());
-            Set<Long> managerRoles = this.gson.fromJson(document.getString("managerRoles"), new TypeToken<HashSet<Long>>() {}.getType());
+            Map<String, Preset> presets = this.createPresets(id, document);
+            List<Long> activeGiveaways = document.containsKey("activeGiveaways") ? Lists.newCopyOnWriteArrayList(document.getList("activeGiveaways", Long.class)) : Lists.newCopyOnWriteArrayList();
+            List<Long> finishedGiveaways = document.containsKey("finishedGiveaways") ? Lists.newCopyOnWriteArrayList(document.getList("finishedGiveaways", Long.class)) : Lists.newCopyOnWriteArrayList();
+            List<UUID> scheduledGiveaways = document.containsKey("scheduledGiveaways") ? Lists.newCopyOnWriteArrayList(document.getList("scheduledGiveaways", UUID.class)) : Lists.newCopyOnWriteArrayList();
+            List<Long> bannedUsers = document.containsKey("bannedUsers") ? Lists.newCopyOnWriteArrayList(document.getList("bannedUsers", Long.class)) : Lists.newCopyOnWriteArrayList();
+            Set<Long> managerRoles = document.containsKey("managerRoles") ? Sets.newConcurrentHashSet(document.getList("managerRoles", Long.class)) : Sets.newConcurrentHashSet();
             long premium = document.getLong("premium");
             String language = document.getString("language");
             return new Server(this.bot, id, activeGiveaways, finishedGiveaways, scheduledGiveaways, bannedUsers, managerRoles, presets, premium, language);
@@ -71,35 +77,60 @@ public class ServerStorage extends MongoStorage<Long, Server> {
         return server;
     }
 
-    public Map<String, EnumMap<Setting, String>> serializePresets(Map<String, Preset> unserialized) {
-        Map<String, EnumMap<Setting, String>> serialized = Maps.newHashMap();
-        for (Map.Entry<String, Preset> preset : unserialized.entrySet()) {
-            serialized.put(preset.getKey(), preset.getValue().getSerializedSettings());
-        }
-        return serialized;
-    }
+    public Set<BasicDBObject> createPresets(Server server) {
+        Set<BasicDBObject> documents = Sets.newHashSet();
+        Map<String, Preset> presets = server.getPresets();
 
-    public Map<String, Preset> deserializePresets(long guildId, Map<String, Map<Setting, String>> serialized) {
-        if (serialized.isEmpty()) {
-            return new ConcurrentSkipListMap<>();
-        }
-        Guild guild = this.bot.getShardManager().getGuildById(guildId);
-        Map<String, Preset> deserialized = new ConcurrentSkipListMap<>();
-        for (Map.Entry<String, Map<Setting, String>> entry : serialized.entrySet()) {
-            deserialized.put(entry.getKey(), new Preset(entry.getKey(), this.convertPresetValue(guild, entry.getValue())));
-        }
-        return deserialized;
-    }
+        for (Map.Entry<String, Preset> presetEntry : presets.entrySet()) {
+            BasicDBObject presetObject = new BasicDBObject();
+            presetObject.put("name", presetEntry.getKey());
 
-    public EnumMap<Setting, Object> convertPresetValue(Guild guild, Map<Setting, String> unconverted) {
-        EnumMap<Setting, Object> enumMap = Maps.newEnumMap(Setting.class);
-        for (Map.Entry<Setting, String> innerEntry : unconverted.entrySet()) {
-            Object parsed = innerEntry.getKey().parseAny(innerEntry.getValue(), guild);
-            if (parsed == null) {
-                continue;
+            if (!presetEntry.getValue().getSettings().isEmpty()) {
+                Set<BasicDBObject> settingObjects = Sets.newHashSet();
+                for (Map.Entry<Setting, String> settingEntry : presetEntry.getValue().getSerializedSettings().entrySet()) {
+                    BasicDBObject settingObject = new BasicDBObject();
+                    settingObject.put("setting", settingEntry.getKey().toString());
+                    settingObject.put("value", settingEntry.getValue());
+                    settingObjects.add(settingObject);
+                }
+                presetObject.put("settings", settingObjects);
             }
-            enumMap.put(innerEntry.getKey(), parsed);
+            documents.add(presetObject);
         }
-        return enumMap;
+        return documents;
+    }
+
+    public Map<String, Preset> createPresets(long guildId, Document serverDocument) {
+        Map<String, Preset> map = new ConcurrentHashMap<>();
+
+        if (!serverDocument.containsKey("presets"))
+            return map;
+
+        Guild guild = this.shardManager.getGuildById(guildId);
+        List<Document> presetDocuments = serverDocument.getList("presets", Document.class);
+
+        for (Document presetDocument : presetDocuments) {
+            String name = presetDocument.getString("name");
+
+            if (presetDocument.containsKey("settings")) {
+                List<Document> settingDocuments = presetDocument.getList("settings", Document.class);
+                EnumMap<Setting, Object> settings = Maps.newEnumMap(Setting.class);
+
+                for (Document settingDocument : settingDocuments) {
+                    Setting setting = Setting.valueOf(settingDocument.getString("setting"));
+                    Object value = this.convertPresetValue(guild, setting, settingDocument.getString("value"));
+
+                    settings.put(setting, value);
+                }
+                map.put(name, new Preset(name, settings));
+            } else {
+                map.put(name, new Preset(name));
+            }
+        }
+        return map;
+    }
+
+    public Object convertPresetValue(Guild guild, Setting setting, String unconverted) {
+        return setting.parseAny(unconverted, guild);
     }
 }

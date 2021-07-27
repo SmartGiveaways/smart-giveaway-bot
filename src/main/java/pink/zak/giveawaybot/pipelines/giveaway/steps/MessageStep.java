@@ -61,7 +61,7 @@ public class MessageStep {
         this.handleFinishedMessages(server, giveaway, message, winners, totalEntries, null, false);
     }
 
-    public void handleFinishedMessages(Server server, RichGiveaway giveaway, Message message, Set<Long> winners, BigInteger totalEntries, Map<Long, BigInteger> userEntries, boolean addToFinished) {
+    public void handleFinishedMessages(Server server, RichGiveaway giveaway, Message message, Set<Long> winners, BigInteger totalEntries, Map<Long, Integer> userEntries, boolean addToFinished) {
         StringBuilder descriptionBuilder = new StringBuilder();
         for (long winnerId : winners) {
             descriptionBuilder.append("<@").append(winnerId).append(">\n");

@@ -34,7 +34,7 @@ public class EntryCounterStep {
     public void countEntries(CurrentGiveaway giveaway, Message message) {
         Server server = this.serverCache.get(giveaway.getServerId());
         BigInteger totalEntries = BigInteger.ZERO;
-        Map<Long, BigInteger> userEntriesMap = Maps.newHashMap();
+        Map<Long, Integer> userEntriesMap = Maps.newHashMap();
         List<Long> enteredUsers = Lists.newArrayList(giveaway.getEnteredUsers());
         Collections.shuffle(enteredUsers);
         long giveawayId = giveaway.getMessageId();
@@ -52,10 +52,11 @@ public class EntryCounterStep {
             }
             Map<EntryType, AtomicInteger> entries = user.getEntries().get(giveawayId);
             if (entries != null) {
-                BigInteger totalUserEntries = BigInteger.ZERO;
+                int totalUserEntries = 0;
                 for (AtomicInteger entryTypeAmount : entries.values()) {
-                    totalEntries = totalEntries.add(BigInteger.valueOf(entryTypeAmount.get()));
-                    totalUserEntries = totalUserEntries.add(BigInteger.valueOf(entryTypeAmount.get()));
+                    int amount = entryTypeAmount.get();
+                    totalEntries = totalEntries.add(BigInteger.valueOf(amount));
+                    totalUserEntries += amount;
                 }
                 userEntriesMap.put(user.getId(), totalUserEntries);
             }

@@ -8,19 +8,19 @@ import java.util.Set;
 
 public class FullFinishedGiveaway extends PartialFinishedGiveaway {
     private final BigInteger totalEntries;
-    private final Map<Long, BigInteger> userEntries;
+    private final Map<Long, Integer> userEntries;
     private Set<Long> winners;
 
     public FullFinishedGiveaway(long messageId, long channelId, long serverId, long startTime, long endTime,
                                 int winnerAmount, String presetName, String giveawayItem, BigInteger totalEntries,
-                                Map<Long, BigInteger> userEntries, Set<Long> winners) {
+                                Map<Long, Integer> userEntries, Set<Long> winners) {
         super(messageId, channelId, serverId, startTime, endTime, winnerAmount, presetName, giveawayItem);
         this.totalEntries = totalEntries;
         this.userEntries = userEntries;
         this.winners = winners;
     }
 
-    public FullFinishedGiveaway(CurrentGiveaway giveaway, BigInteger totalEntries, Map<Long, BigInteger> userEntries, Set<Long> winners) {
+    public FullFinishedGiveaway(CurrentGiveaway giveaway, BigInteger totalEntries, Map<Long, Integer> userEntries, Set<Long> winners) {
         this(giveaway.getMessageId(), giveaway.getChannelId(), giveaway.getServerId(), giveaway.getStartTime(),
                 giveaway.getEndTime(), giveaway.getWinnerAmount(), giveaway.getPresetName(), giveaway.getGiveawayItem(),
                 totalEntries, userEntries, winners);
@@ -30,7 +30,7 @@ public class FullFinishedGiveaway extends PartialFinishedGiveaway {
         return this.totalEntries;
     }
 
-    public Map<Long, BigInteger> getUserEntries() {
+    public Map<Long, Integer> getUserEntries() {
         return this.userEntries;
     }
 

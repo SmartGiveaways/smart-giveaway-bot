@@ -57,7 +57,7 @@ public class DeletionStep {
         this.giveawayStorage.delete(messageId);
     }
 
-    public void addToFinished(Server server, CurrentGiveaway giveaway, BigInteger totalEntries, Map<Long, BigInteger> userEntries, Set<Long> winners) {
+    public void addToFinished(Server server, CurrentGiveaway giveaway, BigInteger totalEntries, Map<Long, Integer> userEntries, Set<Long> winners) {
         FullFinishedGiveaway finishedGiveaway = this.finishedGiveawayStorage.create(giveaway, totalEntries, userEntries, winners);
         server.getFinishedGiveaways().add(giveaway.getMessageId());
         this.finishedGiveawayCache.set(giveaway.getMessageId(), finishedGiveaway);

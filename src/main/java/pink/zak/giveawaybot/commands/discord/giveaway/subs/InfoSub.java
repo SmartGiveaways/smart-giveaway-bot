@@ -46,6 +46,7 @@ public class InfoSub extends SubCommand {
             }
         } catch (Exception ex) {
             this.langFor(server, Text.COULDNT_FIND_GIVEAWAY).to(event, true);
+            return;
         }
         if (uuid == null) {
             if (longId < 786066350882488381L) {

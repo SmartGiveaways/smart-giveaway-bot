@@ -1,8 +1,9 @@
 package pink.zak.giveawaybot.data.storage.finishedgiveaway;
 
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.mongodb.BasicDBObject;
+import org.bson.Document;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.data.models.giveaway.CurrentGiveaway;
 import pink.zak.giveawaybot.data.models.giveaway.finished.FullFinishedGiveaway;
@@ -10,13 +11,11 @@ import pink.zak.giveawaybot.service.storage.mongo.MongoDeserializer;
 import pink.zak.giveawaybot.service.storage.mongo.MongoSerializer;
 
 import java.math.BigInteger;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 public class FullFinishedGiveawayStorage extends FinishedGiveawayStorage<FullFinishedGiveaway> {
-    private final Gson gson = new Gson();
 
     public FullFinishedGiveawayStorage(GiveawayBot bot) {
         super(bot);
@@ -34,8 +33,8 @@ public class FullFinishedGiveawayStorage extends FinishedGiveawayStorage<FullFin
             document.put("presetName", giveaway.getPresetName());
             document.put("giveawayItem", giveaway.getGiveawayItem());
             document.put("totalEntries", giveaway.getTotalEntries().toString());
-            document.put("userEntries", this.gson.toJson(giveaway.getUserEntries()));
-            document.put("winners", this.gson.toJson(giveaway.getWinners()));
+            document.put("userEntries", this.createUserEntries(giveaway));
+            document.put("winners", giveaway.getWinners());
             return document;
         };
     }
@@ -52,10 +51,35 @@ public class FullFinishedGiveawayStorage extends FinishedGiveawayStorage<FullFin
             String presetName = document.getString("presetName");
             String giveawayItem = document.getString("giveawayItem");
             BigInteger totalEntries = new BigInteger(document.getString("totalEntries"));
-            Map<Long, BigInteger> userEntries = this.gson.fromJson(document.getString("userEntries"), new TypeToken<HashMap<Long, BigInteger>>() {}.getType());
-            Set<Long> winners = Sets.newConcurrentHashSet(this.gson.fromJson(document.getString("winners"), new TypeToken<HashSet<Long>>() {}.getType()));
+            Map<Long, Integer> userEntries = this.createUserEntries(document);
+            Set<Long> winners = document.containsKey("winners") ? Sets.newConcurrentHashSet(document.getList("winners", Long.class)) : Sets.newConcurrentHashSet();
             return new FullFinishedGiveaway(messageId, channelId, serverId, startTime, endTime, winnerAmount, presetName, giveawayItem, totalEntries, userEntries, winners);
         };
+    }
+
+    private Set<BasicDBObject> createUserEntries(FullFinishedGiveaway giveaway) {
+        Set<BasicDBObject> documents = Sets.newHashSet();
+        for (Map.Entry<Long, Integer> entry : giveaway.getUserEntries().entrySet()) {
+            BasicDBObject document = new BasicDBObject();
+            document.put("id", entry.getKey());
+            document.put("entries", entry.getValue());
+
+            documents.add(document);
+        }
+        return documents;
+    }
+
+    private Map<Long, Integer> createUserEntries(Document giveawayDocument) {
+        Map<Long, Integer> map = Maps.newHashMap();
+
+        List<Document> userDocuments = giveawayDocument.getList("userEntries", Document.class);
+        for (Document userDocument : userDocuments) {
+            long id = userDocument.getLong("id");
+            int entries = userDocument.getInteger("entries");
+
+            map.put(id, entries);
+        }
+        return map;
     }
 
     @Override
@@ -63,7 +87,7 @@ public class FullFinishedGiveawayStorage extends FinishedGiveawayStorage<FullFin
         return null;
     }
 
-    public FullFinishedGiveaway create(CurrentGiveaway giveaway, BigInteger totalEntries, Map<Long, BigInteger> userEntries, Set<Long> winners) {
+    public FullFinishedGiveaway create(CurrentGiveaway giveaway, BigInteger totalEntries, Map<Long, Integer> userEntries, Set<Long> winners) {
         FullFinishedGiveaway finishedGiveaway = new FullFinishedGiveaway(giveaway, totalEntries, userEntries, winners);
         this.save(finishedGiveaway);
         return finishedGiveaway;
