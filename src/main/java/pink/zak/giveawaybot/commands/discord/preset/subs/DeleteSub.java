@@ -30,16 +30,16 @@ public class DeleteSub extends SubCommand {
             if (server.getPresets().size() > 0) {
                 message = message + this.langFor(server, Text.PRESET_DELETE_SHOW_PRESETS_ADDON, replacer -> replacer.set("preset-list", String.join(", ", server.getPresets().keySet())));
             }
-            event.reply(message).queue();
+            event.reply(message).setEphemeral(true).queue();
             return;
         }
         String lowerPresetName = presetName.toLowerCase();
         if (!this.canBeDeleted(server, lowerPresetName)) {
-            this.langFor(server, Text.PRESET_DELETE_IN_USE).to(event);
+            this.langFor(server, Text.PRESET_DELETE_IN_USE).to(event, true);
             return;
         }
         server.getPresets().remove(lowerPresetName);
-        this.langFor(server, Text.PRESET_DELETED, replacer -> replacer.set("preset", presetName)).to(event);
+        this.langFor(server, Text.PRESET_DELETED, replacer -> replacer.set("preset", presetName)).to(event, true);
     }
 
     @SneakyThrows

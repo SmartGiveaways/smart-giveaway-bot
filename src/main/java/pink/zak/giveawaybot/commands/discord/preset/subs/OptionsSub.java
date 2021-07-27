@@ -27,7 +27,8 @@ public class OptionsSub extends SubCommand {
 
     @Override
     public void onExecute(Member sender, Server server, SlashCommandEvent event) {
-        event.replyEmbeds(this.optionsList.get(server.getLanguage())).queue();
+        event.replyEmbeds(this.optionsList.get(server.getLanguage()))
+            .setEphemeral(true).queue();
     }
 
     private Map<String, MessageEmbed> setupOptionsList() {
@@ -36,15 +37,15 @@ public class OptionsSub extends SubCommand {
         for (Language language : this.languageRegistry.languageMap().values()) {
             for (Setting setting : Setting.values()) {
                 builder.append(setting.getName())
-                        .append(" - ")
-                        .append(language.getValue(setting.getDescription()).toString())
-                        .append("\n");
+                    .append(" - ")
+                    .append(language.getValue(setting.getDescription()).toString())
+                    .append("\n");
             }
             messageEmbeds.put(language.getIdentifier(), new EmbedBuilder()
-                    .setColor(this.palette.primary())
-                    .setTitle(language.getValue(Text.PRESET_OPTIONS_LIST_OPTIONS_EMBED_TITLE).toString())
-                    .setDescription(builder.toString())
-                    .build());
+                .setColor(this.palette.primary())
+                .setTitle(language.getValue(Text.PRESET_OPTIONS_LIST_OPTIONS_EMBED_TITLE).toString())
+                .setDescription(builder.toString())
+                .build());
         }
         return messageEmbeds;
     }

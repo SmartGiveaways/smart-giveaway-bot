@@ -8,11 +8,11 @@ values:
   # General messages
   bot-missing-permission-specific: ":x: The bot is missing the %permission% permission."
   bot-missing-permissions-specific: ":x: The bot is missing the following permissions: %permission%"
-  no-permission: ":x: No permission. You must have admin or one of your roles must be a manager (`>gadmin role add @Role`)"
+  no-permission: ":x: No permission. You must have admin or one of your roles must be a manager (`/gadmin manager add @Role`)"
   couldnt-find-member: ":x: Couldn't find that member :worried:"
   couldnt-find-channel: ":x: The specified channel could not be found. Make sure the bot can access it."
   couldnt-find-giveaway: ":x: Could not find a giveaway with that ID. Make sure the giveaway is finished and you're using the message ID."
-  couldnt-find-scheduled-giveaway: ":x: Could not find a scheduled giveaway with that UUID. Use `>g list scheduled` to list scheduled giveaways."
+  couldnt-find-scheduled-giveaway: ":x: Could not find a scheduled giveaway with that UUID. Use `/giveaway list scheduled` to list scheduled giveaways."
   couldnt-find-preset: ":x: Could not find that preset."
   no-active-giveaways: ":x: There are no active giveaways in this server."
   no-scheduled-giveaways: ":x: There are no scheduled giveaways in this server."
@@ -62,14 +62,14 @@ values:
 
   # /gadmin command messages
   admin-list-languages-embed-title: "Available Languages"
-  admin-list-languages-embed-footer: "Use >gadmin language <language> to set the language"
-  admin-language-not-found: "Could not find that language. Use >gadmin languages to list the available languages."
+  admin-list-languages-embed-footer: "Use `/gadmin language set <language>` to set the language"
+  admin-language-not-found: "Could not find that language. Use `/gadmin language list` to list the available languages."
   admin-set-language: "Your language has been set to English UK."
 
   admin-no-managers: ":x: There are not any manager roles right now. Add them with `>gadmin role add <role>"
   admin-manager-list-title: "Manager Roles"
 
-  admin-manager-limit-reached: ":x: You can only have 5 manager roles. List them with >gadmin roles"
+  admin-manager-limit-reached: ":x: You can only have 5 manager roles. List them with `/gadmin manager list`"
   admin-manager-already-contains: ":x: That role can already manage this server."
   admin-manager-doesnt-contain: ":x: That role is not a manager role."
   admin-manager-role-added: ":white_check_mark: %name% is now a manager role."
@@ -113,7 +113,7 @@ values:
   giveaway-list-embed-title: "Current Giveaways"
   giveaway-limit-failure: ":x: Your guild has reached the maximum number of 5 giveaways."
   giveaway-limit-failure-premium: ":x: Your guild has reached the maximum number of 10 premium giveaways."
-  no-preset-found-on-creation: ":x: Could not find the specified preset. Use `>preset list` to list them all."
+  no-preset-found-on-creation: ":x: Could not find the specified preset. Use `/preset list` to list them all."
   unknown-emoji-on-creation: ":x: Your giveaway was created but the reaction could not be added. Check the preset `%preset-name%` and make sure the reaction is valid. You must manually add it if you change it."
   giveaway-created: ":white_check_mark: Created your giveaway in %channel%."
   giveaway-length-too-short: "Giveaways must be at least 5 minutes long."
@@ -165,7 +165,7 @@ values:
   giveaway-history-embed-title: "**Finished Giveaways**"
   giveaway-history-no-history: ":x: No previous giveaways found"
   giveaway-history-embed-line: "%item% - ended %time% `(ID %id%)`"
-  giveaway-history-embed-footer: "Page %page%/%max_page% | %total% total | >g info <id> for more info"
+  giveaway-history-embed-footer: "Page %page%/%max_page% | %total% total | /giveaway info <id> for more info"
   # reroll messages
   reroll-over-24-hours: ":x: You can only reroll a giveaway within 24 hours."
   reroll-one-winner: "Your new winner is %winner%"
@@ -205,11 +205,11 @@ values:
   preset-list-default-entry: "default - this preset cannot be removed"
   # create sub
   preset-create-restricted-name: "You cannot use the name %name%."
-  preset-create-limit-reached: "You can only have 5 presets at a time. See `>preset` for help deleting some."
-  preset-create-limit-reached-premium: "You can only have 10 presets at a time. See `>preset` for help deleting some."
+  preset-create-limit-reached: "You can only have 5 presets at a time. Use `/preset delete` to delete some."
+  preset-create-limit-reached-premium: "You can only have 10 presets at a time. Use `/preset` to delete some."
   preset-create-already-called: "There is already a preset called %name% for this server."
   preset-create-name-too-long: "Preset names must be shorter than 20 characters."
-  preset-created: "Created your preset. Use `>preset settings` to see available settings."
+  preset-created: "Created your preset. Use `/preset options` to see available options."
   # export/import subs
   preset-exported-all: "Here's an export of all your presets."
   preset-exported-single: "Here's your export of your %preset% preset."
@@ -228,10 +228,10 @@ values:
   # options sub
   preset-options-list-options-embed-title: "Available Options"
   # list options sub
-  preset-has-no-settings: ":x: The preset %preset% has no settings. Use `>preset settings` to view available settings and `>preset set %preset% <setting> <value>` to set them."
+  preset-has-no-settings: ":x: The preset %preset% has no settings. Use `/preset options` to view available settings and `/preset set %preset% <setting> <value>` to set them."
   preset-options-list-embed-title: "Settings for the %preset% preset"
   # set option sub
-  preset-cannot-modify-default: ":x: You cannot modify the default preset. Create your own using `>preset create <preset>`."
+  preset-cannot-modify-default: ":x: You cannot modify the default preset. Create your own using `/preset create <preset>`."
   preset-setting-incorrect-input: ":x: Incorrect input for setting %setting%."
   preset-setting-set: "Set the %setting% setting to %value%."
   # preset settings descriptions

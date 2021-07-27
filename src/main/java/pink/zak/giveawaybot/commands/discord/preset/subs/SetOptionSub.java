@@ -21,24 +21,24 @@ public class SetOptionSub extends SubCommand {
         Setting setting = Setting.valueOf(event.getOption("setting").getAsString());
         String inputValue = event.getOption("value").getAsString();
         if (presetName.equalsIgnoreCase("default")) {
-            this.langFor(server, Text.PRESET_CANNOT_MODIFY_DEFAULT).to(event);
+            this.langFor(server, Text.PRESET_CANNOT_MODIFY_DEFAULT).to(event, true);
             return;
         }
         Preset preset = server.getPreset(presetName);
         if (preset == null) {
-            this.langFor(server, Text.COULDNT_FIND_PRESET).to(event);
+            this.langFor(server, Text.COULDNT_FIND_PRESET).to(event, true);
             return;
         }
         if (!setting.checkInputAny(inputValue, event.getGuild())) {
-            this.langFor(server, Text.PRESET_SETTING_INCORRECT_INPUT, replacer -> replacer.set("setting", setting.getName())).to(event);
+            this.langFor(server, Text.PRESET_SETTING_INCORRECT_INPUT, replacer -> replacer.set("setting", setting.getName())).to(event, true);
             return;
         }
         Object parsedValue = setting.parseAny(inputValue, event.getGuild());
         if (!setting.checkLimit(server, parsedValue)) {
-            this.langFor(server, setting.getLimitMessage(), replacer -> replacer.set("max", server.isPremium() ? setting.getMaxPremiumValue() : setting.getMaxValue())).to(event);
+            this.langFor(server, setting.getLimitMessage(), replacer -> replacer.set("max", server.isPremium() ? setting.getMaxPremiumValue() : setting.getMaxValue())).to(event, true);
             return;
         }
         preset.setSetting(setting, parsedValue);
-        this.langFor(server, Text.PRESET_SETTING_SET, replacer -> replacer.set("setting", setting.getName()).set("value", parsedValue)).to(event);
+        this.langFor(server, Text.PRESET_SETTING_SET, replacer -> replacer.set("setting", setting.getName()).set("value", parsedValue)).to(event, true);
     }
 }

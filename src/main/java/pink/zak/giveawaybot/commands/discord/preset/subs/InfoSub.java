@@ -29,25 +29,26 @@ public class InfoSub extends SubCommand {
         String presetName = event.getOption("presetname").getAsString();
         Preset preset = presetName.equalsIgnoreCase("default") ? this.defaultPreset : server.getPreset(presetName);
         if (preset == null) {
-            this.langFor(server, Text.COULDNT_FIND_PRESET).to(event);
+            this.langFor(server, Text.COULDNT_FIND_PRESET).to(event, true);
             return;
         }
         if (preset.getSettings().isEmpty()) {
-            this.langFor(server, Text.PRESET_HAS_NO_SETTINGS, replacer -> replacer.set("preset", preset.getName())).to(event);
+            this.langFor(server, Text.PRESET_HAS_NO_SETTINGS, replacer -> replacer.set("preset", preset.getName())).to(event, true);
             return;
         }
         StringBuilder builder = new StringBuilder();
         for (Map.Entry<Setting, Object> entry : preset.getSettings().entrySet()) {
             builder.append(entry.getKey().getName())
-                    .append(" - ")
-                    .append(entry.getValue())
-                    .append("\n");
+                .append(" - ")
+                .append(entry.getValue())
+                .append("\n");
         }
         event.replyEmbeds(new EmbedBuilder()
-                .setTitle(this.langFor(server, Text.PRESET_OPTIONS_LIST_EMBED_TITLE, replacer -> replacer.set("preset", preset.getName())).toString())
-                .setFooter(this.langFor(server, Text.GENERIC_EMBED_FOOTER).toString())
-                .setColor(this.palette.primary())
-                .setDescription(builder.toString())
-                .build()).queue();
+            .setTitle(this.langFor(server, Text.PRESET_OPTIONS_LIST_EMBED_TITLE, replacer -> replacer.set("preset", preset.getName())).toString())
+            .setFooter(this.langFor(server, Text.GENERIC_EMBED_FOOTER).toString())
+            .setColor(this.palette.primary())
+            .setDescription(builder.toString())
+            .build())
+            .setEphemeral(true).queue();
     }
 }

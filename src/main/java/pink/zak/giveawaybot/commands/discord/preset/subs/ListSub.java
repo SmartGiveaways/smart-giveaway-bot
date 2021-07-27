@@ -23,12 +23,13 @@ public class ListSub extends SubCommand {
         StringBuilder listBuilder = new StringBuilder(this.langFor(server, Text.PRESET_LIST_DEFAULT_ENTRY).toString());
         for (Preset preset : server.getPresets().values()) {
             listBuilder.append("\n")
-                    .append(preset.getName());
+                .append(preset.getName());
         }
         event.replyEmbeds(new EmbedBuilder()
-                .setColor(this.palette.primary())
-                .setTitle(this.langFor(server, Text.PRESET_LIST_EMBED_TITLE, replacer -> replacer.set("preset-count", server.getPresets().size() + 1)).toString())
-                .setDescription(listBuilder.toString())
-                .build()).queue();
+            .setColor(this.palette.primary())
+            .setTitle(this.langFor(server, Text.PRESET_LIST_EMBED_TITLE, replacer -> replacer.set("preset-count", server.getPresets().size() + 1)).toString())
+            .setDescription(listBuilder.toString())
+            .build())
+            .setEphemeral(true).queue();
     }
 }
