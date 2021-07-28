@@ -5,14 +5,13 @@ import com.google.common.collect.Maps;
 import pink.zak.giveawaybot.data.Defaults;
 import pink.zak.giveawaybot.enums.Setting;
 
-import java.util.EnumMap;
 import java.util.Map;
 
 public class Preset {
     private final String name;
-    private final EnumMap<Setting, Object> settings;
+    private final Map<Setting, Object> settings;
 
-    public Preset(String name, EnumMap<Setting, Object> settings) {
+    public Preset(String name, Map<Setting, Object> settings) {
         this.name = name;
         this.settings = settings;
     }
@@ -42,8 +41,8 @@ public class Preset {
         return this.settings;
     }
 
-    public EnumMap<Setting, String> getSerializedSettings() {
-        EnumMap<Setting, String> serializedMap = Maps.newEnumMap(Setting.class);
+    public Map<Setting, String> getSerializedSettings() {
+        Map<Setting, String> serializedMap = Maps.newEnumMap(Setting.class);
         for (Map.Entry<Setting, Object> entry : this.settings.entrySet()) {
             serializedMap.put(entry.getKey(), String.valueOf(entry.getValue()));
         }

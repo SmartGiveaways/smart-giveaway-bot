@@ -3,7 +3,6 @@ package pink.zak.giveawaybot.data.models;
 import pink.zak.giveawaybot.pipelines.entries.EntryType;
 
 import java.math.BigInteger;
-import java.util.EnumMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -12,11 +11,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class User {
     private final long id;
     private final long serverId;
-    private final ConcurrentMap<Long, EnumMap<EntryType, AtomicInteger>> entries;
+    private final ConcurrentMap<Long, Map<EntryType, AtomicInteger>> entries;
     private boolean banned;
     private boolean shadowBanned;
 
-    public User(long id, long serverId, boolean banned, boolean shadowBanned, ConcurrentMap<Long, EnumMap<EntryType, AtomicInteger>> entries) {
+    public User(long id, long serverId, boolean banned, boolean shadowBanned, ConcurrentMap<Long, Map<EntryType, AtomicInteger>> entries) {
         this.id = id;
         this.serverId = serverId;
         this.banned = banned;
@@ -67,7 +66,7 @@ public class User {
         return this.shadowBanned;
     }
 
-    public ConcurrentMap<Long, EnumMap<EntryType, AtomicInteger>> getEntries() {
+    public ConcurrentMap<Long, Map<EntryType, AtomicInteger>> getEntries() {
         return this.entries;
     }
 

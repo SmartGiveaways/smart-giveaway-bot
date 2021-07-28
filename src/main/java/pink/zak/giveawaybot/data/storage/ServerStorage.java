@@ -15,7 +15,6 @@ import pink.zak.giveawaybot.service.storage.mongo.MongoDeserializer;
 import pink.zak.giveawaybot.service.storage.mongo.MongoSerializer;
 import pink.zak.giveawaybot.service.storage.mongo.MongoStorage;
 
-import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -114,7 +113,7 @@ public class ServerStorage extends MongoStorage<Long, Server> {
 
             if (presetDocument.containsKey("settings")) {
                 List<Document> settingDocuments = presetDocument.getList("settings", Document.class);
-                EnumMap<Setting, Object> settings = Maps.newEnumMap(Setting.class);
+                Map<Setting, Object> settings = Maps.newEnumMap(Setting.class);
 
                 for (Document settingDocument : settingDocuments) {
                     Setting setting = Setting.valueOf(settingDocument.getString("setting"));

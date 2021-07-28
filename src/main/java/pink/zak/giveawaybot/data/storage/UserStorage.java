@@ -12,7 +12,6 @@ import pink.zak.giveawaybot.service.storage.mongo.MongoStorage;
 import pink.zak.giveawaybot.service.storage.mongo.factory.MongoConnectionFactory;
 import pink.zak.giveawaybot.threads.ThreadManager;
 
-import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -48,18 +47,18 @@ public class UserStorage extends MongoStorage<Long, User> {
             long userId = document.getLong("userId");
             boolean banned = document.getBoolean("banned");
             boolean shadowBanned = document.getBoolean("shadowBanned");
-            ConcurrentMap<Long, EnumMap<EntryType, AtomicInteger>> entries = this.createEntries(document);
+            ConcurrentMap<Long, Map<EntryType, AtomicInteger>> entries = this.createEntries(document);
             return new User(userId, this.serverId, banned, shadowBanned, entries);
         };
     }
 
     private Set<BasicDBObject> createEntries(User user) {
         Set<BasicDBObject> documents = Sets.newHashSet();
-        Map<Long, EnumMap<EntryType, AtomicInteger>> entries = user.getEntries();
+        Map<Long, Map<EntryType, AtomicInteger>> entries = user.getEntries();
         if (user.getEntries().isEmpty())
             return documents;
 
-        for (Map.Entry<Long, EnumMap<EntryType, AtomicInteger>> giveawayEntry : entries.entrySet()) {
+        for (Map.Entry<Long, Map<EntryType, AtomicInteger>> giveawayEntry : entries.entrySet()) {
             BasicDBObject dbObject = new BasicDBObject();
             dbObject.put("id", giveawayEntry.getKey());
             Set<BasicDBObject> entryObjects = Sets.newHashSet();
@@ -75,8 +74,8 @@ public class UserStorage extends MongoStorage<Long, User> {
         return documents;
     }
 
-    private ConcurrentHashMap<Long, EnumMap<EntryType, AtomicInteger>> createEntries(Document userDocument) {
-        ConcurrentHashMap<Long, EnumMap<EntryType, AtomicInteger>> map = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<Long, Map<EntryType, AtomicInteger>> createEntries(Document userDocument) {
+        ConcurrentHashMap<Long, Map<EntryType, AtomicInteger>> map = new ConcurrentHashMap<>();
         if (!userDocument.containsKey("entries"))
             return map;
 
@@ -86,7 +85,7 @@ public class UserStorage extends MongoStorage<Long, User> {
             long giveawayId = giveawayDocument.getLong("id");
             List<Document> entryDocuments = giveawayDocument.getList("entries", Document.class);
 
-            EnumMap<EntryType, AtomicInteger> entryMap = Maps.newEnumMap(EntryType.class);
+            Map<EntryType, AtomicInteger> entryMap = Maps.newEnumMap(EntryType.class);
             for (Document entryDocument : entryDocuments) {
                 EntryType entryType = EntryType.valueOf(entryDocument.getString("type"));
                 AtomicInteger value = new AtomicInteger(entryDocument.getInteger("value"));

@@ -35,7 +35,7 @@ public class UnloadUserSub extends ConsoleSubCommand {
             JdaBot.LOGGER.error("The user {} is not cached in any servers", userId);
             return;
         }
-        JdaBot.LOGGER.warn("Invalidating {} from " + servers.size() + " servers", userId);
+        JdaBot.LOGGER.warn("Invalidating {} from {} servers", userId, servers.size());
 
         for (Server server : servers) {
             server.getUserCache().invalidate(userId);
