@@ -35,7 +35,7 @@ public class UserUtils {
     public void sendMissingPermsMessage(LanguageRegistry languageRegistry, Server server, Member selfMember, TextChannel checkChannel, SlashCommandEvent event) {
         ImmutablePair<ImmutableSet<Permission>, String> permissionPair = UserUtils.getMissingPerms(selfMember, checkChannel);
         languageRegistry.get(server, permissionPair.getKey().size() > 1 ? Text.BOT_MISSING_PERMISSIONS_SPECIFIC : Text.BOT_MISSING_PERMISSION_SPECIFIC,
-                replacer -> replacer.set("permission", permissionPair.getValue())).to(event);
+                replacer -> replacer.set("permission", permissionPair.getValue())).to(event, true);
     }
 
     public long parseIdInput(String input) {

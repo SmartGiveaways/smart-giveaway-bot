@@ -16,7 +16,7 @@ public enum Setting {
     ENABLE_REACT_TO_ENTER(Text.PRESET_ENABLE_REACT_TO_ENTER_DESCRIPTION, Boolean::parseBoolean, BooleanUtils::isBoolean, "Require Reaction To Enter"),
     REACT_TO_ENTER_EMOJI(Text.PRESET_REACT_TO_ENTER_EMOJI_DESCRIPTION, ReactionContainer::fromUnknown, (str, guild) ->
             ReactionContainer.fromUnknown(str, guild) != null
-            , "Add Reaction Emoji"),
+            , "Reaction Emoji"),
     ENABLE_MESSAGE_ENTRIES(Text.PRESET_ENABLE_MESSAGE_ENTRIES_DESCRIPTION, Boolean::parseBoolean, BooleanUtils::isBoolean, "Enable Message Entries"),
     ENTRIES_PER_MESSAGE(Text.PRESET_ENTRIES_PER_MESSAGE_DESCRIPTION, Text.PRESET_ENTRIES_PER_MESSAGE_LIMIT_MESSAGE, 3, 9,
             str -> NumberUtils.parseInt(str, -1), str -> {

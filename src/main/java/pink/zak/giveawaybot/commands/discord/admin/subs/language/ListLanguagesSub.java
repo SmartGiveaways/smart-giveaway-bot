@@ -25,7 +25,8 @@ public class ListLanguagesSub extends SubCommand {
 
     @Override
     public void onExecute(Member sender, Server server, SlashCommandEvent event) {
-        event.replyEmbeds(this.messageEmbeds.get(server.getLanguage())).queue();
+        event.replyEmbeds(this.messageEmbeds.get(server.getLanguage()))
+            .setEphemeral(true).queue();
     }
 
     private void buildMessages(Palette palette) {

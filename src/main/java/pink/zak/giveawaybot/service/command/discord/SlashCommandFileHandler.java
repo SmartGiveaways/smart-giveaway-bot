@@ -23,6 +23,7 @@ import java.util.Set;
 
 @UtilityClass
 public class SlashCommandFileHandler {
+    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     public static Set<SlashCommandInfo> loadSlashCommands(Path basePath) {
         Path path = basePath.resolve("command-data.json");
@@ -55,14 +56,13 @@ public class SlashCommandFileHandler {
         }
 
         try (Writer writer = Files.newBufferedWriter(path)) {
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
             JsonObject json = new JsonObject();
 
             JsonArray jsonArray = new JsonArray();
             for (Command command : commands)
                 jsonArray.add(createCommandObject(command));
             json.add("", jsonArray);
-            gson.toJson(json, writer);
+            GSON.toJson(json, writer);
         } catch (IOException ex) {
             JdaBot.LOGGER.error("Error writing slash commands", ex);
         }

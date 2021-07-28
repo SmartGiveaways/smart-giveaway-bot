@@ -18,10 +18,10 @@ public class SetLanguageSub extends SubCommand {
     public void onExecute(Member sender, Server server, SlashCommandEvent event) {
         Language language = this.languageRegistry.getLanguage(event.getOption("language").getAsString());
         if (language == null) {
-            this.langFor(server, Text.ADMIN_LANGUAGE_NOT_FOUND).to(event);
+            this.langFor(server, Text.ADMIN_LANGUAGE_NOT_FOUND).to(event, true);
             return;
         }
         server.setLanguage(language.getIdentifier());
-        this.langFor(server, Text.ADMIN_SET_LANGUAGE).to(event);
+        this.langFor(server, Text.ADMIN_SET_LANGUAGE).to(event, true);
     }
 }

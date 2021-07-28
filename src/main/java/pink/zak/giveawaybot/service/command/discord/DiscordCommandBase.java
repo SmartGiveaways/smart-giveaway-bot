@@ -60,16 +60,7 @@ public class DiscordCommandBase extends CommandBackend implements SlashCommandLi
         Set<SlashCommandFileHandler.SlashCommandInfo> loadedCommands = SlashCommandFileHandler.loadSlashCommands(basePath);
 
         if (loadedCommands == null) {
-            Set<CommandData> createdData = this.commands.values()
-                .stream()
-                .map(SimpleCommand::getCommandData)
-                .collect(Collectors.toSet());
-            JdaBot.LOGGER.info("Created data {}", createdData);
-
-            // Use this commented line for testing new slash commands on a guild
-            //List<net.dv8tion.jda.api.interactions.commands.Command> createdCommands = this.jda.getGuildById(751886048623067186L).updateCommands().addCommands(createdData).complete();
-            List<net.dv8tion.jda.api.interactions.commands.Command> createdCommands = this.jda.updateCommands().addCommands(createdData).complete();
-            JdaBot.LOGGER.info("Created Commands {}", createdCommands);
+            List<net.dv8tion.jda.api.interactions.commands.Command> createdCommands = this.createNewCommands();
 
             createdCommands.forEach(command -> {
                 SimpleCommand matchedCommand = this.commands.get(command.getName());
@@ -88,6 +79,21 @@ public class DiscordCommandBase extends CommandBackend implements SlashCommandLi
                 JdaBot.LOGGER.info("Bound loaded command {} to ID {}", commandInfo.getName(), commandInfo.getId());
             }
         }
+    }
+
+    private List<net.dv8tion.jda.api.interactions.commands.Command> createNewCommands() {
+        Set<CommandData> createdData = this.commands.values()
+            .stream()
+            .map(SimpleCommand::getCommandData)
+            .collect(Collectors.toSet());
+        JdaBot.LOGGER.info("Created data {}", createdData);
+
+        // Use this commented line for testing new slash commands on a guild
+        //List<net.dv8tion.jda.api.interactions.commands.Command> createdCommands = this.jda.getGuildById(751886048623067186L).updateCommands().addCommands(createdData).complete();
+        List<net.dv8tion.jda.api.interactions.commands.Command> createdCommands = this.jda.updateCommands().addCommands(createdData).complete();
+        JdaBot.LOGGER.info("Created Commands {}", createdCommands);
+
+        return createdCommands;
     }
 
     @Override

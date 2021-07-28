@@ -51,7 +51,8 @@ public class BotInfoCommand extends SimpleCommand {
                         .set("shard_ping", this.latencyMonitor.getLastTiming(jda))
                         .set("last_shard_ping_update", Time.format(System.currentTimeMillis() - this.latencyMonitor.getShardTestTimes().get(jda))))
                         .toString())
-                .build()).queue();
+                .build())
+            .setEphemeral(true).queue();
     }
 
     @Override

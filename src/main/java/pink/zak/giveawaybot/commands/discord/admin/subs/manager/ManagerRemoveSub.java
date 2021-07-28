@@ -18,10 +18,10 @@ public class ManagerRemoveSub extends SubCommand {
     public void onExecute(Member sender, Server server, SlashCommandEvent event) {
         Role role = event.getOption("role").getAsRole();
         if (!server.getManagerRoles().contains(role.getIdLong())) {
-            this.langFor(server, Text.ADMIN_MANAGER_DOESNT_CONTAIN).to(event);
+            this.langFor(server, Text.ADMIN_MANAGER_DOESNT_CONTAIN).to(event, true);
             return;
         }
         server.getManagerRoles().remove(role.getIdLong());
-        this.langFor(server, Text.ADMIN_MANAGER_ROLE_REMOVED, replacer -> replacer.set("name", role.getName())).to(event);
+        this.langFor(server, Text.ADMIN_MANAGER_ROLE_REMOVED, replacer -> replacer.set("name", role.getName())).to(event, true);
     }
 }

@@ -21,17 +21,17 @@ public class ManagerAddSub extends SubCommand {
     @Override
     public void onExecute(Member sender, Server server, SlashCommandEvent event) {
         if (server.getManagerRoles().size() >= 5) {
-            this.langFor(server, Text.ADMIN_MANAGER_LIMIT_REACHED).to(event);
+            this.langFor(server, Text.ADMIN_MANAGER_LIMIT_REACHED).to(event, true);
             return;
         }
         Role role = event.getOption("role").getAsRole();
 
         if (server.getManagerRoles().contains(role.getIdLong())) {
-            this.langFor(server, Text.ADMIN_MANAGER_ALREADY_CONTAINS).to(event);
+            this.langFor(server, Text.ADMIN_MANAGER_ALREADY_CONTAINS).to(event, true);
             return;
         }
         server.getManagerRoles().add(role.getIdLong());
         SlashCommandUtils.updatePrivileges(event.getGuild(), server, this.commandBase);
-        this.langFor(server, Text.ADMIN_MANAGER_ROLE_ADDED, replacer -> replacer.set("name", role.getName())).to(event);
+        this.langFor(server, Text.ADMIN_MANAGER_ROLE_ADDED, replacer -> replacer.set("name", role.getName())).to(event, true);
     }
 }

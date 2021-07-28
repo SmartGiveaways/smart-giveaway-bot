@@ -33,16 +33,16 @@ public class RerollSub extends SubCommand {
     public void onExecute(Member sender, Server server, SlashCommandEvent event) {
         long giveawayId = event.getOption("giveawayid").getAsLong();
         if (giveawayId < 786066350882488381L) { // Just check the ID isn't too old to reduce hits on the database.
-            this.langFor(server, Text.COULDNT_FIND_GIVEAWAY).to(event);
+            this.langFor(server, Text.COULDNT_FIND_GIVEAWAY).to(event, true);
             return;
         }
         FullFinishedGiveaway giveaway = this.giveawayCache.get(giveawayId);
         if (giveaway == null) {
-            this.langFor(server, Text.COULDNT_FIND_GIVEAWAY).to(event);
+            this.langFor(server, Text.COULDNT_FIND_GIVEAWAY).to(event, true);
             return;
         }
         if (System.currentTimeMillis() - giveaway.getEndTime() > 86400000) {
-            this.langFor(server, Text.REROLL_OVER_24_HOURS).to(event);
+            this.langFor(server, Text.REROLL_OVER_24_HOURS).to(event, true);
             return;
         }
         Set<Long> newWinners = this.winnerStep.regenerateWinners(giveaway);
@@ -53,7 +53,7 @@ public class RerollSub extends SubCommand {
         }
         Long[] winnersArray = newWinners.toArray(new Long[]{});
         if (winnersArray.length == 1) {
-            this.langFor(server, Text.REROLL_ONE_WINNER, replacer -> replacer.set("winner", "<@" + winnersArray[0] + ">")).to(event);
+            this.langFor(server, Text.REROLL_ONE_WINNER, replacer -> replacer.set("winner", "<@" + winnersArray[0] + ">")).to(event, true);
             return;
         }
         int count = 0;
@@ -63,7 +63,7 @@ public class RerollSub extends SubCommand {
             if (count == winnersArray.length) {
                 this.langFor(server, Text.REROLL_MULTIPLE_WINNERS, replacer -> replacer
                     .set("winners", builder.toString())
-                    .set("final-winner", "<@" + winner + ">")).to(event);
+                    .set("final-winner", "<@" + winner + ">")).to(event, true);
                 return;
             } else {
                 builder.append("<@").append(winnersArray[count - 1]).append(">");

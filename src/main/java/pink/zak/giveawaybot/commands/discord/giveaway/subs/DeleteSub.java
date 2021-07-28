@@ -44,16 +44,16 @@ public class DeleteSub extends SubCommand {
         try {
             uuid = UUID.fromString(input);
         } catch (IllegalArgumentException ex) {
-            this.langFor(server, Text.COULDNT_FIND_SCHEDULED_GIVEAWAY).to(event);
+            this.langFor(server, Text.COULDNT_FIND_SCHEDULED_GIVEAWAY).to(event, true);
             return;
         }
         ScheduledGiveaway giveaway = this.scheduledGiveawayCache.get(uuid);
         if (giveaway == null) {
-            this.langFor(server, Text.COULDNT_FIND_SCHEDULED_GIVEAWAY).to(event);
+            this.langFor(server, Text.COULDNT_FIND_SCHEDULED_GIVEAWAY).to(event, true);
             return;
         }
         this.scheduledGiveawayController.deleteGiveaway(server, giveaway);
-        this.langFor(server, Text.SCHEDULED_GIVEAWAY_DELETED, replacer -> replacer.set("item", giveaway.getGiveawayItem())).to(event);
+        this.langFor(server, Text.SCHEDULED_GIVEAWAY_DELETED, replacer -> replacer.set("item", giveaway.getGiveawayItem())).to(event, true);
     }
 
     private void deleteLong(Server server, String input, SlashCommandEvent event) {
@@ -61,19 +61,19 @@ public class DeleteSub extends SubCommand {
         try {
             id = Long.parseLong(input);
         } catch (IllegalArgumentException ex) {
-            this.langFor(server, Text.COULDNT_FIND_GIVEAWAY).to(event);
+            this.langFor(server, Text.COULDNT_FIND_GIVEAWAY).to(event, true);
             return;
         }
         if (id < 786066350882488381L) { // Just check the ID isn't too old to reduce hits on the database.
-            this.langFor(server, Text.COULDNT_FIND_GIVEAWAY).to(event);
+            this.langFor(server, Text.COULDNT_FIND_GIVEAWAY).to(event, true);
             return;
         }
         CurrentGiveaway giveaway = this.giveawayCache.get(id);
         if (giveaway == null) {
-            this.langFor(server, Text.COULDNT_FIND_GIVEAWAY).to(event);
+            this.langFor(server, Text.COULDNT_FIND_GIVEAWAY).to(event, true);
             return;
         }
         this.deletionStep.delete(giveaway);
-        this.langFor(server, Text.GIVEAWAY_DELETED, replacer -> replacer.set("item", giveaway.getGiveawayItem())).to(event);
+        this.langFor(server, Text.GIVEAWAY_DELETED, replacer -> replacer.set("item", giveaway.getGiveawayItem())).to(event, true);
     }
 }

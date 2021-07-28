@@ -20,11 +20,11 @@ public class UnbanCommand extends SimpleCommand {
     public void onExecute(Member sender, Server server, SlashCommandEvent event) {
         Member target = event.getOption("user").getAsMember();
         if (target == null) {
-            this.langFor(server, Text.COULDNT_FIND_MEMBER).to(event);
+            this.langFor(server, Text.COULDNT_FIND_MEMBER).to(event, true);
             return;
         }
         if (target.getIdLong() == sender.getIdLong()) {
-            this.langFor(server, Text.CANNOT_UNBAN_SELF).to(event);
+            this.langFor(server, Text.CANNOT_UNBAN_SELF).to(event, true);
             return;
         }
         User user = server.getUserCache().get(target.getIdLong());

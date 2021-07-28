@@ -21,7 +21,7 @@ public class ListManagersSub extends SubCommand {
     @Override
     public void onExecute(Member sender, Server server, SlashCommandEvent event) {
         if (server.getManagerRoles().isEmpty()) {
-            this.langFor(server, Text.ADMIN_NO_MANAGERS).to(event);
+            this.langFor(server, Text.ADMIN_NO_MANAGERS).to(event, true);
             return;
         }
         StringBuilder descriptionBuilder = new StringBuilder();
@@ -33,6 +33,7 @@ public class ListManagersSub extends SubCommand {
             .setFooter(this.langFor(server, Text.GENERIC_EMBED_FOOTER).toString())
             .setColor(this.palette.primary())
             .setDescription(descriptionBuilder.toString())
-            .build()).queue();
+            .build())
+            .setEphemeral(true).queue();
     }
 }

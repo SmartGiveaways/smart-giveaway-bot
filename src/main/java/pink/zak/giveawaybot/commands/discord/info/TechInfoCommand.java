@@ -53,7 +53,8 @@ public class TechInfoCommand extends SimpleCommand {
                 .addField("", "[GitHub](https://github.com/SmartGiveaways/smart-giveaway-bot)", true)
                 .addField("", "[Discord](https://discord.gg/aS4PebKZpe)", true)
                 .addField("", "[Code Reports](https://sonarcloud.io/dashboard?id=SmartGiveaways_smart-giveaway-bot)", true)
-                .build()).queue();
+                .build())
+            .setEphemeral(true).queue();
     }
 
     @Override
