@@ -122,7 +122,7 @@ values:
   giveaway-length-too-long-premium: "Giveaways must be no longer than 3 months."
   winner-amount-too-large: "Giveaways must have less than 20 winners."
   winner-amount-too-small: "Giveaways must have at least 1 winner."
-  giveaway-item-too-long: "Giveaway items must be 20 characters or shorter."
+  giveaway-item-too-long: "Giveaway items must be 35 characters or shorter."
   # schedule sub
   scheduled-giveaway-list-embed-title: "Scheduled Giveaways"
   giveaway-scheduled: ":white_check_mark: Your giveaway has been scheduled in the channel %channel%. It will be posted at %time%."
