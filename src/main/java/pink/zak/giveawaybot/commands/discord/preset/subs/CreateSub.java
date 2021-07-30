@@ -33,7 +33,7 @@ public class CreateSub extends SubCommand {
             this.langFor(server, Text.PRESET_CREATE_NAME_TOO_LONG).to(event, true);
             return;
         }
-        this.langFor(server, Text.PRESET_CREATED).to(event, true);
+        this.langFor(server, Text.PRESET_CREATED, replacer -> replacer.set("name", presetName)).to(event, true);
         server.addPreset(new Preset(presetName));
     }
 }

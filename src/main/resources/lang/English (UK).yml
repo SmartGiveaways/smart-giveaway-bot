@@ -209,7 +209,7 @@ values:
   preset-create-limit-reached-premium: "You can only have 10 presets at a time. Use `/preset` to delete some."
   preset-create-already-called: "There is already a preset called %name% for this server."
   preset-create-name-too-long: "Preset names must be shorter than 20 characters."
-  preset-created: "Created your preset. Use `/preset options` to see available options."
+  preset-created: "Created the preset `%name%`. Use `/preset options` to see available options."
   # export/import subs
   preset-exported-all: "Here's an export of all your presets."
   preset-exported-single: "Here's your export of your %preset% preset."
@@ -241,7 +241,7 @@ values:
   preset-entries-per-message-description: "Entries per sent message"
   preset-max-entries-description: "Maximum entries per user"
   preset-ping-winners-description: "Whether winners will be pinged (ghost or in winner message)"
-  preset-enable-winners-message: "Whether a message will be sent in the giveaway channel when it ends"
+  preset-enable-winners-message: "Whether messages will be sent in the giveaway channel when it ends"
   preset-enable-dm-winners: "Whether the bot will attempt to DM winners"
   # preset settings limit messages
   preset-entries-per-message-limit-message: "The max entries per message is %max%"
