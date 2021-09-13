@@ -36,7 +36,7 @@ dependencies {
     implementation("org.mongodb:mongo-java-driver:3.12.9")
     implementation("org.mongojack:mongojack:4.2.0")
 
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.2")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.0")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.2")
     testImplementation("org.assertj:assertj-core:3.20.2")
     testImplementation("org.awaitility:awaitility:4.1.0")
