@@ -3,7 +3,7 @@ package pink.zak.giveawaybot.service.command.console;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import pink.zak.giveawaybot.GiveawayBot;
-import pink.zak.giveawaybot.service.command.console.command.ConsoleBaseCommand;
+import pink.zak.giveawaybot.service.command.console.command.ConsoleCommand;
 import pink.zak.giveawaybot.service.command.console.command.ConsoleSubCommand;
 import pink.zak.giveawaybot.service.command.global.CommandBackend;
 
@@ -12,19 +12,19 @@ import java.util.List;
 import java.util.Set;
 
 public class ConsoleCommandBase extends CommandBackend {
-    private final Set<ConsoleBaseCommand> commands = Sets.newHashSet();
+    private final Set<ConsoleCommand> commands = Sets.newHashSet();
 
     public ConsoleCommandBase(GiveawayBot bot) {
         super(bot);
     }
 
-    public void registerCommands(ConsoleBaseCommand... commands) {
+    public void registerCommands(ConsoleCommand... commands) {
         this.commands.addAll(Arrays.asList(commands));
     }
 
     public void onExecute(String rawMessage) {
         String commandName = rawMessage.split(" ")[0];
-        for (ConsoleBaseCommand simpleCommand : this.commands) {
+        for (ConsoleCommand simpleCommand : this.commands) {
             if (!simpleCommand.doesCommandMatch(commandName)) {
                 continue;
             }
@@ -51,7 +51,7 @@ public class ConsoleCommandBase extends CommandBackend {
         }
     }
 
-    public Set<ConsoleBaseCommand> getCommands() {
+    public Set<ConsoleCommand> getCommands() {
         return this.commands;
     }
 }

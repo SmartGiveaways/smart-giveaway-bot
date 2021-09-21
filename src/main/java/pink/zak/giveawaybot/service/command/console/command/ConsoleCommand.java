@@ -1,17 +1,50 @@
 package pink.zak.giveawaybot.service.command.console.command;
 
-import org.jetbrains.annotations.Nullable;
+import com.google.common.collect.Sets;
 import pink.zak.giveawaybot.GiveawayBot;
 
-import java.util.List;
+import java.util.Arrays;
+import java.util.Set;
 
-public abstract class ConsoleCommand {
+public abstract class ConsoleCommand extends GenericConsoleCommand {
+    private final String command;
+    private Set<String> aliases = Sets.newHashSet();
+    private Set<ConsoleSubCommand> subCommands = Sets.newLinkedHashSet();
 
-    @Nullable protected final GiveawayBot bot;
-
-    protected ConsoleCommand(@Nullable GiveawayBot bot) {
-        this.bot = bot;
+    protected ConsoleCommand(GiveawayBot bot, String command) {
+        super(bot);
+        this.command = command;
     }
 
-    public abstract void onExecute(List<String> args);
+    public String getCommand() {
+        return this.command;
+    }
+
+    public Set<ConsoleSubCommand> getSubCommands() {
+        return this.subCommands;
+    }
+
+    public void setSubCommands(Set<ConsoleSubCommand> subCommands) {
+        this.subCommands = subCommands;
+    }
+
+    protected void setSubCommands(ConsoleSubCommand... subCommands) {
+        this.subCommands.addAll(Arrays.asList(subCommands));
+    }
+
+    public Set<String> getAliases() {
+        return this.aliases;
+    }
+
+    public void setAliases(Set<String> aliases) {
+        this.aliases = aliases;
+    }
+
+    public void setAliases(String... aliases) {
+        this.aliases.addAll(Arrays.asList(aliases));
+    }
+
+    public boolean doesCommandMatch(String command) {
+        return this.command.equalsIgnoreCase(command) || this.aliases.contains(command);
+    }
 }

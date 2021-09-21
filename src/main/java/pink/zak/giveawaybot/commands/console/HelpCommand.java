@@ -2,11 +2,11 @@ package pink.zak.giveawaybot.commands.console;
 
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.service.bot.JdaBot;
-import pink.zak.giveawaybot.service.command.console.command.ConsoleBaseCommand;
+import pink.zak.giveawaybot.service.command.console.command.ConsoleCommand;
 
 import java.util.List;
 
-public class HelpCommand extends ConsoleBaseCommand {
+public class HelpCommand extends ConsoleCommand {
     
     public HelpCommand(GiveawayBot bot) {
         super(bot, "help");

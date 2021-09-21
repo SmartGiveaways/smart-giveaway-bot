@@ -12,7 +12,7 @@ import pink.zak.giveawaybot.service.command.global.argument.ArgumentTypeUtils;
 import java.util.List;
 import java.util.function.Predicate;
 
-public abstract class ConsoleSubCommand extends ConsoleCommand {
+public abstract class ConsoleSubCommand extends GenericConsoleCommand {
     private final boolean endless;
     private final ServerCache serverCache;
     private final List<Argument<?>> arguments = Lists.newArrayList();

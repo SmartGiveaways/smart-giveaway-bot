@@ -4,11 +4,11 @@ import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.commands.console.unload.subs.UnloadServerSub;
 import pink.zak.giveawaybot.commands.console.unload.subs.UnloadUserSub;
 import pink.zak.giveawaybot.service.bot.JdaBot;
-import pink.zak.giveawaybot.service.command.console.command.ConsoleBaseCommand;
+import pink.zak.giveawaybot.service.command.console.command.ConsoleCommand;
 
 import java.util.List;
 
-public class UnloadCommand extends ConsoleBaseCommand {
+public class UnloadCommand extends ConsoleCommand {
 
     public UnloadCommand(GiveawayBot bot) {
         super(bot, "unload");

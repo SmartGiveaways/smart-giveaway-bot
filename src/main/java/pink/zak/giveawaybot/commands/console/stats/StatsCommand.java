@@ -7,11 +7,11 @@ import pink.zak.giveawaybot.data.cache.GiveawayCache;
 import pink.zak.giveawaybot.data.cache.ServerCache;
 import pink.zak.giveawaybot.data.models.Server;
 import pink.zak.giveawaybot.service.bot.JdaBot;
-import pink.zak.giveawaybot.service.command.console.command.ConsoleBaseCommand;
+import pink.zak.giveawaybot.service.command.console.command.ConsoleCommand;
 
 import java.util.List;
 
-public class StatsCommand extends ConsoleBaseCommand {
+public class StatsCommand extends ConsoleCommand {
     private final ServerCache serverCache;
     private final GiveawayCache giveawayCache;
     private final FinishedGiveawayCache finishedGiveawayCache;

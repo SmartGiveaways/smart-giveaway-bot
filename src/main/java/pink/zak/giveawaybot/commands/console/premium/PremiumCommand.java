@@ -4,11 +4,11 @@ import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.commands.console.premium.subs.PremiumAddSub;
 import pink.zak.giveawaybot.commands.console.premium.subs.PremiumCheckSub;
 import pink.zak.giveawaybot.service.bot.JdaBot;
-import pink.zak.giveawaybot.service.command.console.command.ConsoleBaseCommand;
+import pink.zak.giveawaybot.service.command.console.command.ConsoleCommand;
 
 import java.util.List;
 
-public class PremiumCommand extends ConsoleBaseCommand {
+public class PremiumCommand extends ConsoleCommand {
 
     public PremiumCommand(GiveawayBot bot) {
         super(bot, "premium");

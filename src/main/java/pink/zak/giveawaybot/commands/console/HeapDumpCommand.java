@@ -4,14 +4,14 @@ import com.sun.management.HotSpotDiagnosticMXBean;
 import lombok.SneakyThrows;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.service.bot.JdaBot;
-import pink.zak.giveawaybot.service.command.console.command.ConsoleBaseCommand;
+import pink.zak.giveawaybot.service.command.console.command.ConsoleCommand;
 
 import java.lang.management.ManagementFactory;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-public class HeapDumpCommand extends ConsoleBaseCommand {
+public class HeapDumpCommand extends ConsoleCommand {
 
     public HeapDumpCommand(GiveawayBot bot) {
         super(bot, "dump");

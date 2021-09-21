@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.listener.button.ButtonRegistry;
 import pink.zak.giveawaybot.service.command.console.ConsoleCommandBase;
-import pink.zak.giveawaybot.service.command.console.command.ConsoleBaseCommand;
+import pink.zak.giveawaybot.service.command.console.command.ConsoleCommand;
 import pink.zak.giveawaybot.service.command.discord.DiscordCommandBase;
 import pink.zak.giveawaybot.service.command.discord.command.BotCommand;
 import pink.zak.giveawaybot.service.config.Config;
@@ -37,7 +37,7 @@ public interface SimpleBot {
 
     void registerCommands(@NotNull BotCommand... commands);
 
-    void registerConsoleCommands(@NotNull ConsoleBaseCommand... commands);
+    void registerConsoleCommands(@NotNull ConsoleCommand... commands);
 
     void registerListeners(@NotNull Object... listeners);
 
