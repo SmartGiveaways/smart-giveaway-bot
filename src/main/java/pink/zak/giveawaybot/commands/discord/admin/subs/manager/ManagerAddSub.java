@@ -8,9 +8,9 @@ import pink.zak.giveawaybot.data.models.Server;
 import pink.zak.giveawaybot.lang.Text;
 import pink.zak.giveawaybot.service.SlashCommandUtils;
 import pink.zak.giveawaybot.service.command.discord.DiscordCommandBase;
-import pink.zak.giveawaybot.service.command.discord.command.SubCommand;
+import pink.zak.giveawaybot.service.command.discord.command.BotSubCommand;
 
-public class ManagerAddSub extends SubCommand {
+public class ManagerAddSub extends BotSubCommand {
     private final DiscordCommandBase commandBase;
 
     public ManagerAddSub(GiveawayBot bot) {

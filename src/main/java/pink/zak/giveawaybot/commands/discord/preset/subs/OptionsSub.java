@@ -11,11 +11,11 @@ import pink.zak.giveawaybot.enums.Setting;
 import pink.zak.giveawaybot.lang.Text;
 import pink.zak.giveawaybot.lang.model.Language;
 import pink.zak.giveawaybot.service.colour.Palette;
-import pink.zak.giveawaybot.service.command.discord.command.SubCommand;
+import pink.zak.giveawaybot.service.command.discord.command.BotSubCommand;
 
 import java.util.Map;
 
-public class OptionsSub extends SubCommand {
+public class OptionsSub extends BotSubCommand {
     private final Palette palette;
     private final Map<String, MessageEmbed> optionsList;
 

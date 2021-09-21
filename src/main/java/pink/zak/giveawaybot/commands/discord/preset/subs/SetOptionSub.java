@@ -7,9 +7,9 @@ import pink.zak.giveawaybot.data.models.Preset;
 import pink.zak.giveawaybot.data.models.Server;
 import pink.zak.giveawaybot.enums.Setting;
 import pink.zak.giveawaybot.lang.Text;
-import pink.zak.giveawaybot.service.command.discord.command.SubCommand;
+import pink.zak.giveawaybot.service.command.discord.command.BotSubCommand;
 
-public class SetOptionSub extends SubCommand {
+public class SetOptionSub extends BotSubCommand {
 
     public SetOptionSub(GiveawayBot bot) {
         super(bot, "set", true, false);

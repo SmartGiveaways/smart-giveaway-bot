@@ -8,11 +8,11 @@ import pink.zak.giveawaybot.data.cache.GiveawayCache;
 import pink.zak.giveawaybot.data.cache.ScheduledGiveawayCache;
 import pink.zak.giveawaybot.data.models.Server;
 import pink.zak.giveawaybot.lang.Text;
-import pink.zak.giveawaybot.service.command.discord.command.SubCommand;
+import pink.zak.giveawaybot.service.command.discord.command.BotSubCommand;
 
 import java.util.UUID;
 
-public class DeleteSub extends SubCommand {
+public class DeleteSub extends BotSubCommand {
     private final GiveawayCache giveawayCache;
     private final ScheduledGiveawayCache scheduledGiveawayCache;
 

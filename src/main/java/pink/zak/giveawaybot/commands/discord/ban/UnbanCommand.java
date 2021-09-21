@@ -8,9 +8,9 @@ import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.data.models.Server;
 import pink.zak.giveawaybot.data.models.User;
 import pink.zak.giveawaybot.lang.Text;
-import pink.zak.giveawaybot.service.command.discord.command.SimpleCommand;
+import pink.zak.giveawaybot.service.command.discord.command.BotCommand;
 
-public class UnbanCommand extends SimpleCommand {
+public class UnbanCommand extends BotCommand {
 
     public UnbanCommand(GiveawayBot bot) {
         super(bot, "unban", true, false);

@@ -13,10 +13,10 @@ import pink.zak.giveawaybot.lang.Text;
 import pink.zak.giveawaybot.metrics.MetricsLogger;
 import pink.zak.giveawaybot.metrics.helpers.LatencyMonitor;
 import pink.zak.giveawaybot.service.colour.Palette;
-import pink.zak.giveawaybot.service.command.discord.command.SimpleCommand;
+import pink.zak.giveawaybot.service.command.discord.command.BotCommand;
 import pink.zak.giveawaybot.service.time.Time;
 
-public class BotInfoCommand extends SimpleCommand {
+public class BotInfoCommand extends BotCommand {
     private final MetricsLogger metricsLogger;
     private final GiveawayCache giveawayCache;
     private final LatencyMonitor latencyMonitor;

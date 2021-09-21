@@ -6,9 +6,9 @@ import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.data.models.Preset;
 import pink.zak.giveawaybot.data.models.Server;
 import pink.zak.giveawaybot.lang.Text;
-import pink.zak.giveawaybot.service.command.discord.command.SubCommand;
+import pink.zak.giveawaybot.service.command.discord.command.BotSubCommand;
 
-public class CreateSub extends SubCommand {
+public class CreateSub extends BotSubCommand {
 
     public CreateSub(GiveawayBot bot) {
         super(bot, "create", true, false);

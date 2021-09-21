@@ -12,11 +12,11 @@ import pink.zak.giveawaybot.commands.discord.admin.subs.language.SetLanguageSub;
 import pink.zak.giveawaybot.commands.discord.admin.subs.manager.ListManagersSub;
 import pink.zak.giveawaybot.commands.discord.admin.subs.manager.ManagerAddSub;
 import pink.zak.giveawaybot.commands.discord.admin.subs.manager.ManagerRemoveSub;
-import pink.zak.giveawaybot.service.command.discord.command.SimpleCommand;
+import pink.zak.giveawaybot.service.command.discord.command.BotCommand;
 
 import java.util.stream.Collectors;
 
-public class AdminCommand extends SimpleCommand {
+public class AdminCommand extends BotCommand {
 
     public AdminCommand(GiveawayBot bot) {
         super(bot, "gadmin", true, false);

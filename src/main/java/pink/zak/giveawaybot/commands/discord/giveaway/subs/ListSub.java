@@ -9,9 +9,9 @@ import pink.zak.giveawaybot.data.models.Server;
 import pink.zak.giveawaybot.data.models.giveaway.CurrentGiveaway;
 import pink.zak.giveawaybot.lang.Text;
 import pink.zak.giveawaybot.service.colour.Palette;
-import pink.zak.giveawaybot.service.command.discord.command.SubCommand;
+import pink.zak.giveawaybot.service.command.discord.command.BotSubCommand;
 
-public class ListSub extends SubCommand {
+public class ListSub extends BotSubCommand {
     private final Palette palette;
     private final GiveawayCache giveawayCache;
 

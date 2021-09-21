@@ -11,7 +11,7 @@ import net.dv8tion.jda.api.interactions.commands.privileges.CommandPrivilege;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.data.models.Server;
 import pink.zak.giveawaybot.service.command.discord.DiscordCommandBase;
-import pink.zak.giveawaybot.service.command.discord.command.SimpleCommand;
+import pink.zak.giveawaybot.service.command.discord.command.BotCommand;
 
 import java.util.Collection;
 import java.util.Map;
@@ -41,7 +41,7 @@ public class SlashCommandUtils {
 
         Map<String, Collection<? extends CommandPrivilege>> commandPrivileges = Maps.newHashMap();
 
-        for (SimpleCommand command : commandBase.getCommands().values()) {
+        for (BotCommand command : commandBase.getCommands().values()) {
             commandPrivileges.put(command.getCommand().getId(), privileges);
         }
         guild.updateCommandPrivileges(commandPrivileges).queue();

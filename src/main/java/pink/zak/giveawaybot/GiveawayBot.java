@@ -44,7 +44,7 @@ import pink.zak.giveawaybot.metrics.MetricsLogger;
 import pink.zak.giveawaybot.metrics.helpers.LatencyMonitor;
 import pink.zak.giveawaybot.pipelines.entries.EntryPipeline;
 import pink.zak.giveawaybot.service.bot.JdaBot;
-import pink.zak.giveawaybot.service.command.discord.command.Command;
+import pink.zak.giveawaybot.service.command.discord.command.GenericBotCommand;
 import pink.zak.giveawaybot.service.config.Config;
 import pink.zak.giveawaybot.service.config.Reloadable;
 import pink.zak.giveawaybot.service.storage.mongo.factory.MongoConnectionFactory;
@@ -183,7 +183,7 @@ public class GiveawayBot extends JdaBot {
 
     public void reload() {
         this.languageRegistry.reloadLanguages(this);
-        for (Command command : this.getDiscordCommandBase().getCommands().values()) {
+        for (GenericBotCommand command : this.getDiscordCommandBase().getCommands().values()) {
             if (command instanceof Reloadable reloadableCommand) {
                 reloadableCommand.reload(this);
             }

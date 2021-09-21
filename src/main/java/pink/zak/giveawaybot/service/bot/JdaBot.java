@@ -17,7 +17,7 @@ import pink.zak.giveawaybot.listener.slash.SlashCommandListener;
 import pink.zak.giveawaybot.service.command.console.ConsoleCommandBase;
 import pink.zak.giveawaybot.service.command.console.command.ConsoleBaseCommand;
 import pink.zak.giveawaybot.service.command.discord.DiscordCommandBase;
-import pink.zak.giveawaybot.service.command.discord.command.SimpleCommand;
+import pink.zak.giveawaybot.service.command.discord.command.BotCommand;
 import pink.zak.giveawaybot.service.config.Config;
 import pink.zak.giveawaybot.service.config.ConfigStore;
 import pink.zak.giveawaybot.service.listener.ConsoleListener;
@@ -123,8 +123,8 @@ public abstract class JdaBot implements SimpleBot {
     }
 
     @Override
-    public void registerCommands(SimpleCommand... commands) {
-        for (SimpleCommand command : commands) {
+    public void registerCommands(BotCommand... commands) {
+        for (BotCommand command : commands) {
             this.discordCommandBase.registerCommand(command);
         }
     }

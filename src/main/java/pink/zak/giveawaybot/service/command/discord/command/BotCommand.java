@@ -11,14 +11,14 @@ import pink.zak.giveawaybot.data.models.Server;
 import java.util.Map;
 import java.util.Set;
 
-public abstract class SimpleCommand extends Command {
+public abstract class BotCommand extends GenericBotCommand {
     private final String name;
     private final CommandData commandData;
-    private Map<String, SubCommand> subCommands = Maps.newHashMap();
+    private Map<String, BotSubCommand> subCommands = Maps.newHashMap();
 
     private net.dv8tion.jda.api.interactions.commands.Command command;
 
-    protected SimpleCommand(GiveawayBot bot, String name, boolean manager, boolean premium) {
+    protected BotCommand(GiveawayBot bot, String name, boolean manager, boolean premium) {
         super(bot, manager, premium);
         this.name = name;
         this.commandData = this.createCommandData();
@@ -28,13 +28,13 @@ public abstract class SimpleCommand extends Command {
         return this.name;
     }
 
-    public Map<String, SubCommand> getSubCommands() {
+    public Map<String, BotSubCommand> getSubCommands() {
         return this.subCommands;
     }
 
-    public void setSubCommands(Set<SubCommand> subCommands) {
-        Map<String, SubCommand> subCommandMap = Maps.newHashMap();
-        for (SubCommand subCommand : subCommands)
+    public void setSubCommands(Set<BotSubCommand> subCommands) {
+        Map<String, BotSubCommand> subCommandMap = Maps.newHashMap();
+        for (BotSubCommand subCommand : subCommands)
             if (subCommand.getSubCommandGroupId() != null)
                 subCommandMap.put(subCommand.getSubCommandGroupId() + "/" + subCommand.getSubCommandId(), subCommand);
             else
@@ -47,7 +47,7 @@ public abstract class SimpleCommand extends Command {
 
     }
 
-    public void setSubCommands(SubCommand... subCommands) {
+    public void setSubCommands(BotSubCommand... subCommands) {
         this.setSubCommands(Sets.newHashSet(subCommands));
     }
 

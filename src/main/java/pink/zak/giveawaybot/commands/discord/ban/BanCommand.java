@@ -9,9 +9,9 @@ import pink.zak.giveawaybot.data.models.Server;
 import pink.zak.giveawaybot.data.models.User;
 import pink.zak.giveawaybot.lang.Text;
 import pink.zak.giveawaybot.service.SlashCommandUtils;
-import pink.zak.giveawaybot.service.command.discord.command.SimpleCommand;
+import pink.zak.giveawaybot.service.command.discord.command.BotCommand;
 
-public class BanCommand extends SimpleCommand {
+public class BanCommand extends BotCommand {
     private final BanCmdUtils cmdUtils = new BanCmdUtils(this.bot);
 
     public BanCommand(GiveawayBot bot) {

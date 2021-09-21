@@ -13,12 +13,12 @@ import pink.zak.giveawaybot.commands.discord.preset.subs.ListSub;
 import pink.zak.giveawaybot.commands.discord.preset.subs.OptionsSub;
 import pink.zak.giveawaybot.commands.discord.preset.subs.SetOptionSub;
 import pink.zak.giveawaybot.enums.Setting;
-import pink.zak.giveawaybot.service.command.discord.command.SimpleCommand;
+import pink.zak.giveawaybot.service.command.discord.command.BotCommand;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-public class PresetCommand extends SimpleCommand {
+public class PresetCommand extends BotCommand {
 
     public PresetCommand(GiveawayBot bot) {
         super(bot, "preset", true, false);

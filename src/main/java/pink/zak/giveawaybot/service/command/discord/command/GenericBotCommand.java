@@ -8,13 +8,13 @@ import pink.zak.giveawaybot.lang.LanguageRegistry;
 import pink.zak.giveawaybot.lang.Text;
 import pink.zak.giveawaybot.service.text.Replace;
 
-public abstract class Command {
+public abstract class GenericBotCommand {
     protected final GiveawayBot bot;
     protected final LanguageRegistry languageRegistry;
     private final boolean manager;
     private final boolean requiresPremium;
 
-    protected Command(GiveawayBot bot, boolean manager, boolean premium) {
+    protected GenericBotCommand(GiveawayBot bot, boolean manager, boolean premium) {
         this.bot = bot;
         this.languageRegistry = bot.getLanguageRegistry();
         this.manager = manager;

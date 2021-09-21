@@ -5,9 +5,9 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.commands.menus.GiveawayHistoryMenu;
 import pink.zak.giveawaybot.data.models.Server;
-import pink.zak.giveawaybot.service.command.discord.command.SubCommand;
+import pink.zak.giveawaybot.service.command.discord.command.BotSubCommand;
 
-public class HistorySub extends SubCommand {
+public class HistorySub extends BotSubCommand {
 
     public HistorySub(GiveawayBot bot) {
         super(bot, "history", true, false);

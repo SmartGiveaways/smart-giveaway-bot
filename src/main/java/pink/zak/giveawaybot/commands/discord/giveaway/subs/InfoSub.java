@@ -13,13 +13,13 @@ import pink.zak.giveawaybot.data.models.giveaway.ScheduledGiveaway;
 import pink.zak.giveawaybot.data.models.giveaway.finished.FullFinishedGiveaway;
 import pink.zak.giveawaybot.lang.Text;
 import pink.zak.giveawaybot.service.colour.Palette;
-import pink.zak.giveawaybot.service.command.discord.command.SubCommand;
+import pink.zak.giveawaybot.service.command.discord.command.BotSubCommand;
 import pink.zak.giveawaybot.service.time.Time;
 
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class InfoSub extends SubCommand {
+public class InfoSub extends BotSubCommand {
     private final ScheduledGiveawayCache scheduledGiveawayCache;
     private final FinishedGiveawayCache finishedGiveawayCache;
     private final GiveawayCache currentGiveawayCache;

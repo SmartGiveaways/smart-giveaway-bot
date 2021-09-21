@@ -16,9 +16,9 @@ import pink.zak.giveawaybot.lang.LanguageRegistry;
 import pink.zak.giveawaybot.lang.Text;
 import pink.zak.giveawaybot.listener.slash.SlashCommandListener;
 import pink.zak.giveawaybot.service.bot.JdaBot;
-import pink.zak.giveawaybot.service.command.discord.command.Command;
-import pink.zak.giveawaybot.service.command.discord.command.SimpleCommand;
-import pink.zak.giveawaybot.service.command.discord.command.SubCommand;
+import pink.zak.giveawaybot.service.command.discord.command.GenericBotCommand;
+import pink.zak.giveawaybot.service.command.discord.command.BotCommand;
+import pink.zak.giveawaybot.service.command.discord.command.BotSubCommand;
 import pink.zak.giveawaybot.service.command.global.CommandBackend;
 import pink.zak.giveawaybot.service.types.UserUtils;
 import pink.zak.giveawaybot.threads.ThreadFunction;
@@ -39,8 +39,8 @@ public class DiscordCommandBase extends CommandBackend implements SlashCommandLi
     private final Set<Permission> requiredPermissions;
     private final AtomicInteger executions = new AtomicInteger();
 
-    private final Map<String, SimpleCommand> commands = Maps.newHashMap();
-    private final Map<Long, SimpleCommand> slashCommands = Maps.newHashMap();
+    private final Map<String, BotCommand> commands = Maps.newHashMap();
+    private final Map<Long, BotCommand> slashCommands = Maps.newHashMap();
 
     public DiscordCommandBase(GiveawayBot bot) {
         super(bot);
@@ -51,7 +51,7 @@ public class DiscordCommandBase extends CommandBackend implements SlashCommandLi
         this.requiredPermissions.remove(Permission.MESSAGE_WRITE); // message write is checked early
     }
 
-    public void registerCommand(SimpleCommand command) {
+    public void registerCommand(BotCommand command) {
         this.commands.put(command.getName(), command);
     }
 
@@ -63,7 +63,7 @@ public class DiscordCommandBase extends CommandBackend implements SlashCommandLi
             List<net.dv8tion.jda.api.interactions.commands.Command> createdCommands = this.createNewCommands();
 
             createdCommands.forEach(command -> {
-                SimpleCommand matchedCommand = this.commands.get(command.getName());
+                BotCommand matchedCommand = this.commands.get(command.getName());
                 matchedCommand.setCommand(command);
                 this.slashCommands.put(command.getIdLong(), matchedCommand);
                 JdaBot.LOGGER.info("Bound created command {} to ID {}", matchedCommand.getName(), command.getIdLong());
@@ -73,7 +73,7 @@ public class DiscordCommandBase extends CommandBackend implements SlashCommandLi
         } else {
             JdaBot.LOGGER.info("Loaded Commands {}", loadedCommands);
             for (SlashCommandFileHandler.SlashCommandInfo commandInfo : loadedCommands) {
-                SimpleCommand command = this.commands.get(commandInfo.getName());
+                BotCommand command = this.commands.get(commandInfo.getName());
                 this.slashCommands.put(commandInfo.getId(), command);
                 command.setCommand(new net.dv8tion.jda.api.interactions.commands.Command((JDAImpl) this.jda, null, commandInfo.getDataObject()));
                 JdaBot.LOGGER.info("Bound loaded command {} to ID {}", commandInfo.getName(), commandInfo.getId());
@@ -84,7 +84,7 @@ public class DiscordCommandBase extends CommandBackend implements SlashCommandLi
     private List<net.dv8tion.jda.api.interactions.commands.Command> createNewCommands() {
         Set<CommandData> createdData = this.commands.values()
             .stream()
-            .map(SimpleCommand::getCommandData)
+            .map(BotCommand::getCommandData)
             .collect(Collectors.toSet());
         JdaBot.LOGGER.info("Created data {}", createdData);
 
@@ -113,7 +113,7 @@ public class DiscordCommandBase extends CommandBackend implements SlashCommandLi
         }
         CompletableFuture.runAsync(() -> {
             long commandId = event.getCommandIdLong();
-            SimpleCommand command = this.slashCommands.get(commandId);
+            BotCommand command = this.slashCommands.get(commandId);
             if (command == null) {
                 JdaBot.LOGGER.error("Command not found with ID {} and path {}", commandId, event.getCommandPath());
                 return;
@@ -135,7 +135,7 @@ public class DiscordCommandBase extends CommandBackend implements SlashCommandLi
             if (subCommandGroup != null)
                 subCommandName = subCommandGroup + "/" + subCommandName;
 
-            SubCommand subCommand = command.getSubCommands().get(subCommandName);
+            BotSubCommand subCommand = command.getSubCommands().get(subCommandName);
             if (subCommand == null) {
                 JdaBot.LOGGER.error("SubCommand not found with ID {} and path {}", subCommandName, event.getCommandPath());
                 return;
@@ -164,12 +164,12 @@ public class DiscordCommandBase extends CommandBackend implements SlashCommandLi
         return true;
     }
 
-    private void executeCommand(Command command, Member sender, Server server, SlashCommandEvent event) {
+    private void executeCommand(GenericBotCommand command, Member sender, Server server, SlashCommandEvent event) {
         this.executions.getAndIncrement();
         command.middleMan(sender, server, event);
     }
 
-    private boolean memberHasAccess(Server server, Command simpleCommand, SlashCommandEvent event, Member member) {
+    private boolean memberHasAccess(Server server, GenericBotCommand simpleCommand, SlashCommandEvent event, Member member) {
         if (simpleCommand.requiresManager() && !server.canMemberManage(member)) {
             this.languageRegistry.get(server, Text.NO_PERMISSION).to(event);
             return false;
@@ -177,7 +177,7 @@ public class DiscordCommandBase extends CommandBackend implements SlashCommandLi
         return true;
     }
 
-    public Map<String, SimpleCommand> getCommands() {
+    public Map<String, BotCommand> getCommands() {
         return this.commands;
     }
 

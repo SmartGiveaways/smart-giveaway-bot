@@ -11,11 +11,11 @@ import pink.zak.giveawaybot.data.models.giveaway.finished.FullFinishedGiveaway;
 import pink.zak.giveawaybot.lang.Text;
 import pink.zak.giveawaybot.pipelines.giveaway.steps.MessageStep;
 import pink.zak.giveawaybot.pipelines.giveaway.steps.WinnerStep;
-import pink.zak.giveawaybot.service.command.discord.command.SubCommand;
+import pink.zak.giveawaybot.service.command.discord.command.BotSubCommand;
 
 import java.util.Set;
 
-public class RerollSub extends SubCommand {
+public class RerollSub extends BotSubCommand {
     private final FinishedGiveawayCache giveawayCache;
     private final GiveawayController giveawayController;
     private final MessageStep messageStep;

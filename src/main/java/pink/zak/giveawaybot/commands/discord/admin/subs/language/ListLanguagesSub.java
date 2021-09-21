@@ -10,11 +10,11 @@ import pink.zak.giveawaybot.data.models.Server;
 import pink.zak.giveawaybot.lang.Text;
 import pink.zak.giveawaybot.lang.model.Language;
 import pink.zak.giveawaybot.service.colour.Palette;
-import pink.zak.giveawaybot.service.command.discord.command.SubCommand;
+import pink.zak.giveawaybot.service.command.discord.command.BotSubCommand;
 
 import java.util.Map;
 
-public class ListLanguagesSub extends SubCommand {
+public class ListLanguagesSub extends BotSubCommand {
     private final Map<String, MessageEmbed> messageEmbeds = Maps.newHashMap();
 
     public ListLanguagesSub(GiveawayBot bot) {

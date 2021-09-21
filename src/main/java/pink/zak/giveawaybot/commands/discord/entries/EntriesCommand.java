@@ -13,12 +13,12 @@ import pink.zak.giveawaybot.data.models.giveaway.CurrentGiveaway;
 import pink.zak.giveawaybot.lang.Text;
 import pink.zak.giveawaybot.service.SlashCommandUtils;
 import pink.zak.giveawaybot.service.colour.Palette;
-import pink.zak.giveawaybot.service.command.discord.command.SimpleCommand;
+import pink.zak.giveawaybot.service.command.discord.command.BotCommand;
 
 import java.math.BigInteger;
 import java.util.List;
 
-public class EntriesCommand extends SimpleCommand {
+public class EntriesCommand extends BotCommand {
     private final GiveawayCache giveawayCache;
     private final Palette palette;
 

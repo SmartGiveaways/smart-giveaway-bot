@@ -8,10 +8,10 @@ import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.commands.discord.giveaway.GiveawayCmdUtils;
 import pink.zak.giveawaybot.data.models.Server;
 import pink.zak.giveawaybot.service.SlashCommandUtils;
-import pink.zak.giveawaybot.service.command.discord.command.SubCommand;
+import pink.zak.giveawaybot.service.command.discord.command.BotSubCommand;
 import pink.zak.giveawaybot.service.time.Time;
 
-public class ScheduleSub extends SubCommand {
+public class ScheduleSub extends BotSubCommand {
     private final GiveawayCmdUtils cmdUtils;
 
     public ScheduleSub(GiveawayBot bot, GiveawayCmdUtils cmdUtils) {

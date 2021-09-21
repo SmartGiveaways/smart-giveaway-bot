@@ -5,17 +5,17 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.data.models.Server;
 
-public abstract class SubCommand extends Command {
+public abstract class BotSubCommand extends GenericBotCommand {
     private final String subCommandId;
     private final String subCommandGroupId;
 
-    protected SubCommand(GiveawayBot bot, String subCommandId, boolean manager, boolean premium) {
+    protected BotSubCommand(GiveawayBot bot, String subCommandId, boolean manager, boolean premium) {
         super(bot, manager, premium);
         this.subCommandId = subCommandId;
         this.subCommandGroupId = null;
     }
 
-    protected SubCommand(GiveawayBot bot, String subCommandGroupId, String subCommandId, boolean manager, boolean premium) {
+    protected BotSubCommand(GiveawayBot bot, String subCommandGroupId, String subCommandId, boolean manager, boolean premium) {
         super(bot, manager, premium);
         this.subCommandId = subCommandId;
         this.subCommandGroupId = subCommandGroupId;

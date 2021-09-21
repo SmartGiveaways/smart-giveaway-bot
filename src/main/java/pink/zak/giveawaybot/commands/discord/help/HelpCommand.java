@@ -11,12 +11,12 @@ import pink.zak.giveawaybot.data.models.Server;
 import pink.zak.giveawaybot.lang.Text;
 import pink.zak.giveawaybot.lang.model.Language;
 import pink.zak.giveawaybot.service.colour.Palette;
-import pink.zak.giveawaybot.service.command.discord.command.SimpleCommand;
+import pink.zak.giveawaybot.service.command.discord.command.BotCommand;
 import pink.zak.giveawaybot.service.config.Reloadable;
 
 import java.util.Map;
 
-public class HelpCommand extends SimpleCommand implements Reloadable {
+public class HelpCommand extends BotCommand implements Reloadable {
     private Map<String, MessageEmbed> limitedMessageEmbed = Maps.newHashMap();
     private Map<String, MessageEmbed> fullMessageEmbed = Maps.newHashMap();
 

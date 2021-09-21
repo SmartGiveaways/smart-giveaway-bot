@@ -6,9 +6,9 @@ import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.commands.menus.BanListMenu;
 import pink.zak.giveawaybot.data.models.Server;
-import pink.zak.giveawaybot.service.command.discord.command.SimpleCommand;
+import pink.zak.giveawaybot.service.command.discord.command.BotCommand;
 
-public class BanListCommand extends SimpleCommand {
+public class BanListCommand extends BotCommand {
 
     public BanListCommand(GiveawayBot bot) {
         super(bot, "banlist", true, false);

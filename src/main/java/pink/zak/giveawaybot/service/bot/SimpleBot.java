@@ -10,7 +10,7 @@ import pink.zak.giveawaybot.listener.button.ButtonRegistry;
 import pink.zak.giveawaybot.service.command.console.ConsoleCommandBase;
 import pink.zak.giveawaybot.service.command.console.command.ConsoleBaseCommand;
 import pink.zak.giveawaybot.service.command.discord.DiscordCommandBase;
-import pink.zak.giveawaybot.service.command.discord.command.SimpleCommand;
+import pink.zak.giveawaybot.service.command.discord.command.BotCommand;
 import pink.zak.giveawaybot.service.config.Config;
 import pink.zak.giveawaybot.service.config.ConfigStore;
 import pink.zak.giveawaybot.service.registry.Registry;
@@ -35,7 +35,7 @@ public interface SimpleBot {
 
     void registerRegistries(Registry... registries);
 
-    void registerCommands(@NotNull SimpleCommand... commands);
+    void registerCommands(@NotNull BotCommand... commands);
 
     void registerConsoleCommands(@NotNull ConsoleBaseCommand... commands);
 

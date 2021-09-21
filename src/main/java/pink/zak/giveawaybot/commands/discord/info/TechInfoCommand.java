@@ -13,12 +13,12 @@ import pink.zak.giveawaybot.metrics.helpers.GenericMetrics;
 import pink.zak.giveawaybot.metrics.helpers.LatencyMonitor;
 import pink.zak.giveawaybot.service.cache.singular.CachedValue;
 import pink.zak.giveawaybot.service.colour.Palette;
-import pink.zak.giveawaybot.service.command.discord.command.SimpleCommand;
+import pink.zak.giveawaybot.service.command.discord.command.BotCommand;
 import pink.zak.giveawaybot.service.time.Time;
 
 import java.util.concurrent.TimeUnit;
 
-public class TechInfoCommand extends SimpleCommand {
+public class TechInfoCommand extends BotCommand {
     private final GenericMetrics genericMetrics;
     private final LatencyMonitor latencyMonitor;
     private final GiveawayCache giveawayCache;

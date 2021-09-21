@@ -6,9 +6,9 @@ import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.data.models.Server;
 import pink.zak.giveawaybot.lang.Text;
 import pink.zak.giveawaybot.lang.model.Language;
-import pink.zak.giveawaybot.service.command.discord.command.SubCommand;
+import pink.zak.giveawaybot.service.command.discord.command.BotSubCommand;
 
-public class SetLanguageSub extends SubCommand {
+public class SetLanguageSub extends BotSubCommand {
 
     public SetLanguageSub(GiveawayBot bot) {
         super(bot, "language", "set", false, false);

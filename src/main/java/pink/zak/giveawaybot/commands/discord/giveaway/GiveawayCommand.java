@@ -13,9 +13,9 @@ import pink.zak.giveawaybot.commands.discord.giveaway.subs.ListScheduledSub;
 import pink.zak.giveawaybot.commands.discord.giveaway.subs.ListSub;
 import pink.zak.giveawaybot.commands.discord.giveaway.subs.RerollSub;
 import pink.zak.giveawaybot.commands.discord.giveaway.subs.ScheduleSub;
-import pink.zak.giveawaybot.service.command.discord.command.SimpleCommand;
+import pink.zak.giveawaybot.service.command.discord.command.BotCommand;
 
-public class GiveawayCommand extends SimpleCommand {
+public class GiveawayCommand extends BotCommand {
 
     public GiveawayCommand(GiveawayBot bot) {
         super(bot, "giveaway", true, false);

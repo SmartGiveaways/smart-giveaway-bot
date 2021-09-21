@@ -6,9 +6,9 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import pink.zak.giveawaybot.GiveawayBot;
 import pink.zak.giveawaybot.data.models.Server;
 import pink.zak.giveawaybot.lang.Text;
-import pink.zak.giveawaybot.service.command.discord.command.SubCommand;
+import pink.zak.giveawaybot.service.command.discord.command.BotSubCommand;
 
-public class ManagerRemoveSub extends SubCommand {
+public class ManagerRemoveSub extends BotSubCommand {
 
     public ManagerRemoveSub(GiveawayBot bot) {
         super(bot, "manager", "remove", false, false);
