@@ -33,7 +33,7 @@ dependencies {
     implementation("me.tongfei:progressbar:0.9.3")
 
     implementation("com.google.guava:guava:31.1-jre")
-    implementation("org.mongodb:mongo-java-driver:3.12.9")
+    implementation("org.mongodb:mongo-java-driver:3.12.11")
     implementation("org.mongojack:mongojack:4.5.0")
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
