@@ -23,7 +23,7 @@ repositories {
 }
 
 dependencies {
-    implementation("net.dv8tion:JDA:4.3.0_303") { exclude module: "opus-java" }
+    implementation("net.dv8tion:JDA:4.4.0_352") { exclude module: "opus-java" }
     implementation("com.timvisee:yamlwrapper:1.2.0")
     implementation("com.vdurmont:emoji-java:5.1.1")
 
@@ -32,7 +32,7 @@ dependencies {
     implementation("com.influxdb:influxdb-client-java:1.15.0")
     implementation("me.tongfei:progressbar:0.9.2")
 
-    implementation("com.google.guava:guava:30.1.1-jre")
+    implementation("com.google.guava:guava:31.1-jre")
     implementation("org.mongodb:mongo-java-driver:3.12.9")
     implementation("org.mongojack:mongojack:4.2.0")
 
