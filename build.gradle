@@ -29,7 +29,7 @@ dependencies {
 
     implementation("ch.qos.logback:logback-classic:1.2.11")
     implementation("com.github.ZakShearman:influx-metrics:1.1.0")
-    implementation("com.influxdb:influxdb-client-java:1.15.0")
+    implementation("com.influxdb:influxdb-client-java:6.3.0")
     implementation("me.tongfei:progressbar:0.9.3")
 
     implementation("com.google.guava:guava:31.1-jre")
